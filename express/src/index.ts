@@ -1,12 +1,8 @@
+import { ensureBasicOptions, extractBearerToken, LogtoMiddlewareBasicOptions, LogtoUser, validateUser } from '@logto/middleware-core';
 import { Request, Response, NextFunction } from "express";
 
-export interface LogtoExpressOptions {
-  strategy?: "bearer";
+export interface LogtoExpressOptions extends LogtoMiddlewareBasicOptions {
   unauthorizedHandler?: (res: Response) => void;
-}
-
-export interface LogtoUser {
-  id: string;
 }
 
 export interface LogtoEnhancedRequest extends Request {
@@ -17,26 +13,13 @@ const defaultUnauthorizedHandler = (res: Response) => {
   throw new Error("401: Unauthorized");
 };
 
-// 应该从core读取
-const validateUser = async (token: string): Promise<LogtoUser> => {
-  if (token === "test-user-token") {
-    return {
-      id: "test-user",
-    };
-  }
-  return null;
-};
-
 export default function logto(
   options?: LogtoExpressOptions
 ): (req: LogtoEnhancedRequest, res: Response, next: NextFunction) => void {
+  const { strategy } = ensureBasicOptions(options);
   const {
-    strategy = "bearer",
     unauthorizedHandler = defaultUnauthorizedHandler,
   } = options || {};
-  if (strategy !== "bearer") {
-    throw new Error("Invalid strategy");
-  }
   if (typeof unauthorizedHandler !== 'function') {
     throw new Error("Invalid unauthorizedHandler");
   }
@@ -56,7 +39,11 @@ export default function logto(
         unauthorizedHandler(res);
         return next();
       }
-      const token = authorization.substr(7);
+      const token = extractBearerToken(req.headers.authorization);
+      if (!token) {
+        unauthorizedHandler(res);
+        return next();
+      }
       const user = await validateUser(token);
       if (!user) {
         unauthorizedHandler(res);

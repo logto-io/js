@@ -12,12 +12,12 @@ describe('go through', () => {
         });
     })
     test('find user', (done) => {
-        request.agent(app).get('/').set('authorization', 'bearer test-user-token').expect('hello test-user', done);
+        request.agent(app.callback()).get('/').set('authorization', 'bearer test-user-token').expect('hello test-user', done);
     });
     test('empty token should get 401', (done) => {
-        request.agent(app).get('/').expect(401, done);
+        request.agent(app.callback()).get('/').expect(401, done);
     });
     test('invalid token should get 401', (done) => {
-        request.agent(app).get('/').set('authorization', 'bearer test-user-token1').expect(401, done);
+        request.agent(app.callback()).get('/').set('authorization', 'bearer test-user-token1').expect(401, done);
     });
 });

@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express, Response } from 'express';
 import request from 'supertest';
 import logto, { LogtoEnhancedRequest } from '../src';
 
