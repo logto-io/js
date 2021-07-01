@@ -1,42 +1,21 @@
+import { ensureBasicOptions, extractBearerToken, LogtoMiddlewareBasicOptions, validateUser } from '@logto/middleware-core';
 import { Context, Next } from "koa";
 
-export interface LogtoKoaOptions {
-  strategy?: "bearer";
+export interface LogtoKoaOptions extends LogtoMiddlewareBasicOptions {
   unauthorizedHandler?: (ctx: Context) => void;
-}
-
-export interface LogtoUser {
-  id: string;
-}
-
-export interface LogtoEnhancedRequest extends Request {
-  user: LogtoUser;
 }
 
 const defaultUnauthorizedHandler = (ctx: Context) => {
   ctx.throw(401, 'Unauthorized');
 };
 
-// 应该从core读取
-const validateUser = async (token: string): Promise<LogtoUser> => {
-  if (token === "test-user-token") {
-    return {
-      id: "test-user",
-    };
-  }
-  return null;
-};
-
 export default function logto(
   options?: LogtoKoaOptions
 ): (ctx: Context, next: Next) => void {
+  const { strategy } = ensureBasicOptions(options);
   const {
-    strategy = "bearer",
     unauthorizedHandler = defaultUnauthorizedHandler,
   } = options || {};
-  if (strategy !== "bearer") {
-    throw new Error("Invalid strategy");
-  }
   if (typeof unauthorizedHandler !== 'function') {
     throw new Error("Invalid unauthorizedHandler");
   }
@@ -45,17 +24,11 @@ export default function logto(
     next: Next
   ) => {
     if (strategy === "bearer") {
-      const { authorization } = ctx.req.headers;
-      if (
-        !authorization ||
-        typeof authorization !== "string" ||
-        (!authorization.startsWith("Bearer ") &&
-          !authorization.startsWith("bearer "))
-      ) {
+      const token = extractBearerToken(ctx.req.headers.authorization);
+      if (!token) {
         unauthorizedHandler(ctx);
         return;
       }
-      const token = authorization.substr(7);
       const user = await validateUser(token);
       if (!user) {
         unauthorizedHandler(ctx);
