@@ -23,19 +23,22 @@ export default function logto(
     ctx: Context,
     next: Next
   ) => {
+    let token: string;
     if (strategy === "bearer") {
-      const token = extractBearerToken(ctx.req.headers.authorization);
-      if (!token) {
-        unauthorizedHandler(ctx);
-        return;
-      }
-      const user = await validateUser(token);
-      if (!user) {
-        unauthorizedHandler(ctx);
-        return;
-      }
-      ctx.user = user;
+      token = extractBearerToken(ctx.req.headers.authorization);
+    } else if (strategy === "cookie") {
+      token = ctx.cookies.get('logto_token');
     }
+    if (!token) {
+      unauthorizedHandler(ctx);
+      return;
+    }
+    const user = await validateUser(token);
+    if (!user) {
+      unauthorizedHandler(ctx);
+      return;
+    }
+    ctx.user = user;
     next();
   };
 }

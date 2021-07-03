@@ -6,6 +6,7 @@
     "@types/jest": "^26.0.23",
     "@types/koa": "^2.13.3",
     "@types/supertest": "^2.0.11",
+    "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
     "jest": "^27.0.6",
     "koa": "^2.13.1",

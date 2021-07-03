@@ -28,6 +28,7 @@ export default function logto(
     res: Response,
     next: NextFunction
   ) => {
+    let token: string;
     if (strategy === "bearer") {
       const { authorization } = req.headers;
       if (
@@ -39,18 +40,24 @@ export default function logto(
         unauthorizedHandler(res);
         return next();
       }
-      const token = extractBearerToken(req.headers.authorization);
-      if (!token) {
+      token = extractBearerToken(req.headers.authorization);
+    } else if (strategy === "cookie") {
+      if (!req.cookies || !req.cookies.logto_token || typeof req.cookies.logto_token !== 'string') {
         unauthorizedHandler(res);
         return next();
       }
-      const user = await validateUser(token);
-      if (!user) {
-        unauthorizedHandler(res);
-        return next();
-      }
-      req.user = user;
+      token = req.cookies.logto_token;
     }
+    if (!token) {
+      unauthorizedHandler(res);
+      return next();
+    }
+    const user = await validateUser(token);
+    if (!user) {
+      unauthorizedHandler(res);
+      return next();
+    }
+    req.user = user;
     next();
   };
 }

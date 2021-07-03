@@ -1,5 +1,5 @@
 export interface LogtoMiddlewareBasicOptions {
-  strategy?: "bearer";
+  strategy?: "bearer" | "cookie";
 }
 
 export interface LogtoUser {
@@ -26,16 +26,16 @@ export const extractBearerToken = (authorization: string): string => {
   }
   const token = authorization.substr(7);
   return token;
-}
+};
 
-export const ensureBasicOptions = (options?: LogtoMiddlewareBasicOptions): LogtoMiddlewareBasicOptions => {
-  const {
-    strategy = "bearer",
-  } = options || {};
-  if (strategy !== "bearer") {
+export const ensureBasicOptions = (
+  options?: LogtoMiddlewareBasicOptions
+): LogtoMiddlewareBasicOptions => {
+  const { strategy = "bearer" } = options || {};
+  if (strategy !== "bearer" && strategy !== "cookie") {
     throw new Error("Invalid strategy");
   }
   return {
     strategy,
-  }
-}
+  };
+};
