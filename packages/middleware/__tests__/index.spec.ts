@@ -27,19 +27,3 @@ describe('extractBearerToken', () => {
         expect(token).toBeNull();
     });
 });
-
-describe('ensureBasicOptions', () => {
-    test('empty options', () => {
-        const options = ensureBasicOptions();
-        expect(typeof options).toEqual('object');
-    });
-    test('good strategy(bearer)', () => {
-        const options = ensureBasicOptions({ strategy: 'bearer' });
-        expect(options.strategy).toEqual('bearer');
-    });
-    test('bad strategy should throw', () => {
-        // @ts-ignore
-        const func = () => ensureBasicOptions({ strategy: 'bad' });
-        expect(func).toThrowError();
-    });
-});

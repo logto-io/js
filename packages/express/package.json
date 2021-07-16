@@ -9,6 +9,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@logto/middleware-core": "^0.0.1"
+    "@logto/middleware": "^0.0.1",
+    "http-errors": "^1.8.0"
   }
 }
