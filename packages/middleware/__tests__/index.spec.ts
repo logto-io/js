@@ -1,4 +1,4 @@
-import { extractBearerToken, ensureBasicOptions } from "../src";
+import { extractBearerToken } from "../src";
 
 describe('extractBearerToken', () => {
     test('bearer testtoken', () => {
