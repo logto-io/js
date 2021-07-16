@@ -1,17 +1,20 @@
 import express, { Express, Response } from 'express';
 import request from 'supertest';
-import cookieParser from 'cookie-parser';
-import logto, { LogtoEnhancedRequest } from '../src';
+import { logto } from '../src';
+import { LogtoRequest } from '../src/types';
 
 describe('go through', () => {
     let app: Express;
     beforeAll(() => {
         app = express();
         app.use(logto({
-            unauthorizedHandler: (res) => res.status(401).end(),
+            issuerBaseURL: '/',
+            clientID: 'TEST_ID',
+            secret: 'TEST_SECRET',
         }));
-        app.get('/', (req: LogtoEnhancedRequest, res: Response) => {
-            res.send('hello ' + req.user.id);
+        app.get('/', async (req: LogtoRequest, res: Response) => {
+            const user = await req.logto.fetchUserInfo();
+            res.send('hello ' + user.id);
         });
     })
     test('find user', (done) => {
@@ -22,29 +25,5 @@ describe('go through', () => {
     });
     test('invalid token should get 401', (done) => {
         request.agent(app).get('/').set('authorization', 'bearer test-user-token1').expect(401, done);
-    });
-});
-
-describe('cookie strategy', () => {
-    let app: Express;
-    beforeAll(() => {
-        app = express();
-        app.use(cookieParser());
-        app.use(logto({
-            strategy: 'cookie',
-            unauthorizedHandler: (res) => res.status(401).end(),
-        }));
-        app.get('/', (req: LogtoEnhancedRequest, res: Response) => {
-            res.send('hello ' + req.user.id);
-        });
-    })
-    test('find user', (done) => {
-        request.agent(app).get('/').set('cookie', 'logto_token=test-user-token').expect('hello test-user', done);
-    });
-    test('empty token should get 401', (done) => {
-        request.agent(app).get('/').expect(401, done);
-    });
-    test('invalid token should get 401', (done) => {
-        request.agent(app).get('/').set('authorization', 'logto_token=test-user-token1').expect(401, done);
     });
 });
