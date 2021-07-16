@@ -8,7 +8,7 @@ export interface ConfigParams {
 
 export interface UserResponse {
   id: string;
-  // TODO
+  // TODO 用户信息返回待确定
 }
 
 export const validateUser = async (accessToken: string): Promise<UserResponse> => {
