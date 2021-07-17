@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@logto/middleware": "^0.0.1",
+    "express": "^4.17.1",
     "http-errors": "^1.8.0"
   }
 }

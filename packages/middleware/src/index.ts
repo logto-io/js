@@ -13,9 +13,9 @@ export interface UserResponse {
 
 export const validateUser = async (accessToken: string): Promise<UserResponse> => {
   // TODO 替换成真实的校验
-  if (accessToken === "test-user-token") {
+  if (accessToken === 'test-user-token') {
     return {
-      id: "test-user",
+      id: 'test-user',
     };
   }
   return null;
@@ -24,9 +24,8 @@ export const validateUser = async (accessToken: string): Promise<UserResponse> =
 export const extractBearerToken = (authorization: string): string => {
   if (
     !authorization ||
-    typeof authorization !== "string" ||
-    (!authorization.startsWith("Bearer ") &&
-      !authorization.startsWith("bearer "))
+    typeof authorization !== 'string' ||
+    (!authorization.startsWith('Bearer ') && !authorization.startsWith('bearer '))
   ) {
     return null;
   }
@@ -34,9 +33,7 @@ export const extractBearerToken = (authorization: string): string => {
   return token;
 };
 
-export const ensureBasicOptions = (
-  options?: ConfigParams
-): ConfigParams => {
+export const ensureBasicOptions = (options?: ConfigParams): ConfigParams => {
   const { authRequired = true, baseURL = '/', clientID, issuerBaseURL, secret } = options || {};
   if (typeof issuerBaseURL !== 'string' || !issuerBaseURL.length) {
     throw new Error('Invalid issuerBaseURL');
