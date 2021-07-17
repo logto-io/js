@@ -1,10 +1,10 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 
 export interface RequestContext {
   accessToken?: string;
   refreshToken?: string;
   idToken?: string;
-  // idTokenClaims: any;
+  // TODO idTokenClaims: any;
   user?: Record<string, any>;
   isAuthenticated: () => boolean;
   // 必要时再获取，一般情况下只需要判断是否登陆

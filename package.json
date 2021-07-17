@@ -26,5 +26,9 @@
     "bootstrap": "lerna bootstrap",
     "test": "lerna run test",
     "lerna": "lerna"
-  }
+  },
+  "eslintConfig": {
+    "extends": "@logto/eslint-config"
+  },
+  "prettier": "@logto/eslint-config/.prettierrc"
 }
