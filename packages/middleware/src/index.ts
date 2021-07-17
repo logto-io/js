@@ -1,4 +1,4 @@
-export interface ConfigParams {
+export interface ConfigParameters {
   authRequired?: boolean;
   baseURL?: string;
   clientID: string;
@@ -18,6 +18,7 @@ export const validateUser = async (accessToken: string): Promise<UserResponse> =
       id: 'test-user',
     };
   }
+
   return null;
 };
 
@@ -29,23 +30,27 @@ export const extractBearerToken = (authorization: string): string => {
   ) {
     return null;
   }
-  const token = authorization.substr(7);
+
+  const token = authorization.slice(7);
   return token;
 };
 
-export const ensureBasicOptions = (options?: ConfigParams): ConfigParams => {
+export const ensureBasicOptions = (options?: ConfigParameters): ConfigParameters => {
   const { authRequired = true, baseURL = '/', clientID, issuerBaseURL, secret } = options || {};
-  if (typeof issuerBaseURL !== 'string' || !issuerBaseURL.length) {
+  if (typeof issuerBaseURL !== 'string' || issuerBaseURL.length === 0) {
     throw new Error('Invalid issuerBaseURL');
   }
-  if (typeof clientID !== 'string' || !clientID.length) {
+
+  if (typeof clientID !== 'string' || clientID.length === 0) {
     throw new Error('Need clientId');
   }
-  if (typeof secret !== 'string' || !secret.length) {
+
+  if (typeof secret !== 'string' || secret.length === 0) {
     throw new Error('Need secret');
   }
+
   return {
-    authRequired: !!authRequired,
+    authRequired: Boolean(authRequired),
     baseURL,
     clientID,
     secret,
