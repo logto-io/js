@@ -3,7 +3,7 @@ import {
   extractBearerToken,
   ConfigParams,
   validateUser,
-} from '@logto/middleware';
+} from '@logto/client';
 import { NextFunction, Router as createRouter } from 'express';
 import { LogtoRequest, LogtoResponse } from './types.d';
 import { requireAuth } from './require-auth';
