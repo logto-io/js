@@ -22,6 +22,7 @@ describe('extractBearerToken', () => {
     expect(token).toBeNull();
   });
   test('empty input', () => {
+    // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
     // @ts-ignore
     const token = extractBearerToken();
     expect(token).toBeNull();
