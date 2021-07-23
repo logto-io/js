@@ -1,14 +1,16 @@
 {
-  "name": "@logto/core",
+  "name": "@logto/express-server",
   "version": "0.0.1",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "license": "MIT",
   "scripts": {
-    "prepare": "tsc --build tsconfig.prod.json",
+    "prepack": "tsc --build tsconfig.prod.json",
     "test": "jest"
   },
   "dependencies": {
+    "@logto/core": "^0.0.1",
+    "express": "^4.17.1",
     "http-errors": "^1.8.0"
   }
 }
