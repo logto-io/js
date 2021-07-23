@@ -1,16 +1,16 @@
 import {
   ensureBasicOptions,
   extractBearerToken,
-  ConfigParams,
+  ConfigParameters,
   validateUser,
-} from '@logto/client';
+} from '@logto/core';
 import { NextFunction, Router as createRouter } from 'express';
 import { LogtoRequest, LogtoResponse } from './types.d';
 import { requireAuth } from './require-auth';
 
 export { requireAuth };
 
-export function logto(options?: ConfigParams): createRouter {
+export function logto(options?: ConfigParameters): createRouter {
   const { authRequired } = ensureBasicOptions(options);
   const router = createRouter();
   router.use(async (request: LogtoRequest, response: LogtoResponse, next: NextFunction) => {
