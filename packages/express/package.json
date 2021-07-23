@@ -9,7 +9,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@logto/core": "^0.0.1",
+    "@logto/node": "^0.0.1",
     "express": "^4.17.1",
     "http-errors": "^1.8.0"
   }
