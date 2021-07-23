@@ -1,0 +1,10 @@
+{
+    "extends": "@logto/ts-config/tsconfig.base",
+    "compilerOptions": {
+        "outDir": "dist",
+        "strict": false
+    },
+    "files": [
+        "src/index.ts"
+    ]
+}
