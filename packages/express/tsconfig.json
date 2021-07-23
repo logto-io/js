@@ -3,8 +3,5 @@
     "compilerOptions": {
         "outDir": "dist",
         "strict": false
-    },
-    "exclude": [
-        "node_modules"
-    ],
+    }
 }
