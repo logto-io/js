@@ -1,5 +1,5 @@
 {
-  "name": "@logto/client",
+  "name": "@logto/core",
   "version": "0.0.1",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -8,7 +8,5 @@
     "prepare": "tsc --build tsconfig.prod.json",
     "test": "jest"
   },
-  "dependencies": {
-    "http-errors": "^1.8.0"
-  }
+  "dependencies": {}
 }
