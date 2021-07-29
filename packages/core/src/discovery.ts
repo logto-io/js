@@ -1,9 +1,5 @@
 import axios from 'axios';
 
-export interface OpenIdConfiguration {
-  authorizationEndpoint: string;
-}
-
 interface OIDCDiscoveryResponse {
   authorization_endpoint: string;
   claims_parameter_supported: boolean;
@@ -35,12 +31,12 @@ interface OIDCDiscoveryResponse {
   claim_types_supported: string[];
 }
 
+export interface OpenIdConfiguration extends OIDCDiscoveryResponse {}
+
 export const discoverOpenIDConfiguration = async (url: string): Promise<OpenIdConfiguration> => {
   try {
     const { data } = await axios.get<OIDCDiscoveryResponse>(url);
-    return {
-      authorizationEndpoint: data.authorization_endpoint,
-    };
+    return data;
   } catch (error: unknown) {
     console.error(error);
 
