@@ -1,9 +1,8 @@
+import { discoverOpenIDConfiguration, OpenIdConfiguration } from './discovery';
+
 export interface ConfigParameters {
-  authRequired?: boolean;
-  baseURL?: string;
-  clientID: string;
-  issuerBaseURL: string;
-  secret: string;
+  discoveryUrl: string;
+  clientId: string;
 }
 
 export interface UserResponse {
@@ -36,24 +35,36 @@ export const extractBearerToken = (authorization: string): string => {
 };
 
 export const ensureBasicOptions = (options?: ConfigParameters): ConfigParameters => {
-  const { authRequired = true, baseURL = '/', clientID, issuerBaseURL, secret } = options || {};
-  if (typeof issuerBaseURL !== 'string' || issuerBaseURL.length === 0) {
-    throw new Error('Invalid issuerBaseURL');
+  const { clientId, discoveryUrl } = options || {};
+  if (typeof discoveryUrl !== 'string' || !discoveryUrl.startsWith('http')) {
+    throw new Error('Invalid discoveryUrl');
   }
 
-  if (typeof clientID !== 'string' || clientID.length === 0) {
+  if (typeof clientId !== 'string' || clientId.length === 0) {
     throw new Error('Need clientId');
   }
 
-  if (typeof secret !== 'string' || secret.length === 0) {
-    throw new Error('Need secret');
-  }
-
   return {
-    authRequired: Boolean(authRequired),
-    baseURL,
-    clientID,
-    secret,
-    issuerBaseURL,
+    clientId,
+    discoveryUrl,
   };
 };
+
+export class LogtoClient {
+  private readonly clientId: string;
+  private openIdConfiguration: OpenIdConfiguration;
+  constructor(config: ConfigParameters) {
+    const { discoveryUrl, clientId } = ensureBasicOptions(config);
+    this.clientId = clientId;
+
+    void this.discoverOpenIdConfiguration(discoveryUrl);
+  }
+
+  public getOpenIdConfiguration() {
+    return this.openIdConfiguration;
+  }
+
+  private async discoverOpenIdConfiguration(url: string) {
+    this.openIdConfiguration = await discoverOpenIDConfiguration(url);
+  }
+}

@@ -1,4 +1,5 @@
-import { extractBearerToken } from '../src';
+import { extractBearerToken, LogtoClient } from '../src';
+import { OpenIdConfiguration } from '../src/discovery';
 
 describe('extractBearerToken', () => {
   test('bearer testtoken', () => {
@@ -26,5 +27,31 @@ describe('extractBearerToken', () => {
     // @ts-ignore
     const token = extractBearerToken();
     expect(token).toBeNull();
+  });
+});
+
+describe('init client', () => {
+  let client: LogtoClient;
+  beforeAll(() => {
+    client = new LogtoClient({
+      discoveryUrl: 'http://localhost:3001/oidc/.well-known/openid-configuration',
+      clientId: 'foo',
+    });
+  });
+  test('openid configuration', async () => {
+    let configuration: OpenIdConfiguration;
+    while (true) {
+      configuration = client.getOpenIdConfiguration();
+      if (configuration) {
+        break;
+      }
+
+      // eslint-disable-next-line no-await-in-loop
+      await new Promise((resolve) => {
+        setTimeout(resolve, 100);
+      });
+    }
+
+    expect(configuration.authorizationEndpoint).toContain('oidc/auth');
   });
 });
