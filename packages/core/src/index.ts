@@ -1,25 +1,10 @@
 import { discoverOpenIDConfiguration, OpenIdConfiguration } from './discovery';
+import { fetchJwks, JWK } from './jwt';
 
 export interface ConfigParameters {
   discoveryUrl: string;
   clientId: string;
 }
-
-export interface UserResponse {
-  id: string;
-  // TODO 用户信息返回待确定
-}
-
-export const validateUser = async (accessToken: string): Promise<UserResponse> => {
-  // TODO 替换成真实的校验
-  if (accessToken === 'test-user-token') {
-    return {
-      id: 'test-user',
-    };
-  }
-
-  return null;
-};
 
 export const extractBearerToken = (authorization: string): string => {
   if (
@@ -51,20 +36,38 @@ export const ensureBasicOptions = (options?: ConfigParameters): ConfigParameters
 };
 
 export class LogtoClient {
+  public oidcReady = false;
   private readonly clientId: string;
   private openIdConfiguration: OpenIdConfiguration;
-  constructor(config: ConfigParameters) {
+  private jwks: JWK[];
+  constructor(config: ConfigParameters, onOidcReady?: () => void) {
     const { discoveryUrl, clientId } = ensureBasicOptions(config);
     this.clientId = clientId;
 
-    void this.discoverOpenIdConfiguration(discoveryUrl);
+    void this.initOIDC(discoveryUrl, onOidcReady);
   }
 
   public getOpenIdConfiguration() {
-    return this.openIdConfiguration;
+    return { ...this.openIdConfiguration };
+  }
+
+  public getJWKS() {
+    return { ...this.jwks };
+  }
+
+  private async initOIDC(discoveryUrl: string, onOidcReady?: () => void) {
+    await this.discoverOpenIdConfiguration(discoveryUrl);
+    await this.fetchJwks();
+    if (typeof onOidcReady === 'function') {
+      onOidcReady();
+    }
   }
 
   private async discoverOpenIdConfiguration(url: string) {
     this.openIdConfiguration = await discoverOpenIDConfiguration(url);
+  }
+
+  private async fetchJwks() {
+    this.jwks = await fetchJwks(this.openIdConfiguration.jwks_uri);
   }
 }
