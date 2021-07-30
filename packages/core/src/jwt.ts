@@ -1,6 +1,9 @@
 import axios from 'axios';
 import * as jwt from 'jsonwebtoken';
+import createJwksClient, { JwksClient } from 'jwks-rsa';
 import { IDToken } from './types.d';
+
+let jwksClient: JwksClient;
 
 export interface JWK {
   kty: string;
@@ -19,13 +22,6 @@ export const fetchJwks = async (url: string): Promise<JWK[]> => {
     throw new Error('Error occurred during jwks fetching');
   }
 };
-
-export interface JWTVerifyOptions {
-  idToken: string;
-  audience?: string | string[];
-  issuer?: string;
-  subject?: string;
-}
 
 export const decode = (token: string) => {
   const { payload } = jwt.decode(token, { complete: true });
@@ -71,4 +67,45 @@ export const decode = (token: string) => {
   };
 
   return idToken;
+};
+
+export interface JWTVerifyOptions {
+  token: string;
+  jwksUri: string;
+  audience?: string | string[];
+  issuer?: string;
+  subject?: string;
+}
+
+export const verify = async ({ token, jwksUri, audience, issuer, subject }: JWTVerifyOptions) => {
+  if (!jwksClient) {
+    jwksClient = createJwksClient({ jwksUri });
+  }
+
+  return new Promise((resolve, reject) => {
+    jwt.verify(
+      token,
+      (header, callback) => {
+        jwksClient.getSigningKey(header.kid, (error, key) => {
+          if (error) {
+            callback(error);
+          } else if ('publicKey' in key) {
+            callback(null, key.publicKey);
+          } else if ('rsaPublicKey' in key) {
+            callback(null, key.rsaPublicKey);
+          } else {
+            callback(new Error('error finding signing key'));
+          }
+        });
+      },
+      { audience, issuer, subject },
+      (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      }
+    );
+  });
 };
