@@ -1,5 +1,4 @@
 import { discoverOpenIDConfiguration, OpenIdConfiguration } from './discovery';
-import { fetchJwks, JWK } from './jwt';
 
 export interface ConfigParameters {
   discoveryUrl: string;
@@ -39,7 +38,6 @@ export class LogtoClient {
   public oidcReady = false;
   private readonly clientId: string;
   private openIdConfiguration: OpenIdConfiguration;
-  private jwks: JWK[];
   constructor(config: ConfigParameters, onOidcReady?: () => void) {
     const { discoveryUrl, clientId } = ensureBasicOptions(config);
     this.clientId = clientId;
@@ -51,13 +49,8 @@ export class LogtoClient {
     return { ...this.openIdConfiguration };
   }
 
-  public getJWKS() {
-    return { ...this.jwks };
-  }
-
   private async initOIDC(discoveryUrl: string, onOidcReady?: () => void) {
     await this.discoverOpenIdConfiguration(discoveryUrl);
-    await this.fetchJwks();
     if (typeof onOidcReady === 'function') {
       onOidcReady();
     }
@@ -65,9 +58,5 @@ export class LogtoClient {
 
   private async discoverOpenIdConfiguration(url: string) {
     this.openIdConfiguration = await discoverOpenIDConfiguration(url);
-  }
-
-  private async fetchJwks() {
-    this.jwks = await fetchJwks(this.openIdConfiguration.jwks_uri);
   }
 }

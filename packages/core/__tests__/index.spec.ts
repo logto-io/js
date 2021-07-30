@@ -44,8 +44,4 @@ describe('init client', () => {
     const configuration = client.getOpenIdConfiguration();
     expect(configuration.authorization_endpoint).toContain('oidc/auth');
   });
-  test('jwks', async () => {
-    const jwks = client.getJWKS();
-    expect(jwks[0].kty).toEqual('RSA');
-  });
 });
