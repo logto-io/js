@@ -11,6 +11,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "jose": "^3.14.3",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "jwks-rsa": "^2.0.4"
   }
 }
