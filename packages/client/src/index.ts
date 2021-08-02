@@ -1,4 +1,4 @@
-import { discoverOpenIDConfiguration, OpenIdConfiguration } from './discovery';
+import { Client, Issuer } from 'openid-client';
 
 export interface ConfigParameters {
   discoveryUrl: string;
@@ -36,27 +36,19 @@ export const ensureBasicOptions = (options?: ConfigParameters): ConfigParameters
 
 export class LogtoClient {
   public oidcReady = false;
+  public issuer: Issuer<Client>;
   private readonly clientId: string;
-  private openIdConfiguration: OpenIdConfiguration;
   constructor(config: ConfigParameters, onOidcReady?: () => void) {
     const { discoveryUrl, clientId } = ensureBasicOptions(config);
     this.clientId = clientId;
 
-    void this.initOIDC(discoveryUrl, onOidcReady);
+    void this.initIssuer(discoveryUrl, onOidcReady);
   }
 
-  public getOpenIdConfiguration() {
-    return { ...this.openIdConfiguration };
-  }
-
-  private async initOIDC(discoveryUrl: string, onOidcReady?: () => void) {
-    await this.discoverOpenIdConfiguration(discoveryUrl);
+  private async initIssuer(url: string, onOidcReady?: () => void) {
+    this.issuer = await Issuer.discover(url);
     if (typeof onOidcReady === 'function') {
       onOidcReady();
     }
-  }
-
-  private async discoverOpenIdConfiguration(url: string) {
-    this.openIdConfiguration = await discoverOpenIDConfiguration(url);
   }
 }

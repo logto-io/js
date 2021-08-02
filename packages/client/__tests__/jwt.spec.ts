@@ -20,7 +20,7 @@ describe('jwks', () => {
   test('verify with remote jwks uri', async () => {
     const result = await verify({
       token: jwt_jwks,
-      jwksUri: 'http://localhost:3001/oidc/jwks',
+      jwksUri: 'https://logto.dev/oidc/jwks',
     });
     expect(result).not.toBeNull();
   });
