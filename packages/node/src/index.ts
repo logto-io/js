@@ -1,1 +1,1 @@
-export * from '@logto/core';
+export * from '@logto/client';

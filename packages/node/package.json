@@ -9,6 +9,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "@logto/core": "^0.0.1"
+    "@logto/client": "^0.0.1"
   }
 }
