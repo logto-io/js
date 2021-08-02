@@ -12,6 +12,7 @@
     "axios": "^0.21.1",
     "jose": "^3.14.3",
     "jsonwebtoken": "^8.5.1",
-    "jwks-rsa": "^2.0.4"
+    "jwks-rsa": "^2.0.4",
+    "openid-client": "^4.7.4"
   }
 }

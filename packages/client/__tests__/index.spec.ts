@@ -34,14 +34,14 @@ describe('init client', () => {
   beforeAll((done) => {
     client = new LogtoClient(
       {
-        discoveryUrl: 'http://localhost:3001/oidc/.well-known/openid-configuration',
+        discoveryUrl: 'https://logto.dev/oidc/.well-known/openid-configuration',
         clientId: 'foo',
       },
       done
     );
   });
   test('openid configuration', async () => {
-    const configuration = client.getOpenIdConfiguration();
+    const configuration = client.issuer.metadata;
     expect(configuration.authorization_endpoint).toContain('oidc/auth');
   });
 });
