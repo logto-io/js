@@ -36,6 +36,7 @@ describe('init client', () => {
       {
         discoveryUrl: 'https://logto.dev/oidc/.well-known/openid-configuration',
         clientId: 'foo',
+        redirectUris: ['http://localhost:3000/callback'],
       },
       done
     );
@@ -43,5 +44,21 @@ describe('init client', () => {
   test('openid configuration', async () => {
     const configuration = client.issuer.metadata;
     expect(configuration.authorization_endpoint).toContain('oidc/auth');
+  });
+  test('get login url and codeVerifier', () => {
+    const [url, codeVerifier] = client.getLoginUrlAndCodeVerifier();
+    console.log(url);
+    console.log(codeVerifier);
+    expect(typeof url).toEqual('string');
+    expect(typeof codeVerifier).toEqual('string');
+  });
+  test('handle callback and get tokenset', async () => {
+    if (!process.env.CODE || !process.env.CODE_VERIFIER) {
+      // Skip
+      expect(1).toEqual(1);
+    }
+
+    const tokenset = await client.handleLoginCallback(process.env.CODE_VERIFIER, process.env.CODE);
+    expect(tokenset).not.toBeNull();
   });
 });
