@@ -1,11 +1,13 @@
 {
   "name": "@logto/client",
   "version": "0.0.1",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "typings": "dist/index.d.ts",
   "license": "MIT",
   "scripts": {
-    "prepare": "tsc --build tsconfig.prod.json",
+    "preinstall": "npx only-allow pnpm",
+    "build": "tsc",
+    "lint": "eslint --format pretty --ext .ts src",
     "test": "jest"
   },
   "dependencies": {
@@ -14,5 +16,22 @@
     "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^2.0.4",
     "openid-client": "^4.7.4"
-  }
+  },
+  "devDependencies": {
+    "@logto/eslint-config": "^0.1.0-rc.14",
+    "@logto/ts-config": "^0.1.0-rc.14",
+    "@types/jest": "^26.0.24",
+    "@types/jsonwebtoken": "^8.5.4",
+    "eslint": "^7.32.0",
+    "eslint-formatter-pretty": "^4.1.0",
+    "jest": "^27.0.6",
+    "lint-staged": "^11.1.2",
+    "prettier": "^2.3.2",
+    "ts-jest": "^27.0.4",
+    "typescript": "^4.3.5"
+  },
+  "eslintConfig": {
+    "extends": "@logto"
+  },
+  "prettier": "@logto/eslint-config/.prettierrc"
 }
