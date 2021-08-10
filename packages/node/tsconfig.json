@@ -1,7 +1,9 @@
 {
     "extends": "@logto/ts-config/tsconfig.base",
     "compilerOptions": {
-        "outDir": "dist",
-        "strict": false
-    }
+        "outDir": "lib"
+    },
+    "include": [
+        "src"
+    ]
 }
