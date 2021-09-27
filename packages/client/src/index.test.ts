@@ -10,22 +10,18 @@ describe('extractBearerToken', () => {
     expect(token).toEqual('testtoken');
   });
   test('bearertesttoken', () => {
-    const token = extractBearerToken('bearertesttoken');
-    expect(token).toBeNull();
+    expect(() => extractBearerToken('bearertesttoken')).toThrow();
   });
   test('testtoken', () => {
-    const token = extractBearerToken('testtoken');
-    expect(token).toBeNull();
+    expect(() => extractBearerToken('testtoken')).toThrow();
   });
   test('empty string', () => {
-    const token = extractBearerToken('');
-    expect(token).toBeNull();
+    expect(() => extractBearerToken('')).toThrow();
   });
   test('empty input', () => {
     // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
     // @ts-ignore
-    const token = extractBearerToken();
-    expect(token).toBeNull();
+    expect(() => extractBearerToken()).toThrow();
   });
 });
 
