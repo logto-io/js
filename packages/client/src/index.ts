@@ -6,7 +6,7 @@ export interface ConfigParameters {
   redirectUris?: string[];
 }
 
-export const extractBearerToken = (authorization: string): string => {
+export const extractBearerToken = (authorization: string): string | null => {
   if (
     !authorization ||
     typeof authorization !== 'string' ||
@@ -50,19 +50,23 @@ export const ensureBasicOptions = (options?: ConfigParameters): ConfigParameters
 
 export class LogtoClient {
   public oidcReady = false;
-  public issuer: Issuer<Client>;
-  private client: Client;
+  public issuer: Issuer<Client> | null = null;
+  private client: Client | null = null;
   private readonly clientId: string;
   private readonly redirectUris: string[];
   constructor(config: ConfigParameters, onOidcReady?: () => void) {
     const { discoveryUrl, clientId, redirectUris } = ensureBasicOptions(config);
     this.clientId = clientId;
-    this.redirectUris = redirectUris;
+    this.redirectUris = redirectUris || [];
 
     void this.initIssuer(discoveryUrl, onOidcReady);
   }
 
   public getClient(): Client {
+    if (!this.issuer) {
+      throw new Error('should init first');
+    }
+
     if (!this.client) {
       this.client = new this.issuer.Client({
         client_id: this.clientId,
@@ -76,7 +80,7 @@ export class LogtoClient {
   }
 
   public getLoginUrlAndCodeVerifier(): [string, string] {
-    if (!this.redirectUris) {
+    if (this.redirectUris.length === 0) {
       throw new Error('RedirectUris is need for calling loginWithRedirect');
     }
 
