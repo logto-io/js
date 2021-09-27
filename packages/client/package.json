@@ -18,8 +18,8 @@
     "openid-client": "^4.7.4"
   },
   "devDependencies": {
-    "@logto/eslint-config": "^0.1.0-rc.14",
-    "@logto/ts-config": "^0.1.0-rc.14",
+    "@silverhand/eslint-config": "^0.2.2",
+    "@silverhand/ts-config": "^0.2.2",
     "@types/jest": "^26.0.24",
     "@types/jsonwebtoken": "^8.5.4",
     "eslint": "^7.32.0",
