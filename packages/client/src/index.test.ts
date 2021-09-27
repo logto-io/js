@@ -45,7 +45,7 @@ describe('init client', () => {
     expect(configuration?.authorization_endpoint).toContain('oidc/auth');
   });
   test('get login url and codeVerifier', () => {
-    const [url, codeVerifier] = client.getLoginUrlAndCodeVerifier();
+    const [url, codeVerifier] = client.getLoginUrlAndCodeVerifier('http://localhost:3000/callback');
     console.log(url);
     console.log(codeVerifier);
     expect(typeof url).toEqual('string');

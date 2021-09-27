@@ -73,7 +73,7 @@ export class LogtoClient {
     return this.client;
   }
 
-  public getLoginUrlAndCodeVerifier(): [string, string] {
+  public getLoginUrlAndCodeVerifier(redirectUrl: string): [string, string] {
     const codeVerifier = generators.codeVerifier();
     const codeChallenge = generators.codeChallenge(codeVerifier);
 
@@ -83,6 +83,7 @@ export class LogtoClient {
       prompt: 'consent',
       code_challenge: codeChallenge,
       code_challenge_method: 'S256',
+      redirect_uri: redirectUrl,
     });
     return [url, codeVerifier];
   }
