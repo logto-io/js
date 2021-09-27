@@ -5,13 +5,13 @@ export interface ConfigParameters {
   clientId: string;
 }
 
-export const extractBearerToken = (authorization: string): string | null => {
+export const extractBearerToken = (authorization: string): string => {
   if (
     !authorization ||
     typeof authorization !== 'string' ||
     (!authorization.startsWith('Bearer ') && !authorization.startsWith('bearer '))
   ) {
-    return null;
+    throw new Error('Fail to extract bearer token');
   }
 
   const token = authorization.slice(7);
