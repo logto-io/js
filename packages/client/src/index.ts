@@ -73,7 +73,7 @@ export class LogtoClient {
     return this.client;
   }
 
-  public getLoginUrlAndCodeVerifier(redirectUrl: string): [string, string] {
+  public getLoginUrlAndCodeVerifier(redirectUri: string): [string, string] {
     const codeVerifier = generators.codeVerifier();
     const codeChallenge = generators.codeChallenge(codeVerifier);
 
@@ -83,14 +83,14 @@ export class LogtoClient {
       prompt: 'consent',
       code_challenge: codeChallenge,
       code_challenge_method: 'S256',
-      redirect_uri: redirectUrl,
+      redirect_uri: redirectUri,
     });
     return [url, codeVerifier];
   }
 
-  public async handleLoginCallback(redirectUrl: string, codeVerifier: string, code: string) {
+  public async handleLoginCallback(redirectUri: string, codeVerifier: string, code: string) {
     const client = this.getClient();
-    const tokenset = await client.callback(redirectUrl, { code }, { code_verifier: codeVerifier });
+    const tokenset = await client.callback(redirectUri, { code }, { code_verifier: codeVerifier });
     return tokenset;
   }
 
