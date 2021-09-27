@@ -1,4 +1,4 @@
-import { extractBearerToken, LogtoClient } from '../src';
+import { extractBearerToken, LogtoClient } from '.';
 
 describe('extractBearerToken', () => {
   test('bearer testtoken', () => {
@@ -34,16 +34,15 @@ describe('init client', () => {
   beforeAll((done) => {
     client = new LogtoClient(
       {
-        discoveryUrl: 'https://logto.dev/oidc/.well-known/openid-configuration',
+        logtoUrl: 'https://logto.dev',
         clientId: 'foo',
-        redirectUris: ['http://localhost:3000/callback'],
       },
       done
     );
   });
   test('openid configuration', async () => {
-    const configuration = client.issuer.metadata;
-    expect(configuration.authorization_endpoint).toContain('oidc/auth');
+    const configuration = client.issuer?.metadata;
+    expect(configuration?.authorization_endpoint).toContain('oidc/auth');
   });
   test('get login url and codeVerifier', () => {
     const [url, codeVerifier] = client.getLoginUrlAndCodeVerifier();
@@ -58,7 +57,11 @@ describe('init client', () => {
       expect(1).toEqual(1);
     }
 
-    const tokenset = await client.handleLoginCallback(process.env.CODE_VERIFIER, process.env.CODE);
+    const tokenset = await client.handleLoginCallback(
+      'http://localhost:3000/callback',
+      process.env.CODE_VERIFIER || '',
+      process.env.CODE || ''
+    );
     expect(tokenset).not.toBeNull();
   });
 });
