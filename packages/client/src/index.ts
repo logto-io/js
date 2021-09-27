@@ -1,9 +1,8 @@
 import { Client, Issuer, generators } from 'openid-client';
 
 export interface ConfigParameters {
-  discoveryUrl: string;
+  logtoUrl: string;
   clientId: string;
-  redirectUris?: string[];
 }
 
 export const extractBearerToken = (authorization: string): string | null => {
@@ -20,32 +19,27 @@ export const extractBearerToken = (authorization: string): string | null => {
 };
 
 export const ensureBasicOptions = (options?: ConfigParameters): ConfigParameters => {
-  const { clientId, discoveryUrl, redirectUris } = options || {};
-  if (typeof discoveryUrl !== 'string' || !discoveryUrl.startsWith('http')) {
-    throw new Error('Invalid discoveryUrl');
+  const { clientId, logtoUrl } = options || {};
+  if (typeof logtoUrl !== 'string' || !logtoUrl.startsWith('http')) {
+    throw new Error('Invalid logtoUrl');
   }
 
   if (typeof clientId !== 'string' || clientId.length === 0) {
     throw new Error('Need clientId');
   }
 
-  if (redirectUris) {
-    if (!Array.isArray(redirectUris)) {
-      throw new TypeError('RedirectUris should be an array of strings');
-    }
-
-    for (const uri of redirectUris) {
-      if (typeof uri !== 'string') {
-        throw new TypeError('RedirectUris should be an array of strings');
-      }
-    }
-  }
-
   return {
     clientId,
-    discoveryUrl,
-    redirectUris,
+    logtoUrl,
   };
+};
+
+export const ensureTrailingSlash = (url: string): string => {
+  if (url.endsWith('/')) {
+    return url;
+  }
+
+  return url + '/';
 };
 
 export class LogtoClient {
@@ -53,13 +47,14 @@ export class LogtoClient {
   public issuer: Issuer<Client> | null = null;
   private client: Client | null = null;
   private readonly clientId: string;
-  private readonly redirectUris: string[];
   constructor(config: ConfigParameters, onOidcReady?: () => void) {
-    const { discoveryUrl, clientId, redirectUris } = ensureBasicOptions(config);
+    const { logtoUrl, clientId } = ensureBasicOptions(config);
     this.clientId = clientId;
-    this.redirectUris = redirectUris || [];
 
-    void this.initIssuer(discoveryUrl, onOidcReady);
+    void this.initIssuer(
+      `${ensureTrailingSlash(logtoUrl)}oidc/.well-known/openid-configuration`,
+      onOidcReady
+    );
   }
 
   public getClient(): Client {
@@ -70,7 +65,6 @@ export class LogtoClient {
     if (!this.client) {
       this.client = new this.issuer.Client({
         client_id: this.clientId,
-        redirect_uris: this.redirectUris,
         response_types: ['code'],
         token_endpoint_auth_method: 'none',
       });
@@ -80,10 +74,6 @@ export class LogtoClient {
   }
 
   public getLoginUrlAndCodeVerifier(): [string, string] {
-    if (this.redirectUris.length === 0) {
-      throw new Error('RedirectUris is need for calling loginWithRedirect');
-    }
-
     const codeVerifier = generators.codeVerifier();
     const codeChallenge = generators.codeChallenge(codeVerifier);
 
@@ -97,13 +87,9 @@ export class LogtoClient {
     return [url, codeVerifier];
   }
 
-  public async handleLoginCallback(codeVerifier: string, code: string) {
+  public async handleLoginCallback(redirectUrl: string, codeVerifier: string, code: string) {
     const client = this.getClient();
-    const tokenset = await client.callback(
-      this.redirectUris[0],
-      { code },
-      { code_verifier: codeVerifier }
-    );
+    const tokenset = await client.callback(redirectUrl, { code }, { code_verifier: codeVerifier });
     return tokenset;
   }
 
