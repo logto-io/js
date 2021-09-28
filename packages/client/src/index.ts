@@ -1,9 +1,8 @@
 import { Client, Issuer, generators } from 'openid-client';
 
 export interface ConfigParameters {
-  discoveryUrl: string;
+  logtoUrl: string;
   clientId: string;
-  redirectUris?: string[];
 }
 
 export const extractBearerToken = (authorization: string): string => {
@@ -12,7 +11,7 @@ export const extractBearerToken = (authorization: string): string => {
     typeof authorization !== 'string' ||
     (!authorization.startsWith('Bearer ') && !authorization.startsWith('bearer '))
   ) {
-    return null;
+    throw new Error('Fail to extract bearer token');
   }
 
   const token = authorization.slice(7);
@@ -20,53 +19,52 @@ export const extractBearerToken = (authorization: string): string => {
 };
 
 export const ensureBasicOptions = (options?: ConfigParameters): ConfigParameters => {
-  const { clientId, discoveryUrl, redirectUris } = options || {};
-  if (typeof discoveryUrl !== 'string' || !discoveryUrl.startsWith('http')) {
-    throw new Error('Invalid discoveryUrl');
+  const { clientId, logtoUrl } = options || {};
+  if (typeof logtoUrl !== 'string' || !logtoUrl.startsWith('http')) {
+    throw new Error('Invalid logtoUrl');
   }
 
   if (typeof clientId !== 'string' || clientId.length === 0) {
     throw new Error('Need clientId');
   }
 
-  if (redirectUris) {
-    if (!Array.isArray(redirectUris)) {
-      throw new TypeError('RedirectUris should be an array of strings');
-    }
-
-    for (const uri of redirectUris) {
-      if (typeof uri !== 'string') {
-        throw new TypeError('RedirectUris should be an array of strings');
-      }
-    }
-  }
-
   return {
     clientId,
-    discoveryUrl,
-    redirectUris,
+    logtoUrl,
   };
+};
+
+export const ensureTrailingSlash = (url: string): string => {
+  if (url.endsWith('/')) {
+    return url;
+  }
+
+  return url + '/';
 };
 
 export class LogtoClient {
   public oidcReady = false;
-  public issuer: Issuer<Client>;
-  private client: Client;
+  public issuer: Issuer<Client> | null = null;
+  private client: Client | null = null;
   private readonly clientId: string;
-  private readonly redirectUris: string[];
   constructor(config: ConfigParameters, onOidcReady?: () => void) {
-    const { discoveryUrl, clientId, redirectUris } = ensureBasicOptions(config);
+    const { logtoUrl, clientId } = ensureBasicOptions(config);
     this.clientId = clientId;
-    this.redirectUris = redirectUris;
 
-    void this.initIssuer(discoveryUrl, onOidcReady);
+    void this.initIssuer(
+      `${ensureTrailingSlash(logtoUrl)}oidc/.well-known/openid-configuration`,
+      onOidcReady
+    );
   }
 
   public getClient(): Client {
+    if (!this.issuer) {
+      throw new Error('should init first');
+    }
+
     if (!this.client) {
       this.client = new this.issuer.Client({
         client_id: this.clientId,
-        redirect_uris: this.redirectUris,
         response_types: ['code'],
         token_endpoint_auth_method: 'none',
       });
@@ -75,11 +73,7 @@ export class LogtoClient {
     return this.client;
   }
 
-  public getLoginUrlAndCodeVerifier(): [string, string] {
-    if (!this.redirectUris) {
-      throw new Error('RedirectUris is need for calling loginWithRedirect');
-    }
-
+  public getLoginUrlAndCodeVerifier(redirectUri: string): [string, string] {
     const codeVerifier = generators.codeVerifier();
     const codeChallenge = generators.codeChallenge(codeVerifier);
 
@@ -89,17 +83,14 @@ export class LogtoClient {
       prompt: 'consent',
       code_challenge: codeChallenge,
       code_challenge_method: 'S256',
+      redirect_uri: redirectUri,
     });
     return [url, codeVerifier];
   }
 
-  public async handleLoginCallback(codeVerifier: string, code: string) {
+  public async handleLoginCallback(redirectUri: string, codeVerifier: string, code: string) {
     const client = this.getClient();
-    const tokenset = await client.callback(
-      this.redirectUris[0],
-      { code },
-      { code_verifier: codeVerifier }
-    );
+    const tokenset = await client.callback(redirectUri, { code }, { code_verifier: codeVerifier });
     return tokenset;
   }
 

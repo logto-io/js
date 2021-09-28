@@ -24,8 +24,13 @@ export const fetchJwks = async (url: string): Promise<JWK[]> => {
 };
 
 export const decode = (token: string) => {
-  const { payload } = jwt.decode(token, { complete: true });
-  const { iss, sub, aud, exp, iat, at_hash } = payload;
+  const jwtDecoded = jwt.decode(token, { complete: true });
+
+  if (!jwtDecoded) {
+    throw new Error('Fail to decode jwt');
+  }
+
+  const { iss, sub, aud, exp = 0, iat = 0, at_hash } = jwtDecoded.payload;
 
   // Check exp manually
   const now = new Date(Date.now());

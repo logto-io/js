@@ -1,4 +1,4 @@
-import { extractBearerToken, LogtoClient } from '../src';
+import { extractBearerToken, LogtoClient } from '.';
 
 describe('extractBearerToken', () => {
   test('bearer testtoken', () => {
@@ -10,22 +10,18 @@ describe('extractBearerToken', () => {
     expect(token).toEqual('testtoken');
   });
   test('bearertesttoken', () => {
-    const token = extractBearerToken('bearertesttoken');
-    expect(token).toBeNull();
+    expect(() => extractBearerToken('bearertesttoken')).toThrow();
   });
   test('testtoken', () => {
-    const token = extractBearerToken('testtoken');
-    expect(token).toBeNull();
+    expect(() => extractBearerToken('testtoken')).toThrow();
   });
   test('empty string', () => {
-    const token = extractBearerToken('');
-    expect(token).toBeNull();
+    expect(() => extractBearerToken('')).toThrow();
   });
   test('empty input', () => {
     // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
     // @ts-ignore
-    const token = extractBearerToken();
-    expect(token).toBeNull();
+    expect(() => extractBearerToken()).toThrow();
   });
 });
 
@@ -34,19 +30,18 @@ describe('init client', () => {
   beforeAll((done) => {
     client = new LogtoClient(
       {
-        discoveryUrl: 'https://logto.dev/oidc/.well-known/openid-configuration',
+        logtoUrl: 'https://logto.dev',
         clientId: 'foo',
-        redirectUris: ['http://localhost:3000/callback'],
       },
       done
     );
   });
   test('openid configuration', async () => {
-    const configuration = client.issuer.metadata;
-    expect(configuration.authorization_endpoint).toContain('oidc/auth');
+    const configuration = client.issuer?.metadata;
+    expect(configuration?.authorization_endpoint).toContain('oidc/auth');
   });
   test('get login url and codeVerifier', () => {
-    const [url, codeVerifier] = client.getLoginUrlAndCodeVerifier();
+    const [url, codeVerifier] = client.getLoginUrlAndCodeVerifier('http://localhost:3000/callback');
     console.log(url);
     console.log(codeVerifier);
     expect(typeof url).toEqual('string');
@@ -58,7 +53,11 @@ describe('init client', () => {
       expect(1).toEqual(1);
     }
 
-    const tokenset = await client.handleLoginCallback(process.env.CODE_VERIFIER, process.env.CODE);
+    const tokenset = await client.handleLoginCallback(
+      'http://localhost:3000/callback',
+      process.env.CODE_VERIFIER || '',
+      process.env.CODE || ''
+    );
     expect(tokenset).not.toBeNull();
   });
 });
