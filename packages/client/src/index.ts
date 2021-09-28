@@ -1,4 +1,4 @@
-import { Client, Issuer, generators } from 'openid-client';
+import { Client, Issuer, generators, TokenSet, TokenSetParameters } from 'openid-client';
 
 export interface ConfigParameters {
   logtoUrl: string;
@@ -46,6 +46,7 @@ export class LogtoClient {
   public oidcReady = false;
   public issuer: Issuer<Client> | null = null;
   private client: Client | null = null;
+  private tokenSet: TokenSet | null = null;
   private readonly clientId: string;
   constructor(config: ConfigParameters, onOidcReady?: () => void) {
     const { logtoUrl, clientId } = ensureBasicOptions(config);
@@ -55,6 +56,42 @@ export class LogtoClient {
       `${ensureTrailingSlash(logtoUrl)}oidc/.well-known/openid-configuration`,
       onOidcReady
     );
+  }
+
+  get authenticated(): boolean {
+    if (!this.tokenSet) {
+      return false;
+    }
+
+    if (this.tokenSet.expired()) {
+      return false;
+    }
+
+    return true;
+  }
+
+  get token(): string {
+    if (!this.authenticated || !this.tokenSet || !this.tokenSet.access_token) {
+      throw new Error('Not authenticated');
+    }
+
+    return this.tokenSet.access_token;
+  }
+
+  get idToken(): string {
+    if (!this.authenticated || !this.tokenSet || !this.tokenSet.id_token) {
+      throw new Error('Not authenticated');
+    }
+
+    return this.tokenSet.id_token;
+  }
+
+  get subject(): string {
+    if (!this.authenticated || !this.tokenSet) {
+      throw new Error('Not authenticated');
+    }
+
+    return this.tokenSet.claims().sub;
   }
 
   public getClient(): Client {
@@ -71,6 +108,10 @@ export class LogtoClient {
     }
 
     return this.client;
+  }
+
+  public setToken(input: TokenSetParameters) {
+    this.tokenSet = new TokenSet(input);
   }
 
   public getLoginUrlAndCodeVerifier(redirectUri: string): [string, string] {
@@ -91,6 +132,9 @@ export class LogtoClient {
   public async handleLoginCallback(redirectUri: string, codeVerifier: string, code: string) {
     const client = this.getClient();
     const tokenset = await client.callback(redirectUri, { code }, { code_verifier: codeVerifier });
+
+    this.tokenSet = tokenset;
+
     return tokenset;
   }
 
