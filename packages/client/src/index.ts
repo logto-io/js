@@ -8,7 +8,6 @@ export interface ConfigParameters {
 export const extractBearerToken = (authorization: string): string => {
   if (
     !authorization ||
-    typeof authorization !== 'string' ||
     (!authorization.startsWith('Bearer ') && !authorization.startsWith('bearer '))
   ) {
     throw new Error('Fail to extract bearer token');
@@ -18,23 +17,7 @@ export const extractBearerToken = (authorization: string): string => {
   return token;
 };
 
-export const ensureBasicOptions = (options?: ConfigParameters): ConfigParameters => {
-  const { clientId, logtoUrl } = options || {};
-  if (typeof logtoUrl !== 'string' || !logtoUrl.startsWith('http')) {
-    throw new Error('Invalid logtoUrl');
-  }
-
-  if (typeof clientId !== 'string' || clientId.length === 0) {
-    throw new Error('Need clientId');
-  }
-
-  return {
-    clientId,
-    logtoUrl,
-  };
-};
-
-export const ensureTrailingSlash = (url: string): string => {
+export const appendSlashIfNeeded = (url: string): string => {
   if (url.endsWith('/')) {
     return url;
   }
@@ -48,11 +31,11 @@ export class LogtoClient {
   private client: Client | null = null;
   private readonly clientId: string;
   constructor(config: ConfigParameters, onOidcReady?: () => void) {
-    const { logtoUrl, clientId } = ensureBasicOptions(config);
+    const { logtoUrl, clientId } = config;
     this.clientId = clientId;
 
     void this.initIssuer(
-      `${ensureTrailingSlash(logtoUrl)}oidc/.well-known/openid-configuration`,
+      `${appendSlashIfNeeded(logtoUrl)}oidc/.well-known/openid-configuration`,
       onOidcReady
     );
   }
@@ -90,8 +73,8 @@ export class LogtoClient {
 
   public async handleLoginCallback(redirectUri: string, codeVerifier: string, code: string) {
     const client = this.getClient();
-    const tokenset = await client.callback(redirectUri, { code }, { code_verifier: codeVerifier });
-    return tokenset;
+    const tokenSet = await client.callback(redirectUri, { code }, { code_verifier: codeVerifier });
+    return tokenSet;
   }
 
   private async initIssuer(url: string, onOidcReady?: () => void) {

@@ -42,22 +42,7 @@ describe('init client', () => {
   });
   test('get login url and codeVerifier', () => {
     const [url, codeVerifier] = client.getLoginUrlAndCodeVerifier('http://localhost:3000/callback');
-    console.log(url);
-    console.log(codeVerifier);
-    expect(typeof url).toEqual('string');
-    expect(typeof codeVerifier).toEqual('string');
-  });
-  test('handle callback and get tokenset', async () => {
-    if (!process.env.CODE || !process.env.CODE_VERIFIER) {
-      // Skip
-      expect(1).toEqual(1);
-    }
-
-    const tokenset = await client.handleLoginCallback(
-      'http://localhost:3000/callback',
-      process.env.CODE_VERIFIER || '',
-      process.env.CODE || ''
-    );
-    expect(tokenset).not.toBeNull();
+    expect(url).toContain('https://logto.dev');
+    expect(codeVerifier.length).toBeGreaterThan(10);
   });
 });
