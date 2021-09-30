@@ -19,8 +19,7 @@ describe('extractBearerToken', () => {
     expect(() => extractBearerToken('')).toThrow();
   });
   test('empty input', () => {
-    // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
-    // @ts-ignore
+    // @ts-expect-error
     expect(() => extractBearerToken()).toThrow();
   });
 });
