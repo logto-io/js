@@ -1,4 +1,5 @@
-import { Client, Issuer, generators } from 'openid-client';
+import { Client, Issuer, generators, TokenSet, TokenSetParameters } from 'openid-client';
+import { Optional } from '@silverhand/essentials';
 
 export interface ConfigParameters {
   logtoUrl: string;
@@ -27,8 +28,9 @@ export const appendSlashIfNeeded = (url: string): string => {
 
 export class LogtoClient {
   public oidcReady = false;
-  public issuer: Issuer<Client> | null = null;
-  private client: Client | null = null;
+  public issuer: Optional<Issuer<Client>>;
+  private client: Optional<Client>;
+  private tokenSet: Optional<TokenSet>;
   private readonly clientId: string;
   constructor(config: ConfigParameters, onOidcReady?: () => void) {
     const { logtoUrl, clientId } = config;
@@ -38,6 +40,34 @@ export class LogtoClient {
       `${appendSlashIfNeeded(logtoUrl)}oidc/.well-known/openid-configuration`,
       onOidcReady
     );
+  }
+
+  get isAuthenticated(): boolean {
+    return !this.tokenSet?.expired();
+  }
+
+  get accessToken(): string {
+    if (!this.isAuthenticated || !this.tokenSet?.access_token) {
+      throw new Error('Not authenticated');
+    }
+
+    return this.tokenSet.access_token;
+  }
+
+  get idToken(): string {
+    if (!this.isAuthenticated || !this.tokenSet?.id_token) {
+      throw new Error('Not authenticated');
+    }
+
+    return this.tokenSet.id_token;
+  }
+
+  get subject(): string {
+    if (!this.isAuthenticated || !this.tokenSet) {
+      throw new Error('Not authenticated');
+    }
+
+    return this.tokenSet.claims().sub;
   }
 
   public getClient(): Client {
@@ -54,6 +84,10 @@ export class LogtoClient {
     }
 
     return this.client;
+  }
+
+  public setToken(input: TokenSetParameters) {
+    this.tokenSet = new TokenSet(input);
   }
 
   public getLoginUrlAndCodeVerifier(redirectUri: string): [string, string] {
@@ -73,8 +107,9 @@ export class LogtoClient {
 
   public async handleLoginCallback(redirectUri: string, codeVerifier: string, code: string) {
     const client = this.getClient();
-    const tokenSet = await client.callback(redirectUri, { code }, { code_verifier: codeVerifier });
-    return tokenSet;
+    this.tokenSet = await client.callback(redirectUri, { code }, { code_verifier: codeVerifier });
+
+    return this.tokenSet;
   }
 
   private async initIssuer(url: string, onOidcReady?: () => void) {
