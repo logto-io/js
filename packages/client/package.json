@@ -13,8 +13,6 @@
   "dependencies": {
     "axios": "^0.21.1",
     "jose": "^3.14.3",
-    "jsonwebtoken": "^8.5.1",
-    "jwks-rsa": "^2.0.4",
     "openid-client": "^4.7.4"
   },
   "devDependencies": {
@@ -22,7 +20,6 @@
     "@silverhand/essentials": "^1.1.0",
     "@silverhand/ts-config": "^0.2.2",
     "@types/jest": "^26.0.24",
-    "@types/jsonwebtoken": "^8.5.4",
     "eslint": "^7.32.0",
     "eslint-formatter-pretty": "^4.1.0",
     "jest": "^27.0.6",
