@@ -1,6 +1,7 @@
 import { randomBytes } from 'crypto';
 
-import * as jwt from 'jsonwebtoken';
+import { SignJWT } from 'jose/jwt/sign';
+import { generateKeyPair } from 'jose/util/generate_key_pair';
 
 import { extractBearerToken, LogtoClient } from '.';
 
@@ -58,29 +59,26 @@ const generateRandomString = (length: number) =>
 const access_token = generateRandomString(43);
 const refresh_token = generateRandomString(43);
 const sub = generateRandomString(8);
-const id_token = jwt.sign(
-  {
-    sub,
-    at_hash: 'RHPz55byGq-p81hfzGVYfA',
-    aud: 'foo',
-    exp: Math.floor(Date.now() / 1000) + 1000,
-    iat: Math.floor(Date.now() / 1000),
-    iss: 'https://logto.dev/oidc',
-  },
-  'secret'
-);
 const scope = 'openid offline_access';
 const token_type = 'Bearer';
 
 describe('setToken', () => {
   let client: LogtoClient;
+  let id_token: string;
   beforeAll((done) => {
     client = new LogtoClient(
       {
         logtoUrl: 'https://logto.dev',
         clientId: 'foo',
       },
-      () => {
+      async () => {
+        id_token = await new SignJWT({})
+          .setProtectedHeader({ alg: 'RS256' })
+          .setAudience('foo')
+          .setSubject(sub)
+          .setIssuedAt()
+          .setExpirationTime('2h')
+          .sign((await generateKeyPair('RS256')).privateKey);
         client.setToken({
           access_token,
           expires_at: Math.floor(Date.now() / 1000) + 1000,
@@ -123,7 +121,7 @@ describe('setToken with expired input', () => {
         client.setToken({
           access_token,
           expires_at: Math.floor(Date.now() / 1000) - 1,
-          id_token,
+          id_token: '',
           refresh_token,
           scope,
           token_type,

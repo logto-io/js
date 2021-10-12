@@ -1,5 +1,5 @@
-import { Client, Issuer, generators, TokenSet, TokenSetParameters } from 'openid-client';
 import { Optional } from '@silverhand/essentials';
+import { Client, Issuer, generators, TokenSet, TokenSetParameters } from 'openid-client';
 
 export interface ConfigParameters {
   logtoUrl: string;
