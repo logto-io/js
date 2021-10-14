@@ -6,18 +6,6 @@ export interface ConfigParameters {
   clientId: string;
 }
 
-export const extractBearerToken = (authorization: string): string => {
-  if (
-    !authorization ||
-    (!authorization.startsWith('Bearer ') && !authorization.startsWith('bearer '))
-  ) {
-    throw new Error('Fail to extract bearer token');
-  }
-
-  const token = authorization.slice(7);
-  return token;
-};
-
 export const appendSlashIfNeeded = (url: string): string => {
   if (url.endsWith('/')) {
     return url;

@@ -3,31 +3,7 @@ import { randomBytes } from 'crypto';
 import { SignJWT } from 'jose/jwt/sign';
 import { generateKeyPair } from 'jose/util/generate_key_pair';
 
-import { extractBearerToken, LogtoClient } from '.';
-
-describe('extractBearerToken', () => {
-  test('bearer testtoken', () => {
-    const token = extractBearerToken('bearer testtoken');
-    expect(token).toEqual('testtoken');
-  });
-  test('Bearer testtoken', () => {
-    const token = extractBearerToken('Bearer testtoken');
-    expect(token).toEqual('testtoken');
-  });
-  test('bearertesttoken', () => {
-    expect(() => extractBearerToken('bearertesttoken')).toThrow();
-  });
-  test('testtoken', () => {
-    expect(() => extractBearerToken('testtoken')).toThrow();
-  });
-  test('empty string', () => {
-    expect(() => extractBearerToken('')).toThrow();
-  });
-  test('empty input', () => {
-    // @ts-expect-error
-    expect(() => extractBearerToken()).toThrow();
-  });
-});
+import { LogtoClient } from '.';
 
 describe('init client', () => {
   let client: LogtoClient;
