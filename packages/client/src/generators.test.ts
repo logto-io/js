@@ -1,12 +1,12 @@
-import { generateCodeVerifier, generateCodeChallenge } from './generators';
+import { generateCodeVerifier, generateCodeChallenge, CODE_VERIFIER_LEN } from './generators';
 
 test('generate codeVerifier', () => {
   const verifier = generateCodeVerifier();
-  expect(verifier.length).toEqual(96);
+  expect(verifier.length).toEqual(CODE_VERIFIER_LEN);
 });
 
-test('generate codeChallenge', () => {
+test('generate codeChallenge', async () => {
   const verifier = generateCodeVerifier();
-  const challenge = generateCodeChallenge(verifier);
+  const challenge = await generateCodeChallenge(verifier);
   expect(challenge.length).toEqual(43);
 });

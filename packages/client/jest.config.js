@@ -8,4 +8,5 @@ module.exports = {
   moduleNameMapper: {
     '^jose/(.*)$': '<rootDir>/node_modules/jose/dist/node/cjs/$1',
   },
+  setupFilesAfterEnv: ['./jest.setup.js'],
 };

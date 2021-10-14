@@ -1,16 +1,9 @@
-import { fromByteArray } from 'base64-js';
-import { sha256 } from 'js-sha256';
+import { fromUint8Array } from 'js-base64';
 
 function generateRandomData(length: number) {
-  // Use web crypto APIs if possible
-  if (typeof window !== undefined && window.crypto?.getRandomValues && window.Uint8Array) {
-    const array = new Uint8Array(length);
-    crypto.getRandomValues(array);
-    return Array.from(array);
-  }
-
-  // Fallback to Math random
-  return Array.from({ length }).map(() => Math.floor(256 * Math.random()));
+  const array = new Uint8Array(length);
+  crypto.getRandomValues(array);
+  return Array.from(array);
 }
 
 function generateRandomString(length: number) {
@@ -24,14 +17,12 @@ function generateRandomString(length: number) {
   return String.fromCharCode(...charCodes);
 }
 
-export const generateCodeVerifier = (): string => generateRandomString(96);
+export const CODE_VERIFIER_LEN = 96;
+export const generateCodeVerifier = (): string => generateRandomString(CODE_VERIFIER_LEN);
 
-export const generateCodeChallenge = (codeVerifier: string): string => {
-  const hashBytes = new Uint8Array(sha256.arrayBuffer(codeVerifier));
-  const encodedHash = fromByteArray(hashBytes)
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=/g, '');
+export const generateCodeChallenge = async (codeVerifier: string): Promise<string> => {
+  const encoded = new TextEncoder().encode(codeVerifier);
+  const challenge = new Uint8Array(await crypto.subtle.digest('SHA-256', encoded));
 
-  return encodedHash;
+  return fromUint8Array(challenge).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 };

@@ -12,12 +12,12 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "base64-js": "^1.5.1",
     "jose": "^3.14.3",
-    "js-sha256": "^0.9.0",
+    "js-base64": "^3.7.2",
     "openid-client": "^4.7.4"
   },
   "devDependencies": {
+    "@peculiar/webcrypto": "^1.1.7",
     "@silverhand/eslint-config": "^0.2.2",
     "@silverhand/essentials": "^1.1.0",
     "@silverhand/ts-config": "^0.2.2",
