@@ -1,4 +1,4 @@
-import { IDToken } from './types';
+import { z, ZodError } from 'zod';
 
 const fullfillBase64 = (input: string) => {
   if (input.length === 2) {
@@ -11,6 +11,17 @@ const fullfillBase64 = (input: string) => {
 
   return input;
 };
+
+const IDTokenSchema = z.object({
+  iss: z.string(),
+  sub: z.string(),
+  aud: z.string(),
+  exp: z.number(),
+  iat: z.number(),
+  at_hash: z.optional(z.string()),
+});
+
+export type IDToken = z.infer<typeof IDTokenSchema>;
 
 /**
  * Decode IDToken from JWT, without verifing.
@@ -34,8 +45,12 @@ export const decodeToken = (token: string): IDToken => {
   try {
     const payload = JSON.parse(json) as IDToken;
 
-    return payload;
-  } catch {
+    return IDTokenSchema.parse(payload);
+  } catch (error: unknown) {
+    if (error instanceof ZodError) {
+      throw error;
+    }
+
     throw new Error('invalid token: JSON parse failed');
   }
 };

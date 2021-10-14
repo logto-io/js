@@ -13,7 +13,8 @@
   "dependencies": {
     "axios": "^0.21.1",
     "jose": "^3.14.3",
-    "openid-client": "^4.7.4"
+    "openid-client": "^4.7.4",
+    "zod": "^3.9.8"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "^0.2.2",
