@@ -32,8 +32,8 @@ export const grantTokenByAuthorizationCode = async (
   const result = TokenSetParametersSchema.safeParse(response.data);
 
   if (!result.success) {
-    // Will get a lint error without `as ZodError`, wired
-    throw new OPError({ zodError: result.error as ZodError });
+    // Will get a lint error without `as ZodError`, weird
+    throw new OPError({ originalError: result.error as ZodError });
   }
 
   return result.data;
