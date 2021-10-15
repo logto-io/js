@@ -3,6 +3,7 @@ import axios, { AxiosError } from 'axios';
 import { OPError } from './errors';
 
 const axiosInstance = axios.create();
+
 axiosInstance.interceptors.request.use(
   (config) => config,
   async (error: Error) => {
