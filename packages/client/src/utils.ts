@@ -43,9 +43,7 @@ export const decodeToken = (token: string): IDToken => {
   );
 
   try {
-    const payload = JSON.parse(json) as IDToken;
-
-    return IDTokenSchema.parse(payload);
+    return IDTokenSchema.parse(JSON.parse(json));
   } catch (error: unknown) {
     if (error instanceof ZodError) {
       throw error;
