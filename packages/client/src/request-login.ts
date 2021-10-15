@@ -6,7 +6,7 @@ export const getLoginUrlAndCodeVerifier = (
   baseUrl: string,
   clientId: string,
   redirectUri: string
-): [string, string] => {
+): { url: string; codeVerifier: string } => {
   const codeVerifier = generateCodeVerifier();
   const codeChallenge = generateCodeChallenge(codeVerifier);
 
@@ -20,5 +20,5 @@ export const getLoginUrlAndCodeVerifier = (
     code_challenge_method: 'S256',
   })}`;
 
-  return [url, codeVerifier];
+  return { url, codeVerifier };
 };
