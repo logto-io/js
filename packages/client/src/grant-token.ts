@@ -1,5 +1,7 @@
-import axios from 'axios';
-import { z } from 'zod';
+import { z, ZodError } from 'zod';
+
+import { OPError } from './errors';
+import { opRequest } from './op-request';
 
 const TokenSetParametersSchema = z.object({
   access_token: z.string(),
@@ -22,11 +24,17 @@ export const grantTokenByAuthorizationCode = async (
   parameters.append('redirect_uri', redirectUri);
   parameters.append('code_verifier', codeVerifier);
 
-  const { data } = await axios.post<TokenSetParameters>(endpoint, parameters, {
+  const response = await opRequest.post(endpoint, parameters, {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
   });
+  const result = TokenSetParametersSchema.safeParse(response.data);
 
-  return TokenSetParametersSchema.parse(data);
+  if (!result.success) {
+    // Will get a lint error without `as ZodError`, wired
+    throw new OPError({ zodError: result.error as ZodError });
+  }
+
+  return result.data;
 };
