@@ -27,7 +27,7 @@ export type IDToken = z.infer<typeof IDTokenSchema>;
  * Decode IDToken from JWT, without verifing.
  * Verifing JWT requires fetching public key first, this can not
  * be done in a sync function, in some cases, verifing is not necessary.
- * @param token JWT string
+ * @param token JWT string.
  * @returns IDToken combined with JWT Claims.
  */
 export const decodeToken = (token: string): IDToken => {
