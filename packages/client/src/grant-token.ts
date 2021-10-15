@@ -38,3 +38,27 @@ export const grantTokenByAuthorizationCode = async (
 
   return result.data;
 };
+
+export const grantTokenByRefreshToken = async (
+  endpoint: string,
+  clientId: string,
+  refreshToken: string
+): Promise<TokenSetParameters> => {
+  const parameters = new URLSearchParams();
+  parameters.append('grant_type', 'refresh_token');
+  parameters.append('client_id', clientId);
+  parameters.append('refresh_token', refreshToken);
+
+  const response = await opRequest.post(endpoint, parameters, {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+  const result = TokenSetParametersSchema.safeParse(response.data);
+
+  if (!result.success) {
+    throw new OPError({ originalError: result.error });
+  }
+
+  return result.data;
+};
