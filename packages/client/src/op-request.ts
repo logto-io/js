@@ -9,8 +9,7 @@ axiosInstance.interceptors.request.use(
   async (error: Error) => {
     return Promise.reject(
       new OPError({
-        errorMessage: 'request error with OP',
-        errorDescription: error.message,
+        message: `request error with OP (${error.message})`,
       })
     );
   }
@@ -20,8 +19,7 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const opError = new OPError({
-      errorMessage: 'response error with OP',
-      errorDescription: error.message,
+      message: `request error with OP (${error.message})`,
     });
     return Promise.reject(opError);
   }
