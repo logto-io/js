@@ -3,28 +3,30 @@
   "version": "0.0.1",
   "main": "lib/index.js",
   "typings": "dist/index.d.ts",
-  "license": "MIT",
+  "license": "MPL-2.0",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "build": "tsc",
-    "lint": "eslint --format pretty --ext .ts src",
+    "lint": "eslint --ext .ts src",
     "test": "jest"
   },
   "dependencies": {
     "axios": "^0.21.1",
     "jose": "^3.14.3",
+    "js-base64": "^3.7.2",
     "openid-client": "^4.7.4",
     "zod": "^3.9.8"
   },
   "devDependencies": {
+    "@peculiar/webcrypto": "^1.1.7",
     "@silverhand/eslint-config": "^0.2.2",
     "@silverhand/essentials": "^1.1.0",
     "@silverhand/ts-config": "^0.2.2",
     "@types/jest": "^26.0.24",
     "eslint": "^7.32.0",
-    "eslint-formatter-pretty": "^4.1.0",
     "jest": "^27.0.6",
     "lint-staged": "^11.1.2",
+    "nock": "^13.1.3",
     "prettier": "^2.3.2",
     "ts-jest": "^27.0.4",
     "typescript": "^4.3.5"
