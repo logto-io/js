@@ -15,6 +15,7 @@
     "jose": "^3.14.3",
     "js-base64": "^3.7.2",
     "openid-client": "^4.7.4",
+    "query-string": "^7.0.1",
     "zod": "^3.9.8"
   },
   "devDependencies": {
