@@ -1,5 +1,7 @@
-import axios from 'axios';
-import { z } from 'zod';
+import { z, ZodError } from 'zod';
+
+import { OPError } from './errors';
+import { opRequest } from './op-request';
 
 const OIDCConfigurationSchema = z.object({
   authorization_endpoint: z.string(),
@@ -20,8 +22,14 @@ const appendSlashIfNeeded = (url: string): string => {
 };
 
 export default async function discover(url: string): Promise<OIDCConfiguration> {
-  const { data } = await axios.get<OIDCConfiguration>(
+  const response = await opRequest.get(
     `${appendSlashIfNeeded(url)}oidc/.well-known/openid-configuration`
   );
-  return OIDCConfigurationSchema.parse(data);
+  const result = OIDCConfigurationSchema.safeParse(response.data);
+
+  if (!result.success) {
+    throw new OPError({ originalError: result.error as ZodError });
+  }
+
+  return result.data;
 }
