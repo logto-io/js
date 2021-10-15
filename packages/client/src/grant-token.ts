@@ -1,4 +1,4 @@
-import { z, ZodError } from 'zod';
+import { z } from 'zod';
 
 import { OPError } from './errors';
 import { opRequest } from './op-request';
@@ -32,8 +32,7 @@ export const grantTokenByAuthorizationCode = async (
   const result = TokenSetParametersSchema.safeParse(response.data);
 
   if (!result.success) {
-    // Will get a lint error without `as ZodError`, weird
-    throw new OPError({ originalError: result.error as ZodError });
+    throw new OPError({ originalError: result.error });
   }
 
   return result.data;

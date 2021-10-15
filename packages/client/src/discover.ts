@@ -28,7 +28,6 @@ export default async function discover(url: string): Promise<OIDCConfiguration> 
   const result = OIDCConfigurationSchema.safeParse(response.data);
 
   if (!result.success) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     throw new OPError({ originalError: result.error });
   }
 
