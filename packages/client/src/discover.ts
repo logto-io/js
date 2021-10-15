@@ -1,4 +1,4 @@
-import { z, ZodError } from 'zod';
+import { z } from 'zod';
 
 import { OPError } from './errors';
 import { opRequest } from './op-request';
@@ -28,7 +28,8 @@ export default async function discover(url: string): Promise<OIDCConfiguration> 
   const result = OIDCConfigurationSchema.safeParse(response.data);
 
   if (!result.success) {
-    throw new OPError({ originalError: result.error as ZodError });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    throw new OPError({ originalError: result.error });
   }
 
   return result.data;
