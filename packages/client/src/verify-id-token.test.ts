@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { KeyObject } from 'crypto';
+
 import { SignJWT } from 'jose/jwt/sign';
 import { generateKeyPair } from 'jose/util/generate_key_pair';
 import nock from 'nock';
@@ -9,7 +9,11 @@ import { createJWKS, verifyIdToken } from './verify-id-token';
 describe('verifyIdToken', () => {
   test('valid idToken', async () => {
     const { privateKey, publicKey } = await generateKeyPair('RS256');
-    // @ts-expect-error
+
+    if (!(publicKey instanceof KeyObject)) {
+      throw new TypeError('key is not instanceof KeyObject, check envirionment');
+    }
+
     const key = publicKey.export({ format: 'jwk' });
     nock('https://logto.dev', { allowUnmocked: true })
       .get('/oidc/jwks')
@@ -29,7 +33,11 @@ describe('verifyIdToken', () => {
   test('signature mismatch', async () => {
     const { privateKey } = await generateKeyPair('RS256');
     const { publicKey } = await generateKeyPair('RS256');
-    // @ts-expect-error
+
+    if (!(publicKey instanceof KeyObject)) {
+      throw new TypeError('key is not instanceof KeyObject, check envirionment');
+    }
+
     const key = publicKey.export({ format: 'jwk' });
     nock('https://logto.dev', { allowUnmocked: true })
       .get('/oidc/jwks')
@@ -50,7 +58,11 @@ describe('verifyIdToken', () => {
 
   test('audience mismatch', async () => {
     const { privateKey, publicKey } = await generateKeyPair('RS256');
-    // @ts-expect-error
+
+    if (!(publicKey instanceof KeyObject)) {
+      throw new TypeError('key is not instanceof KeyObject, check envirionment');
+    }
+
     const key = publicKey.export({ format: 'jwk' });
     nock('https://logto.dev', { allowUnmocked: true })
       .get('/oidc/jwks')
@@ -71,7 +83,11 @@ describe('verifyIdToken', () => {
 
   test('expired', async () => {
     const { privateKey, publicKey } = await generateKeyPair('RS256');
-    // @ts-expect-error
+
+    if (!(publicKey instanceof KeyObject)) {
+      throw new TypeError('key is not instanceof KeyObject, check envirionment');
+    }
+
     const key = publicKey.export({ format: 'jwk' });
     nock('https://logto.dev', { allowUnmocked: true })
       .get('/oidc/jwks')
