@@ -1,0 +1,27 @@
+name: Commitlint
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  lint-commits:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node and pnpm
+        uses: silverhand-io/actions-node-pnpm-run-steps@v1.0.2
+        with:
+          run-install: false
+
+      - name: Install commitlint
+        run: pnpm add -g @commitlint/{cli,config-conventional}
+
+      - name: Commitlint
+        run: commitlint --from HEAD~${{ github.event.pull_request.commits }} --to HEAD
+
+      - name: Commitlint on PR title
+        run: echo '${{ github.event.pull_request.title }}' | commitlint
