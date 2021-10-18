@@ -9,6 +9,9 @@
     "prepare": "if test \"$NODE_ENV\" != \"production\" ; then husky install ; fi"
   },
   "devDependencies": {
+    "@commitlint/cli": "^13.1.0",
+    "@commitlint/config-conventional": "^13.1.0",
+    "@commitlint/types": "^13.1.0",
     "@silverhand/ts-config": "^0.2.2",
     "husky": "^7.0.1",
     "lerna": "^4.0.0",
