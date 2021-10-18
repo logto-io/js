@@ -4,6 +4,14 @@ const STORAGE_KEY_PREFIX = 'logto:';
 
 const getKey = (key: string) => `${STORAGE_KEY_PREFIX}${key}`;
 
+const safeParse = <T>(value: string): T | undefined => {
+  try {
+    return JSON.parse(value) as T;
+  } catch {
+    // Noop
+  }
+};
+
 interface ClientStorageOptions {
   secondsUntilExpire: number;
 }
@@ -23,7 +31,12 @@ export class LocalStorage implements ClientStorage {
       return;
     }
 
-    const payload = JSON.parse(value) as { expiresAt?: number; value: T };
+    const payload = safeParse<{ expiresAt?: number; value: T }>(value);
+    if (!payload) {
+      // When JSON parse failed, return undefined.
+      return;
+    }
+
     if (payload.expiresAt && payload.expiresAt <= nowRoundToSec()) {
       this.removeItem(key);
       return;
