@@ -16,11 +16,17 @@ axiosInstance.interceptors.request.use(
   }
 );
 
+declare interface LogtoErrorResponse {
+  error_description?: string;
+}
+
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const opError = new OPError({
-      message: `request error with OP (${error.message})`,
+      message: `request error with OP (${
+        (error.response?.data as LogtoErrorResponse)?.error_description ?? error.message
+      })`,
       originalError: error,
     });
     return Promise.reject(opError);
