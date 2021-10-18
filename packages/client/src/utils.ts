@@ -52,3 +52,5 @@ export const decodeToken = (token: string): IDToken => {
     throw new Error('invalid token: JSON parse failed');
   }
 };
+
+export const nowRoundToSec = () => Math.floor(Date.now() / 1000);
