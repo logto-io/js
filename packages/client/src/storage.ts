@@ -22,6 +22,11 @@ export interface ClientStorage {
   removeItem(key: string): void;
 }
 
+type LocalStoragePayload<T> = {
+  expiresAt?: number;
+  value: T;
+};
+
 export class LocalStorage implements ClientStorage {
   storage: Storage = localStorage;
 
@@ -31,7 +36,7 @@ export class LocalStorage implements ClientStorage {
       return;
     }
 
-    const payload = safeParse<{ expiresAt?: number; value: T }>(value);
+    const payload = safeParse<LocalStoragePayload<T>>(value);
     if (!payload) {
       // When JSON parse failed, return undefined.
       return;
@@ -46,16 +51,14 @@ export class LocalStorage implements ClientStorage {
   }
 
   setItem(key: string, value: unknown, options?: ClientStorageOptions) {
-    this.storage.setItem(
-      getKey(key),
-      JSON.stringify({
-        expiresAt:
-          typeof options?.secondsUntilExpire === 'number'
-            ? nowRoundToSec() + options.secondsUntilExpire
-            : undefined,
-        value,
-      })
-    );
+    const payload: LocalStoragePayload<unknown> = {
+      expiresAt:
+        typeof options?.secondsUntilExpire === 'number'
+          ? nowRoundToSec() + options.secondsUntilExpire
+          : undefined,
+      value,
+    };
+    this.storage.setItem(getKey(key), JSON.stringify(payload));
   }
 
   removeItem(key: string) {
