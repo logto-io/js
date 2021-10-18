@@ -1,5 +1,5 @@
 import { TokenSetParameters } from './grant-token';
-import { decodeToken, IDToken, now } from './utils';
+import { decodeToken, IDToken, nowRoundToSec } from './utils';
 
 export default class TokenSet {
   public accessToken: string;
@@ -14,11 +14,11 @@ export default class TokenSet {
   }
 
   get expiresIn(): number {
-    return Math.max(this.expiresAt - now(), 0);
+    return Math.max(this.expiresAt - nowRoundToSec(), 0);
   }
 
   set expiresIn(value: number) {
-    this.expiresAt = now() + value;
+    this.expiresAt = nowRoundToSec() + value;
   }
 
   public expired(): boolean {

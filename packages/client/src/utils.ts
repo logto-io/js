@@ -53,4 +53,4 @@ export const decodeToken = (token: string): IDToken => {
   }
 };
 
-export const now = () => Math.floor(Date.now() / 1000);
+export const nowRoundToSec = () => Math.floor(Date.now() / 1000);

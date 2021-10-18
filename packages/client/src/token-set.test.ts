@@ -2,7 +2,7 @@ import { SignJWT } from 'jose/jwt/sign';
 import { generateKeyPair } from 'jose/util/generate_key_pair';
 
 import TokenSet from './token-set';
-import { now } from './utils';
+import { nowRoundToSec } from './utils';
 
 describe('TokenSet', () => {
   test('sets the expire_at automatically from expires_in', () => {
@@ -13,7 +13,7 @@ describe('TokenSet', () => {
       id_token: 'it',
     });
 
-    expect(ts).toHaveProperty('expiresAt', now() + 300);
+    expect(ts).toHaveProperty('expiresAt', nowRoundToSec() + 300);
     expect(ts).toHaveProperty('expiresIn', 300);
     expect(ts.expired()).toBeFalsy();
   });
@@ -26,7 +26,7 @@ describe('TokenSet', () => {
       id_token: 'it',
     });
 
-    expect(ts).toHaveProperty('expiresAt', now() - 30);
+    expect(ts).toHaveProperty('expiresAt', nowRoundToSec() - 30);
     expect(ts).toHaveProperty('expiresIn', 0);
     expect(ts.expired()).toBeTruthy();
   });
