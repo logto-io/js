@@ -1,6 +1,3 @@
-// Import { BinaryLike, createHash } from 'crypto';
-// import * as crypto from 'crypto';
-
 import { fromUint8Array } from 'js-base64';
 import { customAlphabet } from 'nanoid';
 
