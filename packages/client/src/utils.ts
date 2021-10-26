@@ -54,3 +54,6 @@ export const decodeToken = (token: string): IDToken => {
 };
 
 export const nowRoundToSec = () => Math.floor(Date.now() / 1000);
+
+export const encodeBase64 = (input: string) => btoa(input);
+export const decodeBase64 = (input: string) => atob(input);
