@@ -2,7 +2,7 @@ import { Optional } from '@silverhand/essentials';
 
 import { ClientStorage } from './storage';
 
-const SESSEION_MANAGER_KEY = 'LOGTO_SESSEION_MANAGER';
+const SESSEION_MANAGER_KEY = 'LOGTO_SESSION_MANAGER';
 
 interface Session {
   codeVerifier: string;
