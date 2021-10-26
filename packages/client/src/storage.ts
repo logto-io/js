@@ -1,3 +1,5 @@
+import { Optional } from '@silverhand/essentials';
+
 import { nowRoundToSec } from './utils';
 
 const STORAGE_KEY_PREFIX = 'logto:';
@@ -22,8 +24,8 @@ export interface ClientStorage {
   removeItem(key: string): void;
 }
 
-type LocalStoragePayload<T> = {
-  expiresAt?: number;
+type StoragePayload<T> = {
+  expiresAt: Optional<number>;
   value: T;
 };
 
@@ -36,7 +38,7 @@ export class LocalStorage implements ClientStorage {
       return;
     }
 
-    const payload = safeParse<LocalStoragePayload<T>>(value);
+    const payload = safeParse<StoragePayload<T>>(value);
     if (!payload) {
       // When JSON parse failed, return undefined.
       return;
@@ -51,7 +53,7 @@ export class LocalStorage implements ClientStorage {
   }
 
   setItem(key: string, value: unknown, options?: ClientStorageOptions) {
-    const payload: LocalStoragePayload<unknown> = {
+    const payload: StoragePayload<unknown> = {
       expiresAt:
         typeof options?.secondsUntilExpire === 'number'
           ? nowRoundToSec() + options.secondsUntilExpire
@@ -68,4 +70,38 @@ export class LocalStorage implements ClientStorage {
 
 export class SessionStorage extends LocalStorage {
   storage: Storage = sessionStorage;
+}
+
+export class MemoryStorage implements ClientStorage {
+  storage: Map<string, StoragePayload<unknown>> = new Map();
+
+  getItem<T>(key: string) {
+    const payload = this.storage.get(key);
+
+    if (!payload) {
+      return;
+    }
+
+    if (payload.expiresAt && payload.expiresAt <= nowRoundToSec()) {
+      this.removeItem(key);
+      return;
+    }
+
+    return payload.value as T;
+  }
+
+  setItem(key: string, value: unknown, options?: ClientStorageOptions) {
+    const payload: StoragePayload<unknown> = {
+      expiresAt:
+        typeof options?.secondsUntilExpire === 'number'
+          ? nowRoundToSec() + options.secondsUntilExpire
+          : undefined,
+      value,
+    };
+    this.storage.set(key, payload);
+  }
+
+  removeItem(key: string) {
+    this.storage.delete(key);
+  }
 }
