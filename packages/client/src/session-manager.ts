@@ -1,3 +1,5 @@
+import { Optional } from '@silverhand/essentials';
+
 import { ClientStorage } from './storage';
 
 const SESSEION_MANAGER_KEY = 'LOGTO_SESSEION_MANAGER';
@@ -8,7 +10,7 @@ interface Session {
 }
 
 export default class SessionManager {
-  private session?: Session;
+  private session: Optional<Session>;
 
   constructor(private readonly storage: ClientStorage) {
     this.session = this.storage.getItem(SESSEION_MANAGER_KEY);
@@ -20,7 +22,7 @@ export default class SessionManager {
     this.storage.setItem(SESSEION_MANAGER_KEY, session, { secondsUntilExpire: 86_400 });
   }
 
-  public get(): Session | undefined {
+  public get(): Optional<Session> {
     return this.session;
   }
 
