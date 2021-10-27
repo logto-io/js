@@ -11,26 +11,19 @@ interface Session {
 }
 
 export default class SessionManager {
-  private session: Optional<Session>;
-
-  constructor(private readonly storage: ClientStorage) {
-    this.session = this.storage.getItem(SESSEION_MANAGER_KEY);
-  }
+  constructor(private readonly storage: ClientStorage) {}
 
   public create(session: Session) {
-    this.session = session;
-
     this.storage.setItem(SESSEION_MANAGER_KEY, session, {
       secondsUntilExpire: SESSION_EXPIRES_SECONDS,
     });
   }
 
   public get(): Optional<Session> {
-    return this.session;
+    return this.storage.getItem(SESSEION_MANAGER_KEY);
   }
 
   public remove() {
-    this.session = undefined;
     this.storage.removeItem(SESSEION_MANAGER_KEY);
   }
 }
