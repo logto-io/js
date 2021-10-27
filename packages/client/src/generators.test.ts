@@ -1,8 +1,8 @@
-import { generateCodeVerifier, generateCodeChallenge, CODE_VERIFIER_MAX_LEN } from './generators';
+import { generateCodeVerifier, generateCodeChallenge } from './generators';
 
 test('generate codeVerifier', () => {
   const verifier = generateCodeVerifier();
-  expect(verifier.length).toEqual(CODE_VERIFIER_MAX_LEN);
+  expect(verifier.length).toEqual(172);
 });
 
 test('generate codeChallenge', async () => {
