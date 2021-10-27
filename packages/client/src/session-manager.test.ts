@@ -9,13 +9,6 @@ const transaction = {
 };
 
 describe('SessionManager', () => {
-  test('constructor', () => {
-    const sessionStorage = new SessionStorage();
-    jest.spyOn(sessionStorage, 'getItem');
-    void new SessionManager(sessionStorage);
-    expect(sessionStorage.getItem).toHaveBeenCalledWith(SESSION_MANAGER_KEY);
-  });
-
   test('create and get', () => {
     const sessionStorage = new SessionStorage();
     const sessionManager = new SessionManager(sessionStorage);
