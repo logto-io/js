@@ -22,6 +22,5 @@ jobs:
       - name: Lint
         run: pnpm -- lerna run --parallel lint
 
-      # LOG-172
-      # - name: Test
-      #   run: pnpm -- lerna run --parallel test
+      - name: Test
+        run: pnpm -- lerna run --parallel test
