@@ -1,9 +1,20 @@
 import { Optional } from '@silverhand/essentials';
-import { Client, Issuer, generators, TokenSet, TokenSetParameters } from 'openid-client';
+
+import discover, { OIDCConfiguration } from './discover';
+import { grantTokenByAuthorizationCode, TokenSetParameters } from './grant-token';
+import { getLoginUrlAndCodeVerifier } from './request-login';
+import { getLogoutUrl } from './request-logout';
+import SessionManager from './session-manager';
+import { ClientStorage, LocalStorage } from './storage';
+import TokenSet from './token-set';
+import { createJWKS, verifyIdToken } from './verify-id-token';
+
+const TOKEN_SET_CACHE_KEY = 'LOGTO_TOKEN_SET_CACHE';
 
 export interface ConfigParameters {
-  logtoUrl: string;
+  domain: string;
   clientId: string;
+  storage?: ClientStorage;
 }
 
 export const appendSlashIfNeeded = (url: string): string => {
@@ -14,96 +25,96 @@ export const appendSlashIfNeeded = (url: string): string => {
   return url + '/';
 };
 
-export class LogtoClient {
-  public oidcReady = false;
-  public issuer: Optional<Issuer<Client>>;
-  private client: Optional<Client>;
-  private tokenSet: Optional<TokenSet>;
+export default class LogtoClient {
+  private readonly oidcConfiguration: OIDCConfiguration;
   private readonly clientId: string;
-  constructor(config: ConfigParameters, onOidcReady?: () => void) {
-    const { logtoUrl, clientId } = config;
+  private readonly sessionManager: SessionManager;
+  private readonly storage: ClientStorage;
+  private tokenSet: Optional<TokenSet>;
+  constructor(config: ConfigParameters, oidcConfiguration: OIDCConfiguration) {
+    const { clientId, storage } = config;
     this.clientId = clientId;
+    this.oidcConfiguration = oidcConfiguration;
+    this.storage = storage ?? new LocalStorage();
+    this.sessionManager = new SessionManager(this.storage);
+    this.createTokenSetFromCache();
+  }
 
-    void this.initIssuer(
-      `${appendSlashIfNeeded(logtoUrl)}oidc/.well-known/openid-configuration`,
-      onOidcReady
+  static async create(config: ConfigParameters): Promise<LogtoClient> {
+    const client = new LogtoClient(config, await discover(`https://${config.domain}`));
+    return client;
+  }
+
+  public loginWithRedirect(redirectUri: string) {
+    const { url, codeVerifier } = getLoginUrlAndCodeVerifier(
+      this.oidcConfiguration.authorization_endpoint,
+      this.clientId,
+      redirectUri
     );
+    this.sessionManager.set({ redirectUri, codeVerifier });
+    window.location.assign(url);
   }
 
-  get isAuthenticated(): boolean {
-    return !this.tokenSet?.expired();
-  }
+  public async handleCallback(code: string) {
+    const session = this.sessionManager.get();
 
-  get accessToken(): string {
-    if (!this.isAuthenticated || !this.tokenSet?.access_token) {
-      throw new Error('Not authenticated');
+    if (!session) {
+      throw new Error('Session not found');
     }
 
-    return this.tokenSet.access_token;
+    const { redirectUri, codeVerifier } = session;
+    this.sessionManager.clear();
+    const tokenParameters = await grantTokenByAuthorizationCode(
+      this.oidcConfiguration.token_endpoint,
+      code,
+      redirectUri,
+      codeVerifier
+    );
+    await verifyIdToken(
+      createJWKS(this.oidcConfiguration.jwks_uri),
+      tokenParameters.id_token,
+      this.clientId
+    );
+    this.storage.setItem(this.tokenSetCacheKey, tokenParameters);
+    this.tokenSet = new TokenSet(tokenParameters);
   }
 
-  get idToken(): string {
-    if (!this.isAuthenticated || !this.tokenSet?.id_token) {
-      throw new Error('Not authenticated');
-    }
-
-    return this.tokenSet.id_token;
-  }
-
-  get subject(): string {
+  public getClaims() {
     if (!this.isAuthenticated || !this.tokenSet) {
       throw new Error('Not authenticated');
     }
 
-    return this.tokenSet.claims().sub;
+    return this.tokenSet.claims();
   }
 
-  public getClient(): Client {
-    if (!this.issuer) {
-      throw new Error('should init first');
+  public isAuthenticated() {
+    return Boolean(this.tokenSet);
+  }
+
+  public logout(redirectUri: string) {
+    this.sessionManager.clear();
+    if (!this.tokenSet) {
+      return;
     }
 
-    if (!this.client) {
-      this.client = new this.issuer.Client({
-        client_id: this.clientId,
-        response_types: ['code'],
-        token_endpoint_auth_method: 'none',
-      });
-    }
-
-    return this.client;
+    const url = getLogoutUrl(
+      this.oidcConfiguration.end_session_endpoint,
+      this.tokenSet.idToken,
+      redirectUri
+    );
+    this.tokenSet = undefined;
+    this.storage.removeItem(this.tokenSetCacheKey);
+    window.location.assign(url);
   }
 
-  public setToken(input: TokenSetParameters) {
-    this.tokenSet = new TokenSet(input);
+  private get tokenSetCacheKey() {
+    return `${TOKEN_SET_CACHE_KEY}::${this.oidcConfiguration.issuer}::${this.clientId}`;
   }
 
-  public getLoginUrlAndCodeVerifier(redirectUri: string): [string, string] {
-    const codeVerifier = generators.codeVerifier();
-    const codeChallenge = generators.codeChallenge(codeVerifier);
-
-    const client = this.getClient();
-    const url = client.authorizationUrl({
-      scope: 'openid offline_access',
-      prompt: 'consent',
-      code_challenge: codeChallenge,
-      code_challenge_method: 'S256',
-      redirect_uri: redirectUri,
-    });
-    return [url, codeVerifier];
-  }
-
-  public async handleLoginCallback(redirectUri: string, codeVerifier: string, code: string) {
-    const client = this.getClient();
-    this.tokenSet = await client.callback(redirectUri, { code }, { code_verifier: codeVerifier });
-
-    return this.tokenSet;
-  }
-
-  private async initIssuer(url: string, onOidcReady?: () => void) {
-    this.issuer = await Issuer.discover(url);
-    if (typeof onOidcReady === 'function') {
-      onOidcReady();
+  private createTokenSetFromCache() {
+    const parameters = this.storage.getItem<TokenSetParameters>(this.tokenSetCacheKey);
+    if (parameters) {
+      this.tokenSet = new TokenSet(parameters);
     }
   }
 }

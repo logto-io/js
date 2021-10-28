@@ -13,7 +13,7 @@ interface Session {
 export default class SessionManager {
   constructor(private readonly storage: ClientStorage) {}
 
-  public create(session: Session) {
+  public set(session: Session) {
     this.storage.setItem(SESSEION_MANAGER_KEY, session, {
       secondsUntilExpire: SESSION_EXPIRES_SECONDS,
     });
@@ -23,7 +23,7 @@ export default class SessionManager {
     return this.storage.getItem(SESSEION_MANAGER_KEY);
   }
 
-  public remove() {
+  public clear() {
     this.storage.removeItem(SESSEION_MANAGER_KEY);
   }
 }
