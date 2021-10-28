@@ -12,14 +12,14 @@ describe('SessionManager', () => {
   test('create and get', () => {
     const sessionStorage = new SessionStorage();
     const sessionManager = new SessionManager(sessionStorage);
-    sessionManager.create(transaction);
+    sessionManager.set(transaction);
     expect(sessionManager.get()).toMatchObject(transaction);
   });
 
   test('`create` should save data in storage', () => {
     const sessionStorage = new SessionStorage();
     const sessionManager = new SessionManager(sessionStorage);
-    sessionManager.create(transaction);
+    sessionManager.set(transaction);
     expect(sessionStorage.getItem(SESSION_MANAGER_KEY)).toMatchObject(transaction);
   });
 

@@ -9,6 +9,7 @@ const OIDCConfigurationSchema = z.object({
   token_endpoint: z.string(),
   issuer: z.string(),
   revocation_endpoint: z.string(),
+  end_session_endpoint: z.string(),
 });
 
 export type OIDCConfiguration = z.infer<typeof OIDCConfigurationSchema>;

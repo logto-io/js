@@ -8,6 +8,7 @@ const successResponse = {
   jwks_uri: 'https://logto.dev/oidc/jwks',
   token_endpoint: 'https://logto.dev/oidc/token',
   revocation_endpoint: 'https://logto.dev/oidc/token/revocation',
+  end_session_endpoint: 'https://logto.dev/oidc/session/end',
 };
 
 describe('discover: /.well-known/openid-configuration', () => {
