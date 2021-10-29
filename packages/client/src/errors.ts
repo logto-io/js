@@ -1,28 +1,24 @@
-import { AxiosResponse } from 'axios';
 import { ZodError } from 'zod';
 
-interface OPErrorParmeters {
+interface LogtoErrorParameters {
   message?: string;
-  uri?: string;
-  originalError?: Error;
+  cause?: Error;
+  response?: Response;
 }
 
-export class OPError extends Error {
+export class LogtoError extends Error {
   public uri?: string;
-  public response?: AxiosResponse;
-  public originalError?: Error | ZodError;
+  public response?: Response;
+  public cause?: Error | ZodError;
 
-  constructor({ message, uri, originalError }: OPErrorParmeters) {
-    if (originalError instanceof ZodError) {
-      super(`OP response format error: ${originalError.message}`);
+  constructor({ message, cause, response }: LogtoErrorParameters) {
+    if (cause instanceof ZodError) {
+      super(`Remote response format error: ${cause.message}`);
     } else {
       super(message);
     }
 
-    if (originalError) {
-      this.originalError = originalError;
-    }
-
-    this.uri = uri;
+    this.cause = cause;
+    this.response = response;
   }
 }

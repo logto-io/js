@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-import { OPError } from './errors';
-import { opRequest } from './op-request';
+import { requestWithFetch } from './api';
+import { LogtoError } from './errors';
 
 const OIDCConfigurationSchema = z.object({
   authorization_endpoint: z.string(),
@@ -23,13 +23,13 @@ const appendSlashIfNeeded = (url: string): string => {
 };
 
 export default async function discover(url: string): Promise<OIDCConfiguration> {
-  const response = await opRequest.get(
+  const response = await requestWithFetch<OIDCConfiguration>(
     `${appendSlashIfNeeded(url)}oidc/.well-known/openid-configuration`
   );
-  const result = OIDCConfigurationSchema.safeParse(response.data);
+  const result = OIDCConfigurationSchema.safeParse(response);
 
   if (!result.success) {
-    throw new OPError({ originalError: result.error });
+    throw new LogtoError({ cause: result.error });
   }
 
   return result.data;

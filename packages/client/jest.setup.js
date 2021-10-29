@@ -7,10 +7,9 @@
 const { TextEncoder, TextDecoder } = require('util');
 
 const { Crypto } = require('@peculiar/webcrypto');
-const axios = require('axios');
+const fetch = require('node-fetch');
 
 global.crypto = new Crypto();
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
-
-axios.defaults.adapter = require('axios/lib/adapters/http');
+global.fetch = fetch;
