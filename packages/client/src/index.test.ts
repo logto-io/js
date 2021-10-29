@@ -145,7 +145,7 @@ describe('LogtoClient', () => {
         domain: DOMAIN,
         clientId: CLIENT_ID,
       });
-      logto.loginWithRedirect(REDIRECT_URI);
+      await logto.loginWithRedirect(REDIRECT_URI);
       expect(window.location.assign).toHaveBeenCalled();
     });
 
@@ -156,7 +156,7 @@ describe('LogtoClient', () => {
         clientId: CLIENT_ID,
         storage,
       });
-      logto.loginWithRedirect(REDIRECT_URI);
+      await logto.loginWithRedirect(REDIRECT_URI);
       expect(storage.getItem('LOGTO_SESSION_MANAGER')).toHaveProperty('redirectUri', REDIRECT_URI);
       expect(storage.getItem('LOGTO_SESSION_MANAGER')).toHaveProperty('codeVerifier');
     });
@@ -180,7 +180,7 @@ describe('LogtoClient', () => {
         clientId: CLIENT_ID,
         storage,
       });
-      logto.loginWithRedirect(REDIRECT_URI);
+      await logto.loginWithRedirect(REDIRECT_URI);
       await logto.handleCallback('code');
       expect(verifyIdToken).toHaveBeenCalled();
     });
@@ -192,7 +192,7 @@ describe('LogtoClient', () => {
         clientId: CLIENT_ID,
         storage,
       });
-      logto.loginWithRedirect(REDIRECT_URI);
+      await logto.loginWithRedirect(REDIRECT_URI);
       await logto.handleCallback('code');
       expect(storage.getItem('LOGTO_SESSION_MANAGER')).toBeUndefined();
     });
@@ -204,7 +204,7 @@ describe('LogtoClient', () => {
         clientId: CLIENT_ID,
         storage,
       });
-      logto.loginWithRedirect(REDIRECT_URI);
+      await logto.loginWithRedirect(REDIRECT_URI);
       await logto.handleCallback('code');
       expect(logto.isAuthenticated()).toBeTruthy();
     });

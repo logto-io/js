@@ -2,13 +2,13 @@ import qs from 'query-string';
 
 import { generateCodeChallenge, generateCodeVerifier } from './generators';
 
-export const getLoginUrlAndCodeVerifier = (
+export const getLoginUrlAndCodeVerifier = async (
   baseUrl: string,
   clientId: string,
   redirectUri: string
-): { url: string; codeVerifier: string } => {
+): Promise<{ url: string; codeVerifier: string }> => {
   const codeVerifier = generateCodeVerifier();
-  const codeChallenge = generateCodeChallenge(codeVerifier);
+  const codeChallenge = await generateCodeChallenge(codeVerifier);
 
   const url = `${baseUrl}?${qs.stringify({
     client_id: clientId,

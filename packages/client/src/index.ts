@@ -45,8 +45,8 @@ export default class LogtoClient {
     return client;
   }
 
-  public loginWithRedirect(redirectUri: string) {
-    const { url, codeVerifier } = getLoginUrlAndCodeVerifier(
+  public async loginWithRedirect(redirectUri: string) {
+    const { url, codeVerifier } = await getLoginUrlAndCodeVerifier(
       this.oidcConfiguration.authorization_endpoint,
       this.clientId,
       redirectUri
