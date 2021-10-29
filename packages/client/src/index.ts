@@ -11,6 +11,8 @@ import { createJWKS, verifyIdToken } from './verify-id-token';
 
 const TOKEN_SET_CACHE_KEY = 'LOGTO_TOKEN_SET_CACHE';
 
+export * from './storage';
+
 export interface ConfigParameters {
   domain: string;
   clientId: string;
