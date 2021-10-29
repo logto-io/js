@@ -1,7 +1,7 @@
 import { getLoginUrlAndCodeVerifier } from './request-login';
 
-test('getLoginUrlAndCodeVerifier', () => {
-  const { url } = getLoginUrlAndCodeVerifier(
+test('getLoginUrlAndCodeVerifier', async () => {
+  const { url } = await getLoginUrlAndCodeVerifier(
     'http://logto.dev/oidc/auth',
     'foo',
     'http://localhost:3000'
