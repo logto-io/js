@@ -1,7 +1,5 @@
 import { Optional } from '@silverhand/essentials';
 
-import { nowRoundToSec } from './utils';
-
 const STORAGE_KEY_PREFIX = 'logto:';
 
 const getKey = (key: string) => `${STORAGE_KEY_PREFIX}${key}`;
@@ -15,7 +13,7 @@ const safeParse = <T>(value: string): T | undefined => {
 };
 
 interface ClientStorageOptions {
-  secondsUntilExpire: number;
+  millisecondsUntilExpire: number;
 }
 
 export interface ClientStorage {
@@ -44,7 +42,7 @@ export class LocalStorage implements ClientStorage {
       return;
     }
 
-    if (payload.expiresAt && payload.expiresAt <= nowRoundToSec()) {
+    if (payload.expiresAt && payload.expiresAt <= Date.now()) {
       this.removeItem(key);
       return;
     }
@@ -55,8 +53,8 @@ export class LocalStorage implements ClientStorage {
   setItem(key: string, value: unknown, options?: ClientStorageOptions) {
     const payload: StoragePayload<unknown> = {
       expiresAt:
-        typeof options?.secondsUntilExpire === 'number'
-          ? nowRoundToSec() + options.secondsUntilExpire
+        typeof options?.millisecondsUntilExpire === 'number'
+          ? Date.now() + options.millisecondsUntilExpire
           : undefined,
       value,
     };
@@ -82,7 +80,7 @@ export class MemoryStorage implements ClientStorage {
       return;
     }
 
-    if (payload.expiresAt && payload.expiresAt <= nowRoundToSec()) {
+    if (payload.expiresAt && payload.expiresAt <= Date.now()) {
       this.removeItem(key);
       return;
     }
@@ -93,8 +91,8 @@ export class MemoryStorage implements ClientStorage {
   setItem(key: string, value: unknown, options?: ClientStorageOptions) {
     const payload: StoragePayload<unknown> = {
       expiresAt:
-        typeof options?.secondsUntilExpire === 'number'
-          ? nowRoundToSec() + options.secondsUntilExpire
+        typeof options?.millisecondsUntilExpire === 'number'
+          ? Date.now() + options.millisecondsUntilExpire
           : undefined,
       value,
     };
