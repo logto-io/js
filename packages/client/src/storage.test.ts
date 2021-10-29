@@ -11,7 +11,7 @@ describe('LocalStorage', () => {
     s = new LocalStorage();
     s.setItem('foo', { value: 'foz' });
     s.setItem('string', 'foz');
-    s.setItem('expired', { value: 'foz' }, { secondsUntilExpire: 0 });
+    s.setItem('expired', { value: 'foz' }, { millisecondsUntilExpire: 0 });
     s.setItem('to-be-remove', { value: 'foz' });
   });
 
@@ -39,7 +39,7 @@ describe('SessionStorage', () => {
     s = new SessionStorage();
     s.setItem('foo', { value: 'foz' });
     s.setItem('string', 'foz');
-    s.setItem('expired', { value: 'foz' }, { secondsUntilExpire: 0 });
+    s.setItem('expired', { value: 'foz' }, { millisecondsUntilExpire: 0 });
     s.setItem('to-be-remove', { value: 'foz' });
   });
 
@@ -67,7 +67,7 @@ describe('MemoryStorage', () => {
     storage = new MemoryStorage();
     storage.setItem('foo', { value: 'foz' });
     storage.setItem('string', 'foz');
-    storage.setItem('expired', { value: 'foz' }, { secondsUntilExpire: 0 });
+    storage.setItem('expired', { value: 'foz' }, { millisecondsUntilExpire: 0 });
     storage.setItem('to-be-remove', { value: 'foz' });
   });
 

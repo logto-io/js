@@ -17,8 +17,8 @@ export default class TokenSet {
     return Math.max(this.expiresAt - nowRoundToSec(), 0);
   }
 
-  set expiresIn(value: number) {
-    this.expiresAt = nowRoundToSec() + value;
+  set expiresIn(seconds: number) {
+    this.expiresAt = nowRoundToSec() + seconds;
   }
 
   public expired(): boolean {
