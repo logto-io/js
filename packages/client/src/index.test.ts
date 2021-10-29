@@ -232,6 +232,59 @@ describe('LogtoClient', () => {
     });
   });
 
+  describe('getAccessToken', () => {
+    describe('from local', () => {
+      test('get accessToken from tokenset', async () => {
+        const storage = new MemoryStorage();
+        storage.setItem(`LOGTO_TOKEN_SET_CACHE::${discoverResponse.issuer}::${CLIENT_ID}`, {
+          ...fakeTokenResponse,
+          id_token: (await generateIdToken()).idToken,
+        });
+        const logto = await LogtoClient.create({
+          domain: DOMAIN,
+          clientId: CLIENT_ID,
+          storage,
+        });
+        await expect(logto.getAccessToken()).resolves.toEqual(fakeTokenResponse.access_token);
+      });
+
+      test('not authenticated should throw', async () => {
+        const logto = await LogtoClient.create({
+          domain: DOMAIN,
+          clientId: CLIENT_ID,
+        });
+        await expect(logto.getAccessToken()).rejects.toThrow();
+      });
+    });
+
+    describe('grant new tokenset with refresh_token', () => {
+      // eslint-disable-next-line @silverhand/fp/no-let
+      let logto: LogtoClient;
+
+      beforeEach(async () => {
+        const storage = new MemoryStorage();
+        storage.setItem(`LOGTO_TOKEN_SET_CACHE::${discoverResponse.issuer}::${CLIENT_ID}`, {
+          ...fakeTokenResponse,
+          id_token: (await generateIdToken()).idToken,
+          expires_in: -1,
+        });
+        logto = await LogtoClient.create({
+          domain: DOMAIN,
+          clientId: CLIENT_ID,
+          storage,
+        });
+      });
+
+      test('should get access_token after refresh', async () => {
+        await expect(logto.getAccessToken()).resolves.toEqual(fakeTokenResponse.access_token);
+      });
+
+      test('verifyIdToken should have been called', async () => {
+        expect(verifyIdToken).toHaveBeenCalled();
+      });
+    });
+  });
+
   describe('logout', () => {
     test('window.location.assign should have been called', async () => {
       const logto = await LogtoClient.create({

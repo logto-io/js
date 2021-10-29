@@ -1,7 +1,11 @@
 import { Optional } from '@silverhand/essentials';
 
 import discover, { OIDCConfiguration } from './discover';
-import { grantTokenByAuthorizationCode, TokenSetParameters } from './grant-token';
+import {
+  grantTokenByAuthorizationCode,
+  grantTokenByRefreshToken,
+  TokenSetParameters,
+} from './grant-token';
 import { parseRedirectCallback } from './parse-callback';
 import { getLoginUrlAndCodeVerifier } from './request-login';
 import { getLogoutUrl } from './request-logout';
@@ -102,6 +106,30 @@ export default class LogtoClient {
 
   public isAuthenticated() {
     return Boolean(this.tokenSet);
+  }
+
+  public async getAccessToken() {
+    if (!this.isAuthenticated || !this.tokenSet) {
+      throw new Error('Not authenticated');
+    }
+
+    if (!this.tokenSet.expired()) {
+      return this.tokenSet.accessToken;
+    }
+
+    const tokenParameters = await grantTokenByRefreshToken(
+      this.oidcConfiguration.token_endpoint,
+      this.clientId,
+      this.tokenSet.refreshToken
+    );
+    await verifyIdToken(
+      createJWKS(this.oidcConfiguration.jwks_uri),
+      tokenParameters.id_token,
+      this.clientId
+    );
+    this.storage.setItem(this.tokenSetCacheKey, tokenParameters);
+    this.tokenSet = new TokenSet(tokenParameters);
+    return this.tokenSet.accessToken;
   }
 
   public logout(redirectUri: string) {
