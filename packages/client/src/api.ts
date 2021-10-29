@@ -19,25 +19,14 @@ const getResponseErrorMessage = async (response: Response): Promise<string> => {
 };
 
 export const requestWithFetch = async <T>(...args: Parameters<typeof fetch>): Promise<T> => {
-  try {
-    const response = await fetch(...args);
-    if (!response.ok) {
-      throw new LogtoError({
-        message: await getResponseErrorMessage(response),
-        response,
-      });
-    }
-
-    const data = (await response.json()) as T;
-    return data;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      throw new LogtoError({
-        message: error.message,
-        cause: error,
-      });
-    }
-
-    throw error;
+  const response = await fetch(...args);
+  if (!response.ok) {
+    throw new LogtoError({
+      message: await getResponseErrorMessage(response),
+      response,
+    });
   }
+
+  const data = (await response.json()) as T;
+  return data;
 };
