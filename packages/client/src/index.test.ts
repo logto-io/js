@@ -19,6 +19,8 @@ const CLIENT_ID = 'client1';
 const SUBJECT = 'subject1';
 const REDIRECT_URI = 'http://localhost:3000';
 const SESSEION_MANAGER_KEY = 'LOGTO_SESSION_MANAGER';
+const REDIRECT_CALLBACK = `${REDIRECT_URI}?code=authorization_code`;
+const REDIRECT_CALLBACK_WITH_ERROR = `${REDIRECT_CALLBACK}&error=invalid_request&error_description=code_challenge%20must%20be%20a%20string%20with%20a%20minimum%20length%20of%2043%20characters`;
 
 const discoverResponse = {
   authorization_endpoint: `${BASE_URL}/oidc/auth`,
@@ -170,7 +172,27 @@ describe('LogtoClient', () => {
         clientId: CLIENT_ID,
         storage,
       });
-      await expect(logto.handleCallback('code')).rejects.toThrowError();
+      await expect(logto.handleCallback(REDIRECT_CALLBACK)).rejects.toThrowError();
+    });
+
+    test('no code in url should fail', async () => {
+      const storage = new MemoryStorage();
+      const logto = await LogtoClient.create({
+        domain: DOMAIN,
+        clientId: CLIENT_ID,
+        storage,
+      });
+      await expect(logto.handleCallback('')).rejects.toThrowError();
+    });
+
+    test('should throw response error', async () => {
+      const storage = new MemoryStorage();
+      const logto = await LogtoClient.create({
+        domain: DOMAIN,
+        clientId: CLIENT_ID,
+        storage,
+      });
+      await expect(logto.handleCallback(REDIRECT_CALLBACK_WITH_ERROR)).rejects.toThrowError();
     });
 
     test('verifyIdToken should be called', async () => {
@@ -181,7 +203,7 @@ describe('LogtoClient', () => {
         storage,
       });
       await logto.loginWithRedirect(REDIRECT_URI);
-      await logto.handleCallback('code');
+      await logto.handleCallback(REDIRECT_CALLBACK);
       expect(verifyIdToken).toHaveBeenCalled();
     });
 
@@ -193,7 +215,7 @@ describe('LogtoClient', () => {
         storage,
       });
       await logto.loginWithRedirect(REDIRECT_URI);
-      await logto.handleCallback('code');
+      await logto.handleCallback(REDIRECT_CALLBACK);
       expect(storage.getItem('LOGTO_SESSION_MANAGER')).toBeUndefined();
     });
 
@@ -205,7 +227,7 @@ describe('LogtoClient', () => {
         storage,
       });
       await logto.loginWithRedirect(REDIRECT_URI);
-      await logto.handleCallback('code');
+      await logto.handleCallback(REDIRECT_CALLBACK);
       expect(logto.isAuthenticated()).toBeTruthy();
     });
   });
