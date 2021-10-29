@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-import { OPError } from './errors';
-import { opRequest } from './op-request';
+import { requestWithFetch } from './api';
+import { LogtoError } from './errors';
 
 const TokenSetParametersSchema = z.object({
   access_token: z.string(),
@@ -24,15 +24,17 @@ export const grantTokenByAuthorizationCode = async (
   parameters.append('redirect_uri', redirectUri);
   parameters.append('code_verifier', codeVerifier);
 
-  const response = await opRequest.post(endpoint, parameters, {
+  const response = await requestWithFetch(endpoint, {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
+    body: parameters,
   });
-  const result = TokenSetParametersSchema.safeParse(response.data);
+  const result = TokenSetParametersSchema.safeParse(response);
 
   if (!result.success) {
-    throw new OPError({ originalError: result.error });
+    throw new LogtoError({ cause: result.error });
   }
 
   return result.data;
@@ -48,15 +50,17 @@ export const grantTokenByRefreshToken = async (
   parameters.append('client_id', clientId);
   parameters.append('refresh_token', refreshToken);
 
-  const response = await opRequest.post(endpoint, parameters, {
+  const response = await requestWithFetch(endpoint, {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
+    body: parameters,
   });
-  const result = TokenSetParametersSchema.safeParse(response.data);
+  const result = TokenSetParametersSchema.safeParse(response);
 
   if (!result.success) {
-    throw new OPError({ originalError: result.error });
+    throw new LogtoError({ cause: result.error });
   }
 
   return result.data;
