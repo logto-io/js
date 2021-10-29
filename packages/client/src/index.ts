@@ -2,6 +2,7 @@ import { Optional } from '@silverhand/essentials';
 
 import discover, { OIDCConfiguration } from './discover';
 import { grantTokenByAuthorizationCode, TokenSetParameters } from './grant-token';
+import { parseRedirectCallback } from './parse-callback';
 import { getLoginUrlAndCodeVerifier } from './request-login';
 import { getLogoutUrl } from './request-logout';
 import SessionManager from './session-manager';
@@ -57,7 +58,17 @@ export default class LogtoClient {
     window.location.assign(url);
   }
 
-  public async handleCallback(code: string) {
+  public async handleCallback(url: string) {
+    const { code, error, error_description } = parseRedirectCallback(url);
+
+    if (error) {
+      throw new Error(error_description ?? error);
+    }
+
+    if (!code) {
+      throw new Error(`Can not found authorization_code in url: ${url}`);
+    }
+
     const session = this.sessionManager.get();
 
     if (!session) {
