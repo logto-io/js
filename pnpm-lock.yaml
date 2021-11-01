@@ -150,6 +150,47 @@ importers:
       webpack: 4.46.0
       webpack-dev-server: 3.11.2_webpack@4.46.0
 
+  packages/react:
+    specifiers:
+      '@logto/client': ^0.0.1
+      '@silverhand/eslint-config': ^0.2.2
+      '@silverhand/essentials': ^1.1.0
+      '@silverhand/ts-config': ^0.2.2
+      '@silverhand/ts-config-react': ^0.2.2
+      '@testing-library/react-hooks': ^7.0.2
+      '@types/jest': ^26.0.24
+      '@types/react': ^17.0.33
+      eslint: ^7.32.0
+      jest: ^27.0.6
+      lint-staged: ^11.1.2
+      prettier: ^2.3.2
+      react: ^17.0.2
+      react-dom: ^17.0.2
+      react-test-renderer: ^17.0.2
+      text-encoder: ^0.0.4
+      ts-jest: ^27.0.4
+      typescript: ^4.3.5
+    dependencies:
+      '@logto/client': link:../client
+    devDependencies:
+      '@silverhand/eslint-config': 0.2.2_d0e06193b104cab3f9ceaef77640598a
+      '@silverhand/essentials': 1.1.0
+      '@silverhand/ts-config': 0.2.2_typescript@4.4.4
+      '@silverhand/ts-config-react': 0.2.2_typescript@4.4.4
+      '@testing-library/react-hooks': 7.0.2_fc2bb8a5b006d3f25c5f84ea777e678d
+      '@types/jest': 26.0.24
+      '@types/react': 17.0.33
+      eslint: 7.32.0
+      jest: 27.0.6
+      lint-staged: 11.1.2
+      prettier: 2.3.2
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+      react-test-renderer: 17.0.2_react@17.0.2
+      text-encoder: 0.0.4
+      ts-jest: 27.0.4_53a80b2445539e5ca18fca8f5a5b611d
+      typescript: 4.4.4
+
 packages:
 
   /@babel/code-frame/7.10.4:
@@ -3317,6 +3358,29 @@ packages:
       - supports-color
     dev: true
 
+  /@testing-library/react-hooks/7.0.2_fc2bb8a5b006d3f25c5f84ea777e678d:
+    resolution: {integrity: sha512-dYxpz8u9m4q1TuzfcUApqi8iFfR6R0FaMbr2hjZJy1uC8z+bO/K4v8Gs9eogGKYQop7QsrBTFkv/BCF7MzD2Cg==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16.9.0'
+      react-dom: '>=16.9.0'
+      react-test-renderer: '>=16.9.0'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-test-renderer:
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.16.0
+      '@types/react': 17.0.33
+      '@types/react-dom': 17.0.10
+      '@types/react-test-renderer': 17.0.1
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+      react-error-boundary: 3.1.4_react@17.0.2
+      react-test-renderer: 17.0.2_react@17.0.2
+    dev: true
+
   /@tootallnate/once/1.1.2:
     resolution: {integrity: sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==}
     engines: {node: '>= 6'}
@@ -3481,6 +3545,12 @@ packages:
     resolution: {integrity: sha512-RNSXOyb3VyRs/EOGmjBhhGKTbnN6fHWvy5FNLzWfOWOGjgVUKqJZXfpKzLmgoU8h6Hj8mpALj/mbXQASOb92wQ==}
     dependencies:
       '@types/history': 4.7.9
+      '@types/react': 17.0.33
+    dev: true
+
+  /@types/react-test-renderer/17.0.1:
+    resolution: {integrity: sha512-3Fi2O6Zzq/f3QR9dRnlnHso9bMl7weKCviFmfF6B4LS1Uat6Hkm15k0ZAQuDz+UBq6B3+g+NM6IT2nr5QgPzCw==}
+    dependencies:
       '@types/react': 17.0.33
     dev: true
 
@@ -6826,7 +6896,7 @@ packages:
       '@typescript-eslint/eslint-plugin': '>=4.28.1'
       eslint: '>=7.30.0'
     dependencies:
-      '@typescript-eslint/eslint-plugin': 4.31.2_8f0416aa8ec58a469909c5c0f73069bc
+      '@typescript-eslint/eslint-plugin': 4.31.2_1ff229bad5b3f782209b865beb048324
       eslint: 7.32.0
       typescript: 4.3.5
     dev: true
@@ -13235,7 +13305,16 @@ packages:
       object-assign: 4.1.1
       react: 17.0.2
       scheduler: 0.20.2
-    dev: false
+
+  /react-error-boundary/3.1.4_react@17.0.2:
+    resolution: {integrity: sha512-uM9uPzZJTF6wRQORmSrvOIgt4lJ9MC1sNgEOj2XGsDTRE4kmpWxg7ENK9EWNKJRMAOY9z0MuF4yIfl6gp4sotA==}
+    engines: {node: '>=10', npm: '>=6'}
+    peerDependencies:
+      react: '>=16.13.1'
+    dependencies:
+      '@babel/runtime': 7.16.0
+      react: 17.0.2
+    dev: true
 
   /react-error-overlay/6.0.9:
     resolution: {integrity: sha512-nQTTcUu+ATDbrSD1BZHr5kgSD4oF8OFjxun8uAaL8RwPBacGBNPf/yAuVVdx17N8XNzRDMrZ9XcKZHCjPW+9ew==}
@@ -13286,13 +13365,34 @@ packages:
       tiny-warning: 1.0.3
     dev: false
 
+  /react-shallow-renderer/16.14.1_react@17.0.2:
+    resolution: {integrity: sha512-rkIMcQi01/+kxiTE9D3fdS959U1g7gs+/rborw++42m1O9FAQiNI/UNRZExVUoAOprn4umcXf+pFRou8i4zuBg==}
+    peerDependencies:
+      react: ^16.0.0 || ^17.0.0
+    dependencies:
+      object-assign: 4.1.1
+      react: 17.0.2
+      react-is: 17.0.2
+    dev: true
+
+  /react-test-renderer/17.0.2_react@17.0.2:
+    resolution: {integrity: sha512-yaQ9cB89c17PUb0x6UfWRs7kQCorVdHlutU1boVPEsB8IDZH6n9tHxMacc3y0JoXOJUsZb/t/Mb8FUWMKaM7iQ==}
+    peerDependencies:
+      react: 17.0.2
+    dependencies:
+      object-assign: 4.1.1
+      react: 17.0.2
+      react-is: 17.0.2
+      react-shallow-renderer: 16.14.1_react@17.0.2
+      scheduler: 0.20.2
+    dev: true
+
   /react/17.0.2:
     resolution: {integrity: sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==}
     engines: {node: '>=0.10.0'}
     dependencies:
       loose-envify: 1.4.0
       object-assign: 4.1.1
-    dev: false
 
   /read-cmd-shim/2.0.0:
     resolution: {integrity: sha512-HJpV9bQpkl6KwjxlJcBoqu9Ba0PQg8TqSNIOrulGt54a0uup0HtevreFHzYzkm0lpnleRdNBzXznKrgxglEHQw==}
@@ -13883,7 +13983,6 @@ packages:
     dependencies:
       loose-envify: 1.4.0
       object-assign: 4.1.1
-    dev: false
 
   /schema-utils/1.0.0:
     resolution: {integrity: sha512-i27Mic4KovM/lnGsy8whRCHhc7VicJajAjTrYg11K9zfZXnYIt4k5F+kZkwjnrhKzLic/HLU4j11mjsz2G/75g==}
@@ -15230,6 +15329,39 @@ packages:
       mkdirp: 1.0.4
       semver: 7.3.5
       typescript: 4.3.5
+      yargs-parser: 20.2.9
+    dev: true
+
+  /ts-jest/27.0.4_53a80b2445539e5ca18fca8f5a5b611d:
+    resolution: {integrity: sha512-c4E1ECy9Xz2WGfTMyHbSaArlIva7Wi2p43QOMmCqjSSjHP06KXv+aT+eSY+yZMuqsMi3k7pyGsGj2q5oSl5WfQ==}
+    engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
+    hasBin: true
+    peerDependencies:
+      '@babel/core': '>=7.0.0-beta.0 <8'
+      '@types/jest': ^26.0.0
+      babel-jest: '>=27.0.0 <28'
+      jest: ^27.0.0
+      typescript: '>=3.8 <5.0'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      '@types/jest':
+        optional: true
+      babel-jest:
+        optional: true
+    dependencies:
+      '@types/jest': 26.0.24
+      bs-logger: 0.2.6
+      buffer-from: 1.1.2
+      fast-json-stable-stringify: 2.1.0
+      jest: 27.0.6
+      jest-util: 27.0.6
+      json5: 2.2.0
+      lodash: 4.17.21
+      make-error: 1.3.6
+      mkdirp: 1.0.4
+      semver: 7.3.5
+      typescript: 4.4.4
       yargs-parser: 20.2.9
     dev: true
 

@@ -1,0 +1,56 @@
+{
+  "name": "@logto/react",
+  "version": "0.0.1",
+  "description": "> TODO: description",
+  "author": "wangsijie <wangsijie@silverhand.io>",
+  "homepage": "https://github.com/logto-io/js#readme",
+  "license": "MPL-2.0",
+  "main": "lib/index.js",
+  "devDependencies": {
+    "@silverhand/eslint-config": "^0.2.2",
+    "@silverhand/essentials": "^1.1.0",
+    "@silverhand/ts-config": "^0.2.2",
+    "@silverhand/ts-config-react": "^0.2.2",
+    "@testing-library/react-hooks": "^7.0.2",
+    "@types/jest": "^26.0.24",
+    "@types/react": "^17.0.33",
+    "eslint": "^7.32.0",
+    "jest": "^27.0.6",
+    "lint-staged": "^11.1.2",
+    "prettier": "^2.3.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-test-renderer": "^17.0.2",
+    "text-encoder": "^0.0.4",
+    "ts-jest": "^27.0.4",
+    "typescript": "^4.3.5"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/logto-io/js.git"
+  },
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "lint": "eslint --ext .ts src",
+    "test": "jest"
+  },
+  "bugs": {
+    "url": "https://github.com/logto-io/js/issues"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand/eslint-config"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc",
+  "dependencies": {
+    "@logto/client": "^0.0.1"
+  },
+  "peerDependencies": {
+    "react": ">=16"
+  }
+}
