@@ -1,9 +1,0 @@
-{
-    "extends": "@silverhand/ts-config/tsconfig.base",
-    "compilerOptions": {
-        "strict": false
-    },
-    "exclude": [
-        "node_modules"
-    ],
-}
