@@ -2,7 +2,7 @@
   "name": "@logto/client",
   "version": "0.0.1",
   "main": "lib/index.js",
-  "typings": "dist/index.d.ts",
+  "typings": "lib/index.d.ts",
   "license": "MPL-2.0",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
