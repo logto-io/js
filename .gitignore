@@ -9,7 +9,7 @@ node_modules
 /packages/*/coverage
 
 # production
-/packages/*/build
+/packages/*/dist
 /packages/*/lib
 
 # logs

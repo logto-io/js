@@ -8,13 +8,14 @@
     "preinstall": "npx only-allow pnpm",
     "build": "tsc",
     "lint": "eslint --ext .ts src",
-    "test": "jest"
+    "package": "webpack",
+    "test": "jest",
+    "prepublish": "npm run build && npm run package"
   },
   "dependencies": {
     "jose": "^3.14.3",
     "js-base64": "^3.7.2",
     "nanoid": "^3.1.30",
-    "openid-client": "^4.7.4",
     "query-string": "^7.0.1",
     "zod": "^3.9.8"
   },
@@ -24,14 +25,18 @@
     "@silverhand/essentials": "^1.1.0",
     "@silverhand/ts-config": "^0.2.2",
     "@types/jest": "^26.0.24",
+    "@types/webpack": "^5.28.0",
     "eslint": "^7.32.0",
     "jest": "^27.0.6",
     "lint-staged": "^11.1.2",
     "nock": "^13.1.3",
     "node-fetch": "2",
     "prettier": "^2.3.2",
+    "ts-loader": "^9.2.6",
     "ts-jest": "^27.0.4",
-    "typescript": "^4.3.5"
+    "typescript": "^4.3.5",
+    "webpack": "^5.58.2",
+    "webpack-cli": "^4.9.1"
   },
   "eslintConfig": {
     "extends": "@silverhand/eslint-config"
