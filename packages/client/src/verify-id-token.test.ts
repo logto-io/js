@@ -1,7 +1,6 @@
 import { KeyObject } from 'crypto';
 
-import { SignJWT } from 'jose/jwt/sign';
-import { generateKeyPair } from 'jose/util/generate_key_pair';
+import { SignJWT, generateKeyPair } from 'jose';
 import nock from 'nock';
 
 import { createJWKS, verifyIdToken } from './verify-id-token';
