@@ -5,6 +5,7 @@ import { generateCodeChallenge, generateCodeVerifier } from './generators';
 export const getLoginUrlAndCodeVerifier = async (
   baseUrl: string,
   clientId: string,
+  scope: string,
   redirectUri: string
 ): Promise<{ url: string; codeVerifier: string }> => {
   const codeVerifier = generateCodeVerifier();
@@ -12,7 +13,7 @@ export const getLoginUrlAndCodeVerifier = async (
 
   const url = `${baseUrl}?${qs.stringify({
     client_id: clientId,
-    scope: 'openid offline_access',
+    scope,
     response_type: 'code',
     redirect_uri: [redirectUri],
     prompt: 'consent',

@@ -15,9 +15,10 @@ jest.mock('./verify-id-token');
 const DOMAIN = 'logto.dev';
 const BASE_URL = `https://${DOMAIN}`;
 const CLIENT_ID = 'client1';
+const DEFAULT_SCOPE = 'openid offline_access';
 const SUBJECT = 'subject1';
 const REDIRECT_URI = 'http://localhost:3000';
-const SESSEION_MANAGER_KEY = 'LOGTO_SESSION_MANAGER';
+const SESSION_MANAGER_KEY = 'LOGTO_SESSION_MANAGER';
 const REDIRECT_CALLBACK = `${REDIRECT_URI}?code=authorization_code`;
 const REDIRECT_CALLBACK_WITH_ERROR = `${REDIRECT_CALLBACK}&error=invalid_request&error_description=code_challenge%20must%20be%20a%20string%20with%20a%20minimum%20length%20of%2043%20characters`;
 
@@ -111,10 +112,13 @@ describe('LogtoClient', () => {
 
     test('claims restored', async () => {
       const storage = new MemoryStorage();
-      storage.setItem(`LOGTO_TOKEN_SET_CACHE::${discoverResponse.issuer}::${CLIENT_ID}`, {
-        ...fakeTokenResponse,
-        id_token: (await generateIdToken()).idToken,
-      });
+      storage.setItem(
+        `LOGTO_TOKEN_SET_CACHE::${discoverResponse.issuer}::${CLIENT_ID}::${DEFAULT_SCOPE}`,
+        {
+          ...fakeTokenResponse,
+          id_token: (await generateIdToken()).idToken,
+        }
+      );
       const logto = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
@@ -235,10 +239,13 @@ describe('LogtoClient', () => {
     describe('from local', () => {
       test('get accessToken from tokenset', async () => {
         const storage = new MemoryStorage();
-        storage.setItem(`LOGTO_TOKEN_SET_CACHE::${discoverResponse.issuer}::${CLIENT_ID}`, {
-          ...fakeTokenResponse,
-          id_token: (await generateIdToken()).idToken,
-        });
+        storage.setItem(
+          `LOGTO_TOKEN_SET_CACHE::${discoverResponse.issuer}::${CLIENT_ID}::${DEFAULT_SCOPE}`,
+          {
+            ...fakeTokenResponse,
+            id_token: (await generateIdToken()).idToken,
+          }
+        );
         const logto = await LogtoClient.create({
           domain: DOMAIN,
           clientId: CLIENT_ID,
@@ -262,11 +269,14 @@ describe('LogtoClient', () => {
 
       beforeEach(async () => {
         const storage = new MemoryStorage();
-        storage.setItem(`LOGTO_TOKEN_SET_CACHE::${discoverResponse.issuer}::${CLIENT_ID}`, {
-          ...fakeTokenResponse,
-          id_token: (await generateIdToken()).idToken,
-          expires_in: -1,
-        });
+        storage.setItem(
+          `LOGTO_TOKEN_SET_CACHE::${discoverResponse.issuer}::${CLIENT_ID}::${DEFAULT_SCOPE}`,
+          {
+            ...fakeTokenResponse,
+            id_token: (await generateIdToken()).idToken,
+            expires_in: -1,
+          }
+        );
         logto = await LogtoClient.create({
           domain: DOMAIN,
           clientId: CLIENT_ID,
@@ -303,15 +313,18 @@ describe('LogtoClient', () => {
         storage,
       });
       logto.logout(REDIRECT_URI);
-      expect(storage.removeItem).toBeCalledWith(SESSEION_MANAGER_KEY);
+      expect(storage.removeItem).toBeCalledWith(SESSION_MANAGER_KEY);
     });
 
     test('tokenset cache should be cleared', async () => {
       const storage = new MemoryStorage();
-      storage.setItem(`LOGTO_TOKEN_SET_CACHE::${discoverResponse.issuer}::${CLIENT_ID}`, {
-        ...fakeTokenResponse,
-        id_token: (await generateIdToken()).idToken,
-      });
+      storage.setItem(
+        `LOGTO_TOKEN_SET_CACHE::${discoverResponse.issuer}::${CLIENT_ID}::${DEFAULT_SCOPE}`,
+        {
+          ...fakeTokenResponse,
+          id_token: (await generateIdToken()).idToken,
+        }
+      );
       jest.spyOn(storage, 'removeItem');
       const logto = await LogtoClient.create({
         domain: DOMAIN,
