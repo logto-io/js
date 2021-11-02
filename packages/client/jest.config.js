@@ -6,8 +6,5 @@ module.exports = {
   testPathIgnorePatterns: ['lib'],
   moduleFileExtensions: ['ts', 'tsx', 'js'],
   testEnvironment: 'jsdom',
-  moduleNameMapper: {
-    '^jose/(.*)$': '<rootDir>/node_modules/jose/dist/node/cjs/$1',
-  },
   setupFilesAfterEnv: ['./jest.setup.js'],
 };
