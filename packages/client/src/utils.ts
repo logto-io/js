@@ -24,9 +24,9 @@ const IDTokenSchema = z.object({
 export type IDToken = z.infer<typeof IDTokenSchema>;
 
 /**
- * Decode IDToken from JWT, without verifing.
- * Verifing JWT requires fetching public key first, this can not
- * be done in a sync function, in some cases, verifing is not necessary.
+ * Decode IDToken from JWT, without verifying.
+ * Verifying JWT requires fetching public key first, this can not
+ * be done in a sync function, in some cases, verifying is not necessary.
  * @param token JWT string.
  * @returns IDToken combined with JWT Claims.
  */
@@ -57,3 +57,19 @@ export const nowRoundToSec = () => Math.floor(Date.now() / 1000);
 
 export const encodeBase64 = (input: string) => btoa(input);
 export const decodeBase64 = (input: string) => atob(input);
+
+/**
+ * @param originalScope
+ * @return customScope including all default scope values ( Logto requires `openid` and `offline_access` )
+ */
+export const generateScope = (originalScope?: string | string[]): string => {
+  const originalScopeValues =
+    originalScope === undefined
+      ? []
+      : Array.isArray(originalScope)
+      ? originalScope
+      : originalScope.split(' ');
+  const nonEmptyScopeValues = originalScopeValues.map((s) => s.trim()).filter((s) => s.length > 0);
+  const uniqueScopeValues = new Set(['openid', 'offline_access', ...nonEmptyScopeValues]);
+  return Array.from(uniqueScopeValues).join(' ');
+};

@@ -12,6 +12,7 @@ import { getLogoutUrl } from './request-logout';
 import SessionManager from './session-manager';
 import { ClientStorage, LocalStorage } from './storage';
 import TokenSet from './token-set';
+import { generateScope } from './utils';
 import { createJWKS, verifyIdToken } from './verify-id-token';
 
 const TOKEN_SET_CACHE_KEY = 'LOGTO_TOKEN_SET_CACHE';
@@ -22,6 +23,7 @@ export interface ConfigParameters {
   domain: string;
   clientId: string;
   storage?: ClientStorage;
+  scope?: string | string[];
 }
 
 export const appendSlashIfNeeded = (url: string): string => {
@@ -35,12 +37,14 @@ export const appendSlashIfNeeded = (url: string): string => {
 export default class LogtoClient {
   private readonly oidcConfiguration: OIDCConfiguration;
   private readonly clientId: string;
+  private readonly scope: string;
   private readonly sessionManager: SessionManager;
   private readonly storage: ClientStorage;
   private tokenSet: Optional<TokenSet>;
   constructor(config: ConfigParameters, oidcConfiguration: OIDCConfiguration) {
-    const { clientId, storage } = config;
+    const { clientId, scope, storage } = config;
     this.clientId = clientId;
+    this.scope = generateScope(scope);
     this.oidcConfiguration = oidcConfiguration;
     this.storage = storage ?? new LocalStorage();
     this.sessionManager = new SessionManager(this.storage);
@@ -48,14 +52,14 @@ export default class LogtoClient {
   }
 
   static async create(config: ConfigParameters): Promise<LogtoClient> {
-    const client = new LogtoClient(config, await discover(`https://${config.domain}`));
-    return client;
+    return new LogtoClient(config, await discover(`https://${config.domain}`));
   }
 
   public async loginWithRedirect(redirectUri: string) {
     const { url, codeVerifier } = await getLoginUrlAndCodeVerifier(
       this.oidcConfiguration.authorization_endpoint,
       this.clientId,
+      this.scope,
       redirectUri
     );
     this.sessionManager.set({ redirectUri, codeVerifier });
@@ -149,7 +153,7 @@ export default class LogtoClient {
   }
 
   private get tokenSetCacheKey() {
-    return `${TOKEN_SET_CACHE_KEY}::${this.oidcConfiguration.issuer}::${this.clientId}`;
+    return `${TOKEN_SET_CACHE_KEY}::${this.oidcConfiguration.issuer}::${this.clientId}::${this.scope}`;
   }
 
   private createTokenSetFromCache() {
