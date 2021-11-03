@@ -22,8 +22,8 @@ export * from './storage';
 export interface ConfigParameters {
   domain: string;
   clientId: string;
-  storage?: ClientStorage;
   scope?: string | string[];
+  storage?: ClientStorage;
 }
 
 export const appendSlashIfNeeded = (url: string): string => {
@@ -56,12 +56,12 @@ export default class LogtoClient {
   }
 
   public async loginWithRedirect(redirectUri: string) {
-    const { url, codeVerifier } = await getLoginUrlAndCodeVerifier(
-      this.oidcConfiguration.authorization_endpoint,
-      this.clientId,
-      this.scope,
-      redirectUri
-    );
+    const { url, codeVerifier } = await getLoginUrlAndCodeVerifier({
+      baseUrl: this.oidcConfiguration.authorization_endpoint,
+      clientId: this.clientId,
+      scope: this.scope,
+      redirectUri,
+    });
     this.sessionManager.set({ redirectUri, codeVerifier });
     window.location.assign(url);
   }

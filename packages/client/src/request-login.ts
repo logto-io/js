@@ -2,12 +2,17 @@ import qs from 'query-string';
 
 import { generateCodeChallenge, generateCodeVerifier } from './generators';
 
+export interface LoginPrepareParameters {
+  baseUrl: string;
+  clientId: string;
+  scope?: string;
+  redirectUri: string;
+}
+
 export const getLoginUrlAndCodeVerifier = async (
-  baseUrl: string,
-  clientId: string,
-  scope: string,
-  redirectUri: string
+  parameters: LoginPrepareParameters
 ): Promise<{ url: string; codeVerifier: string }> => {
+  const { baseUrl, clientId, scope, redirectUri } = parameters;
   const codeVerifier = generateCodeVerifier();
   const codeChallenge = await generateCodeChallenge(codeVerifier);
 
