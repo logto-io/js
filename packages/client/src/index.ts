@@ -85,12 +85,13 @@ export default class LogtoClient {
 
     const { redirectUri, codeVerifier } = session;
     this.sessionManager.clear();
-    const tokenParameters = await grantTokenByAuthorizationCode(
-      this.oidcConfiguration.token_endpoint,
+    const tokenParameters = await grantTokenByAuthorizationCode({
+      endpoint: this.oidcConfiguration.token_endpoint,
+      clientId: this.clientId,
       code,
       redirectUri,
-      codeVerifier
-    );
+      codeVerifier,
+    });
     await verifyIdToken(
       createJWKS(this.oidcConfiguration.jwks_uri),
       tokenParameters.id_token,

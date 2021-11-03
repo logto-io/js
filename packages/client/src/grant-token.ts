@@ -12,17 +12,27 @@ const TokenSetParametersSchema = z.object({
 
 export type TokenSetParameters = z.infer<typeof TokenSetParametersSchema>;
 
-export const grantTokenByAuthorizationCode = async (
-  endpoint: string,
-  code: string,
-  redirectUri: string,
-  codeVerifier: string
-): Promise<TokenSetParameters> => {
+type GrantTokenPayload = {
+  endpoint: string;
+  code: string;
+  redirectUri: string;
+  codeVerifier: string;
+  clientId: string;
+};
+
+export const grantTokenByAuthorizationCode = async ({
+  endpoint,
+  code,
+  redirectUri,
+  codeVerifier,
+  clientId,
+}: GrantTokenPayload): Promise<TokenSetParameters> => {
   const parameters = new URLSearchParams();
   parameters.append('grant_type', 'authorization_code');
   parameters.append('code', code);
   parameters.append('redirect_uri', redirectUri);
   parameters.append('code_verifier', codeVerifier);
+  parameters.append('client_id', clientId);
 
   const response = await requestWithFetch(endpoint, {
     method: 'POST',
