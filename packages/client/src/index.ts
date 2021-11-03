@@ -66,6 +66,27 @@ export default class LogtoClient {
     window.location.assign(url);
   }
 
+  public isLoginRedirect(url: string) {
+    try {
+      const { code, error } = parseRedirectCallback(url);
+
+      if (error || !code) {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+
+    const session = this.sessionManager.get();
+
+    if (!session) {
+      return false;
+    }
+
+    const { redirectUri } = session;
+    return url.startsWith(redirectUri);
+  }
+
   public async handleCallback(url: string) {
     const { code, error, error_description } = parseRedirectCallback(url);
 

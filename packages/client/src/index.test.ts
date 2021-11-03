@@ -167,6 +167,51 @@ describe('LogtoClient', () => {
     });
   });
 
+  describe('isLoginRedirect', () => {
+    test('url contains code and starts with redirect_uri in session should be true', async () => {
+      const storage = new MemoryStorage();
+      const logto = await LogtoClient.create({
+        domain: DOMAIN,
+        clientId: CLIENT_ID,
+        storage,
+      });
+      await logto.loginWithRedirect(REDIRECT_URI);
+      expect(logto.isLoginRedirect(REDIRECT_CALLBACK)).toBeTruthy();
+    });
+
+    test('empty session should be false', async () => {
+      const storage = new MemoryStorage();
+      const logto = await LogtoClient.create({
+        domain: DOMAIN,
+        clientId: CLIENT_ID,
+        storage,
+      });
+      expect(logto.isLoginRedirect(REDIRECT_CALLBACK)).toBeFalsy();
+    });
+
+    test('no code in url should be false', async () => {
+      const storage = new MemoryStorage();
+      const logto = await LogtoClient.create({
+        domain: DOMAIN,
+        clientId: CLIENT_ID,
+        storage,
+      });
+      await logto.loginWithRedirect(REDIRECT_URI);
+      expect(logto.isLoginRedirect(REDIRECT_URI)).toBeFalsy();
+    });
+
+    test('mismatch uri should be false', async () => {
+      const storage = new MemoryStorage();
+      const logto = await LogtoClient.create({
+        domain: DOMAIN,
+        clientId: CLIENT_ID,
+        storage,
+      });
+      await logto.loginWithRedirect('http://example.com');
+      expect(logto.isLoginRedirect(REDIRECT_URI)).toBeFalsy();
+    });
+  });
+
   describe('handleCallback', () => {
     test('empty session should fail', async () => {
       const storage = new MemoryStorage();
