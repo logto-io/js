@@ -3,14 +3,12 @@
 import { fromUint8Array } from 'js-base64';
 import { customAlphabet } from 'nanoid';
 
+import {
+  CODE_VERIFIER_ALPHABET,
+  CODE_VERIFIER_MAX_LENGTH,
+  RANDOM_STRING_MAX_LENGTH,
+} from './constants';
 import { encodeBase64 } from './utils';
-
-/**
- * The code verifier is a string using the unreserved characters [A-Z] / [a-z] / [0-9] / "-" / "." / "_" / "~" (before base64url-encoding).
- * @link [Client Creates a Code Verifier](https://datatracker.ietf.org/doc/html/rfc7636#section-4.1)
- */
-export const CODE_VERIFIER_ALPHABET =
-  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
 
 /**
  * @param length The length of the string to generate.
@@ -18,15 +16,6 @@ export const CODE_VERIFIER_ALPHABET =
 function generateRandomString(length: number) {
   return customAlphabet(CODE_VERIFIER_ALPHABET, length)();
 }
-
-/**
- * The length of code verifier ranges from 43 to 128.
- * After base64url-encoding a string of 96 characters, you will get a maximum length (128) string for code verifier.
- * @link [Client Creates a Code Verifier](https://datatracker.ietf.org/doc/html/rfc7636#section-4.1)
- */
-export const CODE_VERIFIER_MIN_LENGTH = 43;
-export const CODE_VERIFIER_MAX_LENGTH = 128;
-const RANDOM_STRING_MAX_LENGTH = 96;
 
 /**
  * Generates random bytes and encodes them in url safe base64.

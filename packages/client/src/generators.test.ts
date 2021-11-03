@@ -1,8 +1,5 @@
-import {
-  CODE_VERIFIER_MAX_LENGTH,
-  generateCodeVerifier,
-  generateCodeChallenge,
-} from './generators';
+import { CODE_VERIFIER_MAX_LENGTH } from './constants';
+import { generateCodeVerifier, generateCodeChallenge } from './generators';
 
 test('generate codeVerifier with fixed length', () => {
   const verifier = generateCodeVerifier();
