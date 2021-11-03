@@ -2,7 +2,7 @@ import { generateCodeVerifier, generateCodeChallenge } from './generators';
 
 test('generate codeVerifier with fixed length', () => {
   const verifier = generateCodeVerifier();
-  expect(verifier.length).toEqual(Math.ceil(128));
+  expect(verifier.length).toEqual(128);
 });
 
 test('generate codeVerifier with random value', () => {

@@ -30,18 +30,18 @@ export const CODE_VERIFIER_MAX_LEN = 128;
  * Generates random bytes and encodes them in url safe base64.
  * @param length The length of the string (before base64url-encoding) to generate.
  */
-export const generateEncodedRandom = (length = CODE_VERIFIER_MAX_LEN) =>
+export const generateRandomInBase64 = (length = CODE_VERIFIER_MAX_LEN) =>
   encodeBase64(generateRandomString(length));
 
 /**
  * Generates random bytes and encodes them in url safe base64.
  */
-export const generateState = () => generateEncodedRandom();
+export const generateState = () => generateRandomInBase64();
 
 /**
  * Generates random bytes and encodes them in url safe base64.
  */
-export const generateNonce = () => generateEncodedRandom();
+export const generateNonce = () => generateRandomInBase64();
 
 /**
  * Generates code verifier use max_length
