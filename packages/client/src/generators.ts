@@ -30,23 +30,24 @@ export const CODE_VERIFIER_MAX_LEN = 128;
  * Generates random bytes and encodes them in url safe base64.
  * @param length The length of the string (before base64url-encoding) to generate.
  */
-export const generateRandom = (length = CODE_VERIFIER_MAX_LEN) =>
+export const generateRandomInBase64 = (length = CODE_VERIFIER_MAX_LEN) =>
   encodeBase64(generateRandomString(length));
 
 /**
  * Generates random bytes and encodes them in url safe base64.
  */
-export const generateState = () => generateRandom();
+export const generateState = () => generateRandomInBase64();
 
 /**
  * Generates random bytes and encodes them in url safe base64.
  */
-export const generateNonce = () => generateRandom();
+export const generateNonce = () => generateRandomInBase64();
 
 /**
- * Generates random bytes and encodes them in url safe base64.
+ * Generates code verifier use max_length
+ * @link [Client Creates a Code Verifier](https://datatracker.ietf.org/doc/html/rfc7636#section-4.1)
  */
-export const generateCodeVerifier = () => generateRandom();
+export const generateCodeVerifier = () => generateRandomString(CODE_VERIFIER_MAX_LEN);
 
 /**
  * Calculates the S256 PKCE code challenge for an arbitrary code verifier.

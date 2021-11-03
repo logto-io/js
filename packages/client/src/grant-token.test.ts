@@ -15,12 +15,13 @@ describe('grantTokenByAuthorizationCode', () => {
       .post('/oidc/token')
       .reply(200, successResponse);
 
-    const tokenSet = await grantTokenByAuthorizationCode(
-      'https://logto.dev/oidc/token',
-      'code',
-      'http://localhost:3000/callback',
-      'verifier'
-    );
+    const tokenSet = await grantTokenByAuthorizationCode({
+      endpoint: 'https://logto.dev/oidc/token',
+      code: 'code',
+      redirectUri: 'http://localhost:3000/callback',
+      codeVerifier: 'verifier',
+      clientId: 'foo',
+    });
 
     expect(tokenSet).toMatchObject(successResponse);
   });
@@ -37,12 +38,13 @@ describe('grantTokenByAuthorizationCode', () => {
       .reply(200, successResponse);
 
     await expect(
-      grantTokenByAuthorizationCode(
-        'https://logto.dev/oidc/token',
-        'code',
-        'http://localhost:3000/callback',
-        'verifier'
-      )
+      grantTokenByAuthorizationCode({
+        endpoint: 'https://logto.dev/oidc/token',
+        code: 'code',
+        redirectUri: 'http://localhost:3000/callback',
+        codeVerifier: 'verifier',
+        clientId: 'foo',
+      })
     ).rejects.toThrowError();
   });
 });
