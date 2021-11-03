@@ -21,16 +21,18 @@ function generateRandomString(length: number) {
 
 /**
  * The length of code verifier ranges from 43 to 128.
+ * After base64url-encoding a string of 96 characters, you will get a maximum length (128) string for code verifier.
  * @link [Client Creates a Code Verifier](https://datatracker.ietf.org/doc/html/rfc7636#section-4.1)
  */
-export const CODE_VERIFIER_MIN_LEN = 43;
-export const CODE_VERIFIER_MAX_LEN = 128;
+export const CODE_VERIFIER_MIN_LENGTH = 43;
+export const CODE_VERIFIER_MAX_LENGTH = 128;
+const RANDOM_STRING_MAX_LENGTH = 96;
 
 /**
  * Generates random bytes and encodes them in url safe base64.
  * @param length The length of the string (before base64url-encoding) to generate.
  */
-export const generateRandomInBase64 = (length = CODE_VERIFIER_MAX_LEN) =>
+export const generateRandomInBase64 = (length = RANDOM_STRING_MAX_LENGTH) =>
   encodeBase64(generateRandomString(length));
 
 /**
@@ -47,7 +49,7 @@ export const generateNonce = () => generateRandomInBase64();
  * Generates code verifier use max_length
  * @link [Client Creates a Code Verifier](https://datatracker.ietf.org/doc/html/rfc7636#section-4.1)
  */
-export const generateCodeVerifier = () => generateRandomString(CODE_VERIFIER_MAX_LEN);
+export const generateCodeVerifier = () => generateRandomString(CODE_VERIFIER_MAX_LENGTH);
 
 /**
  * Calculates the S256 PKCE code challenge for an arbitrary code verifier.
