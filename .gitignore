@@ -11,6 +11,7 @@ node_modules
 # production
 /packages/*/dist
 /packages/*/lib
+/packages/*/build
 
 # logs
 logs

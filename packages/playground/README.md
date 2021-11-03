@@ -9,6 +9,7 @@ Create `.env` file with the following content:
 ```env
 RAZZLE_OIDC_BASE_URL=https://logto.dev/oidc
 ```
+
 Then
 
 ```bash
