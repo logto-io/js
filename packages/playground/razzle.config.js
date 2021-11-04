@@ -15,6 +15,14 @@ module.exports = {
       '@': path.resolve('src/'),
     };
 
+    // Playground exceed the 244kb limitation after import client
+    // create a issue to optimize client js SDK package size
+    // https://linear.app/silverhand/issue/LOG-236/need-to-reduce-the-client-package-size
+    config.performance = {
+      maxEntrypointSize: 512000,
+      maxAssetSize: 512000,
+    };
+
     return config;
   },
   modifyJestConfig: ({ jestConfig }) => {
@@ -31,6 +39,8 @@ module.exports = {
       '^.+\\.(css|less|scss)$': 'babel-jest',
       '@/(.*)': '<rootDir>/src/$1',
     };
+
+    config.setupFilesAfterEnv =['./jest.setup.js'];
 
     return config;
   },

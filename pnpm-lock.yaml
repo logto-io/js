@@ -72,6 +72,8 @@ importers:
   packages/playground:
     specifiers:
       '@babel/core': ^7.14.6
+      '@logto/client': ^0.0.1
+      '@peculiar/webcrypto': ^1.1.7
       '@silverhand/eslint-config': ^0.2.2
       '@silverhand/eslint-config-react': ^0.2.2
       '@silverhand/essentials': ^1.1.0-rc.1
@@ -91,6 +93,7 @@ importers:
       ky: ^0.28.5
       lint-staged: '>=10'
       mini-css-extract-plugin: ^0.9.0
+      node-fetch: 2.6.6
       postcss: ^8.3.6
       prettier: ^2.3.2
       query-string: ^7.0.1
@@ -101,11 +104,13 @@ importers:
       react-dom: ^17.0.2
       react-router-dom: ^5.2.0
       stylelint: ^13.13.1
+      text-encoder: ^0.0.4
       typescript: ^4.3.5
       webpack: ^4.44.1
       webpack-dev-server: ^3.11.2
       zod: ^3.5.1
     dependencies:
+      '@logto/client': link:../client
       '@silverhand/essentials': 1.1.0
       js-base64: 3.7.2
       ky: 0.28.6
@@ -116,6 +121,7 @@ importers:
       zod: 3.9.8
     devDependencies:
       '@babel/core': 7.15.0
+      '@peculiar/webcrypto': 1.1.7
       '@silverhand/eslint-config': 0.2.2_d0e06193b104cab3f9ceaef77640598a
       '@silverhand/eslint-config-react': 0.2.2_4c20fd9f9f0b69dac15e87486719255f
       '@silverhand/ts-config': 0.2.2_typescript@4.4.4
@@ -132,12 +138,14 @@ importers:
       html-webpack-plugin: 4.5.2_webpack@4.46.0
       lint-staged: 11.1.2
       mini-css-extract-plugin: 0.9.0_webpack@4.46.0
+      node-fetch: 2.6.6
       postcss: 8.3.11
       prettier: 2.3.2
       razzle: 4.2.6_e4684ab490cb0dcc31add400d8065769
       razzle-dev-utils: 4.2.6_25582cf9a45d8a495d3f9acca3867c25
       razzle-plugin-scss: 4.2.6_041d2e272707d6b253e23199b16beaed
       stylelint: 13.13.1
+      text-encoder: 0.0.4
       typescript: 4.4.4
       webpack: 4.46.0
       webpack-dev-server: 3.11.2_webpack@4.46.0
@@ -6818,7 +6826,7 @@ packages:
       '@typescript-eslint/eslint-plugin': '>=4.28.1'
       eslint: '>=7.30.0'
     dependencies:
-      '@typescript-eslint/eslint-plugin': 4.31.2_1ff229bad5b3f782209b865beb048324
+      '@typescript-eslint/eslint-plugin': 4.31.2_8f0416aa8ec58a469909c5c0f73069bc
       eslint: 7.32.0
       typescript: 4.3.5
     dev: true
