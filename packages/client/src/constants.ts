@@ -27,10 +27,10 @@ export const EXPECTED_ALG = 'RS256';
 /**
  * Scope - Values
  */
-export const EMAIL = 'email';
 export const NAME = 'name';
-export const OPENID = 'openid';
+export const EMAIL = 'email';
 export const OFFLINE_ACCESS = 'offline_access';
+export const OPENID = 'openid';
 
 /**
  * Scope - Defaults
