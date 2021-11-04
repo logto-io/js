@@ -24,7 +24,7 @@ export interface ConfigParameters {
   clientId: string;
   scope?: string | string[];
   storage?: ClientStorage;
-  onAuthStateChange?: (isAuthenticated: boolean) => void;
+  onAuthStateChange?: () => void;
 }
 
 export const appendSlashIfNeeded = (url: string): string => {
@@ -41,7 +41,7 @@ export default class LogtoClient {
   private readonly scope: string;
   private readonly sessionManager: SessionManager;
   private readonly storage: ClientStorage;
-  private readonly onAuthStateChange: Optional<(isAuthenticated: boolean) => void>;
+  private readonly onAuthStateChange: Optional<() => void>;
   private tokenSet: Optional<TokenSet>;
   constructor(config: ConfigParameters, oidcConfiguration: OIDCConfiguration) {
     const { clientId, scope, storage, onAuthStateChange } = config;
@@ -124,7 +124,7 @@ export default class LogtoClient {
     this.storage.setItem(this.tokenSetCacheKey, tokenParameters);
     this.tokenSet = new TokenSet(tokenParameters);
     if (this.onAuthStateChange) {
-      this.onAuthStateChange(true);
+      this.onAuthStateChange();
     }
   }
 
@@ -167,7 +167,7 @@ export default class LogtoClient {
   public logout(redirectUri: string) {
     this.sessionManager.clear();
     if (this.onAuthStateChange) {
-      this.onAuthStateChange(false);
+      this.onAuthStateChange();
     }
 
     if (!this.tokenSet) {
@@ -193,7 +193,7 @@ export default class LogtoClient {
     if (parameters) {
       this.tokenSet = new TokenSet(parameters);
       if (this.onAuthStateChange) {
-        this.onAuthStateChange(true);
+        this.onAuthStateChange();
       }
     }
   }

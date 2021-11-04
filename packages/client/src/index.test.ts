@@ -398,7 +398,7 @@ describe('LogtoClient', () => {
         storage,
         onAuthStateChange,
       });
-      expect(onAuthStateChange).toHaveBeenCalledWith(true);
+      expect(onAuthStateChange).toHaveBeenCalled();
     });
 
     test('should be called on handleCallback', async () => {
@@ -412,7 +412,7 @@ describe('LogtoClient', () => {
       });
       await logto.loginWithRedirect(REDIRECT_URI);
       await logto.handleCallback(REDIRECT_CALLBACK);
-      expect(onAuthStateChange).toHaveBeenCalledWith(true);
+      expect(onAuthStateChange).toHaveBeenCalled();
     });
 
     test('should be called on logout', async () => {
@@ -425,7 +425,7 @@ describe('LogtoClient', () => {
         onAuthStateChange,
       });
       logto.logout(REDIRECT_URI);
-      expect(onAuthStateChange).toHaveBeenCalledWith(false);
+      expect(onAuthStateChange).toHaveBeenCalled();
     });
   });
 });
