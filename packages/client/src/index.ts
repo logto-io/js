@@ -24,6 +24,7 @@ export interface ConfigParameters {
   clientId: string;
   scope?: string | string[];
   storage?: ClientStorage;
+  onAuthStateChange?: (isAuthenticated: boolean) => void;
 }
 
 export const appendSlashIfNeeded = (url: string): string => {
@@ -40,10 +41,12 @@ export default class LogtoClient {
   private readonly scope: string;
   private readonly sessionManager: SessionManager;
   private readonly storage: ClientStorage;
+  private readonly onAuthStateChange: Optional<(isAuthenticated: boolean) => void>;
   private tokenSet: Optional<TokenSet>;
   constructor(config: ConfigParameters, oidcConfiguration: OIDCConfiguration) {
-    const { clientId, scope, storage } = config;
+    const { clientId, scope, storage, onAuthStateChange } = config;
     this.clientId = clientId;
+    this.onAuthStateChange = onAuthStateChange;
     this.scope = generateScope(scope);
     this.oidcConfiguration = oidcConfiguration;
     this.storage = storage ?? new LocalStorage();
@@ -120,6 +123,9 @@ export default class LogtoClient {
     );
     this.storage.setItem(this.tokenSetCacheKey, tokenParameters);
     this.tokenSet = new TokenSet(tokenParameters);
+    if (this.onAuthStateChange) {
+      this.onAuthStateChange(true);
+    }
   }
 
   public getClaims() {
@@ -160,6 +166,10 @@ export default class LogtoClient {
 
   public logout(redirectUri: string) {
     this.sessionManager.clear();
+    if (this.onAuthStateChange) {
+      this.onAuthStateChange(false);
+    }
+
     if (!this.tokenSet) {
       return;
     }
@@ -182,6 +192,9 @@ export default class LogtoClient {
     const parameters = this.storage.getItem<TokenSetParameters>(this.tokenSetCacheKey);
     if (parameters) {
       this.tokenSet = new TokenSet(parameters);
+      if (this.onAuthStateChange) {
+        this.onAuthStateChange(true);
+      }
     }
   }
 }

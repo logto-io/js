@@ -380,4 +380,52 @@ describe('LogtoClient', () => {
       expect(storage.removeItem).toBeCalled();
     });
   });
+
+  describe('onAuthStateChange', () => {
+    test('should be called on tokenSet recovery', async () => {
+      const onAuthStateChange = jest.fn();
+      const storage = new MemoryStorage();
+      storage.setItem(
+        `LOGTO_TOKEN_SET_CACHE::${discoverResponse.issuer}::${CLIENT_ID}::${DEFAULT_SCOPE}`,
+        {
+          ...fakeTokenResponse,
+          id_token: (await generateIdToken()).idToken,
+        }
+      );
+      await LogtoClient.create({
+        domain: DOMAIN,
+        clientId: CLIENT_ID,
+        storage,
+        onAuthStateChange,
+      });
+      expect(onAuthStateChange).toHaveBeenCalledWith(true);
+    });
+
+    test('should be called on handleCallback', async () => {
+      const onAuthStateChange = jest.fn();
+      const storage = new MemoryStorage();
+      const logto = await LogtoClient.create({
+        domain: DOMAIN,
+        clientId: CLIENT_ID,
+        storage,
+        onAuthStateChange,
+      });
+      await logto.loginWithRedirect(REDIRECT_URI);
+      await logto.handleCallback(REDIRECT_CALLBACK);
+      expect(onAuthStateChange).toHaveBeenCalledWith(true);
+    });
+
+    test('should be called on logout', async () => {
+      const onAuthStateChange = jest.fn();
+      const storage = new MemoryStorage();
+      const logto = await LogtoClient.create({
+        domain: DOMAIN,
+        clientId: CLIENT_ID,
+        storage,
+        onAuthStateChange,
+      });
+      logto.logout(REDIRECT_URI);
+      expect(onAuthStateChange).toHaveBeenCalledWith(false);
+    });
+  });
 });
