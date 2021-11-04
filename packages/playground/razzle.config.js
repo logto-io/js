@@ -19,7 +19,8 @@ module.exports = {
     // create a issue to optimize client js SDK package size
     // https://linear.app/silverhand/issue/LOG-236/need-to-reduce-the-client-package-size
     config.performance = {
-      hints: 'warning'
+      maxEntrypointSize: 512000,
+      maxAssetSize: 512000,
     };
 
     return config;
