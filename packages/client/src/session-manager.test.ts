@@ -1,7 +1,6 @@
+import { SESSION_MANAGER_KEY } from './constants';
 import SessionManager from './session-manager';
 import { SessionStorage } from './storage';
-
-const SESSION_MANAGER_KEY = 'LOGTO_SESSION_MANAGER';
 
 const transaction = {
   codeVerifier: 'codeVerifier',
