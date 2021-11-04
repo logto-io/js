@@ -7,7 +7,7 @@
 Create `.env` file with the following content:
 
 ```env
-RAZZLE_OIDC_BASE_URL=https://logto.dev/oidc
+RAZZLE_OIDC_BASE_DOMAIN=logto.dev
 ```
 
 Then
