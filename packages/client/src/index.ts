@@ -1,5 +1,6 @@
 import { Optional } from '@silverhand/essentials';
 
+import { TOKEN_SET_CACHE_KEY } from './constants';
 import discover, { OIDCConfiguration } from './discover';
 import {
   grantTokenByAuthorizationCode,
@@ -14,8 +15,6 @@ import { ClientStorage, LocalStorage } from './storage';
 import TokenSet from './token-set';
 import { generateScope } from './utils';
 import { createJWKS, verifyIdToken } from './verify-id-token';
-
-const TOKEN_SET_CACHE_KEY = 'LOGTO_TOKEN_SET_CACHE';
 
 export * from './storage';
 

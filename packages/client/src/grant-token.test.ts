@@ -3,7 +3,7 @@ import nock from 'nock';
 import { grantTokenByAuthorizationCode, grantTokenByRefreshToken } from './grant-token';
 
 describe('grantTokenByAuthorizationCode', () => {
-  test('get tokenSet paramaters', async () => {
+  test('get tokenSet parameters', async () => {
     const successResponse = {
       access_token: 'access_token',
       expires_in: 3600,

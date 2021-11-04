@@ -1,7 +1,6 @@
-import { createRemoteJWKSet, jwtVerify, JWTVerifyResult, JWTVerifyGetKey } from 'jose';
+import { createRemoteJWKSet, jwtVerify, JWTVerifyGetKey, JWTVerifyResult } from 'jose';
 
-const EXPECTED_ALG = 'RS256';
-const CLOCK_TOLERANCE = 60;
+import { CLOCK_TOLERANCE, EXPECTED_ALG } from './constants';
 
 export const createJWKS = (JWKSUri: string): JWTVerifyGetKey => {
   return createRemoteJWKSet(new URL(JWKSUri));

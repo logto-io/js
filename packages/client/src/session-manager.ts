@@ -1,9 +1,7 @@
 import { Optional } from '@silverhand/essentials';
 
+import { SESSION_EXPIRES_MILLISECONDS, SESSION_MANAGER_KEY } from './constants';
 import { ClientStorage } from './storage';
-
-const SESSION_MANAGER_KEY = 'LOGTO_SESSION_MANAGER';
-const SESSION_EXPIRES_MILLISECONDS = 86_400_000;
 
 interface Session {
   codeVerifier: string;

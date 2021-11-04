@@ -1,8 +1,8 @@
 import { Optional } from '@silverhand/essentials';
 
-const STORAGE_KEY_PREFIX = 'logto:';
+import { STORAGE_KEY_PREFIX } from './constants';
 
-const getKey = (key: string) => `${STORAGE_KEY_PREFIX}${key}`;
+const getKey = (key: string) => `${STORAGE_KEY_PREFIX}:${key}`;
 
 const safeParse = <T>(value: string): T | undefined => {
   try {
