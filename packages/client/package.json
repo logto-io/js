@@ -10,7 +10,7 @@
     "lint": "eslint --ext .ts src",
     "package": "webpack",
     "test": "jest",
-    "prepublish": "npm run build && ",
+    "prepublish": "npm run build && npm run package",
     "report": "WITH_REPORT=true npm run package"
   },
   "dependencies": {
