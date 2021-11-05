@@ -7,23 +7,23 @@ import useLogto from './use-logto';
 const isAuthenticated = jest.fn();
 
 jest.mock('@logto/client', () => {
-  const Mocked = jest
-    .fn()
-    .mockImplementation(({ onAuthStateChange }: { onAuthStateChange: () => void }) => {
-      return {
-        isAuthenticated,
-        handleCallback: jest.fn().mockImplementation(() => {
-          onAuthStateChange();
-        }),
-        logout: jest.fn().mockImplementation(() => {
-          onAuthStateChange();
-        }),
-      };
-    });
+  const Mocked = jest.fn(({ onAuthStateChange }: { onAuthStateChange: () => void }) => {
+    return {
+      isAuthenticated,
+      handleCallback: jest.fn(() => {
+        onAuthStateChange();
+      }),
+      logout: jest.fn(() => {
+        onAuthStateChange();
+      }),
+    };
+  });
   return {
     default: Mocked,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    create: jest.fn().mockImplementation((...args) => new Mocked(...args)),
+    create: jest.fn(
+      ({ onAuthStateChange }: { onAuthStateChange: () => void }) =>
+        new Mocked({ onAuthStateChange })
+    ),
   };
 });
 
