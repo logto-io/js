@@ -9,7 +9,7 @@ import {
   DEFAULT_SCOPE_VALUES,
   RANDOM_STRING_MAX_LENGTH,
 } from './constants';
-import { encodeBase64 } from './utils';
+import { UrlSafeBase64 } from './utils';
 
 /**
  * @param length The length of the string to generate.
@@ -22,18 +22,18 @@ function generateRandomString(length: number) {
  * Generates random bytes and encodes them in url safe base64.
  * @param length The length of the string (before base64url-encoding) to generate.
  */
-export const generateRandomInBase64 = (length = RANDOM_STRING_MAX_LENGTH) =>
-  encodeBase64(generateRandomString(length));
+export const generateRandomInUrlSafeBase64 = (length = RANDOM_STRING_MAX_LENGTH) =>
+  UrlSafeBase64.encode(generateRandomString(length));
 
 /**
  * Generates random bytes and encodes them in url safe base64.
  */
-export const generateState = () => generateRandomInBase64();
+export const generateState = () => generateRandomInUrlSafeBase64();
 
 /**
  * Generates random bytes and encodes them in url safe base64.
  */
-export const generateNonce = () => generateRandomInBase64();
+export const generateNonce = () => generateRandomInUrlSafeBase64();
 
 /**
  * Generates code verifier use max_length
@@ -50,7 +50,7 @@ export const generateCodeVerifier = () => generateRandomString(CODE_VERIFIER_MAX
 export const generateCodeChallenge = async (codeVerifier: string): Promise<string> => {
   const encoded = new TextEncoder().encode(codeVerifier);
   const challenge = new Uint8Array(await crypto.subtle.digest('SHA-256', encoded));
-  return fromUint8Array(challenge).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+  return UrlSafeBase64.replaceNonUrlSafeCharacters(fromUint8Array(challenge));
 };
 
 /**

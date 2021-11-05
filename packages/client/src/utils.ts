@@ -55,5 +55,19 @@ export const decodeToken = (token: string): IDToken => {
 
 export const nowRoundToSec = () => Math.floor(Date.now() / 1000);
 
-export const encodeBase64 = (input: string) => btoa(input);
-export const decodeBase64 = (input: string) => atob(input);
+const replaceNonUrlSafeCharacters = (base64String: string) =>
+  base64String
+    .replace(/\+/g, '-') // Convert '+' to '-'
+    .replace(/\//g, '_') // Convert '/' to '_'
+    .replace(/=+$/g, ''); // Remove ending '='
+const restoreNonUrlSafeCharacters = (base64String: string) =>
+  base64String
+    .replace(/-/g, '+') // Convert '-' to '+'
+    .replace(/_/g, '/'); // Convert '_' to '/'
+
+export const UrlSafeBase64 = {
+  encode: (rawString: string) => replaceNonUrlSafeCharacters(btoa(rawString)),
+  decode: (encodedString: string) => atob(restoreNonUrlSafeCharacters(encodedString)),
+  replaceNonUrlSafeCharacters,
+  restoreNonUrlSafeCharacters,
+};
