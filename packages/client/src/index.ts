@@ -2,6 +2,7 @@ import { Optional } from '@silverhand/essentials';
 
 import { TOKEN_SET_CACHE_KEY } from './constants';
 import discover, { OIDCConfiguration } from './discover';
+import { generateScope } from './generators';
 import {
   grantTokenByAuthorizationCode,
   grantTokenByRefreshToken,
@@ -13,7 +14,6 @@ import { getLogoutUrl } from './request-logout';
 import SessionManager from './session-manager';
 import { ClientStorage, LocalStorage } from './storage';
 import TokenSet from './token-set';
-import { generateScope } from './utils';
 import { createJWKS, verifyIdToken } from './verify-id-token';
 
 export * from './storage';
