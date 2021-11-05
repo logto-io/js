@@ -1,9 +1,9 @@
 import { useContext } from 'react';
 
-import { LogtoContext, LogtoContextProperties } from './context';
+import { LogtoContext } from './context';
 
 export default function useLogto() {
-  const context = useContext<LogtoContextProperties>(LogtoContext);
+  const context = useContext(LogtoContext);
 
   if (!('logtoClient' in context)) {
     throw new Error('useLogto hook must be used inside LogtoProvider context');
