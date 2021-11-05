@@ -2,6 +2,8 @@
 
 const path = require('path');
 
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+
 module.exports = {
   options: {
     buildType: 'spa',
@@ -10,6 +12,7 @@ module.exports = {
   modifyWebpackConfig: ({ webpackConfig }) => {
     /** @type {import('webpack').Configuration} **/
     const config = { ...webpackConfig };
+    const { WITH_REPORT } = process.env;
 
     config.resolve.alias = {
       '@': path.resolve('src/'),
@@ -22,6 +25,10 @@ module.exports = {
       maxEntrypointSize: 512000,
       maxAssetSize: 512000,
     };
+
+    if (WITH_REPORT) {
+      config.plugins = [...config.plugins, new BundleAnalyzerPlugin()];
+    }
 
     return config;
   },

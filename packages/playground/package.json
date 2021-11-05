@@ -11,7 +11,8 @@
     "build": "tsc -b && razzle build",
     "lint": "eslint --format pretty --ext .ts --ext .tsx src",
     "stylelint": "stylelint \"src/**/*.scss\"",
-    "test": "razzle test --env=jsdom"
+    "test": "razzle test --env=jsdom",
+    "report": "WITH_REPORT=true razzle build"
   },
   "dependencies": {
     "@logto/client": "^0.0.1",
@@ -53,6 +54,7 @@
     "text-encoder": "^0.0.4",
     "typescript": "^4.3.5",
     "webpack": "^4.44.1",
+    "webpack-bundle-analyzer": "^4.5.0",
     "webpack-dev-server": "^3.11.2"
   },
   "engines": {
