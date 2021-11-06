@@ -1,7 +1,5 @@
 import { z, ZodError } from 'zod';
 
-import { DEFAULT_SCOPE_VALUES } from './constants';
-
 const fullfillBase64 = (input: string) => {
   if (input.length === 2) {
     return `${input}==`;
@@ -59,19 +57,3 @@ export const nowRoundToSec = () => Math.floor(Date.now() / 1000);
 
 export const encodeBase64 = (input: string) => btoa(input);
 export const decodeBase64 = (input: string) => atob(input);
-
-/**
- * @param originalScope
- * @return customScope including all default scope values ( Logto requires `openid` and `offline_access` )
- */
-export const generateScope = (originalScope?: string | string[]): string => {
-  const originalScopeValues =
-    originalScope === undefined
-      ? []
-      : Array.isArray(originalScope)
-      ? originalScope
-      : originalScope.split(' ');
-  const nonEmptyScopeValues = originalScopeValues.map((s) => s.trim()).filter((s) => s.length > 0);
-  const uniqueScopeValues = new Set([...DEFAULT_SCOPE_VALUES, ...nonEmptyScopeValues]);
-  return Array.from(uniqueScopeValues).join(' ');
-};

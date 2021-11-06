@@ -6,6 +6,7 @@ import { customAlphabet } from 'nanoid';
 import {
   CODE_VERIFIER_ALPHABET,
   CODE_VERIFIER_MAX_LENGTH,
+  DEFAULT_SCOPE_VALUES,
   RANDOM_STRING_MAX_LENGTH,
 } from './constants';
 import { encodeBase64 } from './utils';
@@ -50,4 +51,20 @@ export const generateCodeChallenge = async (codeVerifier: string): Promise<strin
   const encoded = new TextEncoder().encode(codeVerifier);
   const challenge = new Uint8Array(await crypto.subtle.digest('SHA-256', encoded));
   return fromUint8Array(challenge).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+};
+
+/**
+ * @param originalScope
+ * @return customScope including all default scope values ( Logto requires `openid` and `offline_access` )
+ */
+export const generateScope = (originalScope?: string | string[]): string => {
+  const originalScopeValues =
+    originalScope === undefined
+      ? []
+      : Array.isArray(originalScope)
+      ? originalScope
+      : originalScope.split(' ');
+  const nonEmptyScopeValues = originalScopeValues.map((s) => s.trim()).filter((s) => s.length > 0);
+  const uniqueScopeValues = new Set([...DEFAULT_SCOPE_VALUES, ...nonEmptyScopeValues]);
+  return Array.from(uniqueScopeValues).join(' ');
 };
