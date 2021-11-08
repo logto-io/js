@@ -43,7 +43,7 @@ export const decodeToken = (token: string): IDToken => {
   );
 
   try {
-    // using SuperStruct to validate the json type
+    // Using SuperStruct to validate the json type
     const data = JSON.parse(json) as IDToken;
     s.assert(data, IDTokenSchema);
     return data;
