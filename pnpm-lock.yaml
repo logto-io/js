@@ -92,7 +92,6 @@ importers:
       eslint-formatter-pretty: ^4.1.0
       html-webpack-plugin: ^4.5.2
       js-base64: ^3.6.1
-      ky: ^0.28.5
       lint-staged: '>=10'
       mini-css-extract-plugin: ^0.9.0
       node-fetch: 2.6.6
@@ -111,17 +110,14 @@ importers:
       webpack: ^4.44.1
       webpack-bundle-analyzer: ^4.5.0
       webpack-dev-server: ^3.11.2
-      zod: ^3.5.1
     dependencies:
       '@logto/client': link:../client
       '@silverhand/essentials': 1.1.0
       js-base64: 3.7.2
-      ky: 0.28.6
       query-string: 7.0.1
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       react-router-dom: 5.3.0_react@17.0.2
-      zod: 3.9.8
     devDependencies:
       '@babel/core': 7.15.0
       '@peculiar/webcrypto': 1.1.7
@@ -10390,11 +10386,6 @@ packages:
     resolution: {integrity: sha512-sZLUnTqimCkvkgRS+kbPlYW5o8q5w1cu+uIisKpEWkj31I8mx8kNG162DwRav8Zirkva6N5uoFsm9kzK4mUXjw==}
     dev: true
 
-  /ky/0.28.6:
-    resolution: {integrity: sha512-EjxET5qSsaLUj1BSFtxPjEtRgF5JOhdroPwMNJFH/VvzruWQFBmh6W7GtqjBR56UZw4dBFTKLvx9nDxxnFXc7w==}
-    engines: {node: '>=12'}
-    dev: false
-
   /lerna/4.0.0:
     resolution: {integrity: sha512-DD/i1znurfOmNJb0OBw66NmNqiM8kF6uIrzrJ0wGE3VNdzeOhz9ziWLYiRaZDGGwgbcjOo6eIfcx9O5Qynz+kg==}
     engines: {node: '>= 10.18.0'}
@@ -16595,10 +16586,6 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
-
-  /zod/3.9.8:
-    resolution: {integrity: sha512-pTNhdJd45PPOBpdxO8x00Tv+HhknYGx3WdgFQndazp+G1Gd2Cxf81L5yMfCIIcd/SA3VqrcTv/G4bFcr+DsZhA==}
-    dev: false
 
   /zwitch/1.0.5:
     resolution: {integrity: sha512-V50KMwwzqJV0NpZIZFwfOD5/lyny3WlSzRiXgA0G7VUnRlqttta1L6UQIHzd6EuBY/cHGfwTIck7w1yH6Q5zUw==}
