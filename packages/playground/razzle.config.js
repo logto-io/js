@@ -22,8 +22,8 @@ module.exports = {
     // create a issue to optimize client js SDK package size
     // https://linear.app/silverhand/issue/LOG-236/need-to-reduce-the-client-package-size
     config.performance = {
-      maxEntrypointSize: 512000,
-      maxAssetSize: 512000,
+      maxEntrypointSize: 307200,
+      maxAssetSize: 307200,
     };
 
     if (WITH_REPORT) {
@@ -35,11 +35,6 @@ module.exports = {
   modifyJestConfig: ({ jestConfig }) => {
     /** @type {import('@jest/types').Config.InitialOptions} **/
     const config = { ...jestConfig };
-
-    config.transformIgnorePatterns = [
-      '^.+\\.module\\.(css|sass|scss)$',
-      '[/\\\\]node_modules[/\\\\]((?!ky[/\\\\]).)+\\.(js|jsx|mjs|cjs|ts|tsx)$',
-    ];
 
     config.moduleNameMapper = {
       ...config.moduleNameMapper,
