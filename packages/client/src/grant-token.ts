@@ -1,16 +1,16 @@
-import { z } from 'zod';
+import * as s from 'superstruct';
 
 import { requestWithFetch } from './api';
 import { LogtoError } from './errors';
 
-const TokenSetParametersSchema = z.object({
-  access_token: z.string(),
-  expires_in: z.number(),
-  id_token: z.string(),
-  refresh_token: z.string(),
+const TokenSetParametersSchema = s.object({
+  access_token: s.string(),
+  expires_in: s.number(),
+  id_token: s.string(),
+  refresh_token: s.string(),
 });
 
-export type TokenSetParameters = z.infer<typeof TokenSetParametersSchema>;
+export type TokenSetParameters = s.Infer<typeof TokenSetParametersSchema>;
 
 type GrantTokenPayload = {
   endpoint: string;
@@ -41,13 +41,17 @@ export const grantTokenByAuthorizationCode = async ({
     },
     body: parameters,
   });
-  const result = TokenSetParametersSchema.safeParse(response);
 
-  if (!result.success) {
-    throw new LogtoError({ cause: result.error });
+  try {
+    s.assert(response, TokenSetParametersSchema);
+    return response;
+  } catch (error: unknown) {
+    if (error instanceof s.StructError) {
+      throw new LogtoError({ cause: error });
+    }
+
+    throw error;
   }
-
-  return result.data;
 };
 
 export const grantTokenByRefreshToken = async (
@@ -67,11 +71,15 @@ export const grantTokenByRefreshToken = async (
     },
     body: parameters,
   });
-  const result = TokenSetParametersSchema.safeParse(response);
 
-  if (!result.success) {
-    throw new LogtoError({ cause: result.error });
+  try {
+    s.assert(response, TokenSetParametersSchema);
+    return response;
+  } catch (error: unknown) {
+    if (error instanceof s.StructError) {
+      throw new LogtoError({ cause: error });
+    }
+
+    throw error;
   }
-
-  return result.data;
 };

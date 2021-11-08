@@ -1,4 +1,4 @@
-import { z, ZodError } from 'zod';
+import * as s from 'superstruct';
 
 const fullfillBase64 = (input: string) => {
   if (input.length === 2) {
@@ -12,16 +12,16 @@ const fullfillBase64 = (input: string) => {
   return input;
 };
 
-const IDTokenSchema = z.object({
-  iss: z.string(),
-  sub: z.string(),
-  aud: z.string(),
-  exp: z.number(),
-  iat: z.number(),
-  at_hash: z.optional(z.string()),
+const IDTokenSchema = s.object({
+  iss: s.string(),
+  sub: s.string(),
+  aud: s.string(),
+  exp: s.number(),
+  iat: s.number(),
+  at_hash: s.optional(s.string()),
 });
 
-export type IDToken = z.infer<typeof IDTokenSchema>;
+export type IDToken = s.Infer<typeof IDTokenSchema>;
 
 /**
  * Decode IDToken from JWT, without verifying.
@@ -43,9 +43,12 @@ export const decodeToken = (token: string): IDToken => {
   );
 
   try {
-    return IDTokenSchema.parse(JSON.parse(json));
+    // using SuperStruct to validate the json type
+    const data = JSON.parse(json) as IDToken;
+    s.assert(data, IDTokenSchema);
+    return data;
   } catch (error: unknown) {
-    if (error instanceof ZodError) {
+    if (error instanceof s.StructError) {
       throw error;
     }
 
