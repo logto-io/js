@@ -36,6 +36,7 @@ importers:
       node-fetch: 2.6.6
       prettier: ^2.3.2
       query-string: ^7.0.1
+      superstruct: ^0.15.3
       text-encoder: ^0.0.4
       ts-jest: ^27.0.4
       ts-loader: ^9.2.6
@@ -43,13 +44,12 @@ importers:
       webpack: ^5.58.2
       webpack-bundle-analyzer: ^4.5.0
       webpack-cli: ^4.9.1
-      zod: ^3.9.8
     dependencies:
       jose: 4.1.4
       js-base64: 3.7.2
       nanoid: 3.1.30
       query-string: 7.0.1
-      zod: 3.9.8
+      superstruct: 0.15.3
     devDependencies:
       '@peculiar/webcrypto': 1.1.7
       '@silverhand/eslint-config': 0.2.2_aff669e8eb0d21fc4e2068e6112ef4d0
@@ -14916,6 +14916,10 @@ packages:
     dependencies:
       postcss: 7.0.39
     dev: true
+
+  /superstruct/0.15.3:
+    resolution: {integrity: sha512-wilec1Rg3FtKuRjRyCt70g5W29YUEuaLnybdVQUI+VQ7m0bw8k7TzrRv5iYmo6IpjLVrwxP5t3RgjAVqhYh4Fg==}
+    dev: false
 
   /supports-color/5.5.0:
     resolution: {integrity: sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==}

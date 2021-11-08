@@ -1,4 +1,4 @@
-import { ZodError } from 'zod';
+import { StructError } from 'superstruct';
 
 interface LogtoErrorParameters {
   message?: string;
@@ -9,10 +9,10 @@ interface LogtoErrorParameters {
 export class LogtoError extends Error {
   public uri?: string;
   public response?: Response;
-  public cause?: Error | ZodError;
+  public cause?: Error | StructError;
 
   constructor({ message, cause, response }: LogtoErrorParameters) {
-    if (cause instanceof ZodError) {
+    if (cause instanceof StructError) {
       super(`Remote response format error: ${cause.message}`);
     } else {
       super(message);

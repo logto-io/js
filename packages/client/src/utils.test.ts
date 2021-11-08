@@ -1,5 +1,5 @@
 import { generateKeyPair, SignJWT } from 'jose';
-import { ZodError } from 'zod';
+import { StructError } from 'superstruct';
 
 import { decodeToken } from './utils';
 
@@ -29,6 +29,6 @@ describe('decodeToken', () => {
       .setIssuedAt()
       .setExpirationTime('2h')
       .sign((await generateKeyPair('RS256')).privateKey);
-    expect(() => decodeToken(JWT)).toThrowError(ZodError);
+    expect(() => decodeToken(JWT)).toThrowError(StructError);
   });
 });
