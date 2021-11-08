@@ -7,7 +7,6 @@ import {
   CODE_VERIFIER_ALPHABET,
   CODE_VERIFIER_MAX_LENGTH,
   DEFAULT_SCOPE_VALUES,
-  RANDOM_STRING_MAX_LENGTH,
 } from './constants';
 import { UrlSafeBase64 } from './utils';
 
@@ -20,20 +19,13 @@ function generateRandomString(length: number) {
 
 /**
  * Generates random bytes and encodes them in url safe base64.
- * @param length The length of the string (before base64url-encoding) to generate.
  */
-export const generateRandomInUrlSafeBase64 = (length = RANDOM_STRING_MAX_LENGTH) =>
-  UrlSafeBase64.encode(generateRandomString(length));
+export const generateState = () => generateRandomString(CODE_VERIFIER_MAX_LENGTH);
 
 /**
  * Generates random bytes and encodes them in url safe base64.
  */
-export const generateState = () => generateRandomInUrlSafeBase64();
-
-/**
- * Generates random bytes and encodes them in url safe base64.
- */
-export const generateNonce = () => generateRandomInUrlSafeBase64();
+export const generateNonce = () => generateRandomString(CODE_VERIFIER_MAX_LENGTH);
 
 /**
  * Generates code verifier use max_length

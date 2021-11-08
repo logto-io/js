@@ -56,14 +56,9 @@ export const decodeToken = (token: string): IDToken => {
 export const nowRoundToSec = () => Math.floor(Date.now() / 1000);
 
 const replaceNonUrlSafeCharacters = (base64String: string) =>
-  base64String
-    .replace(/\+/g, '-') // Convert '+' to '-'
-    .replace(/\//g, '_') // Convert '/' to '_'
-    .replace(/=+$/g, ''); // Remove ending '='
+  base64String.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
 const restoreNonUrlSafeCharacters = (base64String: string) =>
-  base64String
-    .replace(/-/g, '+') // Convert '-' to '+'
-    .replace(/_/g, '/'); // Convert '_' to '/'
+  base64String.replace(/-/g, '+').replace(/_/g, '/');
 
 export const UrlSafeBase64 = {
   encode: (rawString: string) => replaceNonUrlSafeCharacters(btoa(rawString)),
