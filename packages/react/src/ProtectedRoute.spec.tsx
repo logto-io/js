@@ -1,4 +1,4 @@
-import { render, waitFor, screen } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -59,13 +59,15 @@ describe('ProtectedRoute', () => {
     });
 
     test('protected content should not be rendered', async () => {
-      render(renderWrapper(<ProtectedRoute path="/">protected</ProtectedRoute>));
+      const { queryByText } = render(
+        renderWrapper(<ProtectedRoute path="/">protected</ProtectedRoute>)
+      );
 
       await waitFor(() => {
         expect(loginWithRedirect).toHaveBeenCalled();
       });
 
-      expect(screen.queryByText('protected')).toBeNull();
+      expect(queryByText('protected')).toBeNull();
     });
   });
 
@@ -75,18 +77,22 @@ describe('ProtectedRoute', () => {
     });
 
     test('should render content', async () => {
-      render(renderWrapper(<ProtectedRoute path="/">protected-content</ProtectedRoute>));
+      const { getByText } = render(
+        renderWrapper(<ProtectedRoute path="/">protected-content</ProtectedRoute>)
+      );
 
       await waitFor(() => {
-        expect(screen.getByText('protected-content')).not.toBeUndefined();
+        expect(getByText('protected-content')).not.toBeUndefined();
       });
     });
 
     test('`loginWithRedirect` should not be called', async () => {
-      render(renderWrapper(<ProtectedRoute path="/">protected-content</ProtectedRoute>));
+      const { getByText } = render(
+        renderWrapper(<ProtectedRoute path="/">protected-content</ProtectedRoute>)
+      );
 
       await waitFor(() => {
-        expect(screen.getByText('protected-content')).not.toBeUndefined();
+        expect(getByText('protected-content')).not.toBeUndefined();
       });
 
       expect(loginWithRedirect).not.toHaveBeenCalled();
