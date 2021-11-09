@@ -10,7 +10,7 @@ type Action =
 
 export const reducer = (state: AuthState, action: Action): AuthState => {
   if (action.type === 'INITIALIZE') {
-    return { ...state, initialized: true, isAuthenticated: action.isAuthenticated };
+    return { ...state, isInitialized: true, isAuthenticated: action.isAuthenticated };
   }
 
   if (action.type === 'LOGIN_WITH_REDIRECT') {
@@ -18,7 +18,7 @@ export const reducer = (state: AuthState, action: Action): AuthState => {
   }
 
   if (action.type === 'HANDLE_CALLBACK_REQUEST') {
-    return { ...state, isLoading: true, isAuthenticated: false };
+    return { ...state, isLoading: true };
   }
 
   if (action.type === 'HANDLE_CALLBACK_SUCCESS') {

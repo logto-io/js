@@ -1,7 +1,7 @@
 import LogtoClient from '@logto/client';
 import { createContext } from 'react';
 
-import { AuthState, initialAuthState } from './auth-state';
+import { AuthState, defaultAuthState } from './auth-state';
 
 const notInProvider = (): never => {
   throw new Error('Must be used inside <LogtoProvider>');
@@ -15,7 +15,7 @@ export interface LogtoContextProperties extends AuthState {
 }
 
 export const LogtoContext = createContext<LogtoContextProperties>({
-  ...initialAuthState,
+  ...defaultAuthState,
   loginWithRedirect: notInProvider,
   handleCallback: notInProvider,
   logout: notInProvider,

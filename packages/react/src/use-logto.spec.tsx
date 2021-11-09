@@ -51,11 +51,11 @@ describe('useLogto', () => {
     const { result, waitFor } = renderHook(() => useLogto(), {
       wrapper: createHookWrapper(),
     });
-    const { isAuthenticated, initialized } = result.current;
-    expect(initialized).toBeFalsy();
+    const { isAuthenticated, isInitialized } = result.current;
+    expect(isInitialized).toBeFalsy();
     await waitFor(() => {
-      const { initialized } = result.current;
-      expect(initialized).toBeTruthy();
+      const { isInitialized } = result.current;
+      expect(isInitialized).toBeTruthy();
     });
     expect(isAuthenticated).toBeFalsy();
   });
@@ -65,8 +65,8 @@ describe('useLogto', () => {
       wrapper: createHookWrapper(),
     });
     await waitFor(() => {
-      const { initialized } = result.current;
-      expect(initialized).toBeTruthy();
+      const { isInitialized } = result.current;
+      expect(isInitialized).toBeTruthy();
     });
     expect(result.current.isAuthenticated).toBeFalsy();
     await act(async () => result.current.handleCallback('url'));
@@ -82,8 +82,8 @@ describe('useLogto', () => {
       wrapper: createHookWrapper(),
     });
     await waitFor(() => {
-      const { initialized } = result.current;
-      expect(initialized).toBeTruthy();
+      const { isInitialized } = result.current;
+      expect(isInitialized).toBeTruthy();
     });
     expect(result.current.isAuthenticated).toBeFalsy();
     await act(async () => result.current.handleCallback('url'));

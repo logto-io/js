@@ -1,12 +1,12 @@
 export interface AuthState {
   isLoading: boolean;
-  initialized: boolean;
+  isInitialized: boolean;
   isAuthenticated: boolean;
   error?: Error;
 }
 
-export const initialAuthState: AuthState = {
+export const defaultAuthState: AuthState = {
   isLoading: false,
-  initialized: false,
+  isInitialized: false,
   isAuthenticated: false,
 };
