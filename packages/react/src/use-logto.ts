@@ -9,13 +9,5 @@ export default function useLogto() {
     throw new Error('useLogto hook must be used inside LogtoProvider context');
   }
 
-  const { logtoClient, isAuthenticated } = context;
-
-  const isLoading = !logtoClient;
-
-  return {
-    logtoClient,
-    isLoading,
-    isAuthenticated,
-  };
+  return context;
 }

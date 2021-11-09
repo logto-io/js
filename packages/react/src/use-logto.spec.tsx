@@ -7,23 +7,16 @@ import useLogto from './use-logto';
 const isAuthenticated = jest.fn();
 
 jest.mock('@logto/client', () => {
-  const Mocked = jest.fn(({ onAuthStateChange }: { onAuthStateChange: () => void }) => {
+  const Mocked = jest.fn(() => {
     return {
       isAuthenticated,
-      handleCallback: jest.fn(() => {
-        onAuthStateChange();
-      }),
-      logout: jest.fn(() => {
-        onAuthStateChange();
-      }),
+      handleCallback: jest.fn(),
+      logout: jest.fn(),
     };
   });
   return {
     default: Mocked,
-    create: jest.fn(
-      ({ onAuthStateChange }: { onAuthStateChange: () => void }) =>
-        new Mocked({ onAuthStateChange })
-    ),
+    create: jest.fn(() => new Mocked()),
   };
 });
 
@@ -58,51 +51,49 @@ describe('useLogto', () => {
     const { result, waitFor } = renderHook(() => useLogto(), {
       wrapper: createHookWrapper(),
     });
-    const { isAuthenticated, isLoading } = result.current;
-    expect(isLoading).toBeTruthy();
+    const { isAuthenticated, isInitialized } = result.current;
+    expect(isInitialized).toBeFalsy();
     await waitFor(() => {
-      const { isLoading } = result.current;
-      expect(isLoading).toBeFalsy();
+      const { isInitialized } = result.current;
+      expect(isInitialized).toBeTruthy();
     });
     expect(isAuthenticated).toBeFalsy();
   });
 
   test('change from not authenticated to authenticated', async () => {
-    isAuthenticated.mockImplementationOnce(() => true);
     const { result, waitFor } = renderHook(() => useLogto(), {
       wrapper: createHookWrapper(),
     });
-    const { isLoading } = result.current;
-    expect(isLoading).toBeTruthy();
+    await waitFor(() => {
+      const { isInitialized } = result.current;
+      expect(isInitialized).toBeTruthy();
+    });
+    expect(result.current.isAuthenticated).toBeFalsy();
+    await act(async () => result.current.handleCallback('url'));
     await waitFor(() => {
       const { isLoading } = result.current;
       expect(isLoading).toBeFalsy();
-    });
-    expect(result.current.isAuthenticated).toBeFalsy();
-    act(() => {
-      result.current.logtoClient?.handleCallback('url');
     });
     expect(result.current.isAuthenticated).toBeTruthy();
   });
 
   test('change from authenticated to not authenticated', async () => {
-    isAuthenticated.mockImplementationOnce(() => true).mockImplementationOnce(() => false);
     const { result, waitFor } = renderHook(() => useLogto(), {
       wrapper: createHookWrapper(),
     });
-    const { isLoading } = result.current;
-    expect(isLoading).toBeTruthy();
+    await waitFor(() => {
+      const { isInitialized } = result.current;
+      expect(isInitialized).toBeTruthy();
+    });
+    expect(result.current.isAuthenticated).toBeFalsy();
+    await act(async () => result.current.handleCallback('url'));
     await waitFor(() => {
       const { isLoading } = result.current;
       expect(isLoading).toBeFalsy();
     });
-    expect(result.current.isAuthenticated).toBeFalsy();
-    act(() => {
-      result.current.logtoClient?.handleCallback('url');
-    });
     expect(result.current.isAuthenticated).toBeTruthy();
     act(() => {
-      result.current.logtoClient?.logout('url');
+      result.current.logout('url');
     });
     expect(result.current.isAuthenticated).toBeFalsy();
   });

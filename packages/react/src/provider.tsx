@@ -1,7 +1,9 @@
 import LogtoClient, { ConfigParameters } from '@logto/client';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
 
+import { defaultAuthState } from './auth-state';
 import { LogtoContext } from './context';
+import { reducer } from './reducer';
 
 export interface LogtoProviderProperties {
   logtoConfig: ConfigParameters;
@@ -10,24 +12,74 @@ export interface LogtoProviderProperties {
 
 export const LogtoProvider = ({ logtoConfig, children }: LogtoProviderProperties) => {
   const [logtoClient, setLogtoClient] = useState<LogtoClient>();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [state, dispatch] = useReducer(reducer, defaultAuthState);
 
   useEffect(() => {
     const createClient = async () => {
-      const client = await LogtoClient.create({
-        ...logtoConfig,
-        onAuthStateChange: () => {
-          setIsAuthenticated(client.isAuthenticated());
-        },
-      });
-      setLogtoClient(client);
+      try {
+        const client = await LogtoClient.create(logtoConfig);
+        dispatch({ type: 'INITIALIZE', isAuthenticated: client.isAuthenticated() });
+        setLogtoClient(client);
+      } catch (error: unknown) {
+        dispatch({ type: 'ERROR', error });
+      }
     };
 
     void createClient();
   }, [logtoConfig]);
 
+  const loginWithRedirect = useCallback(
+    async (redirectUri: string) => {
+      if (!logtoClient) {
+        dispatch({ type: 'ERROR', error: new Error('Should init first') });
+        return;
+      }
+
+      dispatch({ type: 'LOGIN_WITH_REDIRECT' });
+      try {
+        await logtoClient.loginWithRedirect(redirectUri);
+      } catch (error: unknown) {
+        dispatch({ type: 'ERROR', error });
+      }
+    },
+    [logtoClient]
+  );
+
+  const handleCallback = useCallback(
+    async (uri: string) => {
+      if (!logtoClient) {
+        dispatch({ type: 'ERROR', error: new Error('Should init first') });
+        return;
+      }
+
+      dispatch({ type: 'HANDLE_CALLBACK_REQUEST' });
+      try {
+        await logtoClient.handleCallback(uri);
+        dispatch({ type: 'HANDLE_CALLBACK_SUCCESS' });
+      } catch (error: unknown) {
+        dispatch({ type: 'ERROR', error });
+      }
+    },
+    [logtoClient]
+  );
+
+  const logout = useCallback(
+    (redirectUri: string) => {
+      if (!logtoClient) {
+        dispatch({ type: 'ERROR', error: new Error('Should init first') });
+        return;
+      }
+
+      logtoClient.logout(redirectUri);
+      dispatch({ type: 'LOGOUT' });
+    },
+    [logtoClient]
+  );
+
   return (
-    <LogtoContext.Provider value={{ logtoClient, isAuthenticated }}>
+    <LogtoContext.Provider
+      value={{ ...state, logtoClient, loginWithRedirect, handleCallback, logout }}
+    >
       {children}
     </LogtoContext.Provider>
   );
