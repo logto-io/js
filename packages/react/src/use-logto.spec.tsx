@@ -5,13 +5,16 @@ import { LogtoProvider } from './provider';
 import useLogto from './use-logto';
 
 const isAuthenticated = jest.fn();
+const isLoginRedirect = jest.fn();
+const handleCallback = jest.fn(async () => Promise.resolve());
 
 jest.mock('@logto/client', () => {
   const Mocked = jest.fn(() => {
     return {
       isAuthenticated,
-      handleCallback: jest.fn(),
+      handleCallback,
       logout: jest.fn(),
+      isLoginRedirect,
     };
   });
   return {
@@ -22,6 +25,8 @@ jest.mock('@logto/client', () => {
 
 afterEach(() => {
   isAuthenticated.mockClear();
+  isLoginRedirect.mockClear();
+  handleCallback.mockClear();
 });
 
 const DOMAIN = 'logto.dev';
@@ -58,6 +63,7 @@ describe('useLogto', () => {
       expect(isInitialized).toBeTruthy();
     });
     expect(isAuthenticated).toBeFalsy();
+    expect(result.current.error).toBeUndefined();
   });
 
   test('change from not authenticated to authenticated', async () => {
@@ -75,6 +81,7 @@ describe('useLogto', () => {
       expect(isLoading).toBeFalsy();
     });
     expect(result.current.isAuthenticated).toBeTruthy();
+    expect(result.current.error).toBeUndefined();
   });
 
   test('change from authenticated to not authenticated', async () => {
@@ -96,5 +103,40 @@ describe('useLogto', () => {
       result.current.logout('url');
     });
     expect(result.current.isAuthenticated).toBeFalsy();
+    expect(result.current.error).toBeUndefined();
+  });
+
+  describe('auto handle callback', () => {
+    test('not in callback url should not call `handleCallback`', async () => {
+      isLoginRedirect.mockImplementation(() => false);
+      const { result, waitFor } = renderHook(() => useLogto(), {
+        wrapper: createHookWrapper(),
+      });
+      await waitFor(() => {
+        const { isInitialized } = result.current;
+        expect(isInitialized).toBeTruthy();
+      });
+      expect(handleCallback).not.toHaveBeenCalled();
+      expect(result.current.error).toBeUndefined();
+    });
+
+    test('in callback url should call `handleCallback`, and isLoading should be true before complete', async () => {
+      isLoginRedirect.mockImplementation(() => true);
+      const { result, waitFor } = renderHook(() => useLogto(), {
+        wrapper: createHookWrapper(),
+      });
+      await waitFor(() => {
+        const { isInitialized, isLoading } = result.current;
+        expect(isInitialized).toBeTruthy();
+        expect(isLoading).toBeTruthy();
+      });
+      await waitFor(() => {
+        const { isAuthenticated } = result.current;
+        expect(isAuthenticated).toBeTruthy();
+      });
+      expect(result.current.error).toBeUndefined();
+      expect(handleCallback).toHaveBeenCalledTimes(1);
+      expect(result.current.isLoading).toBeFalsy();
+    });
   });
 });

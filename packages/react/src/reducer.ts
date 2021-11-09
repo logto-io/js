@@ -1,7 +1,7 @@
 import { AuthState } from './auth-state';
 
 type Action =
-  | { type: 'INITIALIZE'; isAuthenticated: boolean }
+  | { type: 'INITIALIZE'; isAuthenticated: boolean; isLoading: boolean }
   | { type: 'LOGIN_WITH_REDIRECT' }
   | { type: 'HANDLE_CALLBACK_REQUEST' }
   | { type: 'HANDLE_CALLBACK_SUCCESS' }
@@ -10,7 +10,12 @@ type Action =
 
 export const reducer = (state: AuthState, action: Action): AuthState => {
   if (action.type === 'INITIALIZE') {
-    return { ...state, isInitialized: true, isAuthenticated: action.isAuthenticated };
+    return {
+      ...state,
+      isInitialized: true,
+      isAuthenticated: action.isAuthenticated,
+      isLoading: action.isLoading,
+    };
   }
 
   if (action.type === 'LOGIN_WITH_REDIRECT') {

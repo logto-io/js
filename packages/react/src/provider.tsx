@@ -18,8 +18,14 @@ export const LogtoProvider = ({ logtoConfig, children }: LogtoProviderProperties
     const createClient = async () => {
       try {
         const client = await LogtoClient.create(logtoConfig);
-        dispatch({ type: 'INITIALIZE', isAuthenticated: client.isAuthenticated() });
         setLogtoClient(client);
+        const isLoginRedirect = client.isLoginRedirect(window.location.href);
+        // If is login redirect, should set isLoading and isInitialized at the same time
+        dispatch({
+          type: 'INITIALIZE',
+          isAuthenticated: client.isAuthenticated(),
+          isLoading: isLoginRedirect,
+        });
       } catch (error: unknown) {
         dispatch({ type: 'ERROR', error });
       }
@@ -27,6 +33,12 @@ export const LogtoProvider = ({ logtoConfig, children }: LogtoProviderProperties
 
     void createClient();
   }, [logtoConfig]);
+
+  useEffect(() => {
+    if (logtoClient?.isLoginRedirect(window.location.href)) {
+      void handleCallback(window.location.href);
+    }
+  }, [logtoClient]);
 
   const loginWithRedirect = useCallback(
     async (redirectUri: string) => {
