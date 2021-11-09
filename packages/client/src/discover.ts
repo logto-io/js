@@ -3,7 +3,7 @@ import * as s from 'superstruct';
 import { requestWithFetch } from './api';
 import { LogtoError } from './errors';
 
-const OIDCConfigurationSchema = s.object({
+const OIDCConfigurationSchema = s.type({
   authorization_endpoint: s.string(),
   jwks_uri: s.string(),
   token_endpoint: s.string(),

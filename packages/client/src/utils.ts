@@ -12,7 +12,7 @@ const fullfillBase64 = (input: string) => {
   return input;
 };
 
-const IDTokenSchema = s.object({
+const IDTokenSchema = s.type({
   iss: s.string(),
   sub: s.string(),
   aud: s.string(),
