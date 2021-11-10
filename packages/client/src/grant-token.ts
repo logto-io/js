@@ -1,6 +1,6 @@
 import * as s from 'superstruct';
 
-import { requestWithFetch } from './api';
+import { createRequester, Requester } from './api';
 import { LogtoError } from './errors';
 
 const TokenSetParametersSchema = s.type({
@@ -12,7 +12,7 @@ const TokenSetParametersSchema = s.type({
 
 export type TokenSetParameters = s.Infer<typeof TokenSetParametersSchema>;
 
-type GrantTokenPayload = {
+type GrantTokenByAuthorizationPayload = {
   endpoint: string;
   code: string;
   redirectUri: string;
@@ -20,13 +20,10 @@ type GrantTokenPayload = {
   clientId: string;
 };
 
-export const grantTokenByAuthorizationCode = async ({
-  endpoint,
-  code,
-  redirectUri,
-  codeVerifier,
-  clientId,
-}: GrantTokenPayload): Promise<TokenSetParameters> => {
+export const grantTokenByAuthorizationCode = async (
+  { endpoint, code, redirectUri, codeVerifier, clientId }: GrantTokenByAuthorizationPayload,
+  requester: Requester = createRequester()
+): Promise<TokenSetParameters> => {
   const parameters = new URLSearchParams();
   parameters.append('grant_type', 'authorization_code');
   parameters.append('code', code);
@@ -34,7 +31,7 @@ export const grantTokenByAuthorizationCode = async ({
   parameters.append('code_verifier', codeVerifier);
   parameters.append('client_id', clientId);
 
-  const response = await requestWithFetch(endpoint, {
+  const response = await requester(endpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -54,17 +51,22 @@ export const grantTokenByAuthorizationCode = async ({
   }
 };
 
+type GrantTokenByRefreshTokenPayload = {
+  endpoint: string;
+  refreshToken: string;
+  clientId: string;
+};
+
 export const grantTokenByRefreshToken = async (
-  endpoint: string,
-  clientId: string,
-  refreshToken: string
+  { endpoint, clientId, refreshToken }: GrantTokenByRefreshTokenPayload,
+  requester: Requester = createRequester()
 ): Promise<TokenSetParameters> => {
   const parameters = new URLSearchParams();
   parameters.append('grant_type', 'refresh_token');
   parameters.append('client_id', clientId);
   parameters.append('refresh_token', refreshToken);
 
-  const response = await requestWithFetch(endpoint, {
+  const response = await requester(endpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',

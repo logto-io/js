@@ -62,11 +62,11 @@ describe('grantTokenByRefreshToken', () => {
       .post('/oidc/token')
       .reply(200, successResponse);
 
-    const tokenSet = await grantTokenByRefreshToken(
-      'https://logto.dev/oidc/token',
-      'client_id',
-      'refresh_token'
-    );
+    const tokenSet = await grantTokenByRefreshToken({
+      endpoint: 'https://logto.dev/oidc/token',
+      clientId: 'client_id',
+      refreshToken: 'refresh_token',
+    });
 
     expect(tokenSet).toMatchObject(successResponse);
   });

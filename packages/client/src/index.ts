@@ -1,5 +1,6 @@
 import { Optional } from '@silverhand/essentials';
 
+import { createRequester, Requester } from './api';
 import { TOKEN_SET_CACHE_KEY } from './constants';
 import discover, { OIDCConfiguration } from './discover';
 import { generateScope } from './generators';
@@ -24,6 +25,7 @@ export interface ConfigParameters {
   scope?: string | string[];
   storage?: ClientStorage;
   onAuthStateChange?: () => void;
+  customFetchFunction?: typeof fetch;
 }
 
 export const appendSlashIfNeeded = (url: string): string => {
@@ -41,23 +43,31 @@ export default class LogtoClient {
   private readonly sessionManager: SessionManager;
   private readonly storage: ClientStorage;
   private readonly onAuthStateChange: Optional<() => void>;
+  private readonly requester: Requester;
   private tokenSet: Optional<TokenSet>;
   constructor(config: ConfigParameters, oidcConfiguration: OIDCConfiguration) {
-    const { clientId, scope, storage, onAuthStateChange } = config;
+    const { clientId, scope, storage, onAuthStateChange, customFetchFunction } = config;
     this.clientId = clientId;
     this.onAuthStateChange = onAuthStateChange;
     this.scope = generateScope(scope);
     this.oidcConfiguration = oidcConfiguration;
     this.storage = storage ?? new LocalStorage();
     this.sessionManager = new SessionManager(this.storage);
+    this.requester = createRequester(customFetchFunction);
     this.createTokenSetFromCache();
   }
 
   static async create(config: ConfigParameters): Promise<LogtoClient> {
-    return new LogtoClient(config, await discover(`https://${config.domain}`));
+    return new LogtoClient(
+      config,
+      await discover(`https://${config.domain}`, createRequester(config.customFetchFunction))
+    );
   }
 
-  public async loginWithRedirect(redirectUri: string) {
+  public async loginWithRedirect(
+    redirectUri: string,
+    onRedirect: (url: string) => void = window.location.assign
+  ) {
     const { url, codeVerifier } = await getLoginUrlAndCodeVerifier({
       baseUrl: this.oidcConfiguration.authorization_endpoint,
       clientId: this.clientId,
@@ -65,7 +75,7 @@ export default class LogtoClient {
       redirectUri,
     });
     this.sessionManager.set({ redirectUri, codeVerifier });
-    window.location.assign(url);
+    onRedirect(url);
   }
 
   public isLoginRedirect(url: string) {
@@ -108,13 +118,16 @@ export default class LogtoClient {
 
     const { redirectUri, codeVerifier } = session;
     this.sessionManager.clear();
-    const tokenParameters = await grantTokenByAuthorizationCode({
-      endpoint: this.oidcConfiguration.token_endpoint,
-      clientId: this.clientId,
-      code,
-      redirectUri,
-      codeVerifier,
-    });
+    const tokenParameters = await grantTokenByAuthorizationCode(
+      {
+        endpoint: this.oidcConfiguration.token_endpoint,
+        clientId: this.clientId,
+        code,
+        redirectUri,
+        codeVerifier,
+      },
+      this.requester
+    );
     await verifyIdToken(
       createJWKS(this.oidcConfiguration.jwks_uri),
       tokenParameters.id_token,
@@ -149,9 +162,12 @@ export default class LogtoClient {
     }
 
     const tokenParameters = await grantTokenByRefreshToken(
-      this.oidcConfiguration.token_endpoint,
-      this.clientId,
-      this.tokenSet.refreshToken
+      {
+        endpoint: this.oidcConfiguration.token_endpoint,
+        clientId: this.clientId,
+        refreshToken: this.tokenSet.refreshToken,
+      },
+      this.requester
     );
     await verifyIdToken(
       createJWKS(this.oidcConfiguration.jwks_uri),
@@ -163,7 +179,7 @@ export default class LogtoClient {
     return this.tokenSet.accessToken;
   }
 
-  public logout(redirectUri: string) {
+  public logout(redirectUri: string, onRedirect: (url: string) => void = window.location.assign) {
     this.sessionManager.clear();
     if (this.onAuthStateChange) {
       this.onAuthStateChange();
@@ -180,7 +196,7 @@ export default class LogtoClient {
     );
     this.tokenSet = undefined;
     this.storage.removeItem(this.tokenSetCacheKey);
-    window.location.assign(url);
+    onRedirect(url);
   }
 
   private get tokenSetCacheKey() {

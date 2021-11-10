@@ -1,6 +1,3 @@
-// Mock window.location
-/* eslint-disable @silverhand/fp/no-delete */
-/* eslint-disable @silverhand/fp/no-mutation */
 import { KeyObject } from 'crypto';
 
 import { SignJWT, generateKeyPair } from 'jose';
@@ -75,25 +72,12 @@ describe('LogtoClient', () => {
     nock(BASE_URL).get('/oidc/.well-known/openid-configuration').reply(200, discoverResponse);
   });
 
-  const locationBackup = window.location;
-
-  beforeAll(() => {
-    // Can not spy on `window.location` directly
-    // @ts-expect-error
-    delete window.location;
-    // @ts-expect-error
-    window.location = { assign: jest.fn() };
-  });
-
-  afterAll(() => {
-    window.location = locationBackup;
-  });
-
   describe('createLogtoClient', () => {
     test('create an instance', async () => {
       const logto = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
+        storage: new MemoryStorage(),
       });
       expect(logto).toBeInstanceOf(LogtoClient);
     });
@@ -143,13 +127,15 @@ describe('LogtoClient', () => {
   });
 
   describe('loginWithRedirect', () => {
-    test('window.location.assign should have been called', async () => {
+    test('onRedirect should have been called', async () => {
+      const onRedirect = jest.fn();
       const logto = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
+        storage: new MemoryStorage(),
       });
-      await logto.loginWithRedirect(REDIRECT_URI);
-      expect(window.location.assign).toHaveBeenCalled();
+      await logto.loginWithRedirect(REDIRECT_URI, onRedirect);
+      expect(onRedirect).toHaveBeenCalled();
     });
 
     test('session should be set', async () => {
@@ -159,7 +145,7 @@ describe('LogtoClient', () => {
         clientId: CLIENT_ID,
         storage,
       });
-      await logto.loginWithRedirect(REDIRECT_URI);
+      await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
       expect(storage.getItem('LOGTO_SESSION_MANAGER')).toHaveProperty('redirectUri', REDIRECT_URI);
       expect(storage.getItem('LOGTO_SESSION_MANAGER')).toHaveProperty('codeVerifier');
     });
@@ -173,7 +159,7 @@ describe('LogtoClient', () => {
         clientId: CLIENT_ID,
         storage,
       });
-      await logto.loginWithRedirect(REDIRECT_URI);
+      await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
       expect(logto.isLoginRedirect(REDIRECT_CALLBACK)).toBeTruthy();
     });
 
@@ -194,7 +180,7 @@ describe('LogtoClient', () => {
         clientId: CLIENT_ID,
         storage,
       });
-      await logto.loginWithRedirect(REDIRECT_URI);
+      await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
       expect(logto.isLoginRedirect(REDIRECT_URI)).toBeFalsy();
     });
 
@@ -205,7 +191,7 @@ describe('LogtoClient', () => {
         clientId: CLIENT_ID,
         storage,
       });
-      await logto.loginWithRedirect('http://example.com');
+      await logto.loginWithRedirect('http://example.com', jest.fn());
       expect(logto.isLoginRedirect(REDIRECT_URI)).toBeFalsy();
     });
   });
@@ -248,7 +234,7 @@ describe('LogtoClient', () => {
         clientId: CLIENT_ID,
         storage,
       });
-      await logto.loginWithRedirect(REDIRECT_URI);
+      await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
       await logto.handleCallback(REDIRECT_CALLBACK);
       expect(verifyIdToken).toHaveBeenCalled();
     });
@@ -260,7 +246,7 @@ describe('LogtoClient', () => {
         clientId: CLIENT_ID,
         storage,
       });
-      await logto.loginWithRedirect(REDIRECT_URI);
+      await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
       await logto.handleCallback(REDIRECT_CALLBACK);
       expect(storage.getItem('LOGTO_SESSION_MANAGER')).toBeUndefined();
     });
@@ -272,7 +258,7 @@ describe('LogtoClient', () => {
         clientId: CLIENT_ID,
         storage,
       });
-      await logto.loginWithRedirect(REDIRECT_URI);
+      await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
       await logto.handleCallback(REDIRECT_CALLBACK);
       expect(logto.isAuthenticated()).toBeTruthy();
     });
@@ -298,6 +284,7 @@ describe('LogtoClient', () => {
         const logto = await LogtoClient.create({
           domain: DOMAIN,
           clientId: CLIENT_ID,
+          storage: new MemoryStorage(),
         });
         await expect(logto.getAccessToken()).rejects.toThrow();
       });
@@ -314,6 +301,7 @@ describe('LogtoClient', () => {
           id_token: (await generateIdToken()).idToken,
           expires_in: -1,
         });
+        // eslint-disable-next-line @silverhand/fp/no-mutation
         logto = await LogtoClient.create({
           domain: DOMAIN,
           clientId: CLIENT_ID,
@@ -332,13 +320,20 @@ describe('LogtoClient', () => {
   });
 
   describe('logout', () => {
-    test('window.location.assign should have been called', async () => {
+    test('onRedirect should have been called', async () => {
+      const onRedirect = jest.fn();
+      const storage = new MemoryStorage();
+      storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, {
+        ...fakeTokenResponse,
+        id_token: (await generateIdToken()).idToken,
+      });
       const logto = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
+        storage,
       });
-      logto.logout(REDIRECT_URI);
-      expect(window.location.assign).toHaveBeenCalled();
+      logto.logout(REDIRECT_URI, onRedirect);
+      expect(onRedirect).toHaveBeenCalled();
     });
 
     test('login session should be cleared', async () => {
@@ -349,7 +344,7 @@ describe('LogtoClient', () => {
         clientId: CLIENT_ID,
         storage,
       });
-      logto.logout(REDIRECT_URI);
+      logto.logout(REDIRECT_URI, jest.fn());
       expect(storage.removeItem).toBeCalledWith(SESSION_MANAGER_KEY);
     });
 
@@ -365,7 +360,7 @@ describe('LogtoClient', () => {
         clientId: CLIENT_ID,
         storage,
       });
-      logto.logout(REDIRECT_URI);
+      logto.logout(REDIRECT_URI, jest.fn());
       expect(storage.removeItem).toBeCalled();
     });
   });
@@ -399,7 +394,7 @@ describe('LogtoClient', () => {
         storage,
         onAuthStateChange,
       });
-      await logto.loginWithRedirect(REDIRECT_URI);
+      await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
       await logto.handleCallback(REDIRECT_CALLBACK);
       expect(onAuthStateChange).toHaveBeenCalled();
     });
@@ -413,7 +408,7 @@ describe('LogtoClient', () => {
         storage,
         onAuthStateChange,
       });
-      logto.logout(REDIRECT_URI);
+      logto.logout(REDIRECT_URI, jest.fn());
       expect(onAuthStateChange).toHaveBeenCalled();
     });
   });

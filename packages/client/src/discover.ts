@@ -1,6 +1,6 @@
 import * as s from 'superstruct';
 
-import { requestWithFetch } from './api';
+import { createRequester, Requester } from './api';
 import { LogtoError } from './errors';
 
 const OIDCConfigurationSchema = s.type({
@@ -22,8 +22,11 @@ const appendSlashIfNeeded = (url: string): string => {
   return url + '/';
 };
 
-export default async function discover(url: string): Promise<OIDCConfiguration> {
-  const response = await requestWithFetch<OIDCConfiguration>(
+export default async function discover(
+  url: string,
+  requester: Requester = createRequester()
+): Promise<OIDCConfiguration> {
+  const response = await requester<OIDCConfiguration>(
     `${appendSlashIfNeeded(url)}oidc/.well-known/openid-configuration`
   );
 
