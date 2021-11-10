@@ -14,6 +14,7 @@
     "report": "WITH_REPORT=true npm run package"
   },
   "dependencies": {
+    "@silverhand/essentials": "^1.1.2",
     "jose": "^4.1.4",
     "js-base64": "^3.7.2",
     "nanoid": "^3.1.30",
@@ -23,7 +24,6 @@
   "devDependencies": {
     "@peculiar/webcrypto": "^1.1.7",
     "@silverhand/eslint-config": "^0.2.2",
-    "@silverhand/essentials": "^1.1.0",
     "@silverhand/ts-config": "^0.2.2",
     "@types/jest": "^26.0.24",
     "@types/webpack": "^5.28.0",
