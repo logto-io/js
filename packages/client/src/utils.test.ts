@@ -1,4 +1,4 @@
-import { generateKeyPair, SignJWT } from 'jose';
+import { SignJWT, generateKeyPair } from 'jose';
 import { StructError } from 'superstruct';
 
 import { decodeToken } from './utils';

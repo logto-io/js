@@ -1,12 +1,19 @@
 import { KeyObject } from 'crypto';
 
-import { SignJWT, generateKeyPair } from 'jose';
+import { generateKeyPair, SignJWT } from 'jose';
 import nock from 'nock';
 
 import LogtoClient from '.';
 import { DEFAULT_SCOPE_STRING, SESSION_MANAGER_KEY } from './constants';
 import { MemoryStorage } from './storage';
 import { verifyIdToken } from './verify-id-token';
+
+const STATE = 'state1';
+
+jest.mock('./generators', () => ({
+  ...jest.requireActual('./generators'),
+  generateState: () => STATE,
+}));
 
 jest.mock('./verify-id-token');
 
@@ -16,8 +23,7 @@ const ISSUER = `${BASE_URL}/oidc`;
 const CLIENT_ID = 'client1';
 const SUBJECT = 'subject1';
 const REDIRECT_URI = 'http://localhost:3000';
-const REDIRECT_CALLBACK = `${REDIRECT_URI}?code=authorization_code`;
-const REDIRECT_CALLBACK_WITH_ERROR = `${REDIRECT_CALLBACK}&error=invalid_request&error_description=code_challenge%20must%20be%20a%20string%20with%20a%20minimum%20length%20of%2043%20characters`;
+const CODE = 'code1';
 const LOGTO_TOKEN_SET_CACHE_KEY = `LOGTO_TOKEN_SET_CACHE::${ISSUER}::${CLIENT_ID}::${DEFAULT_SCOPE_STRING}`;
 
 const discoverResponse = {
@@ -146,13 +152,15 @@ describe('LogtoClient', () => {
         storage,
       });
       await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
-      expect(storage.getItem('LOGTO_SESSION_MANAGER')).toHaveProperty('redirectUri', REDIRECT_URI);
-      expect(storage.getItem('LOGTO_SESSION_MANAGER')).toHaveProperty('codeVerifier');
+      const sessionPayload = storage.getItem('LOGTO_SESSION_MANAGER');
+      expect(sessionPayload).toHaveProperty('redirectUri', REDIRECT_URI);
+      expect(sessionPayload).toHaveProperty('codeVerifier');
+      expect(sessionPayload).toHaveProperty('state');
     });
   });
 
   describe('isLoginRedirect', () => {
-    test('url contains code and starts with redirect_uri in session should be true', async () => {
+    test('url contains code and state and starts with redirect_uri in session should be true', async () => {
       const storage = new MemoryStorage();
       const logto = await LogtoClient.create({
         domain: DOMAIN,
@@ -160,7 +168,7 @@ describe('LogtoClient', () => {
         storage,
       });
       await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
-      expect(logto.isLoginRedirect(REDIRECT_CALLBACK)).toBeTruthy();
+      expect(logto.isLoginRedirect(`${REDIRECT_URI}?code=${CODE}&state=${STATE}`)).toBeTruthy();
     });
 
     test('empty session should be false', async () => {
@@ -170,7 +178,7 @@ describe('LogtoClient', () => {
         clientId: CLIENT_ID,
         storage,
       });
-      expect(logto.isLoginRedirect(REDIRECT_CALLBACK)).toBeFalsy();
+      expect(logto.isLoginRedirect(`${REDIRECT_URI}?code=${CODE}&state=${STATE}`)).toBeFalsy();
     });
 
     test('no code in url should be false', async () => {
@@ -181,7 +189,18 @@ describe('LogtoClient', () => {
         storage,
       });
       await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
-      expect(logto.isLoginRedirect(REDIRECT_URI)).toBeFalsy();
+      expect(logto.isLoginRedirect(`${REDIRECT_URI}?state=${STATE}`)).toBeFalsy();
+    });
+
+    test('no state in url should be false', async () => {
+      const storage = new MemoryStorage();
+      const logto = await LogtoClient.create({
+        domain: DOMAIN,
+        clientId: CLIENT_ID,
+        storage,
+      });
+      await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
+      expect(logto.isLoginRedirect(`${REDIRECT_URI}?code=${CODE}`)).toBeFalsy();
     });
 
     test('mismatch uri should be false', async () => {
@@ -204,7 +223,9 @@ describe('LogtoClient', () => {
         clientId: CLIENT_ID,
         storage,
       });
-      await expect(logto.handleCallback(REDIRECT_CALLBACK)).rejects.toThrowError();
+      await expect(
+        logto.handleCallback(`${REDIRECT_URI}?code=${CODE}&state=${STATE}`)
+      ).rejects.toThrowError();
     });
 
     test('no code in url should fail', async () => {
@@ -214,7 +235,19 @@ describe('LogtoClient', () => {
         clientId: CLIENT_ID,
         storage,
       });
-      await expect(logto.handleCallback('')).rejects.toThrowError();
+      await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
+      await expect(logto.handleCallback(`${REDIRECT_URI}?state=${STATE}`)).rejects.toThrowError();
+    });
+
+    test('no state in url should fail', async () => {
+      const storage = new MemoryStorage();
+      const logto = await LogtoClient.create({
+        domain: DOMAIN,
+        clientId: CLIENT_ID,
+        storage,
+      });
+      await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
+      await expect(logto.handleCallback(`${REDIRECT_URI}?code=${CODE}`)).rejects.toThrowError();
     });
 
     test('should throw response error', async () => {
@@ -224,7 +257,11 @@ describe('LogtoClient', () => {
         clientId: CLIENT_ID,
         storage,
       });
-      await expect(logto.handleCallback(REDIRECT_CALLBACK_WITH_ERROR)).rejects.toThrowError();
+      await expect(
+        logto.handleCallback(
+          `${REDIRECT_URI}?code=${CODE}&state=${STATE}&error=invalid_request&error_description=code_challenge%20must%20be%20a%20string%20with%20a%20minimum%20length%20of%2043%20characters`
+        )
+      ).rejects.toThrowError();
     });
 
     test('verifyIdToken should be called', async () => {
@@ -235,7 +272,7 @@ describe('LogtoClient', () => {
         storage,
       });
       await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
-      await logto.handleCallback(REDIRECT_CALLBACK);
+      await logto.handleCallback(`${REDIRECT_URI}?code=${CODE}&state=${STATE}`);
       expect(verifyIdToken).toHaveBeenCalled();
     });
 
@@ -247,8 +284,22 @@ describe('LogtoClient', () => {
         storage,
       });
       await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
-      await logto.handleCallback(REDIRECT_CALLBACK);
+      await logto.handleCallback(`${REDIRECT_URI}?code=${CODE}&state=${STATE}`);
       expect(storage.getItem('LOGTO_SESSION_MANAGER')).toBeUndefined();
+    });
+
+    test('unknown state in url should fail', async () => {
+      const storage = new MemoryStorage();
+      const logto = await LogtoClient.create({
+        domain: DOMAIN,
+        clientId: CLIENT_ID,
+        storage,
+      });
+      await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
+      const unknownState = `UNKNOWN_${STATE}`;
+      await expect(
+        logto.handleCallback(`${REDIRECT_URI}?code=${CODE}&state=${unknownState}`)
+      ).rejects.toThrowError();
     });
 
     test('should be authenticated', async () => {
@@ -259,7 +310,7 @@ describe('LogtoClient', () => {
         storage,
       });
       await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
-      await logto.handleCallback(REDIRECT_CALLBACK);
+      await logto.handleCallback(`${REDIRECT_URI}?code=${CODE}&state=${STATE}`);
       expect(logto.isAuthenticated()).toBeTruthy();
     });
   });
@@ -395,7 +446,7 @@ describe('LogtoClient', () => {
         onAuthStateChange,
       });
       await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
-      await logto.handleCallback(REDIRECT_CALLBACK);
+      await logto.handleCallback(`${REDIRECT_URI}?code=${CODE}&state=${STATE}`);
       expect(onAuthStateChange).toHaveBeenCalled();
     });
 

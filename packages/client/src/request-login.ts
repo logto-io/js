@@ -1,6 +1,6 @@
 import qs from 'query-string';
 
-import { generateCodeChallenge, generateCodeVerifier } from './generators';
+import { generateCodeChallenge, generateCodeVerifier, generateState } from './generators';
 
 export interface LoginPrepareParameters {
   baseUrl: string;
@@ -9,12 +9,13 @@ export interface LoginPrepareParameters {
   redirectUri: string;
 }
 
-export const getLoginUrlAndCodeVerifier = async (
+export const getLoginUrlWithCodeVerifierAndState = async (
   parameters: LoginPrepareParameters
-): Promise<{ url: string; codeVerifier: string }> => {
+): Promise<{ url: string; codeVerifier: string; state: string }> => {
   const { baseUrl, clientId, scope, redirectUri } = parameters;
   const codeVerifier = generateCodeVerifier();
   const codeChallenge = await generateCodeChallenge(codeVerifier);
+  const state = generateState();
 
   const url = `${baseUrl}?${qs.stringify({
     client_id: clientId,
@@ -24,7 +25,8 @@ export const getLoginUrlAndCodeVerifier = async (
     prompt: 'consent',
     code_challenge: codeChallenge,
     code_challenge_method: 'S256',
+    state,
   })}`;
 
-  return { url, codeVerifier };
+  return { url, codeVerifier, state };
 };

@@ -1,10 +1,11 @@
 import { SESSION_MANAGER_KEY } from './constants';
-import SessionManager from './session-manager';
+import SessionManager, { Session } from './session-manager';
 import { SessionStorage } from './storage';
 
-const transaction = {
+const transaction: Session = {
   codeVerifier: 'codeVerifier',
   redirectUri: 'redirectUri',
+  state: 'state',
 };
 
 describe('SessionManager', () => {
