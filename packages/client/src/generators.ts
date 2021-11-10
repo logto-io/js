@@ -1,5 +1,6 @@
 /** @link [Proof Key for Code Exchange by OAuth Public Clients](https://datatracker.ietf.org/doc/html/rfc7636) */
 
+import { UrlSafeBase64 } from '@silverhand/essentials';
 import { fromUint8Array } from 'js-base64';
 import { customAlphabet } from 'nanoid';
 
@@ -8,7 +9,6 @@ import {
   CODE_VERIFIER_MAX_LENGTH,
   DEFAULT_SCOPE_VALUES,
 } from './constants';
-import { UrlSafeBase64 } from './utils';
 
 /**
  * @param length The length of the string to generate.

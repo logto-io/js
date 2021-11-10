@@ -10637,11 +10637,9 @@ packages:
 
   /lodash.orderby/4.6.0:
     resolution: {integrity: sha1-5pfwTOXXhSL1TZM4syuBozk+TrM=}
-    dev: false
 
   /lodash.pick/4.4.0:
     resolution: {integrity: sha1-UvBWEP/53tQiYRRB7R/BI6AwAbM=}
-    dev: false
 
   /lodash.set/4.3.2:
     resolution: {integrity: sha1-2HV7HagH3eJIFrDWqEvqGnYjCyM=}
