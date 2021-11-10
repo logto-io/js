@@ -3,7 +3,7 @@ import * as s from 'superstruct';
 import { requestWithFetch } from './api';
 import { LogtoError } from './errors';
 
-const TokenSetParametersSchema = s.object({
+const TokenSetParametersSchema = s.type({
   access_token: s.string(),
   expires_in: s.number(),
   id_token: s.string(),
