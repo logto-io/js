@@ -7,19 +7,25 @@ import ProtectedRoute from './ProtectedRoute';
 
 const loginWithRedirect = jest.fn();
 const isAuthenticated = jest.fn();
+const isLoginRedirect = jest.fn();
 
 jest.mock('@logto/client', () => {
-  const Mocked = jest.fn().mockImplementation(() => {
+  const Mocked = jest.fn(() => {
     return {
-      loginWithRedirect,
       isAuthenticated,
+      isLoginRedirect,
+      loginWithRedirect,
     };
   });
   return {
     default: Mocked,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    create: jest.fn().mockImplementation(() => new Mocked()),
+    create: jest.fn(() => new Mocked()),
   };
+});
+
+afterEach(() => {
+  isAuthenticated.mockClear();
+  isLoginRedirect.mockClear();
 });
 
 const renderWrapper = (children: React.ReactNode) => {
@@ -55,7 +61,7 @@ describe('ProtectedRoute', () => {
         expect(loginWithRedirect).toHaveBeenCalled();
       });
 
-      expect(loginWithRedirect).toHaveBeenCalledTimes(1);
+      expect(loginWithRedirect).toHaveBeenCalled();
     });
 
     test('protected content should not be rendered', async () => {
