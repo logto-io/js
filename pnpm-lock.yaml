@@ -22,7 +22,7 @@ importers:
     specifiers:
       '@peculiar/webcrypto': ^1.1.7
       '@silverhand/eslint-config': ^0.2.2
-      '@silverhand/essentials': ^1.1.0
+      '@silverhand/essentials': ^1.1.2
       '@silverhand/ts-config': ^0.2.2
       '@types/jest': ^26.0.24
       '@types/webpack': ^5.28.0
@@ -45,6 +45,7 @@ importers:
       webpack-bundle-analyzer: ^4.5.0
       webpack-cli: ^4.9.1
     dependencies:
+      '@silverhand/essentials': 1.1.2
       jose: 4.1.4
       js-base64: 3.7.2
       nanoid: 3.1.30
@@ -53,7 +54,6 @@ importers:
     devDependencies:
       '@peculiar/webcrypto': 1.1.7
       '@silverhand/eslint-config': 0.2.2_aff669e8eb0d21fc4e2068e6112ef4d0
-      '@silverhand/essentials': 1.1.0
       '@silverhand/ts-config': 0.2.2_typescript@4.3.5
       '@types/jest': 26.0.24
       '@types/webpack': 5.28.0_webpack-cli@4.9.1
@@ -78,7 +78,6 @@ importers:
       '@peculiar/webcrypto': ^1.1.7
       '@silverhand/eslint-config': ^0.2.2
       '@silverhand/eslint-config-react': ^0.2.2
-      '@silverhand/essentials': ^1.1.0-rc.1
       '@silverhand/ts-config': ^0.2.2
       '@silverhand/ts-config-react': ^0.2.2
       '@types/jest': ^26.0.23
@@ -112,7 +111,6 @@ importers:
       webpack-dev-server: ^3.11.2
     dependencies:
       '@logto/client': link:../client
-      '@silverhand/essentials': 1.1.0
       js-base64: 3.7.2
       query-string: 7.0.1
       react: 17.0.2
@@ -154,7 +152,6 @@ importers:
     specifiers:
       '@logto/client': ^0.0.1
       '@silverhand/eslint-config': ^0.2.2
-      '@silverhand/essentials': ^1.1.0
       '@silverhand/ts-config': ^0.2.2
       '@silverhand/ts-config-react': ^0.2.2
       '@testing-library/react-hooks': ^7.0.2
@@ -174,7 +171,6 @@ importers:
       '@logto/client': link:../client
     devDependencies:
       '@silverhand/eslint-config': 0.2.2_d0e06193b104cab3f9ceaef77640598a
-      '@silverhand/essentials': 1.1.0
       '@silverhand/ts-config': 0.2.2_typescript@4.4.4
       '@silverhand/ts-config-react': 0.2.2_typescript@4.4.4
       '@testing-library/react-hooks': 7.0.2_fc2bb8a5b006d3f25c5f84ea777e678d
@@ -3281,12 +3277,13 @@ packages:
       lodash: 4.17.21
     dev: true
 
-  /@silverhand/essentials/1.1.0:
-    resolution: {integrity: sha512-O2ROFk1TgBLf4QwGBc5iF16TvhsIJAShbg/zHzHTF1PrSNAL/Dq2F29Fdr5BG22rJpSmypGQsk9SWVIM1tPRqA==}
+  /@silverhand/essentials/1.1.2:
+    resolution: {integrity: sha512-LentlcxRnZ0pOwgH9lGERCrHwhnhoRgP5seHJkJRa9Y5DCAaNTabZ3ihlC7GhA8r7vEJsvRGp9JL7T2a2c6xFA==}
     engines: {node: '>=14.15.0', pnpm: '>=6'}
     dependencies:
       lodash.orderby: 4.6.0
       lodash.pick: 4.4.0
+    dev: false
 
   /@silverhand/ts-config-react/0.2.2_typescript@4.4.4:
     resolution: {integrity: sha512-zYddjCjxmdo/W+K+olqotrFwawjv0m3YGGVHomp+7oLqfR/6SwWxPg4lR8aWcfxs4XH1DiYTBNakrkFVN8vwug==}
