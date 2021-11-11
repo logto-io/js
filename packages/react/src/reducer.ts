@@ -1,16 +1,22 @@
 import { AuthState } from './auth-state';
 
 type Action =
-  | { type: 'INITIALIZE'; isAuthenticated: boolean }
+  | { type: 'INITIALIZE'; payload: { isAuthenticated: boolean; isLoading: boolean } }
   | { type: 'LOGIN_WITH_REDIRECT' }
   | { type: 'HANDLE_CALLBACK_REQUEST' }
   | { type: 'HANDLE_CALLBACK_SUCCESS' }
   | { type: 'LOGOUT' }
-  | { type: 'ERROR'; error: unknown };
+  | { type: 'ERROR'; payload: { error: unknown } };
 
 export const reducer = (state: AuthState, action: Action): AuthState => {
   if (action.type === 'INITIALIZE') {
-    return { ...state, isInitialized: true, isAuthenticated: action.isAuthenticated };
+    const { isAuthenticated, isLoading } = action.payload;
+    return {
+      ...state,
+      isInitialized: true,
+      isAuthenticated,
+      isLoading,
+    };
   }
 
   if (action.type === 'LOGIN_WITH_REDIRECT') {
@@ -30,7 +36,7 @@ export const reducer = (state: AuthState, action: Action): AuthState => {
   }
 
   if (action.type === 'ERROR') {
-    const { error } = action;
+    const { error } = action.payload;
     if (!(error instanceof Error)) {
       throw error;
     }

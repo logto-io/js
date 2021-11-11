@@ -18,20 +18,34 @@ export const LogtoProvider = ({ logtoConfig, children }: LogtoProviderProperties
     const createClient = async () => {
       try {
         const client = await LogtoClient.create(logtoConfig);
-        dispatch({ type: 'INITIALIZE', isAuthenticated: client.isAuthenticated() });
         setLogtoClient(client);
+        const isLoginRedirect = client.isLoginRedirect(window.location.href);
+        // If is login redirect, should set isLoading and isInitialized at the same time
+        dispatch({
+          type: 'INITIALIZE',
+          payload: {
+            isAuthenticated: client.isAuthenticated(),
+            isLoading: isLoginRedirect,
+          },
+        });
       } catch (error: unknown) {
-        dispatch({ type: 'ERROR', error });
+        dispatch({ type: 'ERROR', payload: { error } });
       }
     };
 
     void createClient();
   }, [logtoConfig]);
 
+  useEffect(() => {
+    if (logtoClient?.isLoginRedirect(window.location.href)) {
+      void handleCallback(window.location.href);
+    }
+  }, [logtoClient]);
+
   const loginWithRedirect = useCallback(
     async (redirectUri: string) => {
       if (!logtoClient) {
-        dispatch({ type: 'ERROR', error: new Error('Should init first') });
+        dispatch({ type: 'ERROR', payload: { error: new Error('Should init first') } });
         return;
       }
 
@@ -39,7 +53,7 @@ export const LogtoProvider = ({ logtoConfig, children }: LogtoProviderProperties
       try {
         await logtoClient.loginWithRedirect(redirectUri);
       } catch (error: unknown) {
-        dispatch({ type: 'ERROR', error });
+        dispatch({ type: 'ERROR', payload: { error } });
       }
     },
     [logtoClient]
@@ -48,7 +62,7 @@ export const LogtoProvider = ({ logtoConfig, children }: LogtoProviderProperties
   const handleCallback = useCallback(
     async (uri: string) => {
       if (!logtoClient) {
-        dispatch({ type: 'ERROR', error: new Error('Should init first') });
+        dispatch({ type: 'ERROR', payload: { error: new Error('Should init first') } });
         return;
       }
 
@@ -57,7 +71,7 @@ export const LogtoProvider = ({ logtoConfig, children }: LogtoProviderProperties
         await logtoClient.handleCallback(uri);
         dispatch({ type: 'HANDLE_CALLBACK_SUCCESS' });
       } catch (error: unknown) {
-        dispatch({ type: 'ERROR', error });
+        dispatch({ type: 'ERROR', payload: { error } });
       }
     },
     [logtoClient]
@@ -66,7 +80,7 @@ export const LogtoProvider = ({ logtoConfig, children }: LogtoProviderProperties
   const logout = useCallback(
     (redirectUri: string) => {
       if (!logtoClient) {
-        dispatch({ type: 'ERROR', error: new Error('Should init first') });
+        dispatch({ type: 'ERROR', payload: { error: new Error('Should init first') } });
         return;
       }
 
