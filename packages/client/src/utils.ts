@@ -1,3 +1,4 @@
+import { isNode } from '@silverhand/essentials';
 import * as s from 'superstruct';
 
 const fullfillBase64 = (input: string) => {
@@ -57,3 +58,11 @@ export const decodeToken = (token: string): IDToken => {
 };
 
 export const nowRoundToSec = () => Math.floor(Date.now() / 1000);
+
+export const createDefaultOnRedirect = () => {
+  if (isNode()) {
+    throw new Error('You should provide a onRedirect function in NodeJS');
+  }
+
+  return window.location.assign;
+};

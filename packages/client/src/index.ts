@@ -15,6 +15,7 @@ import { getLogoutUrl } from './request-logout';
 import SessionManager from './session-manager';
 import { ClientStorage, LocalStorage } from './storage';
 import TokenSet from './token-set';
+import { createDefaultOnRedirect } from './utils';
 import { createJWKS, verifyIdToken } from './verify-id-token';
 
 export * from './storage';
@@ -66,7 +67,7 @@ export default class LogtoClient {
 
   public async loginWithRedirect(
     redirectUri: string,
-    onRedirect: (url: string) => void = window.location.assign
+    onRedirect: (url: string) => void = createDefaultOnRedirect()
   ) {
     const { url, codeVerifier } = await getLoginUrlAndCodeVerifier({
       baseUrl: this.oidcConfiguration.authorization_endpoint,
@@ -179,7 +180,10 @@ export default class LogtoClient {
     return this.tokenSet.accessToken;
   }
 
-  public logout(redirectUri: string, onRedirect: (url: string) => void = window.location.assign) {
+  public logout(
+    redirectUri: string,
+    onRedirect: (url: string) => void = createDefaultOnRedirect()
+  ) {
     this.sessionManager.clear();
     if (this.onAuthStateChange) {
       this.onAuthStateChange();

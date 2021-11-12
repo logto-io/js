@@ -1,3 +1,5 @@
+import { isNode } from '@silverhand/essentials';
+
 import { LogtoError } from './errors';
 
 declare interface LogtoErrorResponse {
@@ -18,9 +20,13 @@ const getResponseErrorMessage = async (response: Response): Promise<string> => {
   }
 };
 
-export const createRequester = (fetchFunction: typeof fetch = fetch) => {
+export const createRequester = (fetchFunction?: typeof fetch) => {
+  if (!fetchFunction && isNode()) {
+    throw new Error('You should provide a fetch function in NodeJS');
+  }
+
   return async <T>(...args: Parameters<typeof fetch>): Promise<T> => {
-    const response = await fetchFunction(...args);
+    const response = await (fetchFunction ?? fetch)(...args);
     if (!response.ok) {
       throw new LogtoError({
         message: await getResponseErrorMessage(response),
