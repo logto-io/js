@@ -8,11 +8,6 @@ export interface AuthenticationResult {
 }
 
 export const parseRedirectCallback = (url: string): AuthenticationResult => {
-  const [, queryString] = url.split('?');
-  if (!queryString) {
-    return {};
-  }
-
-  const result = qs.parse(queryString);
-  return result;
+  const [, queryString = ''] = url.split('?');
+  return qs.parse(queryString);
 };
