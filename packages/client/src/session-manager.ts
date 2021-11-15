@@ -3,9 +3,10 @@ import { Optional } from '@silverhand/essentials';
 import { SESSION_EXPIRES_MILLISECONDS, SESSION_MANAGER_KEY } from './constants';
 import { ClientStorage } from './storage';
 
-interface Session {
+export interface Session {
   codeVerifier: string;
   redirectUri: string;
+  state: string;
 }
 
 export default class SessionManager {

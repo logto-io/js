@@ -11,6 +11,6 @@ describe('parseRedirectCallback', () => {
   });
 
   test('no query params should fail', () => {
-    expect(() => parseRedirectCallback('http://localhost:3000')).toThrow();
+    expect(parseRedirectCallback('http://localhost:3000')).toHaveProperty('error');
   });
 });

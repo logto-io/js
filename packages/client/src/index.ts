@@ -10,7 +10,7 @@ import {
   TokenSetParameters,
 } from './grant-token';
 import { parseRedirectCallback } from './parse-callback';
-import { getLoginUrlAndCodeVerifier } from './request-login';
+import { getLoginUrlWithCodeVerifierAndState } from './request-login';
 import { getLogoutUrl } from './request-logout';
 import SessionManager from './session-manager';
 import { ClientStorage, LocalStorage } from './storage';
@@ -69,29 +69,23 @@ export default class LogtoClient {
     redirectUri: string,
     onRedirect: (url: string) => void = createDefaultOnRedirect()
   ) {
-    const { url, codeVerifier } = await getLoginUrlAndCodeVerifier({
+    const { url, codeVerifier, state } = await getLoginUrlWithCodeVerifierAndState({
       baseUrl: this.oidcConfiguration.authorization_endpoint,
       clientId: this.clientId,
       scope: this.scope,
       redirectUri,
     });
-    this.sessionManager.set({ redirectUri, codeVerifier });
+    this.sessionManager.set({ redirectUri, codeVerifier, state });
     onRedirect(url);
   }
 
   public isLoginRedirect(url: string) {
-    try {
-      const { code, error } = parseRedirectCallback(url);
-
-      if (error || !code) {
-        return false;
-      }
-    } catch {
+    const { code, state, error } = parseRedirectCallback(url);
+    if (error || !code || !state) {
       return false;
     }
 
     const session = this.sessionManager.get();
-
     if (!session) {
       return false;
     }
@@ -101,14 +95,18 @@ export default class LogtoClient {
   }
 
   public async handleCallback(url: string) {
-    const { code, error, error_description } = parseRedirectCallback(url);
+    const { code, state, error, error_description } = parseRedirectCallback(url);
 
     if (error) {
       throw new Error(error_description ?? error);
     }
 
     if (!code) {
-      throw new Error(`Can not found authorization_code in url: ${url}`);
+      throw new Error(`Authorization_code not found in url: ${url}`);
+    }
+
+    if (!state) {
+      throw new Error(`State not found in url: ${url}`);
     }
 
     const session = this.sessionManager.get();
@@ -117,8 +115,13 @@ export default class LogtoClient {
       throw new Error('Session not found');
     }
 
-    const { redirectUri, codeVerifier } = session;
+    const { redirectUri, codeVerifier, state: stateInStorage } = session;
     this.sessionManager.clear();
+
+    if (state !== stateInStorage) {
+      throw new Error('Unknown state');
+    }
+
     const tokenParameters = await grantTokenByAuthorizationCode(
       {
         endpoint: this.oidcConfiguration.token_endpoint,
@@ -129,13 +132,16 @@ export default class LogtoClient {
       },
       this.requester
     );
+
     await verifyIdToken(
       createJWKS(this.oidcConfiguration.jwks_uri),
       tokenParameters.id_token,
       this.clientId
     );
+
     this.storage.setItem(this.tokenSetCacheKey, tokenParameters);
     this.tokenSet = new TokenSet(tokenParameters);
+
     if (this.onAuthStateChange) {
       this.onAuthStateChange();
     }
