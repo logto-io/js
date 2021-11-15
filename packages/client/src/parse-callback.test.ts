@@ -10,7 +10,7 @@ describe('parseRedirectCallback', () => {
     expect(result.error_description).toEqual('some description');
   });
 
-  test('no query params should fail', () => {
-    expect(parseRedirectCallback('http://localhost:3000')).toHaveProperty('error');
+  test('no query params should return empty object', () => {
+    expect(parseRedirectCallback('http://localhost:3000')).toEqual({});
   });
 });
