@@ -38,6 +38,7 @@
     "url": "git+https://github.com/logto-io/js.git"
   },
   "scripts": {
+    "dev:tsc": "tsc -b -w --preserveWatchOutput",
     "preinstall": "npx only-allow pnpm",
     "lint": "eslint --ext .ts src",
     "build": "tsc",

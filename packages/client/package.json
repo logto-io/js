@@ -5,6 +5,7 @@
   "typings": "lib/index.d.ts",
   "license": "MPL-2.0",
   "scripts": {
+    "dev:tsc": "tsc -b -w --preserveWatchOutput",
     "preinstall": "npx only-allow pnpm",
     "build": "tsc",
     "lint": "eslint --ext .ts src",
