@@ -60,9 +60,9 @@ describe('generateCallbackUri', () => {
     const code: string = 'code1';
     const state: string = 'state1';
     const error: string = 'invalid_request';
-    expect(generateCallbackUri({ redirectUri: redirectUri })).toEqual(
-      'http://localhost:3000?code=code1&state=state1&error=invalid_request'
-    );
+    expect(
+      generateCallbackUri({ redirectUri: redirectUri, code: code, state: state, error: error })
+    ).toEqual('http://localhost:3000?code=code1&state=state1&error=invalid_request');
   });
 
   test('generate callback url with full info', () => {
@@ -72,7 +72,15 @@ describe('generateCallbackUri', () => {
     const error: string = 'invalid_request';
     const errorDescription: string =
       'code_challenge must be a string with a minimum length of 43 characters';
-    expect(generateCallbackUri({ redirectUri: redirectUri })).toEqual(
+    expect(
+      generateCallbackUri({
+        redirectUri: redirectUri,
+        code: code,
+        state: state,
+        error: error,
+        errorDescription: errorDescription,
+      })
+    ).toEqual(
       'http://localhost:3000?code=code1&state=state1&error=invalid_request&error_description=code_challenge%20must%20be%20a%20string%20with%20a%20minimum%20length%20of%2043%20characters'
     );
   });
