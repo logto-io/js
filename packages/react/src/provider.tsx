@@ -20,12 +20,14 @@ export const LogtoProvider = ({ logtoConfig, children }: LogtoProviderProperties
         const client = await LogtoClient.create(logtoConfig);
         setLogtoClient(client);
         const isLoginRedirect = client.isLoginRedirect(window.location.href);
+        const isAuthenticated = client.isAuthenticated();
         // If is login redirect, should set isLoading and isInitialized at the same time
         dispatch({
           type: 'INITIALIZE',
           payload: {
-            isAuthenticated: client.isAuthenticated(),
+            isAuthenticated,
             isLoading: isLoginRedirect,
+            claims: isAuthenticated ? client.getClaims() : undefined,
           },
         });
       } catch (error: unknown) {
@@ -69,7 +71,7 @@ export const LogtoProvider = ({ logtoConfig, children }: LogtoProviderProperties
       dispatch({ type: 'HANDLE_CALLBACK_REQUEST' });
       try {
         await logtoClient.handleCallback(uri);
-        dispatch({ type: 'HANDLE_CALLBACK_SUCCESS' });
+        dispatch({ type: 'HANDLE_CALLBACK_SUCCESS', payload: { claims: logtoClient.getClaims() } });
       } catch (error: unknown) {
         dispatch({ type: 'ERROR', payload: { error } });
       }
