@@ -42,8 +42,7 @@
     "lint": "eslint --ext .ts src",
     "build": "tsc",
     "test": "jest",
-    "package": "webpack",
-    "prepublish": "npm run build && npm run package"
+    "prepublish": "npm run build"
   },
   "bugs": {
     "url": "https://github.com/logto-io/js/issues"
