@@ -1,0 +1,18 @@
+@use '@/scss/underscore' as _;
+
+.wrapper {
+  padding: _.unit(5);
+
+  .title {
+    font-size: large;
+    margin: _.unit(3) 0;
+  }
+
+  .content {
+    margin: _.unit(5) 0;
+  }
+
+  button {
+    margin-bottom: _.unit(5);
+  }  
+}

@@ -1,0 +1,28 @@
+@use '@/scss/underscore' as _;
+
+.wrapper {
+  padding: _.unit(5);
+
+  .title {
+    font-size: large;
+    margin: _.unit(3) 0;
+  }
+
+  button {
+    margin-bottom: _.unit(5);
+  }
+
+  .table {
+    margin: 0 auto;
+    table-layout: fixed;
+    width: 800px;
+    border: 1px solid #333;
+    border-spacing: 0;
+
+    td {
+      padding: _.unit(2);
+      word-wrap: break-word;
+      border: 1px solid #333;
+    }
+  }
+}
