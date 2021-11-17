@@ -2,7 +2,8 @@
     "extends": "@silverhand/ts-config-react/tsconfig.base",
     "compilerOptions": {
         "outDir": "lib",
-        "noEmit": false
+        "noEmit": false,
+        "target": "es5"
     },
     "include": [
         "src"

@@ -41,7 +41,9 @@
     "preinstall": "npx only-allow pnpm",
     "lint": "eslint --ext .ts src",
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "package": "webpack",
+    "prepublish": "npm run build && npm run package"
   },
   "bugs": {
     "url": "https://github.com/logto-io/js/issues"
