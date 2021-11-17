@@ -24,7 +24,9 @@ const CLIENT_ID = 'client1';
 const SUBJECT = 'subject1';
 const REDIRECT_URI = 'http://localhost:3000';
 const CODE = 'code1';
-const LOGTO_TOKEN_SET_CACHE_KEY = `LOGTO_TOKEN_SET_CACHE::${ISSUER}::${CLIENT_ID}::${DEFAULT_SCOPE_STRING}`;
+const LOGTO_TOKEN_SET_CACHE_KEY = encodeURIComponent(
+  `LOGTO_TOKEN_SET_CACHE::${ISSUER}::${CLIENT_ID}::${DEFAULT_SCOPE_STRING}`
+);
 
 const discoverResponse = {
   authorization_endpoint: `${BASE_URL}/oidc/auth`,
@@ -421,7 +423,9 @@ describe('LogtoClient', () => {
       const onAuthStateChange = jest.fn();
       const storage = new MemoryStorage();
       storage.setItem(
-        `LOGTO_TOKEN_SET_CACHE::${discoverResponse.issuer}::${CLIENT_ID}::${DEFAULT_SCOPE_STRING}`,
+        encodeURIComponent(
+          `LOGTO_TOKEN_SET_CACHE::${discoverResponse.issuer}::${CLIENT_ID}::${DEFAULT_SCOPE_STRING}`
+        ),
         {
           ...fakeTokenResponse,
           id_token: (await generateIdToken()).idToken,

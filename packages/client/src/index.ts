@@ -210,7 +210,9 @@ export default class LogtoClient {
   }
 
   private get tokenSetCacheKey() {
-    return `${TOKEN_SET_CACHE_KEY}::${this.oidcConfiguration.issuer}::${this.clientId}::${this.scope}`;
+    return encodeURIComponent(
+      `${TOKEN_SET_CACHE_KEY}::${this.oidcConfiguration.issuer}::${this.clientId}::${this.scope}`
+    );
   }
 
   private createTokenSetFromCache() {
