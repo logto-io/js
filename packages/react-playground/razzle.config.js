@@ -42,6 +42,8 @@ module.exports = {
       '@/(.*)': '<rootDir>/src/$1',
     };
 
+    config.setupFilesAfterEnv =['./jest.setup.js'];
+
     return config;
   },
 };
