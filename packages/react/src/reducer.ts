@@ -1,21 +1,27 @@
+import { IDToken } from '@logto/client';
+
 import { AuthState } from './auth-state';
 
 type Action =
-  | { type: 'INITIALIZE'; payload: { isAuthenticated: boolean; isLoading: boolean } }
+  | {
+      type: 'INITIALIZE';
+      payload: { isAuthenticated: boolean; isLoading: boolean; claims?: IDToken };
+    }
   | { type: 'LOGIN_WITH_REDIRECT' }
   | { type: 'HANDLE_CALLBACK_REQUEST' }
-  | { type: 'HANDLE_CALLBACK_SUCCESS' }
+  | { type: 'HANDLE_CALLBACK_SUCCESS'; payload: { claims: IDToken } }
   | { type: 'LOGOUT' }
   | { type: 'ERROR'; payload: { error: unknown } };
 
 export const reducer = (state: AuthState, action: Action): AuthState => {
   if (action.type === 'INITIALIZE') {
-    const { isAuthenticated, isLoading } = action.payload;
+    const { isAuthenticated, isLoading, claims } = action.payload;
     return {
       ...state,
       isInitialized: true,
       isAuthenticated,
       isLoading,
+      claims,
     };
   }
 
@@ -28,7 +34,8 @@ export const reducer = (state: AuthState, action: Action): AuthState => {
   }
 
   if (action.type === 'HANDLE_CALLBACK_SUCCESS') {
-    return { ...state, isLoading: false, isAuthenticated: true };
+    const { claims } = action.payload;
+    return { ...state, isLoading: false, isAuthenticated: true, claims };
   }
 
   if (action.type === 'LOGOUT') {

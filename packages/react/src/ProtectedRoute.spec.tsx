@@ -8,6 +8,14 @@ import ProtectedRoute from './ProtectedRoute';
 const loginWithRedirect = jest.fn();
 const isAuthenticated = jest.fn();
 const isLoginRedirect = jest.fn();
+const getClaims = jest.fn(() => ({
+  iss: 'logto.dev',
+  sub: 'foo',
+  aud: 'client1',
+  exp: 123,
+  iat: 123,
+  at_hash: 'at_hash',
+}));
 
 jest.mock('@logto/client', () => {
   const Mocked = jest.fn(() => {
@@ -15,6 +23,7 @@ jest.mock('@logto/client', () => {
       isAuthenticated,
       isLoginRedirect,
       loginWithRedirect,
+      getClaims,
     };
   });
   return {

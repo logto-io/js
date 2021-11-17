@@ -15,10 +15,11 @@ import { getLogoutUrl } from './request-logout';
 import SessionManager from './session-manager';
 import { ClientStorage, LocalStorage } from './storage';
 import TokenSet from './token-set';
-import { createDefaultOnRedirect } from './utils';
+import { createDefaultOnRedirect, IDToken } from './utils';
 import { createJWKS, verifyIdToken } from './verify-id-token';
 
 export * from './storage';
+export type { IDToken };
 
 export interface ConfigParameters {
   domain: string;

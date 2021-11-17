@@ -7,6 +7,14 @@ import useLogto from './use-logto';
 const isAuthenticated = jest.fn();
 const isLoginRedirect = jest.fn();
 const handleCallback = jest.fn(async () => Promise.resolve());
+const getClaims = jest.fn(() => ({
+  iss: 'logto.dev',
+  sub: 'foo',
+  aud: 'client1',
+  exp: 123,
+  iat: 123,
+  at_hash: 'at_hash',
+}));
 
 jest.mock('@logto/client', () => {
   const Mocked = jest.fn(() => {
@@ -15,6 +23,7 @@ jest.mock('@logto/client', () => {
       handleCallback,
       logout: jest.fn(),
       isLoginRedirect,
+      getClaims,
     };
   });
   return {
@@ -82,6 +91,7 @@ describe('useLogto', () => {
     });
     expect(result.current.isAuthenticated).toBeTruthy();
     expect(result.current.error).toBeUndefined();
+    expect(result.current.claims).not.toBeUndefined();
   });
 
   test('change from authenticated to not authenticated', async () => {
@@ -137,6 +147,7 @@ describe('useLogto', () => {
       expect(result.current.error).toBeUndefined();
       expect(handleCallback).toHaveBeenCalledTimes(1);
       expect(result.current.isLoading).toBeFalsy();
+      expect(result.current.claims).not.toBeUndefined();
     });
   });
 });
