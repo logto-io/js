@@ -7,6 +7,7 @@ import LogtoClient from '.';
 import { DEFAULT_SCOPE_STRING, SESSION_MANAGER_KEY } from './constants';
 import { MemoryStorage } from './storage';
 import { verifyIdToken } from './verify-id-token';
+import { generateCallbackUri } from './utils';
 
 const STATE = 'state1';
 
@@ -65,44 +66,6 @@ const generateIdToken = async () => {
     .sign(privateKey);
 
   return { idToken, key };
-};
-
-interface UriInfo {
-  redirectUri: string;
-  code?: string;
-  state?: string;
-  error?: string;
-  errorDescription?: string;
-}
-
-const generateCallbackUri = (uriInfo: UriInfo): string => {
-  let callbackUri = uriInfo.redirectUri.slice();
-
-  if (uriInfo.code || uriInfo.state || uriInfo.error || uriInfo.errorDescription) {
-    callbackUri += '?';
-  }
-
-  callbackUri += uriInfo.code ? `code=${uriInfo.code}` : '';
-
-  callbackUri += uriInfo.state
-    ? callbackUri.search(RegExp(/[?&]{1}$/)) != -1
-      ? `state=${uriInfo.state}`
-      : `&state=${uriInfo.state}`
-    : '';
-
-  callbackUri += uriInfo.error
-    ? callbackUri.search(RegExp(/[?&]{1}$/)) != -1
-      ? `error=${uriInfo.error}`
-      : `&error=${uriInfo.error}`
-    : '';
-
-  callbackUri += uriInfo.errorDescription
-    ? callbackUri.search(RegExp(/[?&]{1}$/)) != -1
-      ? `error_description=${uriInfo.errorDescription}`
-      : `&error_description=${uriInfo.errorDescription}`
-    : '';
-
-  return encodeURI(callbackUri);
 };
 
 describe('LogtoClient', () => {

@@ -22,6 +22,14 @@ const IDTokenSchema = s.type({
   at_hash: s.optional(s.string()),
 });
 
+interface UriInfo {
+  redirectUri: string;
+  code?: string;
+  state?: string;
+  error?: string;
+  errorDescription?: string;
+}
+
 export type IDToken = s.Infer<typeof IDTokenSchema>;
 
 /**
@@ -67,4 +75,34 @@ export const createDefaultOnRedirect = () => {
   return (url: string) => {
     window.location.assign(url);
   };
+};
+
+export const generateCallbackUri = (uriInfo: UriInfo): string => {
+  let callbackUri = uriInfo.redirectUri.slice();
+
+  if (uriInfo.code || uriInfo.state || uriInfo.error || uriInfo.errorDescription) {
+    callbackUri += '?';
+  }
+
+  callbackUri += uriInfo.code ? `code=${uriInfo.code}` : '';
+
+  callbackUri += uriInfo.state
+    ? callbackUri.search(RegExp(/[?&]{1}$/)) != -1
+      ? `state=${uriInfo.state}`
+      : `&state=${uriInfo.state}`
+    : '';
+
+  callbackUri += uriInfo.error
+    ? callbackUri.search(RegExp(/[?&]{1}$/)) != -1
+      ? `error=${uriInfo.error}`
+      : `&error=${uriInfo.error}`
+    : '';
+
+  callbackUri += uriInfo.errorDescription
+    ? callbackUri.search(RegExp(/[?&]{1}$/)) != -1
+      ? `error_description=${uriInfo.errorDescription}`
+      : `&error_description=${uriInfo.errorDescription}`
+    : '';
+
+  return encodeURI(callbackUri);
 };
