@@ -64,5 +64,7 @@ export const createDefaultOnRedirect = () => {
     throw new Error('You should provide a onRedirect function in NodeJS');
   }
 
-  return window.location.assign;
+  return (url: string) => {
+    window.location.assign(url);
+  };
 };
