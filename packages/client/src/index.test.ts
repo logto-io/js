@@ -67,6 +67,44 @@ const generateIdToken = async () => {
   return { idToken, key };
 };
 
+interface UriInfo {
+  redirectUri: string;
+  code?: string;
+  state?: string;
+  error?: string;
+  errorDescription?: string;
+}
+
+const generateCallbackUri = (uriInfo: UriInfo): string => {
+  let callbackUri = uriInfo.redirectUri.slice();
+
+  if (uriInfo.code || uriInfo.state || uriInfo.error || uriInfo.errorDescription) {
+    callbackUri += '?';
+  }
+
+  callbackUri += uriInfo.code ? `code=${uriInfo.code}` : '';
+
+  callbackUri += uriInfo.state
+    ? callbackUri.search(RegExp(/[?&]{1}$/)) != -1
+      ? `state=${uriInfo.state}`
+      : `&state=${uriInfo.state}`
+    : '';
+
+  callbackUri += uriInfo.error
+    ? callbackUri.search(RegExp(/[?&]{1}$/)) != -1
+      ? `error=${uriInfo.error}`
+      : `&error=${uriInfo.error}`
+    : '';
+
+  callbackUri += uriInfo.errorDescription
+    ? callbackUri.search(RegExp(/[?&]{1}$/)) != -1
+      ? `error_description=${uriInfo.errorDescription}`
+      : `&error_description=${uriInfo.errorDescription}`
+    : '';
+
+  return encodeURI(callbackUri);
+};
+
 describe('LogtoClient', () => {
   beforeEach(async () => {
     const { idToken } = await generateIdToken();
@@ -170,7 +208,11 @@ describe('LogtoClient', () => {
         storage,
       });
       await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
-      expect(logto.isLoginRedirect(`${REDIRECT_URI}?code=${CODE}&state=${STATE}`)).toBeTruthy();
+      expect(
+        logto.isLoginRedirect(
+          generateCallbackUri({ redirectUri: REDIRECT_URI, code: CODE, state: STATE })
+        )
+      ).toBeTruthy();
     });
 
     test('empty session should be false', async () => {
@@ -180,7 +222,11 @@ describe('LogtoClient', () => {
         clientId: CLIENT_ID,
         storage,
       });
-      expect(logto.isLoginRedirect(`${REDIRECT_URI}?code=${CODE}&state=${STATE}`)).toBeFalsy();
+      expect(
+        logto.isLoginRedirect(
+          generateCallbackUri({ redirectUri: REDIRECT_URI, code: CODE, state: STATE })
+        )
+      ).toBeFalsy();
     });
 
     test('no code in url should be false', async () => {
@@ -191,7 +237,9 @@ describe('LogtoClient', () => {
         storage,
       });
       await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
-      expect(logto.isLoginRedirect(`${REDIRECT_URI}?state=${STATE}`)).toBeFalsy();
+      expect(
+        logto.isLoginRedirect(generateCallbackUri({ redirectUri: REDIRECT_URI, state: STATE }))
+      ).toBeFalsy();
     });
 
     test('no state in url should be false', async () => {
@@ -202,7 +250,9 @@ describe('LogtoClient', () => {
         storage,
       });
       await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
-      expect(logto.isLoginRedirect(`${REDIRECT_URI}?code=${CODE}`)).toBeFalsy();
+      expect(
+        logto.isLoginRedirect(generateCallbackUri({ redirectUri: REDIRECT_URI, code: CODE }))
+      ).toBeFalsy();
     });
 
     test('mismatch uri should be false', async () => {
@@ -226,7 +276,9 @@ describe('LogtoClient', () => {
         storage,
       });
       await expect(
-        logto.handleCallback(`${REDIRECT_URI}?code=${CODE}&state=${STATE}`)
+        logto.handleCallback(
+          generateCallbackUri({ redirectUri: REDIRECT_URI, code: CODE, state: STATE })
+        )
       ).rejects.toThrowError();
     });
 
@@ -238,7 +290,9 @@ describe('LogtoClient', () => {
         storage,
       });
       await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
-      await expect(logto.handleCallback(`${REDIRECT_URI}?state=${STATE}`)).rejects.toThrowError();
+      await expect(
+        logto.handleCallback(generateCallbackUri({ redirectUri: REDIRECT_URI, state: STATE }))
+      ).rejects.toThrowError();
     });
 
     test('no state in url should fail', async () => {
@@ -249,7 +303,9 @@ describe('LogtoClient', () => {
         storage,
       });
       await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
-      await expect(logto.handleCallback(`${REDIRECT_URI}?code=${CODE}`)).rejects.toThrowError();
+      await expect(
+        logto.handleCallback(generateCallbackUri({ redirectUri: REDIRECT_URI, code: CODE }))
+      ).rejects.toThrowError();
     });
 
     test('should throw response error', async () => {
@@ -261,7 +317,14 @@ describe('LogtoClient', () => {
       });
       await expect(
         logto.handleCallback(
-          `${REDIRECT_URI}?code=${CODE}&state=${STATE}&error=invalid_request&error_description=code_challenge%20must%20be%20a%20string%20with%20a%20minimum%20length%20of%2043%20characters`
+          generateCallbackUri({
+            redirectUri: REDIRECT_URI,
+            code: CODE,
+            state: STATE,
+            error: 'invalid_request',
+            errorDescription:
+              'code_challenge must be a string with a minimum length of 43 characters',
+          })
         )
       ).rejects.toThrowError();
     });
@@ -274,7 +337,9 @@ describe('LogtoClient', () => {
         storage,
       });
       await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
-      await logto.handleCallback(`${REDIRECT_URI}?code=${CODE}&state=${STATE}`);
+      await logto.handleCallback(
+        generateCallbackUri({ redirectUri: REDIRECT_URI, code: CODE, state: STATE })
+      );
       expect(verifyIdToken).toHaveBeenCalled();
     });
 
@@ -286,7 +351,9 @@ describe('LogtoClient', () => {
         storage,
       });
       await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
-      await logto.handleCallback(`${REDIRECT_URI}?code=${CODE}&state=${STATE}`);
+      await logto.handleCallback(
+        generateCallbackUri({ redirectUri: REDIRECT_URI, code: CODE, state: STATE })
+      );
       expect(storage.getItem('LOGTO_SESSION_MANAGER')).toBeUndefined();
     });
 
@@ -300,7 +367,9 @@ describe('LogtoClient', () => {
       await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
       const unknownState = `UNKNOWN_${STATE}`;
       await expect(
-        logto.handleCallback(`${REDIRECT_URI}?code=${CODE}&state=${unknownState}`)
+        logto.handleCallback(
+          generateCallbackUri({ redirectUri: REDIRECT_URI, code: CODE, state: unknownState })
+        )
       ).rejects.toThrowError();
     });
 
@@ -312,7 +381,9 @@ describe('LogtoClient', () => {
         storage,
       });
       await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
-      await logto.handleCallback(`${REDIRECT_URI}?code=${CODE}&state=${STATE}`);
+      await logto.handleCallback(
+        generateCallbackUri({ redirectUri: REDIRECT_URI, code: CODE, state: STATE })
+      );
       expect(logto.isAuthenticated()).toBeTruthy();
     });
   });
@@ -450,7 +521,9 @@ describe('LogtoClient', () => {
         onAuthStateChange,
       });
       await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
-      await logto.handleCallback(`${REDIRECT_URI}?code=${CODE}&state=${STATE}`);
+      await logto.handleCallback(
+        generateCallbackUri({ redirectUri: REDIRECT_URI, code: CODE, state: STATE })
+      );
       expect(onAuthStateChange).toHaveBeenCalled();
     });
 
