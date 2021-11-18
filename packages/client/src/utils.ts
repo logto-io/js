@@ -78,31 +78,37 @@ export const createDefaultOnRedirect = () => {
 };
 
 export const generateCallbackUri = (uriInfo: UriInfo): string => {
-  let callbackUri = uriInfo.redirectUri.slice();
+  const callbackUriBase: string = uriInfo.redirectUri
+    .slice()
+    .concat(uriInfo.code || uriInfo.state || uriInfo.error || uriInfo.errorDescription ? '?' : '');
 
-  if (uriInfo.code || uriInfo.state || uriInfo.error || uriInfo.errorDescription) {
-    callbackUri += '?';
-  }
+  const callbackUriConcatCode: string = callbackUriBase.concat(
+    uriInfo.code ? `code=${uriInfo.code}` : ''
+  );
 
-  callbackUri += uriInfo.code ? `code=${uriInfo.code}` : '';
+  const callbackUriConcatState: string = callbackUriConcatCode.concat(
+    uriInfo.state
+      ? callbackUriConcatCode.search(new RegExp(/[&?]$/)) === -1
+        ? `&state=${uriInfo.state}`
+        : `state=${uriInfo.state}`
+      : ''
+  );
 
-  callbackUri += uriInfo.state
-    ? callbackUri.search(RegExp(/[?&]{1}$/)) != -1
-      ? `state=${uriInfo.state}`
-      : `&state=${uriInfo.state}`
-    : '';
+  const callbackUriConcatError: string = callbackUriConcatState.concat(
+    uriInfo.error
+      ? callbackUriConcatState.search(new RegExp(/[&?]$/)) === -1
+        ? `&error=${uriInfo.error}`
+        : `error=${uriInfo.error}`
+      : ''
+  );
 
-  callbackUri += uriInfo.error
-    ? callbackUri.search(RegExp(/[?&]{1}$/)) != -1
-      ? `error=${uriInfo.error}`
-      : `&error=${uriInfo.error}`
-    : '';
+  const callbackUriConcatErrorDescription: string = callbackUriConcatError.concat(
+    uriInfo.errorDescription
+      ? callbackUriConcatError.search(new RegExp(/[&?]$/)) === -1
+        ? `&error_description=${uriInfo.errorDescription}`
+        : `error_description=${uriInfo.errorDescription}`
+      : ''
+  );
 
-  callbackUri += uriInfo.errorDescription
-    ? callbackUri.search(RegExp(/[?&]{1}$/)) != -1
-      ? `error_description=${uriInfo.errorDescription}`
-      : `&error_description=${uriInfo.errorDescription}`
-    : '';
-
-  return encodeURI(callbackUri);
+  return encodeURI(callbackUriConcatErrorDescription);
 };

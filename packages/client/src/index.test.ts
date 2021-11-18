@@ -6,8 +6,8 @@ import nock from 'nock';
 import LogtoClient from '.';
 import { DEFAULT_SCOPE_STRING, SESSION_MANAGER_KEY } from './constants';
 import { MemoryStorage } from './storage';
-import { verifyIdToken } from './verify-id-token';
 import { generateCallbackUri } from './utils';
+import { verifyIdToken } from './verify-id-token';
 
 const STATE = 'state1';
 
