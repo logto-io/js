@@ -3,6 +3,12 @@ import { StructError } from 'superstruct';
 
 import { decodeToken, generateCallbackUri } from './utils';
 
+const REDIRECT_URI = 'http://localhost:3000';
+const CODE = 'code1';
+const STATE = 'state1';
+const ERROR = 'invalid_request';
+const ERROR_DESCRIPTION = 'code_challenge must be a string with a minimum length of 43 characters';
+
 describe('decodeToken', () => {
   test('decode token and get claims', async () => {
     const JWT = await new SignJWT({})
@@ -35,50 +41,41 @@ describe('decodeToken', () => {
 
 describe('generateCallbackUri', () => {
   test('generate callback url with redirectUri', () => {
-    const redirectUri = 'http://localhost:3000';
-    expect(generateCallbackUri({ redirectUri })).toEqual('http://localhost:3000');
+    const callbackUri = generateCallbackUri({ redirectUri: REDIRECT_URI });
+    expect(callbackUri).toEqual('http://localhost:3000');
   });
 
   test('generate callback url with redirectUri and code', () => {
-    const redirectUri = 'http://localhost:3000';
-    const code = 'code1';
-    expect(generateCallbackUri({ redirectUri, code })).toEqual('http://localhost:3000?code=code1');
+    const callbackUri = generateCallbackUri({ redirectUri: REDIRECT_URI, code: CODE });
+    expect(callbackUri).toEqual('http://localhost:3000?code=code1');
   });
 
   test('generate callback url with redirectUri and state', () => {
-    const redirectUri = 'http://localhost:3000';
-    const state = 'state1';
-    expect(generateCallbackUri({ redirectUri, state })).toEqual(
-      'http://localhost:3000?state=state1'
-    );
+    const callbackUri = generateCallbackUri({ redirectUri: REDIRECT_URI, state: STATE });
+    expect(callbackUri).toEqual('http://localhost:3000?state=state1');
   });
 
   test('generate callback url with redirectUri, code, state and error', () => {
-    const redirectUri = 'http://localhost:3000';
-    const code = 'code1';
-    const state = 'state1';
-    const error = 'invalid_request';
-    expect(generateCallbackUri({ redirectUri, code, state, error })).toEqual(
+    const callbackUri = generateCallbackUri({
+      redirectUri: REDIRECT_URI,
+      code: CODE,
+      state: STATE,
+      error: ERROR,
+    });
+    expect(callbackUri).toEqual(
       'http://localhost:3000?code=code1&state=state1&error=invalid_request'
     );
   });
 
   test('generate callback url with full info', () => {
-    const redirectUri = 'http://localhost:3000';
-    const code = 'code1';
-    const state = 'state1';
-    const error = 'invalid_request';
-    const errorDescription =
-      'code_challenge must be a string with a minimum length of 43 characters';
-    expect(
-      generateCallbackUri({
-        redirectUri,
-        code,
-        state,
-        error,
-        errorDescription,
-      })
-    ).toEqual(
+    const callbackUri = generateCallbackUri({
+      redirectUri: REDIRECT_URI,
+      code: CODE,
+      state: STATE,
+      error: ERROR,
+      errorDescription: ERROR_DESCRIPTION,
+    });
+    expect(callbackUri).toEqual(
       'http://localhost:3000?code=code1&state=state1&error=invalid_request&error_description=code_challenge%20must%20be%20a%20string%20with%20a%20minimum%20length%20of%2043%20characters'
     );
   });

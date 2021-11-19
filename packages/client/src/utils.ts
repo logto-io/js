@@ -1,4 +1,5 @@
 import { isNode } from '@silverhand/essentials';
+import queryString from 'query-string';
 import * as s from 'superstruct';
 
 const fullfillBase64 = (input: string) => {
@@ -77,38 +78,18 @@ export const createDefaultOnRedirect = () => {
   };
 };
 
-export const generateCallbackUri = (uriInfo: UriInfo): string => {
-  const callbackUriBase: string = uriInfo.redirectUri
-    .slice()
-    .concat(uriInfo.code || uriInfo.state || uriInfo.error || uriInfo.errorDescription ? '?' : '');
-
-  const callbackUriConcatCode: string = callbackUriBase.concat(
-    uriInfo.code ? `code=${uriInfo.code}` : ''
+export const generateCallbackUri = ({
+  redirectUri,
+  code,
+  state,
+  error,
+  errorDescription,
+}: UriInfo): string => {
+  return queryString.stringifyUrl(
+    {
+      url: redirectUri,
+      query: { code, state, error, error_description: errorDescription },
+    },
+    { skipEmptyString: true, sort: false }
   );
-
-  const callbackUriConcatState: string = callbackUriConcatCode.concat(
-    uriInfo.state
-      ? callbackUriConcatCode.search(new RegExp(/[&?]$/)) === -1
-        ? `&state=${uriInfo.state}`
-        : `state=${uriInfo.state}`
-      : ''
-  );
-
-  const callbackUriConcatError: string = callbackUriConcatState.concat(
-    uriInfo.error
-      ? callbackUriConcatState.search(new RegExp(/[&?]$/)) === -1
-        ? `&error=${uriInfo.error}`
-        : `error=${uriInfo.error}`
-      : ''
-  );
-
-  const callbackUriConcatErrorDescription: string = callbackUriConcatError.concat(
-    uriInfo.errorDescription
-      ? callbackUriConcatError.search(new RegExp(/[&?]$/)) === -1
-        ? `&error_description=${uriInfo.errorDescription}`
-        : `error_description=${uriInfo.errorDescription}`
-      : ''
-  );
-
-  return encodeURI(callbackUriConcatErrorDescription);
 };
