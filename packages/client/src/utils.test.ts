@@ -42,17 +42,17 @@ describe('decodeToken', () => {
 describe('generateCallbackUri', () => {
   test('generate callback url with redirectUri', () => {
     const callbackUri = generateCallbackUri({ redirectUri: REDIRECT_URI });
-    expect(callbackUri).toEqual('http://localhost:3000');
+    expect(callbackUri).toEqual(REDIRECT_URI);
   });
 
   test('generate callback url with redirectUri and code', () => {
     const callbackUri = generateCallbackUri({ redirectUri: REDIRECT_URI, code: CODE });
-    expect(callbackUri).toEqual('http://localhost:3000?code=code1');
+    expect(callbackUri).toEqual(`${REDIRECT_URI}?code=${CODE}`);
   });
 
   test('generate callback url with redirectUri and state', () => {
     const callbackUri = generateCallbackUri({ redirectUri: REDIRECT_URI, state: STATE });
-    expect(callbackUri).toEqual('http://localhost:3000?state=state1');
+    expect(callbackUri).toEqual(`${REDIRECT_URI}?state=${STATE}`);
   });
 
   test('generate callback url with redirectUri, code, state and error', () => {
@@ -62,9 +62,7 @@ describe('generateCallbackUri', () => {
       state: STATE,
       error: ERROR,
     });
-    expect(callbackUri).toEqual(
-      'http://localhost:3000?code=code1&state=state1&error=invalid_request'
-    );
+    expect(callbackUri).toEqual(`${REDIRECT_URI}?code=${CODE}&state=${STATE}&error=${ERROR}`);
   });
 
   test('generate callback url with full info', () => {
@@ -76,7 +74,9 @@ describe('generateCallbackUri', () => {
       errorDescription: ERROR_DESCRIPTION,
     });
     expect(callbackUri).toEqual(
-      'http://localhost:3000?code=code1&state=state1&error=invalid_request&error_description=code_challenge%20must%20be%20a%20string%20with%20a%20minimum%20length%20of%2043%20characters'
+      encodeURI(
+        `${REDIRECT_URI}?code=${CODE}&state=${STATE}&error=${ERROR}&error_description=${ERROR_DESCRIPTION}`
+      )
     );
   });
 });

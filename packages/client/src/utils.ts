@@ -23,7 +23,7 @@ const IDTokenSchema = s.type({
   at_hash: s.optional(s.string()),
 });
 
-interface UriInfo {
+interface CallbackUriParameters {
   redirectUri: string;
   code?: string;
   state?: string;
@@ -84,7 +84,7 @@ export const generateCallbackUri = ({
   state,
   error,
   errorDescription,
-}: UriInfo): string => {
+}: CallbackUriParameters): string => {
   return queryString.stringifyUrl(
     {
       url: redirectUri,
