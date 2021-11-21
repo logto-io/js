@@ -1,4 +1,5 @@
 import { isNode } from '@silverhand/essentials';
+import queryString from 'query-string';
 import * as s from 'superstruct';
 
 const fullfillBase64 = (input: string) => {
@@ -21,6 +22,14 @@ const IDTokenSchema = s.type({
   iat: s.number(),
   at_hash: s.optional(s.string()),
 });
+
+interface CallbackUriParameters {
+  redirectUri: string;
+  code?: string;
+  state?: string;
+  error?: string;
+  errorDescription?: string;
+}
 
 export type IDToken = s.Infer<typeof IDTokenSchema>;
 
@@ -67,4 +76,20 @@ export const createDefaultOnRedirect = () => {
   return (url: string) => {
     window.location.assign(url);
   };
+};
+
+export const generateCallbackUri = ({
+  redirectUri,
+  code,
+  state,
+  error,
+  errorDescription,
+}: CallbackUriParameters): string => {
+  return queryString.stringifyUrl(
+    {
+      url: redirectUri,
+      query: { code, state, error, error_description: errorDescription },
+    },
+    { skipEmptyString: true, sort: false }
+  );
 };
