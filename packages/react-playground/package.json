@@ -5,6 +5,8 @@
   "scripts": {
     "dev:tsc": "tsc -b -w --preserveWatchOutput",
     "dev:razzle": "razzle start",
+    "preinstall": "npx only-allow pnpm",
+    "precommit": "lint-staged",
     "start": "concurrently -c \"blue,cyan\" \"pnpm:dev:tsc\" -k \"pnpm:dev:razzle\"",
     "start:prod": "NODE_ENV=production node build/server.js",
     "build": "tsc -b && razzle build",
@@ -34,6 +36,7 @@
     "eslint-formatter-pretty": "^4.1.0",
     "html-webpack-plugin": "^4.5.2",
     "jest": "^27.0.6",
+    "lint-staged": "^12.1.1",
     "mini-css-extract-plugin": "^0.9.0",
     "prettier": "^2.3.2",
     "razzle": "4.2.7",

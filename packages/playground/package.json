@@ -4,6 +4,8 @@
   "license": "UNLICENSED",
   "private": true,
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "precommit": "lint-staged",
     "dev:tsc": "tsc -b -w --preserveWatchOutput",
     "dev:razzle": "razzle start",
     "start": "concurrently -c \"blue,cyan\" \"pnpm:dev:tsc\" -k \"pnpm:dev:razzle\"",
@@ -38,7 +40,7 @@
     "eslint": "^7.30.0",
     "eslint-formatter-pretty": "^4.1.0",
     "html-webpack-plugin": "^4.5.2",
-    "lint-staged": ">=10",
+    "lint-staged": "^11.1.2",
     "mini-css-extract-plugin": "^0.9.0",
     "node-fetch": "2.6.6",
     "postcss": "^8.3.6",

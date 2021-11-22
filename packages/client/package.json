@@ -7,6 +7,7 @@
   "scripts": {
     "dev:tsc": "tsc -b -w --preserveWatchOutput",
     "preinstall": "npx only-allow pnpm",
+    "precommit": "lint-staged",
     "build": "tsc",
     "lint": "eslint --ext .ts src",
     "package": "webpack",
