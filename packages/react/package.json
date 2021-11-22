@@ -40,6 +40,7 @@
   "scripts": {
     "dev:tsc": "tsc -b -w --preserveWatchOutput",
     "preinstall": "npx only-allow pnpm",
+    "precommit": "lint-staged",
     "lint": "eslint --ext .ts src",
     "build": "tsc",
     "test": "jest",
