@@ -1,0 +1,17 @@
+{
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "editor.formatOnSave": true,
+  "[scss]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.stylelint": true
+    }
+  },
+  "cssVariables.lookupFiles": [
+    "./packages/ui/src/components/AppContent/index.module.scss"
+  ],
+  "eslint.workingDirectories": [
+    {
+      "pattern": "./packages/*"
+    }
+  ]
+}
