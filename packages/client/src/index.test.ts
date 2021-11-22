@@ -5,18 +5,22 @@ import nock from 'nock';
 
 import LogtoClient from '.';
 import { DEFAULT_SCOPE_STRING, SESSION_MANAGER_KEY } from './constants';
-import { MemoryStorage } from './storage';
-import { generateCallbackUri } from './utils';
-import { verifyIdToken } from './verify-id-token';
+import { MemoryStorage } from './modules/storage';
+import { verifyIdToken } from './utils/id-token';
+import { generateCallbackUri } from './utils/utils-test';
 
 const STATE = 'state1';
 
-jest.mock('./generators', () => ({
-  ...jest.requireActual('./generators'),
+jest.mock('./utils/generators', () => ({
+  ...jest.requireActual('./utils/generators'),
   generateState: () => STATE,
 }));
 
-jest.mock('./verify-id-token');
+jest.mock('./utils/id-token', () => ({
+  ...jest.requireActual('./utils/id-token'),
+  verifyIdToken: jest.fn(),
+  createJWKS: jest.fn(),
+}));
 
 const DOMAIN = 'logto.dev';
 const BASE_URL = `https://${DOMAIN}`;
@@ -110,11 +114,13 @@ describe('LogtoClient', () => {
         ...fakeTokenResponse,
         id_token: (await generateIdToken()).idToken,
       });
+
       const logto = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage,
       });
+
       expect(logto.isAuthenticated()).toBeTruthy();
       expect(logto.getClaims()).toHaveProperty('sub', SUBJECT);
     });

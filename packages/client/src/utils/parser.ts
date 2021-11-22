@@ -7,6 +7,12 @@ export interface AuthenticationResult {
   error_description?: string;
 }
 
+/**
+ * Parse query paramers from the redirectCallback url
+ *
+ * @param {String} url
+ * @returns
+ */
 export const parseRedirectCallback = (url: string): AuthenticationResult => {
   const [, queryString = ''] = url.split('?');
   return qs.parse(queryString);

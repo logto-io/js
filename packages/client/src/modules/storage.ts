@@ -1,6 +1,6 @@
 import { Optional } from '@silverhand/essentials';
 
-import { STORAGE_KEY_PREFIX } from './constants';
+import { STORAGE_KEY_PREFIX } from '../constants';
 
 const getKey = (key: string) => `${STORAGE_KEY_PREFIX}:${key}`;
 

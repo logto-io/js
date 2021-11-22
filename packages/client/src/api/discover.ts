@@ -1,7 +1,8 @@
 import * as s from 'superstruct';
 
-import { createRequester, Requester } from './api';
-import { LogtoError } from './errors';
+import { LogtoError } from '../modules/errors';
+import { appendSlashIfNeeded } from '../utils';
+import { createRequester, Requester } from '../utils/requester';
 
 const OIDCConfigurationSchema = s.type({
   authorization_endpoint: s.string(),
@@ -14,15 +15,13 @@ const OIDCConfigurationSchema = s.type({
 
 export type OIDCConfiguration = s.Infer<typeof OIDCConfigurationSchema>;
 
-const appendSlashIfNeeded = (url: string): string => {
-  if (url.endsWith('/')) {
-    return url;
-  }
-
-  return url + '/';
-};
-
-export default async function discover(
+/**
+ * OIDC Connect Discovery: https://openid.net/specs/openid-connect-discovery-1_0.html
+ * @param url OP base url
+ * @param requester fetch type requester
+ * @returns OIDCConfiguration
+ */
+export async function discover(
   url: string,
   requester: Requester = createRequester()
 ): Promise<OIDCConfiguration> {

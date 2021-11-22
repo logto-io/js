@@ -1,6 +1,6 @@
 import nock from 'nock';
 
-import discover from './discover';
+import { discover } from './discover';
 
 const successResponse = {
   authorization_endpoint: 'https://logto.dev/oidc/auth',

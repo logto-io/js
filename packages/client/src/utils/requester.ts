@@ -1,6 +1,6 @@
 import { isNode } from '@silverhand/essentials';
 
-import { LogtoError } from './errors';
+import { LogtoError } from '../modules/errors';
 
 declare interface LogtoErrorResponse {
   error_description?: string;

@@ -1,6 +1,7 @@
-import { isNode } from '@silverhand/essentials';
-import queryString from 'query-string';
+import { createRemoteJWKSet, jwtVerify, JWTVerifyGetKey, JWTVerifyResult } from 'jose';
 import * as s from 'superstruct';
+
+import { CLOCK_TOLERANCE, EXPECTED_ALG } from '../constants';
 
 const fullfillBase64 = (input: string) => {
   if (input.length === 2) {
@@ -22,14 +23,6 @@ const IDTokenSchema = s.type({
   iat: s.number(),
   at_hash: s.optional(s.string()),
 });
-
-interface CallbackUriParameters {
-  redirectUri: string;
-  code?: string;
-  state?: string;
-  error?: string;
-  errorDescription?: string;
-}
 
 export type IDToken = s.Infer<typeof IDTokenSchema>;
 
@@ -66,30 +59,31 @@ export const decodeToken = (token: string): IDToken => {
   }
 };
 
-export const nowRoundToSec = () => Math.floor(Date.now() / 1000);
-
-export const createDefaultOnRedirect = () => {
-  if (isNode()) {
-    throw new Error('You should provide a onRedirect function in NodeJS');
-  }
-
-  return (url: string) => {
-    window.location.assign(url);
-  };
+/**
+ * Create JWKS
+ *
+ * @param JWKSUri
+ * @returns
+ */
+export const createJWKS = (JWKSUri: string): JWTVerifyGetKey => {
+  return createRemoteJWKSet(new URL(JWKSUri));
 };
 
-export const generateCallbackUri = ({
-  redirectUri,
-  code,
-  state,
-  error,
-  errorDescription,
-}: CallbackUriParameters): string => {
-  return queryString.stringifyUrl(
-    {
-      url: redirectUri,
-      query: { code, state, error, error_description: errorDescription },
-    },
-    { skipEmptyString: true, sort: false }
-  );
+/**
+ * Verify IDToken
+ * @param {Function} JWKS
+ * @param {String} idToken
+ * @param {String} audience
+ * @returns
+ */
+export const verifyIdToken = async (
+  JWKS: JWTVerifyGetKey,
+  idToken: string,
+  audience: string
+): Promise<JWTVerifyResult> => {
+  return jwtVerify(idToken, JWKS, {
+    algorithms: [EXPECTED_ALG],
+    clockTolerance: CLOCK_TOLERANCE,
+    audience,
+  });
 };

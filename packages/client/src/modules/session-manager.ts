@@ -1,6 +1,6 @@
 import { Optional } from '@silverhand/essentials';
 
-import { SESSION_EXPIRES_MILLISECONDS, SESSION_MANAGER_KEY } from './constants';
+import { SESSION_EXPIRES_MILLISECONDS, SESSION_MANAGER_KEY } from '../constants';
 import { ClientStorage } from './storage';
 
 export interface Session {
