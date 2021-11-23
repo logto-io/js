@@ -20,6 +20,7 @@ export type OIDCConfiguration = s.Infer<typeof OIDCConfigurationSchema>;
  * @param url OP base url
  * @param requester fetch type requester
  * @returns OIDCConfiguration
+ * @throws LogtoError
  */
 export async function discover(
   url: string,

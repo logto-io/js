@@ -30,6 +30,7 @@ type GrantTokenByAuthorizationPayload = {
  * @param {String} payload.clientId
  * @param requester
  * @returns TokenSetParameters
+ * @throws LogtoError
  */
 export const grantTokenByAuthorizationCode = async (
   { endpoint, code, redirectUri, codeVerifier, clientId }: GrantTokenByAuthorizationPayload,
@@ -75,6 +76,7 @@ type GrantTokenByRefreshTokenPayload = {
  * @param {String} payload.cliendId
  * @param requester
  * @returns TokenSetParameters
+ * @throws LogtoError
  */
 export const grantTokenByRefreshToken = async (
   { endpoint, clientId, refreshToken }: GrantTokenByRefreshTokenPayload,
