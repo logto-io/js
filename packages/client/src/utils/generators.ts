@@ -8,10 +8,10 @@ import {
   CODE_VERIFIER_ALPHABET,
   CODE_VERIFIER_MAX_LENGTH,
   DEFAULT_SCOPE_VALUES,
-} from './constants';
+} from '../constants';
 
 /**
- * @param length The length of the string to generate.
+ * @param {Number} length The length of the string to generate.
  */
 function generateRandomString(length: number) {
   return customAlphabet(CODE_VERIFIER_ALPHABET, length)();
@@ -36,7 +36,7 @@ export const generateCodeVerifier = () => generateRandomString(CODE_VERIFIER_MAX
 /**
  * Calculates the S256 PKCE code challenge for an arbitrary code verifier.
  * Encodes in url safe base64.
- * @param codeVerifier Code verifier to calculate the S256 code challenge for
+ * @param {String} codeVerifier Code verifier to calculate the S256 code challenge for
  * @link [Client Creates the Code Challenge](https://datatracker.ietf.org/doc/html/rfc7636#section-4.2)
  */
 export const generateCodeChallenge = async (codeVerifier: string): Promise<string> => {
@@ -46,7 +46,7 @@ export const generateCodeChallenge = async (codeVerifier: string): Promise<strin
 };
 
 /**
- * @param originalScope
+ * @param {String | String[]}originalScope
  * @return customScope including all default scope values ( Logto requires `openid` and `offline_access` )
  */
 export const generateScope = (originalScope?: string | string[]): string => {

@@ -1,7 +1,7 @@
 import { SignJWT, generateKeyPair } from 'jose';
 
+import { nowRoundToSec } from '../utils';
 import TokenSet from './token-set';
-import { nowRoundToSec } from './utils';
 
 describe('TokenSet', () => {
   test('sets the expire_at automatically from expires_in', () => {

@@ -1,24 +1,25 @@
 import { Optional } from '@silverhand/essentials';
 
-import { createRequester, Requester } from './api';
-import { TOKEN_SET_CACHE_KEY } from './constants';
-import discover, { OIDCConfiguration } from './discover';
-import { generateScope } from './generators';
 import {
+  discover,
   grantTokenByAuthorizationCode,
   grantTokenByRefreshToken,
+  OIDCConfiguration,
   TokenSetParameters,
-} from './grant-token';
-import { parseRedirectCallback } from './parse-callback';
-import { getLoginUrlWithCodeVerifierAndState } from './request-login';
-import { getLogoutUrl } from './request-logout';
-import SessionManager from './session-manager';
-import { ClientStorage, LocalStorage } from './storage';
-import TokenSet from './token-set';
-import { createDefaultOnRedirect, IDToken } from './utils';
-import { createJWKS, verifyIdToken } from './verify-id-token';
+} from './api';
+import { TOKEN_SET_CACHE_KEY } from './constants';
+import SessionManager from './modules/session-manager';
+import { ClientStorage, LocalStorage } from './modules/storage';
+import TokenSet from './modules/token-set';
+import { createDefaultOnRedirect, NOOP } from './utils';
+import { getLoginUrlWithCodeVerifierAndState, getLogoutUrl } from './utils/assembler';
+import { generateScope } from './utils/generators';
+import { createJWKS, verifyIdToken, IDToken } from './utils/id-token';
+import { parseRedirectCallback } from './utils/parser';
+import { createRequester, Requester } from './utils/requester';
 
-export * from './storage';
+export * from './modules/storage';
+
 export type { IDToken };
 
 export interface ConfigParameters {
@@ -30,25 +31,17 @@ export interface ConfigParameters {
   customFetchFunction?: typeof fetch;
 }
 
-export const appendSlashIfNeeded = (url: string): string => {
-  if (url.endsWith('/')) {
-    return url;
-  }
-
-  return url + '/';
-};
-
 export default class LogtoClient {
   private readonly oidcConfiguration: OIDCConfiguration;
   private readonly clientId: string;
   private readonly scope: string;
   private readonly sessionManager: SessionManager;
   private readonly storage: ClientStorage;
-  private readonly onAuthStateChange: Optional<() => void>;
+  private readonly onAuthStateChange: () => void;
   private readonly requester: Requester;
   private tokenSet: Optional<TokenSet>;
   constructor(config: ConfigParameters, oidcConfiguration: OIDCConfiguration) {
-    const { clientId, scope, storage, onAuthStateChange, customFetchFunction } = config;
+    const { clientId, scope, storage, onAuthStateChange = NOOP, customFetchFunction } = config;
     this.clientId = clientId;
     this.onAuthStateChange = onAuthStateChange;
     this.scope = generateScope(scope);
@@ -143,9 +136,7 @@ export default class LogtoClient {
     this.storage.setItem(this.tokenSetCacheKey, tokenParameters);
     this.tokenSet = new TokenSet(tokenParameters);
 
-    if (this.onAuthStateChange) {
-      this.onAuthStateChange();
-    }
+    this.onAuthStateChange();
   }
 
   public getClaims() {
@@ -192,9 +183,7 @@ export default class LogtoClient {
     onRedirect: (url: string) => void = createDefaultOnRedirect()
   ) {
     this.sessionManager.clear();
-    if (this.onAuthStateChange) {
-      this.onAuthStateChange();
-    }
+    this.onAuthStateChange();
 
     if (!this.tokenSet) {
       return;
@@ -220,9 +209,7 @@ export default class LogtoClient {
     const parameters = this.storage.getItem<TokenSetParameters>(this.tokenSetCacheKey);
     if (parameters) {
       this.tokenSet = new TokenSet(parameters);
-      if (this.onAuthStateChange) {
-        this.onAuthStateChange();
-      }
+      this.onAuthStateChange();
     }
   }
 }

@@ -5,7 +5,7 @@ import {
   NAME,
   OFFLINE_ACCESS,
   OPENID,
-} from './constants';
+} from '../constants';
 import { generateCodeChallenge, generateCodeVerifier, generateScope } from './generators';
 
 describe('generateCodeVerifier', () => {

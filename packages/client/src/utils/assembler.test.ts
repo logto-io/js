@@ -1,11 +1,11 @@
-import { DEFAULT_SCOPE_STRING } from './constants';
-import { getLoginUrlWithCodeVerifierAndState } from './request-login';
-
-const BASE_URL = 'http://logto.dev/oidc/auth';
-const CLIENT_ID = 'foo';
-const REDIRECT_URI = 'http://localhost:3000';
+import { DEFAULT_SCOPE_STRING } from '../constants';
+import { getLoginUrlWithCodeVerifierAndState, getLogoutUrl } from './assembler';
 
 describe('getLoginUrlWithCodeVerifierAndState', () => {
+  const BASE_URL = 'http://logto.dev/oidc/auth';
+  const CLIENT_ID = 'foo';
+  const REDIRECT_URI = 'http://localhost:3000';
+
   // eslint-disable-next-line @silverhand/fp/no-let
   let loginUrl: string;
 
@@ -59,5 +59,16 @@ describe('getLoginUrlWithCodeVerifierAndState', () => {
 
   test('loginUrl must contain expected state', async () => {
     expect(loginUrl.search('state=[^&=]+')).toBeGreaterThan(0);
+  });
+});
+
+describe('getLogoutUrl', () => {
+  test('getLogoutUrl', () => {
+    const url = getLogoutUrl(
+      'http://logto.dev/oidc/session/end',
+      'id_token',
+      'http://localhost:3000'
+    );
+    expect(url).toContain('id_token_hint=id_token');
   });
 });

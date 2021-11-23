@@ -1,7 +1,7 @@
 import * as s from 'superstruct';
 
-import { createRequester, Requester } from './api';
-import { LogtoError } from './errors';
+import { LogtoError } from '../modules/errors';
+import { createRequester, Requester } from '../utils/requester';
 
 const TokenSetParametersSchema = s.type({
   access_token: s.string(),
@@ -20,6 +20,18 @@ type GrantTokenByAuthorizationPayload = {
   clientId: string;
 };
 
+/**
+ * Grant AccessToken & IDToken by Authorization Code
+ * @param {Object} payload
+ * @param {String} payload.endpoint
+ * @param {String} payload.code
+ * @param {String} payload.redirectUri
+ * @param {String} payload.codeVerifier
+ * @param {String} payload.clientId
+ * @param requester
+ * @returns TokenSetParameters
+ * @throws LogtoError
+ */
 export const grantTokenByAuthorizationCode = async (
   { endpoint, code, redirectUri, codeVerifier, clientId }: GrantTokenByAuthorizationPayload,
   requester: Requester = createRequester()
@@ -57,6 +69,15 @@ type GrantTokenByRefreshTokenPayload = {
   clientId: string;
 };
 
+/**
+ * Retrieve access_token by refresh token
+ * @param {Object} payload
+ * @param {String} payload.endpoint
+ * @param {String} payload.cliendId
+ * @param requester
+ * @returns TokenSetParameters
+ * @throws LogtoError
+ */
 export const grantTokenByRefreshToken = async (
   { endpoint, clientId, refreshToken }: GrantTokenByRefreshTokenPayload,
   requester: Requester = createRequester()

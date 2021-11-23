@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 
-import { createRequester } from './api';
+import { createRequester } from './requester';
 
 describe('api (NodeJS)', () => {
   test('should throw on empty fetchFunction', () => {

@@ -1,5 +1,6 @@
-import { TokenSetParameters } from './grant-token';
-import { decodeToken, IDToken, nowRoundToSec } from './utils';
+import { TokenSetParameters } from '../api';
+import { nowRoundToSec } from '../utils';
+import { decodeToken, IDToken } from '../utils/id-token';
 
 export default class TokenSet {
   public accessToken: string;
