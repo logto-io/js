@@ -209,6 +209,7 @@ importers:
       lint-staged: ^12.1.1
       mini-css-extract-plugin: ^0.9.0
       prettier: ^2.3.2
+      query-string: ^7.0.1
       razzle: 4.2.7
       razzle-dev-utils: 4.2.7
       razzle-plugin-scss: ^4.2.6
@@ -243,6 +244,7 @@ importers:
       lint-staged: 12.1.1
       mini-css-extract-plugin: 0.9.0_webpack@4.46.0
       prettier: 2.3.2
+      query-string: 7.0.1
       razzle: 4.2.7_bc8567ccb50bc8c546bd82111450a7f0
       razzle-dev-utils: 4.2.7_25582cf9a45d8a495d3f9acca3867c25
       razzle-plugin-scss: 4.2.6_36e5a0c204b84802def110095e919267
@@ -13789,7 +13791,6 @@ packages:
       filter-obj: 1.1.0
       split-on-first: 1.1.0
       strict-uri-encode: 2.0.0
-    dev: false
 
   /querystring-es3/0.2.1:
     resolution: {integrity: sha1-nsYfeQSYdXB9aUFFlv2Qek1xHnM=}

@@ -39,6 +39,7 @@
     "lint-staged": "^12.1.1",
     "mini-css-extract-plugin": "^0.9.0",
     "prettier": "^2.3.2",
+    "query-string": "^7.0.1",
     "razzle": "4.2.7",
     "razzle-dev-utils": "4.2.7",
     "razzle-plugin-scss": "^4.2.6",
