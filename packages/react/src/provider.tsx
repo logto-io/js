@@ -1,5 +1,4 @@
 import LogtoClient, { ConfigParameters } from '@logto/client';
-import queryString from 'query-string';
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 
 import { defaultAuthState } from './auth-state';
@@ -73,14 +72,8 @@ export const LogtoProvider = ({ logtoConfig, children }: LogtoProviderProperties
       try {
         await logtoClient.handleCallback(uri);
         dispatch({ type: 'HANDLE_CALLBACK_SUCCESS', payload: { claims: logtoClient.getClaims() } });
-        if (window.location.href.includes('?')) {
-          const { url: baseUrl, query: queryObject } = queryString.parseUrl(window.location.href);
-          if (baseUrl && Object.keys(queryObject).length > 0) {
-            const { code, state, ...filteredEntries } = queryObject;
-            const newUrl = queryString.stringifyUrl({ url: baseUrl, query: filteredEntries });
-            history.replaceState(history.state, '', newUrl);
-          }
-        }
+        const [baseUrl] = uri.split('?');
+        history.replaceState(history.state, '', baseUrl);
       } catch (error: unknown) {
         dispatch({ type: 'ERROR', payload: { error } });
       }
