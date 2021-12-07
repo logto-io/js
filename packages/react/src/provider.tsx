@@ -70,7 +70,7 @@ export const LogtoProvider = ({ logtoConfig, children }: LogtoProviderProperties
 
       dispatch({ type: 'HANDLE_CALLBACK_REQUEST' });
       try {
-        const { redirectUri = '' } = logtoClient.sessionManager.get() ?? {};
+        const { redirectUri = '' } = logtoClient.sessionManager?.get() ?? {};
         await logtoClient.handleCallback(uri);
         dispatch({ type: 'HANDLE_CALLBACK_SUCCESS', payload: { claims: logtoClient.getClaims() } });
         const [baseUrl] = redirectUri.split('?');
