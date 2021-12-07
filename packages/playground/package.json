@@ -37,7 +37,7 @@
     "@types/webpack-env": "^1.16.0",
     "babel-preset-razzle": "^4.2.6",
     "concurrently": "^6.2.0",
-    "eslint": "^7.30.0",
+    "eslint": "^8.1.0",
     "eslint-formatter-pretty": "^4.1.0",
     "html-webpack-plugin": "^4.5.2",
     "lint-staged": "^11.1.2",
