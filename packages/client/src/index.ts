@@ -11,7 +11,7 @@ import { TOKEN_SET_CACHE_KEY } from './constants';
 import SessionManager from './modules/session-manager';
 import { ClientStorage, LocalStorage } from './modules/storage';
 import TokenSet from './modules/token-set';
-import { createDefaultOnRedirect, NOOP } from './utils';
+import { createDefaultOnRedirect } from './utils';
 import { getLoginUrlWithCodeVerifierAndState, getLogoutUrl } from './utils/assembler';
 import { generateScope } from './utils/generators';
 import { createJWKS, verifyIdToken, IDToken } from './utils/id-token';
@@ -27,7 +27,6 @@ export interface ConfigParameters {
   clientId: string;
   scope?: string | string[];
   storage?: ClientStorage;
-  onAuthStateChange?: () => void;
   customFetchFunction?: typeof fetch;
 }
 
@@ -37,13 +36,11 @@ export default class LogtoClient {
   private readonly scope: string;
   private readonly sessionManager: SessionManager;
   private readonly storage: ClientStorage;
-  private readonly onAuthStateChange: () => void;
   private readonly requester: Requester;
   private tokenSet: Optional<TokenSet>;
   constructor(config: ConfigParameters, oidcConfiguration: OIDCConfiguration) {
-    const { clientId, scope, storage, onAuthStateChange = NOOP, customFetchFunction } = config;
+    const { clientId, scope, storage, customFetchFunction } = config;
     this.clientId = clientId;
-    this.onAuthStateChange = onAuthStateChange;
     this.scope = generateScope(scope);
     this.oidcConfiguration = oidcConfiguration;
     this.storage = storage ?? new LocalStorage();
@@ -135,8 +132,6 @@ export default class LogtoClient {
 
     this.storage.setItem(this.tokenSetCacheKey, tokenParameters);
     this.tokenSet = new TokenSet(tokenParameters);
-
-    this.onAuthStateChange();
   }
 
   public getClaims() {
@@ -183,7 +178,6 @@ export default class LogtoClient {
     onRedirect: (url: string) => void = createDefaultOnRedirect()
   ) {
     this.sessionManager.clear();
-    this.onAuthStateChange();
 
     if (!this.tokenSet) {
       return;
@@ -209,7 +203,6 @@ export default class LogtoClient {
     const parameters = this.storage.getItem<TokenSetParameters>(this.tokenSetCacheKey);
     if (parameters) {
       this.tokenSet = new TokenSet(parameters);
-      this.onAuthStateChange();
     }
   }
 }
