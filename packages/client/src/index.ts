@@ -31,11 +31,11 @@ export interface ConfigParameters {
 }
 
 export default class LogtoClient {
-  private readonly oidcConfiguration: OIDCConfiguration;
-  private readonly clientId: string;
-  private readonly scope: string;
-  private readonly sessionManager: SessionManager;
-  private readonly storage: ClientStorage;
+  public readonly oidcConfiguration: OIDCConfiguration;
+  public readonly clientId: string;
+  public readonly scope: string;
+  public readonly sessionManager: SessionManager;
+  public readonly storage: ClientStorage;
   private readonly requester: Requester;
   private tokenSet: Optional<TokenSet>;
   constructor(config: ConfigParameters, oidcConfiguration: OIDCConfiguration) {
