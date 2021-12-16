@@ -14,13 +14,13 @@ import TokenSet from './modules/token-set';
 import { createDefaultOnRedirect } from './utils';
 import { getLoginUrlWithCodeVerifierAndState, getLogoutUrl } from './utils/assembler';
 import { generateScope } from './utils/generators';
-import { createJWKS, verifyIdToken, IDToken } from './utils/id-token';
+import { createJWKS, verifyIdToken } from './utils/id-token';
 import { parseRedirectCallback } from './utils/parser';
 import { createRequester, Requester } from './utils/requester';
 
-export * from './modules/storage';
+export type { IDToken } from './utils/id-token';
 
-export type { IDToken };
+export * from './modules/storage';
 
 export interface ConfigParameters {
   domain: string;
@@ -47,6 +47,12 @@ export default class LogtoClient {
     this.sessionManager = new SessionManager(this.storage);
     this.requester = createRequester(customFetchFunction);
     this.createTokenSetFromCache();
+  }
+
+  private get tokenSetCacheKey() {
+    return encodeURIComponent(
+      `${TOKEN_SET_CACHE_KEY}::${this.oidcConfiguration.issuer}::${this.clientId}::${this.scope}`
+    );
   }
 
   static async create(config: ConfigParameters): Promise<LogtoClient> {
@@ -191,12 +197,6 @@ export default class LogtoClient {
     this.tokenSet = undefined;
     this.storage.removeItem(this.tokenSetCacheKey);
     onRedirect(url);
-  }
-
-  private get tokenSetCacheKey() {
-    return encodeURIComponent(
-      `${TOKEN_SET_CACHE_KEY}::${this.oidcConfiguration.issuer}::${this.clientId}::${this.scope}`
-    );
   }
 
   private createTokenSetFromCache() {

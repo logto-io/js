@@ -109,6 +109,7 @@ describe('verifyIdToken', () => {
 
 describe('decodeToken', () => {
   test('decode token and get claims', async () => {
+    const { privateKey } = await generateKeyPair('RS256');
     const JWT = await new SignJWT({})
       .setProtectedHeader({ alg: 'RS256' })
       .setAudience('foo')
@@ -116,7 +117,7 @@ describe('decodeToken', () => {
       .setIssuer('logto')
       .setIssuedAt()
       .setExpirationTime('2h')
-      .sign((await generateKeyPair('RS256')).privateKey);
+      .sign(privateKey);
     const payload = decodeToken(JWT);
     expect(payload.sub).toEqual('foz');
   });
@@ -126,13 +127,14 @@ describe('decodeToken', () => {
   });
 
   test('throw ZodError when iss is missing', async () => {
+    const { privateKey } = await generateKeyPair('RS256');
     const JWT = await new SignJWT({})
       .setProtectedHeader({ alg: 'RS256' })
       .setAudience('foo')
       .setSubject('foz')
       .setIssuedAt()
       .setExpirationTime('2h')
-      .sign((await generateKeyPair('RS256')).privateKey);
+      .sign(privateKey);
     expect(() => decodeToken(JWT)).toThrowError(StructError);
   });
 });
