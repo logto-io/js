@@ -453,10 +453,10 @@ describe('LogtoClient', () => {
 
     test('tokenset cache should be cleared', async () => {
       const storage = new MemoryStorage();
-      const { idToken } = await generateIdToken();
+      const { idToken: id_token } = await generateIdToken();
       storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, {
         ...fakeTokenResponse,
-        id_token: idToken,
+        id_token,
       });
       jest.spyOn(storage, 'removeItem');
       const logto = await LogtoClient.create({
