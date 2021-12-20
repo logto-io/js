@@ -110,9 +110,10 @@ describe('LogtoClient', () => {
 
     test('claims restored', async () => {
       const storage = new MemoryStorage();
+      const { idToken: id_token } = await generateIdToken();
       storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, {
         ...fakeTokenResponse,
-        id_token: (await generateIdToken()).idToken,
+        id_token,
       });
 
       const logto = await LogtoClient.create({
@@ -127,9 +128,10 @@ describe('LogtoClient', () => {
 
     test('restored failed on mismatch storage key', async () => {
       const storage = new MemoryStorage();
+      const { idToken } = await generateIdToken();
       storage.setItem('dummy-key', {
         ...fakeTokenResponse,
-        id_token: (await generateIdToken()).idToken,
+        id_token: idToken,
       });
       const logto = await LogtoClient.create({
         domain: DOMAIN,
@@ -366,9 +368,10 @@ describe('LogtoClient', () => {
     describe('from local', () => {
       test('get accessToken from tokenset', async () => {
         const storage = new MemoryStorage();
+        const { idToken } = await generateIdToken();
         storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, {
           ...fakeTokenResponse,
-          id_token: (await generateIdToken()).idToken,
+          id_token: idToken,
         });
         const logto = await LogtoClient.create({
           domain: DOMAIN,
@@ -394,9 +397,10 @@ describe('LogtoClient', () => {
 
       beforeEach(async () => {
         const storage = new MemoryStorage();
+        const { idToken } = await generateIdToken();
         storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, {
           ...fakeTokenResponse,
-          id_token: (await generateIdToken()).idToken,
+          id_token: idToken,
           expires_in: -1,
         });
         // eslint-disable-next-line @silverhand/fp/no-mutation
@@ -421,9 +425,10 @@ describe('LogtoClient', () => {
     test('onRedirect should have been called', async () => {
       const onRedirect = jest.fn();
       const storage = new MemoryStorage();
+      const { idToken } = await generateIdToken();
       storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, {
         ...fakeTokenResponse,
-        id_token: (await generateIdToken()).idToken,
+        id_token: idToken,
       });
       const logto = await LogtoClient.create({
         domain: DOMAIN,
@@ -448,9 +453,10 @@ describe('LogtoClient', () => {
 
     test('tokenset cache should be cleared', async () => {
       const storage = new MemoryStorage();
+      const { idToken: id_token } = await generateIdToken();
       storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, {
         ...fakeTokenResponse,
-        id_token: (await generateIdToken()).idToken,
+        id_token,
       });
       jest.spyOn(storage, 'removeItem');
       const logto = await LogtoClient.create({

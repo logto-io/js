@@ -10,15 +10,14 @@ describe('getLoginUrlWithCodeVerifierAndState', () => {
   let loginUrl: string;
 
   beforeAll(async () => {
+    const { url } = await getLoginUrlWithCodeVerifierAndState({
+      baseUrl: BASE_URL,
+      clientId: CLIENT_ID,
+      scope: DEFAULT_SCOPE_STRING,
+      redirectUri: REDIRECT_URI,
+    });
     // eslint-disable-next-line @silverhand/fp/no-mutation
-    loginUrl = (
-      await getLoginUrlWithCodeVerifierAndState({
-        baseUrl: BASE_URL,
-        clientId: CLIENT_ID,
-        scope: DEFAULT_SCOPE_STRING,
-        redirectUri: REDIRECT_URI,
-      })
-    ).url;
+    loginUrl = url;
   });
 
   test('loginUrl must start with baseUrl', async () => {

@@ -31,6 +31,7 @@ describe('TokenSet', () => {
   });
 
   test('provides a #claims getter', async () => {
+    const { privateKey } = await generateKeyPair('RS256');
     const ts = new TokenSet({
       access_token: 'at',
       expires_in: -30,
@@ -42,7 +43,7 @@ describe('TokenSet', () => {
         .setIssuer('logto')
         .setIssuedAt()
         .setExpirationTime('2h')
-        .sign((await generateKeyPair('RS256')).privateKey),
+        .sign(privateKey),
     });
 
     expect(ts.claims().aud).toEqual('foo');
