@@ -110,10 +110,10 @@ describe('LogtoClient', () => {
 
     test('claims restored', async () => {
       const storage = new MemoryStorage();
-      const { idToken } = await generateIdToken();
+      const { idToken: id_token } = await generateIdToken();
       storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, {
         ...fakeTokenResponse,
-        id_token: idToken,
+        id_token,
       });
 
       const logto = await LogtoClient.create({
