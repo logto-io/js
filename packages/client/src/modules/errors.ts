@@ -7,7 +7,6 @@ interface LogtoErrorParameters {
 }
 
 export class LogtoError extends Error {
-  public uri?: string;
   public response?: Response;
   public cause?: Error | StructError;
 
