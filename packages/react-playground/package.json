@@ -23,9 +23,9 @@
   },
   "devDependencies": {
     "@peculiar/webcrypto": "^1.1.7",
-    "@silverhand/eslint-config": "^0.4.0",
-    "@silverhand/ts-config": "^0.4.0",
-    "@silverhand/ts-config-react": "^0.4.0",
+    "@silverhand/eslint-config": "^0.5.0",
+    "@silverhand/ts-config": "^0.5.0",
+    "@silverhand/ts-config-react": "^0.5.0",
     "@testing-library/react": "^12.1.2",
     "@types/jest": "^27.0.2",
     "@types/react": "^17.0.35",
