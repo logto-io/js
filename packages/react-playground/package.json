@@ -13,6 +13,7 @@
     "lint": "eslint --format pretty --ext .ts --ext .tsx src",
     "stylelint": "stylelint \"src/**/*.scss\"",
     "test": "razzle test --env=jsdom",
+    "test:coverage": "razzle test --env=jsdom --coverage",
     "report": "WITH_REPORT=true razzle build"
   },
   "dependencies": {

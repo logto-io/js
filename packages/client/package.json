@@ -12,6 +12,7 @@
     "lint": "eslint --ext .ts src",
     "package": "webpack",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "prepublish": "npm run build && npm run package",
     "report": "WITH_REPORT=true npm run package"
   },
