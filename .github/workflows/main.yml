@@ -25,10 +25,7 @@ jobs:
         run: pnpm -- lerna run --parallel lint
 
       - name: Test
-        run: pnpm -- lerna run --parallel test
+        run: pnpm -- lerna run --parallel test:coverage
 
-      - name: Coverage
-        uses: artiomtr/jest-coverage-report-action@v1.3
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          threshold: 80
+      - name: Upload Coverage
+        uses: codecov/codecov-action@v2
