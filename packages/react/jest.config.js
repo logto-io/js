@@ -6,4 +6,6 @@ module.exports = {
   testPathIgnorePatterns: ['lib'],
   moduleFileExtensions: ['ts', 'tsx', 'js'],
   testEnvironment: 'jsdom',
+  collectCoverageFrom: ['**/*.{ts, tsx, js}', '!**/node_modules/**', '!**/lib/**'],
+  coverageReporters: ['json', 'html', 'text-summary', 'lcov'],
 };

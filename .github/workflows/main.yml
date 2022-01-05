@@ -2,9 +2,9 @@ name: Main
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   main:
@@ -16,8 +16,7 @@ jobs:
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v1.0.2
         with:
-          node-version:
-            16
+          node-version: 16
 
       - name: Build
         run: pnpm -- lerna run --stream build
@@ -26,4 +25,7 @@ jobs:
         run: pnpm -- lerna run --parallel lint
 
       - name: Test
-        run: pnpm -- lerna run --parallel test
+        run: pnpm -- lerna run --parallel test:coverage
+
+      - name: Upload Coverage
+        uses: codecov/codecov-action@v2

@@ -34,15 +34,18 @@ module.exports = {
   },
   modifyJestConfig: ({ jestConfig }) => {
     /** @type {import('@jest/types').Config.InitialOptions} **/
-    const config = { ...jestConfig };
+    const config = {
+      ...jestConfig,
+      setupFilesAfterEnv: ['./jest.setup.js'],
+      collectCoverageFrom: ['**/*.{ts, tsx, js}', '!**/node_modules/**', '!**/lib/**'],
+      coverageReporters: ['json', 'html', 'text-summary', 'lcov'],
+    };
 
     config.moduleNameMapper = {
       ...config.moduleNameMapper,
       '^.+\\.(css|less|scss)$': 'babel-jest',
       '@/(.*)': '<rootDir>/src/$1',
     };
-
-    config.setupFilesAfterEnv =['./jest.setup.js'];
 
     return config;
   },
