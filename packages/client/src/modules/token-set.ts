@@ -1,4 +1,4 @@
-import { TokenSetParameters } from '../api';
+import { TokenResponse } from '../api';
 import { nowRoundToSec } from '../utils';
 import { decodeToken, IDToken } from '../utils/id-token';
 
@@ -7,7 +7,7 @@ export default class TokenSet {
   public idToken: string;
   public refreshToken: string;
   public expiresAt = 0;
-  constructor(tokenSet: TokenSetParameters) {
+  constructor(tokenSet: TokenResponse) {
     this.accessToken = tokenSet.access_token;
     this.expiresIn = tokenSet.expires_in;
     this.idToken = tokenSet.id_token;

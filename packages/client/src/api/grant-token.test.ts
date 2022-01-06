@@ -3,7 +3,7 @@ import nock from 'nock';
 import { grantTokenByAuthorizationCode, grantTokenByRefreshToken } from './grant-token';
 
 describe('grantTokenByAuthorizationCode', () => {
-  test('get tokenSet parameters', async () => {
+  test('get token response', async () => {
     const successResponse = {
       access_token: 'access_token',
       expires_in: 3600,
@@ -15,7 +15,7 @@ describe('grantTokenByAuthorizationCode', () => {
       .post('/oidc/token')
       .reply(200, successResponse);
 
-    const tokenSet = await grantTokenByAuthorizationCode({
+    const tokenResponse = await grantTokenByAuthorizationCode({
       endpoint: 'https://logto.dev/oidc/token',
       code: 'code',
       redirectUri: 'http://localhost:3000/callback',
@@ -23,7 +23,7 @@ describe('grantTokenByAuthorizationCode', () => {
       clientId: 'foo',
     });
 
-    expect(tokenSet).toMatchObject(successResponse);
+    expect(tokenResponse).toMatchObject(successResponse);
   });
 
   test('lack of access_token', async () => {
@@ -50,7 +50,7 @@ describe('grantTokenByAuthorizationCode', () => {
 });
 
 describe('grantTokenByRefreshToken', () => {
-  test('get tokenSet paramaters', async () => {
+  test('get token response', async () => {
     const successResponse = {
       access_token: 'access_token',
       expires_in: 3600,
@@ -62,12 +62,12 @@ describe('grantTokenByRefreshToken', () => {
       .post('/oidc/token')
       .reply(200, successResponse);
 
-    const tokenSet = await grantTokenByRefreshToken({
+    const tokenResponse = await grantTokenByRefreshToken({
       endpoint: 'https://logto.dev/oidc/token',
       clientId: 'client_id',
       refreshToken: 'refresh_token',
     });
 
-    expect(tokenSet).toMatchObject(successResponse);
+    expect(tokenResponse).toMatchObject(successResponse);
   });
 });

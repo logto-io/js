@@ -5,7 +5,7 @@ import {
   grantTokenByAuthorizationCode,
   grantTokenByRefreshToken,
   OidcConfigResponse,
-  TokenSetParameters,
+  TokenResponse,
 } from './api';
 import { TOKEN_SET_CACHE_KEY } from './constants';
 import SessionManager from './modules/session-manager';
@@ -119,7 +119,7 @@ export default class LogtoClient {
       throw new Error('Unknown state');
     }
 
-    const tokenParameters = await grantTokenByAuthorizationCode(
+    const tokenResponse = await grantTokenByAuthorizationCode(
       {
         endpoint: this.oidcConfig.token_endpoint,
         clientId: this.clientId,
@@ -132,12 +132,12 @@ export default class LogtoClient {
 
     await verifyIdToken(
       createJWKS(this.oidcConfig.jwks_uri),
-      tokenParameters.id_token,
+      tokenResponse.id_token,
       this.clientId
     );
 
-    this.storage.setItem(this.tokenSetCacheKey, tokenParameters);
-    this.tokenSet = new TokenSet(tokenParameters);
+    this.storage.setItem(this.tokenSetCacheKey, tokenResponse);
+    this.tokenSet = new TokenSet(tokenResponse);
   }
 
   public getClaims() {
@@ -161,7 +161,7 @@ export default class LogtoClient {
       return this.tokenSet.accessToken;
     }
 
-    const tokenParameters = await grantTokenByRefreshToken(
+    const tokenResponse = await grantTokenByRefreshToken(
       {
         endpoint: this.oidcConfig.token_endpoint,
         clientId: this.clientId,
@@ -171,11 +171,11 @@ export default class LogtoClient {
     );
     await verifyIdToken(
       createJWKS(this.oidcConfig.jwks_uri),
-      tokenParameters.id_token,
+      tokenResponse.id_token,
       this.clientId
     );
-    this.storage.setItem(this.tokenSetCacheKey, tokenParameters);
-    this.tokenSet = new TokenSet(tokenParameters);
+    this.storage.setItem(this.tokenSetCacheKey, tokenResponse);
+    this.tokenSet = new TokenSet(tokenResponse);
     return this.tokenSet.accessToken;
   }
 
@@ -200,7 +200,7 @@ export default class LogtoClient {
   }
 
   private createTokenSetFromCache() {
-    const parameters = this.storage.getItem<TokenSetParameters>(this.tokenSetCacheKey);
+    const parameters = this.storage.getItem<TokenResponse>(this.tokenSetCacheKey);
     if (parameters) {
       this.tokenSet = new TokenSet(parameters);
     }
