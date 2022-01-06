@@ -1,36 +1,25 @@
+comment: false
+
 coverage:
+  require_changes: true
   status:
     project:
       default:
-        target: 80%
-        threshold: 50%
+        target: 70
       client:
         flags:
           - client
-        target: 80%
-        threshold: 80%
       react:
         flags:
           - react
-        target: 80%
-        threshold: 50%
       playground:
         flags:
           - playground
-        target: 1%
-        threshold: 1%
       react-playground:
         flags:
           - react-playground
-        target: 1%
-        threshold: 1%
 
-comment:
-  layout: "reach, diff, flags, files"
-  behavior: default
-  require_changes: false
-
-flag:
+flags:
   client:
     paths:
       - ./packages/client
