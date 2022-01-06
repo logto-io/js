@@ -4,14 +4,26 @@ coverage:
       default:
         target: 80%
         threshold: 50%
-      core:
-        flags: core
+      client:
+        flags:
+          - client
+        target: 80%
+        threshold: 80%
       react:
-        flags: react
+        flags:
+          - react
+        target: 80%
+        threshold: 50%
       playground:
-        flags: playground
+        flags:
+          - playground
+        target: 1%
+        threshold: 1%
       react-playground:
-        flags: react-playground
+        flags:
+          - react-playground
+        target: 1%
+        threshold: 1%
 
 comment:
   layout: "reach, diff, flags, files"
@@ -19,15 +31,15 @@ comment:
   require_changes: false
 
 flag:
-  core:
+  client:
     paths:
-      - packages/client
+      - ./packages/client
   react:
     paths:
-      - packages/react
+      - ./packages/react
   playground:
     paths:
-      - packages/playround
+      - ./packages/playround
   react-playground:
     paths:
-      - packages/react-playground
+      - ./packages/react-playground

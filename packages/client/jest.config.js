@@ -8,5 +8,5 @@ module.exports = {
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['./jest.setup.js'],
   coveragePathIgnorePatterns: ['/node_modules/', '/lib/'],
-  coverageReporters: ['json', 'html', 'text-summary', 'lcov'],
+  coverageReporters: ['text-summary', 'lcov'],
 };

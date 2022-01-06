@@ -16,6 +16,7 @@
     "@types/jest": "^26.0.24",
     "@types/react": "^17.0.33",
     "@types/react-router-dom": "^5.3.2",
+    "codecov": "^3.8.3",
     "eslint": "^8.1.0",
     "jest": "^27.0.6",
     "lint-staged": "^11.1.2",
@@ -45,6 +46,7 @@
     "build": "tsc",
     "test": "jest",
     "test:coverage": "jest --silent --coverage",
+    "test:report": "codecov -F react",
     "prepublish": "npm run build"
   },
   "bugs": {

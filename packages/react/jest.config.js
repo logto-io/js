@@ -7,5 +7,5 @@ module.exports = {
   moduleFileExtensions: ['ts', 'tsx', 'js'],
   testEnvironment: 'jsdom',
   coveragePathIgnorePatterns: ['/node_modules/', '/lib/'],
-  coverageReporters: ['json', 'html', 'text-summary', 'lcov'],
+  coverageReporters: ['text-summary', 'lcov'],
 };

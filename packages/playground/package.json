@@ -15,6 +15,7 @@
     "stylelint": "stylelint \"src/**/*.scss\"",
     "test": "razzle test --env=jsdom",
     "test:coverage": "razzle test --env=jsdom --silent --coverage",
+    "test:report": "codecov -F playground",
     "report": "WITH_REPORT=true razzle build"
   },
   "dependencies": {
@@ -37,6 +38,7 @@
     "@types/react-router-dom": "^5.1.7",
     "@types/webpack-env": "^1.16.0",
     "babel-preset-razzle": "^4.2.6",
+    "codecov": "^3.8.3",
     "concurrently": "^6.2.0",
     "eslint": "^8.1.0",
     "eslint-formatter-pretty": "^4.1.0",
