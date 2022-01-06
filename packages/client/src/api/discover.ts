@@ -4,7 +4,7 @@ import { LogtoError } from '../modules/errors';
 import { appendSlashIfNeeded } from '../utils';
 import { createRequester, Requester } from '../utils/requester';
 
-const OIDCConfigurationSchema = s.type({
+const OidcConfigResponseSchema = s.type({
   authorization_endpoint: s.string(),
   jwks_uri: s.string(),
   token_endpoint: s.string(),
@@ -13,25 +13,25 @@ const OIDCConfigurationSchema = s.type({
   end_session_endpoint: s.string(),
 });
 
-export type OIDCConfiguration = s.Infer<typeof OIDCConfigurationSchema>;
+export type OidcConfigResponse = s.Infer<typeof OidcConfigResponseSchema>;
 
 /**
  * OIDC Connect Discovery: https://openid.net/specs/openid-connect-discovery-1_0.html
- * @param url OP base url
+ * @param url OpenID provider base url
  * @param requester fetch type requester
- * @returns OIDCConfiguration
+ * @returns OidcConfigResponse
  * @throws LogtoError
  */
 export async function discover(
   url: string,
   requester: Requester = createRequester()
-): Promise<OIDCConfiguration> {
-  const response = await requester<OIDCConfiguration>(
+): Promise<OidcConfigResponse> {
+  const response = await requester<OidcConfigResponse>(
     `${appendSlashIfNeeded(url)}oidc/.well-known/openid-configuration`
   );
 
   try {
-    s.assert(response, OIDCConfigurationSchema);
+    s.assert(response, OidcConfigResponseSchema);
     return response;
   } catch (error: unknown) {
     if (error instanceof s.StructError) {
