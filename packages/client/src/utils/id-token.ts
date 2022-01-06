@@ -15,25 +15,31 @@ const fullfillBase64 = (input: string) => {
   return input;
 };
 
-const IDTokenSchema = s.type({
+const IdTokenClaimsSchema = s.type({
   iss: s.string(),
   sub: s.string(),
   aud: s.string(),
   exp: s.number(),
   iat: s.number(),
+  auth_time: s.optional(s.number()),
+  nonce: s.optional(s.string()),
+  acr: s.optional(s.string()),
+  amr: s.optional(s.array(s.string())),
+  azp: s.optional(s.string()),
   at_hash: s.optional(s.string()),
+  c_hash: s.optional(s.string()),
 });
 
-export type IDToken = s.Infer<typeof IDTokenSchema>;
+export type IdTokenClaims = s.Infer<typeof IdTokenClaimsSchema>;
 
 /**
- * Decode IDToken from JWT, without verifying.
+ * Decode ID Token from JWT, without verifying.
  * Verifying JWT requires fetching public key first, this can not
  * be done in a sync function, in some cases, verifying is not necessary.
  * @param token JWT string.
  * @returns IDToken combined with JWT Claims.
  */
-export const decodeToken = (token: string): IDToken => {
+export const decodeIdToken = (token: string): IdTokenClaims => {
   const payloadPart = token.split('.')[1];
 
   if (!payloadPart) {
@@ -47,9 +53,9 @@ export const decodeToken = (token: string): IDToken => {
 
   try {
     // Using SuperStruct to validate the json type
-    const data = JSON.parse(json) as IDToken;
-    s.assert(data, IDTokenSchema);
-    return data;
+    const idToken = JSON.parse(json) as IdTokenClaims;
+    s.assert(idToken, IdTokenClaimsSchema);
+    return idToken;
   } catch (error: unknown) {
     if (error instanceof s.StructError) {
       throw error;
@@ -70,7 +76,7 @@ export const createJWKS = (JWKSUri: string): JWTVerifyGetKey => {
 };
 
 /**
- * Verify IDToken
+ * Verify ID Token
  * @param {Function} JWKS
  * @param {String} idToken
  * @param {String} audience

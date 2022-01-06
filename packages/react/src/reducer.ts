@@ -1,15 +1,15 @@
-import { IDToken } from '@logto/client';
+import { IdTokenClaims } from '@logto/client';
 
 import { AuthState } from './auth-state';
 
 type Action =
   | {
       type: 'INITIALIZE';
-      payload: { isAuthenticated: boolean; isLoading: boolean; claims?: IDToken };
+      payload: { isAuthenticated: boolean; isLoading: boolean; claims?: IdTokenClaims };
     }
   | { type: 'LOGIN_WITH_REDIRECT' }
   | { type: 'HANDLE_CALLBACK_REQUEST' }
-  | { type: 'HANDLE_CALLBACK_SUCCESS'; payload: { claims: IDToken } }
+  | { type: 'HANDLE_CALLBACK_SUCCESS'; payload: { claims: IdTokenClaims } }
   | { type: 'LOGOUT' }
   | { type: 'ERROR'; payload: { error: unknown } };
 
