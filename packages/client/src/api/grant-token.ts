@@ -3,14 +3,14 @@ import * as s from 'superstruct';
 import { LogtoError } from '../modules/errors';
 import { createRequester, Requester } from '../utils/requester';
 
-const TokenSetParametersSchema = s.type({
+const TokenResponseSchema = s.type({
   access_token: s.string(),
   expires_in: s.number(),
   id_token: s.string(),
   refresh_token: s.string(),
 });
 
-export type TokenSetParameters = s.Infer<typeof TokenSetParametersSchema>;
+export type TokenResponse = s.Infer<typeof TokenResponseSchema>;
 
 type GrantTokenByAuthorizationPayload = {
   endpoint: string;
@@ -29,13 +29,13 @@ type GrantTokenByAuthorizationPayload = {
  * @param {String} payload.codeVerifier
  * @param {String} payload.clientId
  * @param requester
- * @returns TokenSetParameters
+ * @returns TokenResponse
  * @throws LogtoError
  */
 export const grantTokenByAuthorizationCode = async (
   { endpoint, code, redirectUri, codeVerifier, clientId }: GrantTokenByAuthorizationPayload,
   requester: Requester = createRequester()
-): Promise<TokenSetParameters> => {
+): Promise<TokenResponse> => {
   const parameters = new URLSearchParams();
   parameters.append('grant_type', 'authorization_code');
   parameters.append('code', code);
@@ -52,7 +52,7 @@ export const grantTokenByAuthorizationCode = async (
   });
 
   try {
-    s.assert(response, TokenSetParametersSchema);
+    s.assert(response, TokenResponseSchema);
     return response;
   } catch (error: unknown) {
     if (error instanceof s.StructError) {
@@ -73,15 +73,15 @@ type GrantTokenByRefreshTokenPayload = {
  * Retrieve access_token by refresh token
  * @param {Object} payload
  * @param {String} payload.endpoint
- * @param {String} payload.cliendId
+ * @param {String} payload.clientId
  * @param requester
- * @returns TokenSetParameters
+ * @returns TokenResponse
  * @throws LogtoError
  */
 export const grantTokenByRefreshToken = async (
   { endpoint, clientId, refreshToken }: GrantTokenByRefreshTokenPayload,
   requester: Requester = createRequester()
-): Promise<TokenSetParameters> => {
+): Promise<TokenResponse> => {
   const parameters = new URLSearchParams();
   parameters.append('grant_type', 'refresh_token');
   parameters.append('client_id', clientId);
@@ -96,7 +96,7 @@ export const grantTokenByRefreshToken = async (
   });
 
   try {
-    s.assert(response, TokenSetParametersSchema);
+    s.assert(response, TokenResponseSchema);
     return response;
   } catch (error: unknown) {
     if (error instanceof s.StructError) {

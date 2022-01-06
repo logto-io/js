@@ -4,8 +4,8 @@ import {
   discover,
   grantTokenByAuthorizationCode,
   grantTokenByRefreshToken,
-  OIDCConfiguration,
-  TokenSetParameters,
+  OidcConfigResponse,
+  TokenResponse,
 } from './api';
 import { TOKEN_SET_CACHE_KEY } from './constants';
 import SessionManager from './modules/session-manager';
@@ -31,18 +31,18 @@ export interface ConfigParameters {
 }
 
 export default class LogtoClient {
-  public readonly oidcConfiguration: OIDCConfiguration;
+  public readonly oidcConfig: OidcConfigResponse;
   public readonly clientId: string;
   public readonly scope: string;
   public readonly sessionManager: SessionManager;
   public readonly storage: ClientStorage;
   private readonly requester: Requester;
   private tokenSet: Optional<TokenSet>;
-  constructor(config: ConfigParameters, oidcConfiguration: OIDCConfiguration) {
+  constructor(config: ConfigParameters, oidcConfig: OidcConfigResponse) {
     const { clientId, scope, storage, customFetchFunction } = config;
     this.clientId = clientId;
     this.scope = generateScope(scope);
-    this.oidcConfiguration = oidcConfiguration;
+    this.oidcConfig = oidcConfig;
     this.storage = storage ?? new LocalStorage();
     this.sessionManager = new SessionManager(this.storage);
     this.requester = createRequester(customFetchFunction);
@@ -51,7 +51,7 @@ export default class LogtoClient {
 
   private get tokenSetCacheKey() {
     return encodeURIComponent(
-      `${TOKEN_SET_CACHE_KEY}::${this.oidcConfiguration.issuer}::${this.clientId}::${this.scope}`
+      `${TOKEN_SET_CACHE_KEY}::${this.oidcConfig.issuer}::${this.clientId}::${this.scope}`
     );
   }
 
@@ -67,7 +67,7 @@ export default class LogtoClient {
     onRedirect: (url: string) => void = createDefaultOnRedirect()
   ) {
     const { url, codeVerifier, state } = await getLoginUrlWithCodeVerifierAndState({
-      baseUrl: this.oidcConfiguration.authorization_endpoint,
+      baseUrl: this.oidcConfig.authorization_endpoint,
       clientId: this.clientId,
       scope: this.scope,
       redirectUri,
@@ -119,9 +119,9 @@ export default class LogtoClient {
       throw new Error('Unknown state');
     }
 
-    const tokenParameters = await grantTokenByAuthorizationCode(
+    const tokenResponse = await grantTokenByAuthorizationCode(
       {
-        endpoint: this.oidcConfiguration.token_endpoint,
+        endpoint: this.oidcConfig.token_endpoint,
         clientId: this.clientId,
         code,
         redirectUri,
@@ -131,13 +131,13 @@ export default class LogtoClient {
     );
 
     await verifyIdToken(
-      createJWKS(this.oidcConfiguration.jwks_uri),
-      tokenParameters.id_token,
+      createJWKS(this.oidcConfig.jwks_uri),
+      tokenResponse.id_token,
       this.clientId
     );
 
-    this.storage.setItem(this.tokenSetCacheKey, tokenParameters);
-    this.tokenSet = new TokenSet(tokenParameters);
+    this.storage.setItem(this.tokenSetCacheKey, tokenResponse);
+    this.tokenSet = new TokenSet(tokenResponse);
   }
 
   public getClaims() {
@@ -161,21 +161,21 @@ export default class LogtoClient {
       return this.tokenSet.accessToken;
     }
 
-    const tokenParameters = await grantTokenByRefreshToken(
+    const tokenResponse = await grantTokenByRefreshToken(
       {
-        endpoint: this.oidcConfiguration.token_endpoint,
+        endpoint: this.oidcConfig.token_endpoint,
         clientId: this.clientId,
         refreshToken: this.tokenSet.refreshToken,
       },
       this.requester
     );
     await verifyIdToken(
-      createJWKS(this.oidcConfiguration.jwks_uri),
-      tokenParameters.id_token,
+      createJWKS(this.oidcConfig.jwks_uri),
+      tokenResponse.id_token,
       this.clientId
     );
-    this.storage.setItem(this.tokenSetCacheKey, tokenParameters);
-    this.tokenSet = new TokenSet(tokenParameters);
+    this.storage.setItem(this.tokenSetCacheKey, tokenResponse);
+    this.tokenSet = new TokenSet(tokenResponse);
     return this.tokenSet.accessToken;
   }
 
@@ -190,7 +190,7 @@ export default class LogtoClient {
     }
 
     const url = getLogoutUrl(
-      this.oidcConfiguration.end_session_endpoint,
+      this.oidcConfig.end_session_endpoint,
       this.tokenSet.idToken,
       redirectUri
     );
@@ -200,7 +200,7 @@ export default class LogtoClient {
   }
 
   private createTokenSetFromCache() {
-    const parameters = this.storage.getItem<TokenSetParameters>(this.tokenSetCacheKey);
+    const parameters = this.storage.getItem<TokenResponse>(this.tokenSetCacheKey);
     if (parameters) {
       this.tokenSet = new TokenSet(parameters);
     }
