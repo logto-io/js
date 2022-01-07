@@ -4,10 +4,10 @@ import { SignJWT, generateKeyPair } from 'jose';
 import nock from 'nock';
 import { StructError } from 'superstruct';
 
-import { decodeToken, createJWKS, verifyIdToken } from './id-token';
+import { decodeIdToken, createJWKS, verifyIdToken } from './id-token';
 
 describe('verifyIdToken', () => {
-  test('valid idToken', async () => {
+  test('valid ID Token', async () => {
     const { privateKey, publicKey } = await generateKeyPair('RS256');
 
     if (!(publicKey instanceof KeyObject)) {
@@ -107,8 +107,8 @@ describe('verifyIdToken', () => {
   });
 });
 
-describe('decodeToken', () => {
-  test('decode token and get claims', async () => {
+describe('decodeIdToken', () => {
+  test('decode ID Token and get claims', async () => {
     const { privateKey } = await generateKeyPair('RS256');
     const JWT = await new SignJWT({})
       .setProtectedHeader({ alg: 'RS256' })
@@ -118,15 +118,15 @@ describe('decodeToken', () => {
       .setIssuedAt()
       .setExpirationTime('2h')
       .sign(privateKey);
-    const payload = decodeToken(JWT);
-    expect(payload.sub).toEqual('foz');
+    const idTokenClaims = decodeIdToken(JWT);
+    expect(idTokenClaims.sub).toEqual('foz');
   });
 
   test('throw on invalid JWT string', async () => {
-    expect(() => decodeToken('invalid-JWT')).toThrow();
+    expect(() => decodeIdToken('invalid-JWT')).toThrow('invalid token');
   });
 
-  test('throw ZodError when iss is missing', async () => {
+  test('throw StructError when iss is missing', async () => {
     const { privateKey } = await generateKeyPair('RS256');
     const JWT = await new SignJWT({})
       .setProtectedHeader({ alg: 'RS256' })
@@ -135,6 +135,6 @@ describe('decodeToken', () => {
       .setIssuedAt()
       .setExpirationTime('2h')
       .sign(privateKey);
-    expect(() => decodeToken(JWT)).toThrowError(StructError);
+    expect(() => decodeIdToken(JWT)).toThrowError(StructError);
   });
 });

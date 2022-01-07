@@ -18,7 +18,7 @@ import { createJWKS, verifyIdToken } from './utils/id-token';
 import { parseRedirectCallback } from './utils/parser';
 import { createRequester, Requester } from './utils/requester';
 
-export type { IDToken } from './utils/id-token';
+export type { IdTokenClaims } from './utils/id-token';
 
 export * from './modules/storage';
 

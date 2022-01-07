@@ -1,11 +1,11 @@
-import { IDToken } from '@logto/client';
+import { IdTokenClaims } from '@logto/client';
 
 export interface AuthState {
   isLoading: boolean;
   isInitialized: boolean;
   isAuthenticated: boolean;
   error?: Error;
-  claims?: IDToken;
+  claims?: IdTokenClaims;
 }
 
 export const defaultAuthState: AuthState = {

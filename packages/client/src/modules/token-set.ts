@@ -1,6 +1,6 @@
 import { TokenResponse } from '../api';
 import { nowRoundToSec } from '../utils';
-import { decodeToken, IDToken } from '../utils/id-token';
+import { decodeIdToken, IdTokenClaims } from '../utils/id-token';
 
 export default class TokenSet {
   public accessToken: string;
@@ -26,11 +26,11 @@ export default class TokenSet {
     return this.expiresIn === 0;
   }
 
-  public claims(): IDToken {
+  public claims(): IdTokenClaims {
     if (!this.idToken) {
       throw new TypeError('id_token not present in TokenSet');
     }
 
-    return decodeToken(this.idToken);
+    return decodeIdToken(this.idToken);
   }
 }
