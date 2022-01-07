@@ -2,32 +2,4 @@ coverage:
   status:
     project:
       default:
-        target: 80%
-        threshold: 50%
-      core:
-        flags: core
-      react:
-        flags: react
-      playground:
-        flags: playground
-      react-playground:
-        flags: react-playground
-
-comment:
-  layout: "reach, diff, flags, files"
-  behavior: default
-  require_changes: false
-
-flag:
-  core:
-    paths:
-      - packages/client
-  react:
-    paths:
-      - packages/react
-  playground:
-    paths:
-      - packages/playround
-  react-playground:
-    paths:
-      - packages/react-playground
+        target: 70%

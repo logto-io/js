@@ -13,6 +13,7 @@
     "package": "webpack",
     "test": "jest",
     "test:coverage": "jest --silent --coverage",
+    "test:report": "codecov -F client",
     "prepublish": "npm run build && npm run package",
     "report": "WITH_REPORT=true npm run package"
   },
@@ -30,6 +31,7 @@
     "@silverhand/ts-config": "^0.5.0",
     "@types/jest": "^26.0.24",
     "@types/webpack": "^5.28.0",
+    "codecov": "^3.8.3",
     "eslint": "^8.1.0",
     "jest": "^27.0.6",
     "lint-staged": "^11.1.2",
