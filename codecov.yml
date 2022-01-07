@@ -3,26 +3,3 @@ coverage:
     project:
       default:
         target: 70%
-
-      client:
-        flags: client
-      react:
-        flags: react
-      playground:
-        flags: playground
-      react-playground:
-        flags: react-playground
-
-flags:
-  client:
-    paths:
-      - ./packages/client
-  react:
-    paths:
-      - ./packages/react
-  playground:
-    paths:
-      - ./packages/playround
-  react-playground:
-    paths:
-      - ./packages/react-playground
