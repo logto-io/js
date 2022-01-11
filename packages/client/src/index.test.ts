@@ -1,26 +1,15 @@
 import { KeyObject } from 'crypto';
 
 import { generateKeyPair, SignJWT } from 'jose';
-import nock from 'nock';
 
 import LogtoClient from '.';
+import { discover, grantTokenByAuthorizationCode, grantTokenByRefreshToken } from './api';
 import { DEFAULT_SCOPE_STRING, SESSION_MANAGER_KEY } from './constants';
 import { MemoryStorage } from './modules/storage';
-import { verifyIdToken } from './utils/id-token';
+import { getLoginUrlWithCodeVerifierAndState, getLogoutUrl } from './utils/assembler';
+import { createJWKS, verifyIdToken } from './utils/id-token';
+import { createRequester } from './utils/requester';
 import { generateCallbackUri } from './utils/utils-test';
-
-const STATE = 'state1';
-
-jest.mock('./utils/generators', () => ({
-  ...jest.requireActual('./utils/generators'),
-  generateState: () => STATE,
-}));
-
-jest.mock('./utils/id-token', () => ({
-  ...jest.requireActual('./utils/id-token'),
-  verifyIdToken: jest.fn(),
-  createJWKS: jest.fn(),
-}));
 
 const DOMAIN = 'logto.dev';
 const BASE_URL = `https://${DOMAIN}`;
@@ -29,6 +18,9 @@ const CLIENT_ID = 'client1';
 const SUBJECT = 'subject1';
 const REDIRECT_URI = 'http://localhost:3000';
 const CODE = 'code1';
+const CODE_VERIFIER = 'codeVerifier1';
+const STATE = 'state1';
+
 const LOGTO_TOKEN_SET_CACHE_KEY = encodeURIComponent(
   `LOGTO_TOKEN_SET_CACHE::${ISSUER}::${CLIENT_ID}::${DEFAULT_SCOPE_STRING}`
 );
@@ -42,13 +34,6 @@ const discoverResponse = {
   end_session_endpoint: `${BASE_URL}/oidc/session/end`,
 };
 
-const fakeTokenResponse = {
-  access_token: 'access_token',
-  expires_in: 3600,
-  id_token: 'id_token',
-  refresh_token: 'refresh_token',
-};
-
 const generateIdToken = async () => {
   const { privateKey, publicKey } = await generateKeyPair('RS256');
 
@@ -56,35 +41,58 @@ const generateIdToken = async () => {
     throw new TypeError('key is not instanceof KeyObject, check envirionment');
   }
 
-  const key = publicKey.export({ format: 'jwk' });
-  nock(BASE_URL)
-    .get('/oidc/jwks')
-    .reply(200, { keys: [key] });
-  const idToken = await new SignJWT({})
+  return new SignJWT({})
     .setProtectedHeader({ alg: 'RS256' })
     .setAudience(CLIENT_ID)
     .setSubject(SUBJECT)
-    .setIssuer(discoverResponse.issuer)
+    .setIssuer(ISSUER)
     .setIssuedAt()
     .setExpirationTime('2h')
     .sign(privateKey);
-
-  return { idToken, key };
 };
 
+const ID_TOKEN = generateIdToken();
+
+const fakeTokenResponse = {
+  access_token: 'accessToken1',
+  refresh_token: 'refreshToken1',
+  id_token: ID_TOKEN,
+  token_type: 'tokenType1',
+  scope: DEFAULT_SCOPE_STRING,
+  expires_in: 3600,
+};
+
+jest.mock('./api', () => {
+  const discover = jest.fn(async () => discoverResponse);
+  const grantTokenByAuthorizationCode = jest.fn(async () => Promise.resolve(fakeTokenResponse));
+  const grantTokenByRefreshToken = jest.fn(async () => Promise.resolve(fakeTokenResponse));
+
+  return {
+    discover,
+    grantTokenByAuthorizationCode,
+    grantTokenByRefreshToken,
+  };
+});
+
+jest.mock('./utils/assembler', () => {
+  const getLoginUrlWithCodeVerifierAndState = jest.fn(async () => ({
+    url: `${ISSUER}/authorize?code_challenge=${CODE_VERIFIER}&state=${STATE}&others`,
+    codeVerifier: CODE_VERIFIER,
+    state: STATE,
+  }));
+
+  const getLogoutUrl = jest.fn().mockReturnValue(`${ISSUER}/sign_out`);
+
+  return {
+    getLoginUrlWithCodeVerifierAndState,
+    getLogoutUrl,
+  };
+});
+
+jest.mock('./utils/id-token');
+jest.mock('./utils/requester');
+
 describe('LogtoClient', () => {
-  beforeEach(async () => {
-    const { idToken } = await generateIdToken();
-
-    nock(BASE_URL)
-      .post('/oidc/token')
-      .reply(200, {
-        ...fakeTokenResponse,
-        id_token: idToken,
-      });
-    nock(BASE_URL).get('/oidc/.well-known/openid-configuration').reply(200, discoverResponse);
-  });
-
   describe('createLogtoClient', () => {
     test('create an instance', async () => {
       const logto = await LogtoClient.create({
@@ -93,6 +101,16 @@ describe('LogtoClient', () => {
         storage: new MemoryStorage(),
       });
       expect(logto).toBeInstanceOf(LogtoClient);
+    });
+
+    test('discover and createRequester should have been called', async () => {
+      await LogtoClient.create({
+        domain: DOMAIN,
+        clientId: CLIENT_ID,
+      });
+
+      expect(discover).toHaveBeenCalled();
+      expect(createRequester).toHaveBeenCalled();
     });
   });
 
@@ -110,11 +128,7 @@ describe('LogtoClient', () => {
 
     test('claims restored', async () => {
       const storage = new MemoryStorage();
-      const { idToken: id_token } = await generateIdToken();
-      storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, {
-        ...fakeTokenResponse,
-        id_token,
-      });
+      storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, fakeTokenResponse);
 
       const logto = await LogtoClient.create({
         domain: DOMAIN,
@@ -122,17 +136,16 @@ describe('LogtoClient', () => {
         storage,
       });
 
-      expect(logto.isAuthenticated()).toBeTruthy();
-      expect(logto.getClaims()).toHaveProperty('sub', SUBJECT);
+      expect(logto).toHaveProperty('tokenSet.accessToken', fakeTokenResponse.access_token);
+      expect(logto).toHaveProperty('tokenSet.refreshToken', fakeTokenResponse.refresh_token);
+      expect(logto).toHaveProperty('tokenSet.idToken', fakeTokenResponse.id_token);
+      // TODO: update this case according to SDK Convention after refactoring TokenSet @IceHe
     });
 
     test('restored failed on mismatch storage key', async () => {
       const storage = new MemoryStorage();
-      const { idToken } = await generateIdToken();
-      storage.setItem('dummy-key', {
-        ...fakeTokenResponse,
-        id_token: idToken,
-      });
+      storage.setItem('dummy-key', fakeTokenResponse);
+
       const logto = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
@@ -144,7 +157,7 @@ describe('LogtoClient', () => {
   });
 
   describe('loginWithRedirect', () => {
-    test('onRedirect should have been called', async () => {
+    test('getLoginUrlWithCodeVerifierAndState and onRedirect should have been called', async () => {
       const onRedirect = jest.fn();
       const logto = await LogtoClient.create({
         domain: DOMAIN,
@@ -152,6 +165,7 @@ describe('LogtoClient', () => {
         storage: new MemoryStorage(),
       });
       await logto.loginWithRedirect(REDIRECT_URI, onRedirect);
+      expect(getLoginUrlWithCodeVerifierAndState).toHaveBeenCalled();
       expect(onRedirect).toHaveBeenCalled();
     });
 
@@ -165,8 +179,8 @@ describe('LogtoClient', () => {
       await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
       const sessionPayload = storage.getItem('LOGTO_SESSION_MANAGER');
       expect(sessionPayload).toHaveProperty('redirectUri', REDIRECT_URI);
-      expect(sessionPayload).toHaveProperty('codeVerifier');
-      expect(sessionPayload).toHaveProperty('state');
+      expect(sessionPayload).toHaveProperty('codeVerifier', CODE_VERIFIER);
+      expect(sessionPayload).toHaveProperty('state', STATE);
     });
   });
 
@@ -234,7 +248,12 @@ describe('LogtoClient', () => {
         storage,
       });
       await logto.loginWithRedirect('http://example.com', jest.fn());
-      expect(logto.isLoginRedirect(REDIRECT_URI)).toBeFalsy();
+      const callbackUri = generateCallbackUri({
+        redirectUri: REDIRECT_URI,
+        code: CODE,
+        state: STATE,
+      });
+      expect(logto.isLoginRedirect(callbackUri)).toBeFalsy();
     });
   });
 
@@ -295,7 +314,7 @@ describe('LogtoClient', () => {
       await expect(logto.handleCallback(callbackUri)).rejects.toThrowError();
     });
 
-    test('verifyIdToken should be called', async () => {
+    test('grantTokenByAuthorizationCode, verifyIdToken and createJWKS should be called', async () => {
       const storage = new MemoryStorage();
       const logto = await LogtoClient.create({
         domain: DOMAIN,
@@ -309,7 +328,10 @@ describe('LogtoClient', () => {
         state: STATE,
       });
       await logto.handleCallback(callbackUri);
+
+      expect(grantTokenByAuthorizationCode).toHaveBeenCalled();
       expect(verifyIdToken).toHaveBeenCalled();
+      expect(createJWKS).toHaveBeenCalled();
     });
 
     test('session should be cleared', async () => {
@@ -368,11 +390,7 @@ describe('LogtoClient', () => {
     describe('from local', () => {
       test('get accessToken from tokenset', async () => {
         const storage = new MemoryStorage();
-        const { idToken } = await generateIdToken();
-        storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, {
-          ...fakeTokenResponse,
-          id_token: idToken,
-        });
+        storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, fakeTokenResponse);
         const logto = await LogtoClient.create({
           domain: DOMAIN,
           clientId: CLIENT_ID,
@@ -397,10 +415,8 @@ describe('LogtoClient', () => {
 
       beforeEach(async () => {
         const storage = new MemoryStorage();
-        const { idToken } = await generateIdToken();
         storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, {
           ...fakeTokenResponse,
-          id_token: idToken,
           expires_in: -1,
         });
         // eslint-disable-next-line @silverhand/fp/no-mutation
@@ -415,8 +431,10 @@ describe('LogtoClient', () => {
         await expect(logto.getAccessToken()).resolves.toEqual(fakeTokenResponse.access_token);
       });
 
-      test('verifyIdToken should have been called', async () => {
+      test('grantTokenByRefreshToken, verifyIdToken and createJWKS should have been called', async () => {
+        expect(grantTokenByRefreshToken).toHaveBeenCalled();
         expect(verifyIdToken).toHaveBeenCalled();
+        expect(createJWKS).toHaveBeenCalled();
       });
     });
   });
@@ -425,17 +443,14 @@ describe('LogtoClient', () => {
     test('onRedirect should have been called', async () => {
       const onRedirect = jest.fn();
       const storage = new MemoryStorage();
-      const { idToken } = await generateIdToken();
-      storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, {
-        ...fakeTokenResponse,
-        id_token: idToken,
-      });
+      storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, fakeTokenResponse);
       const logto = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage,
       });
       logto.logout(REDIRECT_URI, onRedirect);
+      expect(getLogoutUrl).toHaveBeenCalled();
       expect(onRedirect).toHaveBeenCalled();
     });
 
@@ -453,11 +468,7 @@ describe('LogtoClient', () => {
 
     test('tokenset cache should be cleared', async () => {
       const storage = new MemoryStorage();
-      const { idToken: id_token } = await generateIdToken();
-      storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, {
-        ...fakeTokenResponse,
-        id_token,
-      });
+      storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, fakeTokenResponse);
       jest.spyOn(storage, 'removeItem');
       const logto = await LogtoClient.create({
         domain: DOMAIN,
