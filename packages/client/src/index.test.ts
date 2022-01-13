@@ -50,7 +50,7 @@ const generateIdToken = async () => {
 
 const ID_TOKEN = generateIdToken();
 
-const fakeTokenResponse = {
+const tokenResponse = {
   access_token: 'accessToken1',
   refresh_token: 'refreshToken1',
   id_token: ID_TOKEN,
@@ -61,8 +61,8 @@ const fakeTokenResponse = {
 
 jest.mock('./api', () => {
   const discover = jest.fn(async () => discoverResponse);
-  const grantTokenByAuthorizationCode = jest.fn(async () => Promise.resolve(fakeTokenResponse));
-  const grantTokenByRefreshToken = jest.fn(async () => Promise.resolve(fakeTokenResponse));
+  const grantTokenByAuthorizationCode = jest.fn(async () => Promise.resolve(tokenResponse));
+  const grantTokenByRefreshToken = jest.fn(async () => Promise.resolve(tokenResponse));
 
   return {
     discover,
@@ -128,7 +128,7 @@ describe('LogtoClient', () => {
 
     test('claims restored', async () => {
       const storage = new MemoryStorage();
-      storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, fakeTokenResponse);
+      storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, tokenResponse);
 
       const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
@@ -136,15 +136,15 @@ describe('LogtoClient', () => {
         storage,
       });
 
-      expect(logtoClient).toHaveProperty('tokenSet.accessToken', fakeTokenResponse.access_token);
-      expect(logtoClient).toHaveProperty('tokenSet.refreshToken', fakeTokenResponse.refresh_token);
-      expect(logtoClient).toHaveProperty('tokenSet.idToken', fakeTokenResponse.id_token);
+      expect(logtoClient).toHaveProperty('tokenSet.accessToken', tokenResponse.access_token);
+      expect(logtoClient).toHaveProperty('tokenSet.refreshToken', tokenResponse.refresh_token);
+      expect(logtoClient).toHaveProperty('tokenSet.idToken', tokenResponse.id_token);
       // TODO: update this case according to SDK Convention after refactoring TokenSet @IceHe
     });
 
     test('restored failed on mismatch storage key', async () => {
       const storage = new MemoryStorage();
-      storage.setItem('dummy-key', fakeTokenResponse);
+      storage.setItem('dummy-key', tokenResponse);
 
       const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
@@ -390,13 +390,13 @@ describe('LogtoClient', () => {
     describe('from local', () => {
       test('get accessToken from tokenset', async () => {
         const storage = new MemoryStorage();
-        storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, fakeTokenResponse);
+        storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, tokenResponse);
         const logtoClient = await LogtoClient.create({
           domain: DOMAIN,
           clientId: CLIENT_ID,
           storage,
         });
-        await expect(logtoClient.getAccessToken()).resolves.toEqual(fakeTokenResponse.access_token);
+        await expect(logtoClient.getAccessToken()).resolves.toEqual(tokenResponse.access_token);
       });
 
       test('not authenticated should throw', async () => {
@@ -416,7 +416,7 @@ describe('LogtoClient', () => {
       beforeEach(async () => {
         const storage = new MemoryStorage();
         storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, {
-          ...fakeTokenResponse,
+          ...tokenResponse,
           expires_in: -1,
         });
         // eslint-disable-next-line @silverhand/fp/no-mutation
@@ -428,7 +428,7 @@ describe('LogtoClient', () => {
       });
 
       test('should get access_token after refresh', async () => {
-        await expect(logtoClient.getAccessToken()).resolves.toEqual(fakeTokenResponse.access_token);
+        await expect(logtoClient.getAccessToken()).resolves.toEqual(tokenResponse.access_token);
       });
 
       test('grantTokenByRefreshToken, verifyIdToken and createJWKS should have been called', async () => {
@@ -443,7 +443,7 @@ describe('LogtoClient', () => {
     test('onRedirect should have been called', async () => {
       const onRedirect = jest.fn();
       const storage = new MemoryStorage();
-      storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, fakeTokenResponse);
+      storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, tokenResponse);
       const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
@@ -468,7 +468,7 @@ describe('LogtoClient', () => {
 
     test('tokenset cache should be cleared', async () => {
       const storage = new MemoryStorage();
-      storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, fakeTokenResponse);
+      storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, tokenResponse);
       jest.spyOn(storage, 'removeItem');
       const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
