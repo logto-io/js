@@ -1,15 +1,22 @@
 import { KeyObject } from 'crypto';
 
+import {
+  discover,
+  grantTokenByAuthorizationCode,
+  grantTokenByRefreshToken,
+  DEFAULT_SCOPE_STRING,
+  SESSION_MANAGER_KEY,
+  getLoginUrlWithCodeVerifierAndState,
+  getLogoutUrl,
+  createJWKS,
+  createRequester,
+  generateCallbackUri,
+  verifyIdToken,
+} from '@logto/js';
 import { generateKeyPair, SignJWT } from 'jose';
 
 import LogtoClient from '.';
-import { discover, grantTokenByAuthorizationCode, grantTokenByRefreshToken } from './api';
-import { DEFAULT_SCOPE_STRING, SESSION_MANAGER_KEY } from './constants';
 import { MemoryStorage } from './modules/storage';
-import { getLoginUrlWithCodeVerifierAndState, getLogoutUrl } from './utils/assembler';
-import { createJWKS, verifyIdToken } from './utils/id-token';
-import { createRequester } from './utils/requester';
-import { generateCallbackUri } from './utils/utils-test';
 
 const DOMAIN = 'logto.dev';
 const BASE_URL = `https://${DOMAIN}`;
@@ -59,38 +66,32 @@ const tokenResponse = {
   expires_in: 3600,
 };
 
-jest.mock('./api', () => {
-  const discover = jest.fn(async () => discoverResponse);
-  const grantTokenByAuthorizationCode = jest.fn(async () => Promise.resolve(tokenResponse));
-  const grantTokenByRefreshToken = jest.fn(async () => Promise.resolve(tokenResponse));
-
-  return {
-    discover,
-    grantTokenByAuthorizationCode,
-    grantTokenByRefreshToken,
-  };
-});
-
 const CODE_VERIFIER = 'codeVerifier1';
 const STATE = 'state1';
 
-jest.mock('./utils/assembler', () => {
+jest.mock('@logto/js', () => {
+  const discover = jest.fn(async () => discoverResponse);
+  const grantTokenByAuthorizationCode = jest.fn(async () => Promise.resolve(tokenResponse));
+  const grantTokenByRefreshToken = jest.fn(async () => Promise.resolve(tokenResponse));
   const getLoginUrlWithCodeVerifierAndState = jest.fn(async () => ({
     url: `${ISSUER}/authorize?code_challenge=${CODE_VERIFIER}&state=${STATE}&others`,
     codeVerifier: CODE_VERIFIER,
     state: STATE,
   }));
-
   const getLogoutUrl = jest.fn().mockReturnValue(`${ISSUER}/sign_out`);
 
   return {
+    ...jest.requireActual('@logto/js'),
+    discover,
+    grantTokenByAuthorizationCode,
+    grantTokenByRefreshToken,
     getLoginUrlWithCodeVerifierAndState,
     getLogoutUrl,
+    createJWKS: jest.fn(),
+    createRequester: jest.fn(),
+    verifyIdToken: jest.fn(),
   };
 });
-
-jest.mock('./utils/id-token');
-jest.mock('./utils/requester');
 
 describe('LogtoClient', () => {
   describe('create', () => {

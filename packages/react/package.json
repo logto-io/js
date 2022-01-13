@@ -57,7 +57,8 @@
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
-    "@logto/client": "^0.0.1"
+    "@logto/browser": "^0.0.1",
+    "@logto/js": "^0.0.1"
   },
   "peerDependencies": {
     "react": ">=16.8.0",

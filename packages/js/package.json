@@ -1,5 +1,5 @@
 {
-  "name": "@logto/client",
+  "name": "@logto/js",
   "version": "0.0.1",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -13,7 +13,7 @@
     "package": "webpack",
     "test": "jest",
     "test:coverage": "jest --silent --coverage",
-    "test:report": "codecov -F client",
+    "test:report": "codecov -F js",
     "prepublish": "npm run build && npm run package",
     "report": "WITH_REPORT=true npm run package"
   },

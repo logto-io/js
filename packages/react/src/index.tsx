@@ -1,4 +1,4 @@
-export * from '@logto/client';
+export * from '@logto/browser';
 export * from './context';
 export * from './provider';
 export { default as ProtectedRoute } from './ProtectedRoute';

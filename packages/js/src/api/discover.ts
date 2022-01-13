@@ -1,8 +1,8 @@
 import * as s from 'superstruct';
 
-import { LogtoError } from '../modules/errors';
 import { appendSlashIfNeeded } from '../utils';
 import { createRequester, Requester } from '../utils/requester';
+import { LogtoError } from './errors';
 
 const OidcConfigResponseSchema = s.type({
   authorization_endpoint: s.string(),

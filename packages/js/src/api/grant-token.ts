@@ -1,7 +1,7 @@
 import * as s from 'superstruct';
 
-import { LogtoError } from '../modules/errors';
 import { createRequester, Requester } from '../utils/requester';
+import { LogtoError } from './errors';
 
 const TokenResponseSchema = s.type({
   access_token: s.string(),

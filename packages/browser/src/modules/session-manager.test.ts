@@ -1,4 +1,5 @@
-import { SESSION_MANAGER_KEY } from '../constants';
+import { SESSION_MANAGER_KEY } from '@logto/js';
+
 import SessionManager, { Session } from './session-manager';
 import { SessionStorage } from './storage';
 

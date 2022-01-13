@@ -1,26 +1,29 @@
-import { Optional } from '@silverhand/essentials';
-
 import {
+  createDefaultOnRedirect,
   discover,
   grantTokenByAuthorizationCode,
   grantTokenByRefreshToken,
   OidcConfigResponse,
   TokenResponse,
-} from './api';
-import { TOKEN_SET_CACHE_KEY } from './constants';
+  TOKEN_SET_CACHE_KEY,
+  getLoginUrlWithCodeVerifierAndState,
+  getLogoutUrl,
+  generateScope,
+  createJWKS,
+  verifyIdToken,
+  parseRedirectCallback,
+  createRequester,
+  Requester,
+} from '@logto/js';
+import { Optional } from '@silverhand/essentials';
+
 import SessionManager from './modules/session-manager';
 import { ClientStorage, LocalStorage } from './modules/storage';
 import TokenSet from './modules/token-set';
-import { createDefaultOnRedirect } from './utils';
-import { getLoginUrlWithCodeVerifierAndState, getLogoutUrl } from './utils/assembler';
-import { generateScope } from './utils/generators';
-import { createJWKS, verifyIdToken } from './utils/id-token';
-import { parseRedirectCallback } from './utils/parser';
-import { createRequester, Requester } from './utils/requester';
-
-export type { IdTokenClaims } from './utils/id-token';
 
 export * from './modules/storage';
+
+export type { IdTokenClaims } from '@logto/js';
 
 export interface ConfigParameters {
   domain: string;

@@ -16,7 +16,7 @@ const getClaims = jest.fn(() => ({
   at_hash: 'at_hash',
 }));
 
-jest.mock('@logto/client', () => {
+jest.mock('@logto/browser', () => {
   const Mocked = jest.fn(() => {
     return {
       isAuthenticated,

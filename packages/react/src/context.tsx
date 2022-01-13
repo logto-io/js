@@ -1,4 +1,4 @@
-import LogtoClient from '@logto/client';
+import LogtoClient from '@logto/browser';
 import { createContext } from 'react';
 
 import { AuthState, defaultAuthState } from './auth-state';

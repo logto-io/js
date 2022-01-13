@@ -1,6 +1,4 @@
-import { TokenResponse } from '../api';
-import { nowRoundToSec } from '../utils';
-import { decodeIdToken, IdTokenClaims } from '../utils/id-token';
+import { decodeIdToken, nowRoundToSec, TokenResponse, IdTokenClaims } from '@logto/js';
 
 export default class TokenSet {
   public accessToken: string;

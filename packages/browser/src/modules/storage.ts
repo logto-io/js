@@ -1,6 +1,5 @@
+import { STORAGE_KEY_PREFIX } from '@logto/js';
 import { Optional } from '@silverhand/essentials';
-
-import { STORAGE_KEY_PREFIX } from '../constants';
 
 const getKey = (key: string) => `${STORAGE_KEY_PREFIX}:${key}`;
 

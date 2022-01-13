@@ -1,4 +1,4 @@
-import { IdTokenClaims } from '@logto/client';
+import { IdTokenClaims } from '@logto/browser';
 
 import { AuthState } from './auth-state';
 

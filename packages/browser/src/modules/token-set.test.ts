@@ -1,6 +1,6 @@
+import { nowRoundToSec } from '@logto/js';
 import { SignJWT, generateKeyPair } from 'jose';
 
-import { nowRoundToSec } from '../utils';
 import TokenSet from './token-set';
 
 describe('TokenSet', () => {

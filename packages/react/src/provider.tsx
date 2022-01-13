@@ -1,4 +1,4 @@
-import LogtoClient, { ConfigParameters } from '@logto/client';
+import LogtoClient, { ConfigParameters } from '@logto/browser';
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 
 import { defaultAuthState } from './auth-state';
