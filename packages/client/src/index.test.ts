@@ -93,13 +93,14 @@ jest.mock('./utils/id-token');
 jest.mock('./utils/requester');
 
 describe('LogtoClient', () => {
-  describe('createLogtoClient', () => {
+  describe('create', () => {
     test('create an instance', async () => {
       const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage: new MemoryStorage(),
       });
+
       expect(logtoClient).toBeInstanceOf(LogtoClient);
     });
 
@@ -114,19 +115,21 @@ describe('LogtoClient', () => {
     });
   });
 
-  describe('restore tokenSet from cache', () => {
+  describe('restore token response from storage', () => {
     test('storage.getItem should have been called', async () => {
       const storage = new MemoryStorage();
       jest.spyOn(storage, 'getItem');
+
       await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage,
       });
+
       expect(storage.getItem).toHaveBeenCalled();
     });
 
-    test('claims restored', async () => {
+    test('should restore token response', async () => {
       const storage = new MemoryStorage();
       storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, tokenResponse);
 
@@ -142,7 +145,7 @@ describe('LogtoClient', () => {
       // TODO: update this case according to SDK Convention after refactoring TokenSet @IceHe
     });
 
-    test('restored failed on mismatch storage key', async () => {
+    test('should fail to restore token response due to mismatched key', async () => {
       const storage = new MemoryStorage();
       storage.setItem('dummy-key', tokenResponse);
 
@@ -169,7 +172,7 @@ describe('LogtoClient', () => {
       expect(onRedirect).toHaveBeenCalled();
     });
 
-    test('session should be set', async () => {
+    test('should set session', async () => {
       const storage = new MemoryStorage();
       const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
@@ -185,7 +188,7 @@ describe('LogtoClient', () => {
   });
 
   describe('isLoginRedirect', () => {
-    test('url contains code and state and starts with redirect_uri in session should be true', async () => {
+    test('callback uri, containing code and state and starting with redirect uri, should be true', async () => {
       const storage = new MemoryStorage();
       const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
@@ -216,7 +219,7 @@ describe('LogtoClient', () => {
       expect(logtoClient.isLoginRedirect(callbackUri)).toBeFalsy();
     });
 
-    test('no code in url should be false', async () => {
+    test('no code in uri should be false', async () => {
       const storage = new MemoryStorage();
       const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
@@ -228,7 +231,7 @@ describe('LogtoClient', () => {
       expect(logtoClient.isLoginRedirect(callbackUri)).toBeFalsy();
     });
 
-    test('no state in url should be false', async () => {
+    test('no state in uri should be false', async () => {
       const storage = new MemoryStorage();
       const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
@@ -240,7 +243,7 @@ describe('LogtoClient', () => {
       expect(logtoClient.isLoginRedirect(callbackUri)).toBeFalsy();
     });
 
-    test('mismatch uri should be false', async () => {
+    test('starting with mismatched redirect uri should be false', async () => {
       const storage = new MemoryStorage();
       const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
@@ -273,7 +276,7 @@ describe('LogtoClient', () => {
       await expect(logtoClient.handleCallback(callbackUri)).rejects.toThrowError();
     });
 
-    test('no code in url should fail', async () => {
+    test('no code in uri should fail', async () => {
       const storage = new MemoryStorage();
       const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
@@ -285,7 +288,7 @@ describe('LogtoClient', () => {
       await expect(logtoClient.handleCallback(callbackUri)).rejects.toThrowError();
     });
 
-    test('no state in url should fail', async () => {
+    test('no state in uri should fail', async () => {
       const storage = new MemoryStorage();
       const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
@@ -334,7 +337,7 @@ describe('LogtoClient', () => {
       expect(createJWKS).toHaveBeenCalled();
     });
 
-    test('session should be cleared', async () => {
+    test('should clear session after handleCallback', async () => {
       const storage = new MemoryStorage();
       const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
@@ -351,7 +354,7 @@ describe('LogtoClient', () => {
       expect(storage.getItem('LOGTO_SESSION_MANAGER')).toBeUndefined();
     });
 
-    test('unknown state in url should fail', async () => {
+    test('unknown state in uri should fail', async () => {
       const storage = new MemoryStorage();
       const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
@@ -387,8 +390,8 @@ describe('LogtoClient', () => {
   });
 
   describe('getAccessToken', () => {
-    describe('from local', () => {
-      test('get accessToken from tokenset', async () => {
+    describe('from local storage', () => {
+      test('get access token from token response', async () => {
         const storage = new MemoryStorage();
         storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, tokenResponse);
         const logtoClient = await LogtoClient.create({
@@ -409,7 +412,7 @@ describe('LogtoClient', () => {
       });
     });
 
-    describe('grant new tokenset with refresh_token', () => {
+    describe('grant new token with refresh token', () => {
       // eslint-disable-next-line @silverhand/fp/no-let
       let logtoClient: LogtoClient;
 
@@ -427,7 +430,7 @@ describe('LogtoClient', () => {
         });
       });
 
-      test('should get access_token after refresh', async () => {
+      test('should get access token after refreshing', async () => {
         await expect(logtoClient.getAccessToken()).resolves.toEqual(tokenResponse.access_token);
       });
 
@@ -440,7 +443,7 @@ describe('LogtoClient', () => {
   });
 
   describe('logout', () => {
-    test('onRedirect should have been called', async () => {
+    test('getLogoutUrl and onRedirect should have been called', async () => {
       const onRedirect = jest.fn();
       const storage = new MemoryStorage();
       storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, tokenResponse);
@@ -454,7 +457,7 @@ describe('LogtoClient', () => {
       expect(onRedirect).toHaveBeenCalled();
     });
 
-    test('login session should be cleared', async () => {
+    test('should clear session', async () => {
       const storage = new MemoryStorage();
       jest.spyOn(storage, 'removeItem');
       const logtoClient = await LogtoClient.create({
@@ -466,7 +469,7 @@ describe('LogtoClient', () => {
       expect(storage.removeItem).toHaveBeenCalledWith(SESSION_MANAGER_KEY);
     });
 
-    test('tokenset cache should be cleared', async () => {
+    test('should clear token response cache ', async () => {
       const storage = new MemoryStorage();
       storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, tokenResponse);
       jest.spyOn(storage, 'removeItem');
