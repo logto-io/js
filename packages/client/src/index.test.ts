@@ -95,12 +95,12 @@ jest.mock('./utils/requester');
 describe('LogtoClient', () => {
   describe('createLogtoClient', () => {
     test('create an instance', async () => {
-      const logto = await LogtoClient.create({
+      const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage: new MemoryStorage(),
       });
-      expect(logto).toBeInstanceOf(LogtoClient);
+      expect(logtoClient).toBeInstanceOf(LogtoClient);
     });
 
     test('discover and createRequester should have been called', async () => {
@@ -130,15 +130,15 @@ describe('LogtoClient', () => {
       const storage = new MemoryStorage();
       storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, fakeTokenResponse);
 
-      const logto = await LogtoClient.create({
+      const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage,
       });
 
-      expect(logto).toHaveProperty('tokenSet.accessToken', fakeTokenResponse.access_token);
-      expect(logto).toHaveProperty('tokenSet.refreshToken', fakeTokenResponse.refresh_token);
-      expect(logto).toHaveProperty('tokenSet.idToken', fakeTokenResponse.id_token);
+      expect(logtoClient).toHaveProperty('tokenSet.accessToken', fakeTokenResponse.access_token);
+      expect(logtoClient).toHaveProperty('tokenSet.refreshToken', fakeTokenResponse.refresh_token);
+      expect(logtoClient).toHaveProperty('tokenSet.idToken', fakeTokenResponse.id_token);
       // TODO: update this case according to SDK Convention after refactoring TokenSet @IceHe
     });
 
@@ -146,37 +146,37 @@ describe('LogtoClient', () => {
       const storage = new MemoryStorage();
       storage.setItem('dummy-key', fakeTokenResponse);
 
-      const logto = await LogtoClient.create({
+      const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage,
       });
-      expect(logto.isAuthenticated()).toBeFalsy();
-      expect(logto.getClaims).toThrowError();
+      expect(logtoClient.isAuthenticated()).toBeFalsy();
+      expect(logtoClient.getClaims).toThrowError();
     });
   });
 
   describe('loginWithRedirect', () => {
     test('getLoginUrlWithCodeVerifierAndState and onRedirect should have been called', async () => {
       const onRedirect = jest.fn();
-      const logto = await LogtoClient.create({
+      const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage: new MemoryStorage(),
       });
-      await logto.loginWithRedirect(REDIRECT_URI, onRedirect);
+      await logtoClient.loginWithRedirect(REDIRECT_URI, onRedirect);
       expect(getLoginUrlWithCodeVerifierAndState).toHaveBeenCalled();
       expect(onRedirect).toHaveBeenCalled();
     });
 
     test('session should be set', async () => {
       const storage = new MemoryStorage();
-      const logto = await LogtoClient.create({
+      const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage,
       });
-      await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
+      await logtoClient.loginWithRedirect(REDIRECT_URI, jest.fn());
       const sessionPayload = storage.getItem('LOGTO_SESSION_MANAGER');
       expect(sessionPayload).toHaveProperty('redirectUri', REDIRECT_URI);
       expect(sessionPayload).toHaveProperty('codeVerifier', CODE_VERIFIER);
@@ -187,23 +187,23 @@ describe('LogtoClient', () => {
   describe('isLoginRedirect', () => {
     test('url contains code and state and starts with redirect_uri in session should be true', async () => {
       const storage = new MemoryStorage();
-      const logto = await LogtoClient.create({
+      const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage,
       });
-      await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
+      await logtoClient.loginWithRedirect(REDIRECT_URI, jest.fn());
       const callbackUri = generateCallbackUri({
         redirectUri: REDIRECT_URI,
         code: CODE,
         state: STATE,
       });
-      expect(logto.isLoginRedirect(callbackUri)).toBeTruthy();
+      expect(logtoClient.isLoginRedirect(callbackUri)).toBeTruthy();
     });
 
     test('empty session should be false', async () => {
       const storage = new MemoryStorage();
-      const logto = await LogtoClient.create({
+      const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage,
@@ -213,54 +213,54 @@ describe('LogtoClient', () => {
         code: CODE,
         state: STATE,
       });
-      expect(logto.isLoginRedirect(callbackUri)).toBeFalsy();
+      expect(logtoClient.isLoginRedirect(callbackUri)).toBeFalsy();
     });
 
     test('no code in url should be false', async () => {
       const storage = new MemoryStorage();
-      const logto = await LogtoClient.create({
+      const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage,
       });
-      await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
+      await logtoClient.loginWithRedirect(REDIRECT_URI, jest.fn());
       const callbackUri = generateCallbackUri({ redirectUri: REDIRECT_URI, state: STATE });
-      expect(logto.isLoginRedirect(callbackUri)).toBeFalsy();
+      expect(logtoClient.isLoginRedirect(callbackUri)).toBeFalsy();
     });
 
     test('no state in url should be false', async () => {
       const storage = new MemoryStorage();
-      const logto = await LogtoClient.create({
+      const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage,
       });
-      await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
+      await logtoClient.loginWithRedirect(REDIRECT_URI, jest.fn());
       const callbackUri = generateCallbackUri({ redirectUri: REDIRECT_URI, code: CODE });
-      expect(logto.isLoginRedirect(callbackUri)).toBeFalsy();
+      expect(logtoClient.isLoginRedirect(callbackUri)).toBeFalsy();
     });
 
     test('mismatch uri should be false', async () => {
       const storage = new MemoryStorage();
-      const logto = await LogtoClient.create({
+      const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage,
       });
-      await logto.loginWithRedirect('http://example.com', jest.fn());
+      await logtoClient.loginWithRedirect('http://example.com', jest.fn());
       const callbackUri = generateCallbackUri({
         redirectUri: REDIRECT_URI,
         code: CODE,
         state: STATE,
       });
-      expect(logto.isLoginRedirect(callbackUri)).toBeFalsy();
+      expect(logtoClient.isLoginRedirect(callbackUri)).toBeFalsy();
     });
   });
 
   describe('handleCallback', () => {
     test('empty session should fail', async () => {
       const storage = new MemoryStorage();
-      const logto = await LogtoClient.create({
+      const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage,
@@ -270,36 +270,36 @@ describe('LogtoClient', () => {
         code: CODE,
         state: STATE,
       });
-      await expect(logto.handleCallback(callbackUri)).rejects.toThrowError();
+      await expect(logtoClient.handleCallback(callbackUri)).rejects.toThrowError();
     });
 
     test('no code in url should fail', async () => {
       const storage = new MemoryStorage();
-      const logto = await LogtoClient.create({
+      const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage,
       });
-      await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
+      await logtoClient.loginWithRedirect(REDIRECT_URI, jest.fn());
       const callbackUri = generateCallbackUri({ redirectUri: REDIRECT_URI, state: STATE });
-      await expect(logto.handleCallback(callbackUri)).rejects.toThrowError();
+      await expect(logtoClient.handleCallback(callbackUri)).rejects.toThrowError();
     });
 
     test('no state in url should fail', async () => {
       const storage = new MemoryStorage();
-      const logto = await LogtoClient.create({
+      const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage,
       });
-      await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
+      await logtoClient.loginWithRedirect(REDIRECT_URI, jest.fn());
       const callbackUri = generateCallbackUri({ redirectUri: REDIRECT_URI, code: CODE });
-      await expect(logto.handleCallback(callbackUri)).rejects.toThrowError();
+      await expect(logtoClient.handleCallback(callbackUri)).rejects.toThrowError();
     });
 
     test('should throw response error', async () => {
       const storage = new MemoryStorage();
-      const logto = await LogtoClient.create({
+      const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage,
@@ -311,23 +311,23 @@ describe('LogtoClient', () => {
         error: 'invalid_request',
         errorDescription: 'code_challenge must be a string with a minimum length of 43 characters',
       });
-      await expect(logto.handleCallback(callbackUri)).rejects.toThrowError();
+      await expect(logtoClient.handleCallback(callbackUri)).rejects.toThrowError();
     });
 
     test('grantTokenByAuthorizationCode, verifyIdToken and createJWKS should be called', async () => {
       const storage = new MemoryStorage();
-      const logto = await LogtoClient.create({
+      const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage,
       });
-      await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
+      await logtoClient.loginWithRedirect(REDIRECT_URI, jest.fn());
       const callbackUri = generateCallbackUri({
         redirectUri: REDIRECT_URI,
         code: CODE,
         state: STATE,
       });
-      await logto.handleCallback(callbackUri);
+      await logtoClient.handleCallback(callbackUri);
 
       expect(grantTokenByAuthorizationCode).toHaveBeenCalled();
       expect(verifyIdToken).toHaveBeenCalled();
@@ -336,53 +336,53 @@ describe('LogtoClient', () => {
 
     test('session should be cleared', async () => {
       const storage = new MemoryStorage();
-      const logto = await LogtoClient.create({
+      const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage,
       });
-      await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
+      await logtoClient.loginWithRedirect(REDIRECT_URI, jest.fn());
       const callbackUri = generateCallbackUri({
         redirectUri: REDIRECT_URI,
         code: CODE,
         state: STATE,
       });
-      await logto.handleCallback(callbackUri);
+      await logtoClient.handleCallback(callbackUri);
       expect(storage.getItem('LOGTO_SESSION_MANAGER')).toBeUndefined();
     });
 
     test('unknown state in url should fail', async () => {
       const storage = new MemoryStorage();
-      const logto = await LogtoClient.create({
+      const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage,
       });
-      await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
+      await logtoClient.loginWithRedirect(REDIRECT_URI, jest.fn());
       const unknownState = `UNKNOWN_${STATE}`;
       const callbackUri = generateCallbackUri({
         redirectUri: REDIRECT_URI,
         code: CODE,
         state: unknownState,
       });
-      await expect(logto.handleCallback(callbackUri)).rejects.toThrowError();
+      await expect(logtoClient.handleCallback(callbackUri)).rejects.toThrowError();
     });
 
     test('should be authenticated', async () => {
       const storage = new MemoryStorage();
-      const logto = await LogtoClient.create({
+      const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage,
       });
-      await logto.loginWithRedirect(REDIRECT_URI, jest.fn());
+      await logtoClient.loginWithRedirect(REDIRECT_URI, jest.fn());
       const callbackUri = generateCallbackUri({
         redirectUri: REDIRECT_URI,
         code: CODE,
         state: STATE,
       });
-      await logto.handleCallback(callbackUri);
-      expect(logto.isAuthenticated()).toBeTruthy();
+      await logtoClient.handleCallback(callbackUri);
+      expect(logtoClient.isAuthenticated()).toBeTruthy();
     });
   });
 
@@ -391,27 +391,27 @@ describe('LogtoClient', () => {
       test('get accessToken from tokenset', async () => {
         const storage = new MemoryStorage();
         storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, fakeTokenResponse);
-        const logto = await LogtoClient.create({
+        const logtoClient = await LogtoClient.create({
           domain: DOMAIN,
           clientId: CLIENT_ID,
           storage,
         });
-        await expect(logto.getAccessToken()).resolves.toEqual(fakeTokenResponse.access_token);
+        await expect(logtoClient.getAccessToken()).resolves.toEqual(fakeTokenResponse.access_token);
       });
 
       test('not authenticated should throw', async () => {
-        const logto = await LogtoClient.create({
+        const logtoClient = await LogtoClient.create({
           domain: DOMAIN,
           clientId: CLIENT_ID,
           storage: new MemoryStorage(),
         });
-        await expect(logto.getAccessToken()).rejects.toThrow();
+        await expect(logtoClient.getAccessToken()).rejects.toThrow();
       });
     });
 
     describe('grant new tokenset with refresh_token', () => {
       // eslint-disable-next-line @silverhand/fp/no-let
-      let logto: LogtoClient;
+      let logtoClient: LogtoClient;
 
       beforeEach(async () => {
         const storage = new MemoryStorage();
@@ -420,7 +420,7 @@ describe('LogtoClient', () => {
           expires_in: -1,
         });
         // eslint-disable-next-line @silverhand/fp/no-mutation
-        logto = await LogtoClient.create({
+        logtoClient = await LogtoClient.create({
           domain: DOMAIN,
           clientId: CLIENT_ID,
           storage,
@@ -428,7 +428,7 @@ describe('LogtoClient', () => {
       });
 
       test('should get access_token after refresh', async () => {
-        await expect(logto.getAccessToken()).resolves.toEqual(fakeTokenResponse.access_token);
+        await expect(logtoClient.getAccessToken()).resolves.toEqual(fakeTokenResponse.access_token);
       });
 
       test('grantTokenByRefreshToken, verifyIdToken and createJWKS should have been called', async () => {
@@ -444,12 +444,12 @@ describe('LogtoClient', () => {
       const onRedirect = jest.fn();
       const storage = new MemoryStorage();
       storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, fakeTokenResponse);
-      const logto = await LogtoClient.create({
+      const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage,
       });
-      logto.logout(REDIRECT_URI, onRedirect);
+      logtoClient.logout(REDIRECT_URI, onRedirect);
       expect(getLogoutUrl).toHaveBeenCalled();
       expect(onRedirect).toHaveBeenCalled();
     });
@@ -457,12 +457,12 @@ describe('LogtoClient', () => {
     test('login session should be cleared', async () => {
       const storage = new MemoryStorage();
       jest.spyOn(storage, 'removeItem');
-      const logto = await LogtoClient.create({
+      const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage,
       });
-      logto.logout(REDIRECT_URI, jest.fn());
+      logtoClient.logout(REDIRECT_URI, jest.fn());
       expect(storage.removeItem).toBeCalledWith(SESSION_MANAGER_KEY);
     });
 
@@ -470,12 +470,12 @@ describe('LogtoClient', () => {
       const storage = new MemoryStorage();
       storage.setItem(LOGTO_TOKEN_SET_CACHE_KEY, fakeTokenResponse);
       jest.spyOn(storage, 'removeItem');
-      const logto = await LogtoClient.create({
+      const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
         clientId: CLIENT_ID,
         storage,
       });
-      logto.logout(REDIRECT_URI, jest.fn());
+      logtoClient.logout(REDIRECT_URI, jest.fn());
       expect(storage.removeItem).toBeCalled();
     });
   });
