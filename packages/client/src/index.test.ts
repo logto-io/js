@@ -35,7 +35,7 @@ const generateIdToken = async () => {
   const { privateKey, publicKey } = await generateKeyPair('RS256');
 
   if (!(publicKey instanceof KeyObject)) {
-    throw new TypeError('key is not instanceof KeyObject, check envirionment');
+    throw new TypeError('key is not instanceof KeyObject, check environment');
   }
 
   return new SignJWT({})
