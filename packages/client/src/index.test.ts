@@ -115,7 +115,7 @@ describe('LogtoClient', () => {
   });
 
   describe('restore tokenSet from cache', () => {
-    test('storage.getItem should be called', async () => {
+    test('storage.getItem should have been called', async () => {
       const storage = new MemoryStorage();
       jest.spyOn(storage, 'getItem');
       await LogtoClient.create({
@@ -123,7 +123,7 @@ describe('LogtoClient', () => {
         clientId: CLIENT_ID,
         storage,
       });
-      expect(storage.getItem).toBeCalled();
+      expect(storage.getItem).toHaveBeenCalled();
     });
 
     test('claims restored', async () => {
@@ -314,7 +314,7 @@ describe('LogtoClient', () => {
       await expect(logtoClient.handleCallback(callbackUri)).rejects.toThrowError();
     });
 
-    test('grantTokenByAuthorizationCode, verifyIdToken and createJWKS should be called', async () => {
+    test('grantTokenByAuthorizationCode, verifyIdToken and createJWKS should have been called', async () => {
       const storage = new MemoryStorage();
       const logtoClient = await LogtoClient.create({
         domain: DOMAIN,
@@ -463,7 +463,7 @@ describe('LogtoClient', () => {
         storage,
       });
       logtoClient.logout(REDIRECT_URI, jest.fn());
-      expect(storage.removeItem).toBeCalledWith(SESSION_MANAGER_KEY);
+      expect(storage.removeItem).toHaveBeenCalledWith(SESSION_MANAGER_KEY);
     });
 
     test('tokenset cache should be cleared', async () => {
@@ -476,7 +476,7 @@ describe('LogtoClient', () => {
         storage,
       });
       logtoClient.logout(REDIRECT_URI, jest.fn());
-      expect(storage.removeItem).toBeCalled();
+      expect(storage.removeItem).toHaveBeenCalled();
     });
   });
 });
