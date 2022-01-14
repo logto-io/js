@@ -1,18 +1,19 @@
 import { KeyObject } from 'crypto';
 
+import { DEFAULT_SCOPE_STRING } from '@logto/js';
 import { generateKeyPair, SignJWT } from 'jose';
 import nock from 'nock';
 
 import LogtoClient from '.';
-import { DEFAULT_SCOPE_STRING, SESSION_MANAGER_KEY } from './constants';
+import { SESSION_MANAGER_KEY } from './constants';
 import { MemoryStorage } from './modules/storage';
 import { verifyIdToken } from './utils/id-token';
 import { generateCallbackUri } from './utils/utils-test';
 
 const STATE = 'state1';
 
-jest.mock('./utils/generators', () => ({
-  ...jest.requireActual('./utils/generators'),
+jest.mock('@logto/js', () => ({
+  ...jest.requireActual('@logto/js'),
   generateState: () => STATE,
 }));
 

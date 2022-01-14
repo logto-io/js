@@ -1,6 +1,5 @@
+import { generateCodeVerifier, generateCodeChallenge, generateState } from '@logto/js';
 import qs from 'query-string';
-
-import { generateCodeVerifier, generateCodeChallenge, generateState } from './generators';
 
 export interface LoginPrepareParameters {
   baseUrl: string;

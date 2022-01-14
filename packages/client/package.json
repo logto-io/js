@@ -19,9 +19,8 @@
   },
   "dependencies": {
     "@silverhand/essentials": "^1.1.2",
+    "@logto/js": "^0.0.1",
     "jose": "^4.1.4",
-    "js-base64": "^3.7.2",
-    "nanoid": "^3.1.30",
     "query-string": "^7.0.1",
     "superstruct": "^0.15.3"
   },

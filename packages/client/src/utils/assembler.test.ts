@@ -1,4 +1,5 @@
-import { DEFAULT_SCOPE_STRING } from '../constants';
+import { DEFAULT_SCOPE_STRING } from '@logto/js';
+
 import { getLoginUrlWithCodeVerifierAndState, getLogoutUrl } from './assembler';
 
 describe('getLoginUrlWithCodeVerifierAndState', () => {

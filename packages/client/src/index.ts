@@ -1,3 +1,4 @@
+import { generateScope } from '@logto/js';
 import { Optional } from '@silverhand/essentials';
 
 import {
@@ -13,7 +14,6 @@ import { ClientStorage, LocalStorage } from './modules/storage';
 import TokenSet from './modules/token-set';
 import { createDefaultOnRedirect } from './utils';
 import { getLoginUrlWithCodeVerifierAndState, getLogoutUrl } from './utils/assembler';
-import { generateScope } from './utils/generators';
 import { createJWKS, verifyIdToken } from './utils/id-token';
 import { parseRedirectCallback } from './utils/parser';
 import { createRequester, Requester } from './utils/requester';
