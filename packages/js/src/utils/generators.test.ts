@@ -1,12 +1,6 @@
-import {
-  CODE_VERIFIER_MAX_LENGTH,
-  DEFAULT_SCOPE_STRING,
-  EMAIL,
-  NAME,
-  OFFLINE_ACCESS,
-  OPENID,
-} from '../constants';
+import { CODE_VERIFIER_MAX_LENGTH } from '../constants';
 import { generateCodeChallenge, generateCodeVerifier, generateScope } from './generators';
+import { ScopeValue, DEFAULT_SCOPE_STRING } from './scope';
 
 describe('generateCodeVerifier', () => {
   test('with fixed length', () => {
@@ -66,21 +60,23 @@ describe('generateScope', () => {
       });
 
       test('with openid (without default scope value offline_access)', () => {
-        expect(generateScope(OPENID)).toEqual(DEFAULT_SCOPE_STRING);
+        expect(generateScope(ScopeValue.openid)).toEqual(DEFAULT_SCOPE_STRING);
       });
 
       test('with openid name (without default scope value offline_access)', () => {
-        expect(generateScope(`${NAME} ${OPENID}`)).toEqual(`${DEFAULT_SCOPE_STRING} ${NAME}`);
+        expect(generateScope(`${ScopeValue.name} ${ScopeValue.openid}`)).toEqual(
+          `${DEFAULT_SCOPE_STRING} ${ScopeValue.name}`
+        );
       });
 
       test('with offline_access email (without default scope value openid)', () => {
-        expect(generateScope(`${EMAIL} ${OFFLINE_ACCESS}`)).toEqual(
-          `${DEFAULT_SCOPE_STRING} ${EMAIL}`
+        expect(generateScope(`${ScopeValue.email} ${ScopeValue.offline_access}`)).toEqual(
+          `${DEFAULT_SCOPE_STRING} ${ScopeValue.email}`
         );
       });
 
       test('with name email (without all default scope values)', () => {
-        const originalScope = `${NAME} ${EMAIL}`;
+        const originalScope = `${ScopeValue.name} ${ScopeValue.email}`;
         expect(generateScope(originalScope)).toEqual(`${DEFAULT_SCOPE_STRING} ${originalScope}`);
       });
     });
@@ -91,23 +87,31 @@ describe('generateScope', () => {
       });
 
       test('with openid offline_access', () => {
-        expect(generateScope([OPENID, OFFLINE_ACCESS])).toEqual(DEFAULT_SCOPE_STRING);
+        expect(generateScope([ScopeValue.openid, ScopeValue.offline_access])).toEqual(
+          DEFAULT_SCOPE_STRING
+        );
       });
 
       test('with openid (without default scope value offline_access)', () => {
-        expect(generateScope([OPENID])).toEqual(DEFAULT_SCOPE_STRING);
+        expect(generateScope([ScopeValue.openid])).toEqual(DEFAULT_SCOPE_STRING);
       });
 
       test('with openid name (without default scope value offline_access)', () => {
-        expect(generateScope([NAME, OPENID])).toEqual(`${DEFAULT_SCOPE_STRING} ${NAME}`);
+        expect(generateScope([ScopeValue.name, ScopeValue.openid])).toEqual(
+          `${DEFAULT_SCOPE_STRING} ${ScopeValue.name}`
+        );
       });
 
       test('with offline_access email (without default scope value openid)', () => {
-        expect(generateScope([EMAIL, OFFLINE_ACCESS])).toEqual(`${DEFAULT_SCOPE_STRING} ${EMAIL}`);
+        expect(generateScope([ScopeValue.email, ScopeValue.offline_access])).toEqual(
+          `${DEFAULT_SCOPE_STRING} ${ScopeValue.email}`
+        );
       });
 
       test('with name email (without all default scope values)', () => {
-        expect(generateScope([NAME, EMAIL])).toEqual(`${DEFAULT_SCOPE_STRING} ${NAME} ${EMAIL}`);
+        expect(generateScope([ScopeValue.name, ScopeValue.email])).toEqual(
+          `${DEFAULT_SCOPE_STRING} ${ScopeValue.name} ${ScopeValue.email}`
+        );
       });
     });
   });

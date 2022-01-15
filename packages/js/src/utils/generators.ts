@@ -4,11 +4,8 @@ import { UrlSafeBase64 } from '@silverhand/essentials';
 import { fromUint8Array } from 'js-base64';
 import { customAlphabet } from 'nanoid';
 
-import {
-  CODE_VERIFIER_ALPHABET,
-  CODE_VERIFIER_MAX_LENGTH,
-  DEFAULT_SCOPE_VALUES,
-} from '../constants';
+import { CODE_VERIFIER_ALPHABET, CODE_VERIFIER_MAX_LENGTH } from '../constants';
+import { DEFAULT_SCOPE_VALUES } from './scope';
 
 /**
  * @param {Number} length The length of the string to generate.
