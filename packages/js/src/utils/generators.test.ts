@@ -1,6 +1,38 @@
 import { CODE_VERIFIER_MAX_LENGTH } from '../constants';
-import { generateCodeChallenge, generateCodeVerifier, generateScope } from './generators';
+import {
+  generateCodeChallenge,
+  generateCodeVerifier,
+  generateNonce,
+  generateScope,
+  generateState,
+} from './generators';
 import { ScopeValue, DEFAULT_SCOPE_STRING } from './scope';
+
+describe('generateState', () => {
+  test('with fixed length', () => {
+    const state = generateState();
+    expect(state.length).toEqual(CODE_VERIFIER_MAX_LENGTH);
+  });
+
+  test('with random value', () => {
+    const state1 = generateState();
+    const state2 = generateState();
+    expect(state1).not.toEqual(state2);
+  });
+});
+
+describe('generateNonce', () => {
+  test('with fixed length', () => {
+    const nonce = generateNonce();
+    expect(nonce.length).toEqual(CODE_VERIFIER_MAX_LENGTH);
+  });
+
+  test('with random value', () => {
+    const nonce1 = generateNonce();
+    const nonce2 = generateNonce();
+    expect(nonce1).not.toEqual(nonce2);
+  });
+});
 
 describe('generateCodeVerifier', () => {
   test('with fixed length', () => {
