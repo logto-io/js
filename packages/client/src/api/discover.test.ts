@@ -1,5 +1,6 @@
 import nock from 'nock';
 
+import { LogtoError } from '../modules/errors';
 import { discover } from './discover';
 
 const successResponse = {
@@ -41,6 +42,19 @@ describe('discover: /.well-known/openid-configuration', () => {
     expect(configuration).toHaveProperty(
       'revocation_endpoint',
       'https://logto.dev/oidc/token/revocation'
+    );
+  });
+
+  test('should throw LogtoError instead of StructError', async () => {
+    nock('https://logto.dev', { allowUnmocked: true })
+      .get('/oidc/.well-known/openid-configuration')
+      .reply(200, {});
+
+    await expect(discover('https://logto.dev')).rejects.toThrowError(
+      new LogtoError({
+        message:
+          'Remote response format error: At path: authorization_endpoint -- Expected a string, but received: undefined',
+      })
     );
   });
 });
