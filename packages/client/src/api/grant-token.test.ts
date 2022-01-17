@@ -1,5 +1,6 @@
 import nock from 'nock';
 
+import { LogtoError } from '../modules/errors';
 import { grantTokenByAuthorizationCode, grantTokenByRefreshToken } from './grant-token';
 
 describe('grantTokenByAuthorizationCode', () => {
@@ -69,5 +70,22 @@ describe('grantTokenByRefreshToken', () => {
     });
 
     expect(tokenResponse).toMatchObject(successResponse);
+  });
+
+  test('should throw LogtoError instead of StructError', async () => {
+    nock('https://logto.dev', { allowUnmocked: true }).post('/oidc/token').reply(200, {});
+
+    await expect(
+      grantTokenByRefreshToken({
+        endpoint: 'https://logto.dev/oidc/token',
+        clientId: 'client_id',
+        refreshToken: 'refresh_token',
+      })
+    ).rejects.toThrowError(
+      new LogtoError({
+        message:
+          'Remote response format error: At path: access_token -- Expected a string, but received: undefined',
+      })
+    );
   });
 });
