@@ -84,10 +84,12 @@ importers:
       codecov: ^3.8.3
       eslint: ^8.1.0
       jest: ^27.0.6
+      jose: ^4.1.4
       lint-staged: ^11.1.2
       nock: ^13.1.3
       node-fetch: 2.6.6
       prettier: ^2.3.2
+      superstruct: ^0.15.3
       text-encoder: ^0.0.4
       ts-jest: ^27.0.4
       ts-loader: ^9.2.6
@@ -97,6 +99,8 @@ importers:
       webpack-cli: ^4.9.1
     dependencies:
       '@silverhand/essentials': 1.1.2
+      jose: 4.1.4
+      superstruct: 0.15.3
     devDependencies:
       '@peculiar/webcrypto': 1.1.7
       '@silverhand/eslint-config': 0.5.0_bc121a1dc1a5a15c02327e60e5f4e82e
@@ -7191,7 +7195,7 @@ packages:
       '@typescript-eslint/eslint-plugin': '>=4.28.1'
       eslint: '>=7.30.0'
     dependencies:
-      '@typescript-eslint/eslint-plugin': 5.6.0_85c6ab1406c522bb26958d9e32219a86
+      '@typescript-eslint/eslint-plugin': 5.6.0_cfa0f0550d794f774b69ded00bc577ac
       eslint: 8.2.0
       typescript: 4.4.4
     dev: true

@@ -18,7 +18,9 @@
     "report": "WITH_REPORT=true npm run package"
   },
   "dependencies": {
-    "@silverhand/essentials": "^1.1.2"
+    "@silverhand/essentials": "^1.1.2",
+    "jose": "^4.1.4",
+    "superstruct": "^0.15.3"
   },
   "devDependencies": {
     "@peculiar/webcrypto": "^1.1.7",
