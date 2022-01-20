@@ -1,6 +1,3 @@
-/**
- * @jest-environment node
- */
 import { UrlSafeBase64 } from '@silverhand/essentials';
 import { toUint8Array } from 'js-base64';
 
