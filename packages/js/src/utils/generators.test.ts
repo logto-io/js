@@ -1,11 +1,10 @@
 /**
  * @jest-environment node
  */
+import { UrlSafeBase64 } from '@silverhand/essentials';
 import { toUint8Array } from 'js-base64';
 
 import { generateCodeChallenge, generateCodeVerifier, generateState } from './generators';
-
-const isUrlSafe = (input: string) => /^[\w-]*$/.test(input);
 
 describe('generateState', () => {
   test('should be random value', () => {
@@ -16,7 +15,7 @@ describe('generateState', () => {
 
   test('should be url-safe', () => {
     const state = generateState();
-    expect(isUrlSafe(state)).toBeTruthy();
+    expect(UrlSafeBase64.isSafe(state)).toBeTruthy();
   });
 
   test('raw random data length should be length 64', () => {
@@ -34,7 +33,7 @@ describe('generateCodeVerifier', () => {
 
   test('should be url-safe', () => {
     const codeVerifier = generateCodeVerifier();
-    expect(isUrlSafe(codeVerifier)).toBeTruthy();
+    expect(UrlSafeBase64.isSafe(codeVerifier)).toBeTruthy();
   });
 
   test('raw random data length should be length 64', () => {
