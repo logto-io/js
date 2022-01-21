@@ -16,6 +16,7 @@ const logtoErrorCodes = Object.freeze({
     verification: {
       invalidIat: 'Invalid issued at time',
     },
+    invalidToken: 'Invalid token',
   },
 });
 

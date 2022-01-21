@@ -255,7 +255,7 @@ describe('decodeIdToken', () => {
   });
 
   test('decoding invalid JWT string should throw Error', async () => {
-    expect(() => decodeIdToken('invalid-JWT')).toThrow('invalid token');
+    expect(() => decodeIdToken('invalid-JWT')).toThrow(new LogtoError('idToken.invalidToken'));
   });
 
   test('decoding valid JWT without issuer should throw StructError', async () => {

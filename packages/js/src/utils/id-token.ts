@@ -35,7 +35,7 @@ export const verifyIdToken = async (
 export const decodeIdToken = (token: string): IdTokenClaims => {
   const { 1: encodedPayload } = token.split('.');
   if (!encodedPayload) {
-    throw new Error('invalid token');
+    throw new LogtoError('idToken.invalidToken');
   }
 
   const json = UrlSafeBase64.decode(encodedPayload);
