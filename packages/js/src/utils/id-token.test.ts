@@ -206,7 +206,7 @@ describe('verifyIdToken', () => {
     const jwks = createDefaultJwks();
 
     await expect(verifyIdToken(idToken, 'qux', 'foo', jwks)).rejects.toThrowError(
-      new LogtoError('idToken.verification.invalidIat')
+      new LogtoError('idToken.invalidIat')
     );
   });
 });
