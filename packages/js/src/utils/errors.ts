@@ -24,8 +24,8 @@ export type LogtoErrorCode = Normalize<typeof logtoErrorCodes>;
 export class LogtoError extends Error {
   code: LogtoErrorCode;
 
-  constructor(code: LogtoErrorCode, message?: string) {
-    super(message);
+  constructor(code: LogtoErrorCode) {
+    super(code);
     this.code = code;
   }
 }
