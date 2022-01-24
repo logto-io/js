@@ -13,9 +13,8 @@ type Normalize<T> = keyof T | Normalize2<T>;
 
 const logtoErrorCodes = Object.freeze({
   idToken: {
-    verification: {
-      invalidIat: 'Invalid issued at time',
-    },
+    invalidIat: 'Invalid issued at time',
+    invalidToken: 'Invalid token',
   },
 });
 
