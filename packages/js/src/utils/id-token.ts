@@ -28,14 +28,14 @@ export const verifyIdToken = async (
 ) => {
   const result = await jwtVerify(idToken, jwks, { audience: clientId, issuer });
   if (Math.abs((result?.payload?.iat ?? 0) - Date.now() / 1000) > issuedAtTimeTolerance) {
-    throw new LogtoError('idToken.invalidIat');
+    throw new LogtoError('id_token.invalid_iat');
   }
 };
 
 export const decodeIdToken = (token: string): IdTokenClaims => {
   const { 1: encodedPayload } = token.split('.');
   if (!encodedPayload) {
-    throw new LogtoError('idToken.invalidToken');
+    throw new LogtoError('id_token.invalid_token');
   }
 
   const json = UrlSafeBase64.decode(encodedPayload);
