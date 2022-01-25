@@ -206,7 +206,7 @@ describe('verifyIdToken', () => {
     const jwks = createDefaultJwks();
 
     await expect(verifyIdToken(idToken, 'qux', 'foo', jwks)).rejects.toMatchError(
-      new LogtoError('idToken.invalidIat')
+      new LogtoError('id_token.invalid_iat')
     );
   });
 });
@@ -255,7 +255,9 @@ describe('decodeIdToken', () => {
   });
 
   test('decoding invalid JWT string should throw Error', async () => {
-    expect(() => decodeIdToken('invalid-JWT')).toMatchError(new LogtoError('idToken.invalidToken'));
+    expect(() => decodeIdToken('invalid-JWT')).toMatchError(
+      new LogtoError('id_token.invalid_token')
+    );
   });
 
   test('decoding valid JWT without issuer should throw StructError', async () => {

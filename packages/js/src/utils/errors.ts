@@ -2,9 +2,9 @@ import { NormalizeKeyPaths } from '@silverhand/essentials';
 import get from 'lodash.get';
 
 const logtoErrorCodes = Object.freeze({
-  idToken: {
-    invalidIat: 'Invalid issued at time',
-    invalidToken: 'Invalid token',
+  id_token: {
+    invalid_iat: 'Invalid issued at time',
+    invalid_token: 'Invalid token',
   },
   callback_uri_verification: {
     redirect_uri_mismatched: 'Redirect URI mismatched',
