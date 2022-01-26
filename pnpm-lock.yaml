@@ -34,7 +34,7 @@ importers:
       lint-staged: ^11.1.2
       nanoid: ^3.1.30
       nock: ^13.1.3
-      node-fetch: 2.6.6
+      node-fetch: ^2.6.7
       prettier: ^2.3.2
       query-string: ^7.0.1
       superstruct: ^0.15.3
@@ -63,7 +63,7 @@ importers:
       jest: 27.0.6
       lint-staged: 11.1.2
       nock: 13.1.3
-      node-fetch: 2.6.6
+      node-fetch: 2.6.7
       prettier: 2.3.2
       text-encoder: 0.0.4
       ts-jest: 27.0.4_52cc4273aa16028085013af47e479e10
@@ -91,7 +91,7 @@ importers:
       lint-staged: ^11.1.2
       lodash.get: ^4.4.2
       nock: ^13.1.3
-      node-fetch: 2.6.6
+      node-fetch: ^2.6.7
       prettier: ^2.3.2
       query-string: ^7.0.1
       superstruct: ^0.15.3
@@ -122,7 +122,7 @@ importers:
       jest-matcher-specific-error: 1.0.0
       lint-staged: 11.1.2
       nock: 13.1.3
-      node-fetch: 2.6.6
+      node-fetch: 2.6.7
       prettier: 2.3.2
       text-encoder: 0.0.4
       ts-jest: 27.0.4_53a80b2445539e5ca18fca8f5a5b611d
@@ -154,7 +154,7 @@ importers:
       js-base64: ^3.6.1
       lint-staged: ^11.1.2
       mini-css-extract-plugin: ^0.9.0
-      node-fetch: 2.6.6
+      node-fetch: ^2.6.7
       postcss: ^8.3.6
       prettier: ^2.3.2
       query-string: ^7.0.1
@@ -196,7 +196,7 @@ importers:
       html-webpack-plugin: 4.5.2_webpack@4.46.0
       lint-staged: 11.1.2
       mini-css-extract-plugin: 0.9.0_webpack@4.46.0
-      node-fetch: 2.6.6
+      node-fetch: 2.6.7
       postcss: 8.3.11
       prettier: 2.3.2
       razzle: 4.2.6_424444ef4b7975aa4dcd05532c261734
@@ -5781,6 +5781,7 @@ packages:
       teeny-request: 7.1.1
       urlgrey: 1.0.0
     transitivePeerDependencies:
+      - encoding
       - supports-color
     dev: true
 
@@ -7223,7 +7224,7 @@ packages:
       '@typescript-eslint/eslint-plugin': '>=4.28.1'
       eslint: '>=7.30.0'
     dependencies:
-      '@typescript-eslint/eslint-plugin': 5.6.0_cfa0f0550d794f774b69ded00bc577ac
+      '@typescript-eslint/eslint-plugin': 5.6.0_85c6ab1406c522bb26958d9e32219a86
       eslint: 8.2.0
       typescript: 4.4.4
     dev: true
@@ -11817,9 +11818,14 @@ packages:
     engines: {node: 4.x || >=6.0.0}
     dev: true
 
-  /node-fetch/2.6.6:
-    resolution: {integrity: sha512-Z8/6vRlTUChSdIgMa51jxQ4lrw/Jy5SOW10ObaA47/RElsAN2c5Pn8bTgFGWn/ibwzXTE8qwr1Yzx28vsecXEA==}
+  /node-fetch/2.6.7:
+    resolution: {integrity: sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==}
     engines: {node: 4.x || >=6.0.0}
+    peerDependencies:
+      encoding: ^0.1.0
+    peerDependenciesMeta:
+      encoding:
+        optional: true
     dependencies:
       whatwg-url: 5.0.0
     dev: true
@@ -15673,10 +15679,11 @@ packages:
     dependencies:
       http-proxy-agent: 4.0.1
       https-proxy-agent: 5.0.0
-      node-fetch: 2.6.6
+      node-fetch: 2.6.7
       stream-events: 1.0.5
       uuid: 8.3.2
     transitivePeerDependencies:
+      - encoding
       - supports-color
     dev: true
 
