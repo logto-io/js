@@ -13,6 +13,10 @@ const logtoErrorCodes = Object.freeze({
     state_mismatched: 'State mismatched',
     missing_code: 'Missing code',
   },
+  requester: {
+    failed: 'Failed',
+    not_provide_fetch: 'Should provide a fetch function under Node.js',
+  },
 });
 
 export type LogtoErrorCode = NormalizeKeyPaths<typeof logtoErrorCodes>;
@@ -33,8 +37,8 @@ export class LogtoError extends Error {
   error?: string;
   errorDescription?: string;
 
-  constructor(code: LogtoErrorCode, error?: string, errorDescription?: string) {
-    super(getMessageByErrorCode(code));
+  constructor(code: LogtoErrorCode, error?: string, errorDescription?: string, message?: string) {
+    super(message ?? getMessageByErrorCode(code));
     this.code = code;
     this.error = error;
     this.errorDescription = errorDescription;
