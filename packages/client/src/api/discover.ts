@@ -32,6 +32,7 @@ export async function discover(
 
   try {
     s.assert(response, OidcConfigResponseSchema);
+
     return response;
   } catch (error: unknown) {
     if (error instanceof s.StructError) {

@@ -42,6 +42,7 @@ export const generateCodeVerifier = () => generateRandomString(CODE_VERIFIER_MAX
 export const generateCodeChallenge = async (codeVerifier: string): Promise<string> => {
   const encoded = new TextEncoder().encode(codeVerifier);
   const challenge = new Uint8Array(await crypto.subtle.digest('SHA-256', encoded));
+
   return UrlSafeBase64.replaceNonUrlSafeCharacters(fromUint8Array(challenge));
 };
 
@@ -58,5 +59,6 @@ export const generateScope = (originalScope?: string | string[]): string => {
       : originalScope.split(' ');
   const nonEmptyScopeValues = originalScopeValues.map((s) => s.trim()).filter((s) => s.length > 0);
   const uniqueScopeValues = new Set([...DEFAULT_SCOPE_VALUES, ...nonEmptyScopeValues]);
+
   return Array.from(uniqueScopeValues).join(' ');
 };

@@ -10,6 +10,7 @@ const Callback = () => {
     (async () => {
       if (!logtoClient) {
         setError('LogtoClient not found');
+
         return;
       }
 

@@ -55,6 +55,7 @@ export const decodeIdToken = (token: string): IdTokenClaims => {
     // Using SuperStruct to validate the json type
     const idToken = JSON.parse(json) as IdTokenClaims;
     s.assert(idToken, IdTokenClaimsSchema);
+
     return idToken;
   } catch (error: unknown) {
     if (error instanceof s.StructError) {

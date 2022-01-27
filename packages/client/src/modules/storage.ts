@@ -32,11 +32,13 @@ export class LocalStorage implements ClientStorage {
 
   getItem<T>(key: string) {
     const value = this.storage.getItem(getKey(key));
+
     if (!value) {
       return;
     }
 
     const payload = safeParse<StoragePayload<T>>(value);
+
     if (!payload) {
       // When JSON parse failed, return undefined.
       return;
@@ -44,6 +46,7 @@ export class LocalStorage implements ClientStorage {
 
     if (payload.expiresAt && payload.expiresAt <= Date.now()) {
       this.removeItem(key);
+
       return;
     }
 
@@ -82,6 +85,7 @@ export class MemoryStorage implements ClientStorage {
 
     if (payload.expiresAt && payload.expiresAt <= Date.now()) {
       this.removeItem(key);
+
       return;
     }
 

@@ -53,6 +53,7 @@ export const grantTokenByAuthorizationCode = async (
 
   try {
     s.assert(response, TokenResponseSchema);
+
     return response;
   } catch (error: unknown) {
     if (error instanceof s.StructError) {
@@ -97,6 +98,7 @@ export const grantTokenByRefreshToken = async (
 
   try {
     s.assert(response, TokenResponseSchema);
+
     return response;
   } catch (error: unknown) {
     if (error instanceof s.StructError) {

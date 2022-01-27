@@ -15,8 +15,10 @@ const getLogtoErrorParametersByResponse = async (
   response: Response
 ): Promise<LogtoErrorParameters> => {
   const text = await response.text();
+
   try {
     const data = JSON.parse(text) as LogtoErrorResponse;
+
     if (data.error || data.error_description) {
       return {
         error: data.error,

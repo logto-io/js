@@ -16,6 +16,7 @@ type Action =
 export const reducer = (state: AuthState, action: Action): AuthState => {
   if (action.type === 'INITIALIZE') {
     const { isAuthenticated, isLoading, claims } = action.payload;
+
     return {
       ...state,
       isInitialized: true,
@@ -35,6 +36,7 @@ export const reducer = (state: AuthState, action: Action): AuthState => {
 
   if (action.type === 'HANDLE_CALLBACK_SUCCESS') {
     const { claims } = action.payload;
+
     return { ...state, isLoading: false, isAuthenticated: true, claims };
   }
 
@@ -44,6 +46,7 @@ export const reducer = (state: AuthState, action: Action): AuthState => {
 
   if (action.type === 'ERROR') {
     const { error } = action.payload;
+
     if (!(error instanceof Error)) {
       throw error;
     }
