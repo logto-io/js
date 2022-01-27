@@ -8,8 +8,10 @@ declare interface LogtoErrorResponse {
 
 const getResponseErrorMessage = async (response: Response): Promise<string> => {
   const text = await response.text();
+
   try {
     const data = JSON.parse(text) as LogtoErrorResponse;
+
     if (data.error_description) {
       return data.error_description;
     }
@@ -27,6 +29,7 @@ export const createRequester = (fetchFunction?: typeof fetch) => {
 
   return async <T>(...args: Parameters<typeof fetch>): Promise<T> => {
     const response = await (fetchFunction ?? fetch)(...args);
+
     if (!response.ok) {
       throw new LogtoError({
         message: await getResponseErrorMessage(response),
@@ -35,6 +38,7 @@ export const createRequester = (fetchFunction?: typeof fetch) => {
     }
 
     const data = (await response.json()) as T;
+
     return data;
   };
 };

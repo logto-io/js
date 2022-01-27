@@ -27,6 +27,7 @@ export const verifyIdToken = async (
   jwks: JWTVerifyGetKey
 ) => {
   const result = await jwtVerify(idToken, jwks, { audience: clientId, issuer });
+
   if (Math.abs((result?.payload?.iat ?? 0) - Date.now() / 1000) > issuedAtTimeTolerance) {
     throw new LogtoError('id_token.invalid_iat');
   }
@@ -34,10 +35,12 @@ export const verifyIdToken = async (
 
 export const decodeIdToken = (token: string): IdTokenClaims => {
   const { 1: encodedPayload } = token.split('.');
+
   if (!encodedPayload) {
     throw new LogtoError('id_token.invalid_token');
   }
 
   const json = UrlSafeBase64.decode(encodedPayload);
+
   return s.create(JSON.parse(json), IdTokenClaimsSchema);
 };

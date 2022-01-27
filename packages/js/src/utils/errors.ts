@@ -25,6 +25,7 @@ const getMessageByErrorCode = (errorCode: LogtoErrorCode): string => {
   // TODO: linear issue LOG-1419
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const message = get(logtoErrorCodes, errorCode);
+
   if (typeof message === 'string') {
     return message;
   }

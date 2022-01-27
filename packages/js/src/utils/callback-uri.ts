@@ -11,6 +11,7 @@ interface AuthenticationResult {
 
 const parseCallbackUri = (url: string): AuthenticationResult => {
   const [, queryString = ''] = url.split('?');
+
   return qs.parse(queryString);
 };
 

@@ -78,16 +78,19 @@ export default class LogtoClient {
 
   public isLoginRedirect(url: string) {
     const { code, state, error } = parseRedirectCallback(url);
+
     if (error || !code || !state) {
       return false;
     }
 
     const session = this.sessionManager.get();
+
     if (!session) {
       return false;
     }
 
     const { redirectUri } = session;
+
     return url.startsWith(redirectUri);
   }
 
@@ -176,6 +179,7 @@ export default class LogtoClient {
     );
     this.storage.setItem(this.tokenSetCacheKey, tokenResponse);
     this.tokenSet = new TokenSet(tokenResponse);
+
     return this.tokenSet.accessToken;
   }
 
@@ -201,6 +205,7 @@ export default class LogtoClient {
 
   private createTokenSetFromCache() {
     const parameters = this.storage.getItem<TokenResponse>(this.tokenSetCacheKey);
+
     if (parameters) {
       this.tokenSet = new TokenSet(parameters);
     }

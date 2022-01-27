@@ -15,5 +15,6 @@ export interface AuthenticationResult {
  */
 export const parseRedirectCallback = (url: string): AuthenticationResult => {
   const [, queryString = ''] = url.split('?');
+
   return qs.parse(queryString);
 };
