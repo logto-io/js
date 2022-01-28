@@ -5,8 +5,10 @@
 const { Crypto } = require('@peculiar/webcrypto');
 const fetch = require('node-fetch');
 const { TextDecoder, TextEncoder } = require('text-encoder');
+/* eslint-enable unicorn/prefer-module */
 
 global.crypto = new Crypto();
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 global.fetch = fetch;
+/* eslint-enable @silverhand/fp/no-mutation */
