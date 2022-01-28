@@ -28,3 +28,4 @@ cache
 *.env
 .idea/
 *.pem
+.history
