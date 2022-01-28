@@ -14,11 +14,7 @@ const logtoErrorCodes = Object.freeze({
     missing_code: 'Missing code',
   },
   requester: {
-    failed: 'Failed',
     not_provide_fetch: 'Should provide a fetch function under Node.js',
-  },
-  struct_verification: {
-    request_error_struct_mismatched: 'Request error struct mismatched',
   },
 });
 
