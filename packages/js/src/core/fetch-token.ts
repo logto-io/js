@@ -1,4 +1,5 @@
 import { KeysToCamelCase } from '@silverhand/essentials';
+import camelcaseKeys from 'camelcase-keys';
 import { string, number, assert, type, optional, Infer } from 'superstruct';
 import { Except } from 'type-fest';
 
@@ -54,11 +55,13 @@ export const fetchTokenByRefreshToken = async (
   assert(response, TokenResponseSchema);
   const { access_token, refresh_token, id_token, scope: response_scope, expires_in } = response;
 
-  return {
-    accessToken: access_token,
-    refreshToken: refresh_token,
-    idToken: id_token,
-    scope: response_scope?.split(' '),
-    expiresIn: expires_in,
-  };
+  const scopeValues = response_scope?.split(' ');
+
+  return camelcaseKeys({
+    access_token,
+    refresh_token,
+    id_token,
+    scope: scopeValues,
+    expires_in,
+  });
 };
