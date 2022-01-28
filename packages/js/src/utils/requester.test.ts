@@ -1,4 +1,4 @@
-import { LogtoError } from './errors';
+import { LogtoRequestError } from './errors';
 import { createRequester } from './requester';
 
 describe('createRequester', () => {
@@ -14,76 +14,60 @@ describe('createRequester', () => {
     });
   });
 
-  describe('non-ok response', () => {
-    test('json text with error and error description should throw LogtoError with error and error description', async () => {
-      const error = 'some error';
-      const errorDescription = 'some error description';
+  describe('request error', () => {
+    test('failing response json with code and message should throw LogtoRequestError with same code and message', async () => {
+      const code = 'some error code';
+      const message = 'some error message';
       const fetchFunction = jest.fn().mockResolvedValue({
         ok: false,
-        text: async () => {
-          return JSON.stringify({
-            error,
-            error_description: errorDescription,
-          });
+        json: async () => ({ code, message }),
+      });
+      const requester = createRequester(fetchFunction);
+      await expect(requester('foo')).rejects.toMatchError(new LogtoRequestError(code, message));
+    });
+
+    test('failing response json with only code should throw StructError', async () => {
+      const fetchFunction = jest.fn().mockResolvedValue({
+        ok: false,
+        json: async () => {
+          throw new TypeError('without message');
         },
       });
       const requester = createRequester(fetchFunction);
-      await expect(requester('foo')).rejects.toMatchError(
-        new LogtoError('requester.failed', error, errorDescription)
-      );
+      await expect(requester('foo')).rejects.toThrowError(TypeError);
     });
 
-    test('json text with only error should throw LogtoError with error', async () => {
-      const error = 'some error';
+    test('failing response json with only message should throw StructError', async () => {
       const fetchFunction = jest.fn().mockResolvedValue({
         ok: false,
-        text: async () => {
-          return JSON.stringify({ error });
+        json: async () => {
+          throw new TypeError('without code');
         },
       });
       const requester = createRequester(fetchFunction);
-      await expect(requester('foo')).rejects.toMatchError(
-        new LogtoError('requester.failed', error)
-      );
+      await expect(requester('foo')).rejects.toThrowError(TypeError);
     });
 
-    test('json text with only error description should throw LogtoError with error description', async () => {
-      const errorDescription = 'some error description';
+    test('failing response json without code and message should throw StructError', async () => {
       const fetchFunction = jest.fn().mockResolvedValue({
         ok: false,
-        text: async () => {
-          return JSON.stringify({ error_description: errorDescription });
+        json: async () => {
+          throw new TypeError('without code and message');
         },
       });
       const requester = createRequester(fetchFunction);
-      await expect(requester('foo')).rejects.toMatchError(
-        new LogtoError('requester.failed', undefined, errorDescription)
-      );
+      await expect(requester('foo')).rejects.toThrowError(TypeError);
     });
 
-    test('json text without error and error description should throw LogtoError with response status text', async () => {
-      const statusText = 'some error status';
+    test('failing response with non-json text should throw TypeError', async () => {
       const fetchFunction = jest.fn().mockResolvedValue({
         ok: false,
-        text: async () => JSON.stringify({}),
-        statusText,
+        json: async () => {
+          throw new TypeError('not json content');
+        },
       });
       const requester = createRequester(fetchFunction);
-      await expect(requester('foo')).rejects.toMatchError(
-        new LogtoError('requester.failed', undefined, undefined, statusText)
-      );
-    });
-
-    test('non-json text should throw LogtoError with response text', async () => {
-      const errorText = 'some error text';
-      const fetchFunction = jest.fn().mockResolvedValue({
-        ok: false,
-        text: async () => errorText,
-      });
-      const requester = createRequester(fetchFunction);
-      await expect(requester('foo')).rejects.toMatchError(
-        new LogtoError('requester.failed', undefined, undefined, errorText)
-      );
+      await expect(requester('foo')).rejects.toThrowError(TypeError);
     });
   });
 });

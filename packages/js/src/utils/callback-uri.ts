@@ -33,7 +33,7 @@ export const verifyAndParseCodeFromCallbackUri = (
   } = authenticationResult;
 
   if (error) {
-    throw new LogtoError('callback_uri_verification.error_found', error, errorDescription);
+    throw new LogtoError('callback_uri_verification.error_found', { error, errorDescription });
   }
 
   if (!stateFromCallbackUri) {

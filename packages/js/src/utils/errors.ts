@@ -17,6 +17,9 @@ const logtoErrorCodes = Object.freeze({
     failed: 'Failed',
     not_provide_fetch: 'Should provide a fetch function under Node.js',
   },
+  struct_verification: {
+    request_error_struct_mismatched: 'Request error struct mismatched',
+  },
 });
 
 export type LogtoErrorCode = NormalizeKeyPaths<typeof logtoErrorCodes>;
@@ -35,13 +38,20 @@ const getMessageByErrorCode = (errorCode: LogtoErrorCode): string => {
 
 export class LogtoError extends Error {
   code: LogtoErrorCode;
-  error?: string;
-  errorDescription?: string;
+  data: unknown;
 
-  constructor(code: LogtoErrorCode, error?: string, errorDescription?: string, message?: string) {
-    super(message ?? getMessageByErrorCode(code));
+  constructor(code: LogtoErrorCode, data?: unknown) {
+    super(getMessageByErrorCode(code));
     this.code = code;
-    this.error = error;
-    this.errorDescription = errorDescription;
+    this.data = data;
+  }
+}
+
+export class LogtoRequestError extends Error {
+  code: string;
+
+  constructor(code: string, message: string) {
+    super(message);
+    this.code = code;
   }
 }

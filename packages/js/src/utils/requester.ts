@@ -1,36 +1,11 @@
 import { isNode } from '@silverhand/essentials';
 
-import { LogtoError } from './errors';
+import { LogtoError, LogtoRequestError } from './errors';
 
-interface LogtoErrorResponse {
-  error?: string;
-  error_description?: string;
+interface LogtoRequestErrorBody {
+  code: string;
+  message: string;
 }
-
-interface LogtoErrorParameters extends LogtoErrorResponse {
-  message?: string;
-}
-
-const getLogtoErrorParametersByResponse = async (
-  response: Response
-): Promise<LogtoErrorParameters> => {
-  const text = await response.text();
-
-  try {
-    const data = JSON.parse(text) as LogtoErrorResponse;
-
-    if (data.error || data.error_description) {
-      return {
-        error: data.error,
-        error_description: data.error_description,
-      };
-    }
-
-    return { message: response.statusText };
-  } catch {
-    return { message: text };
-  }
-};
 
 export const createRequester = (fetchFunction?: typeof fetch) => {
   if (!fetchFunction && isNode()) {
@@ -41,16 +16,12 @@ export const createRequester = (fetchFunction?: typeof fetch) => {
     const response = await (fetchFunction ?? fetch)(...args);
 
     if (!response.ok) {
-      const logtoErrorMessage = await getLogtoErrorParametersByResponse(response);
-      throw new LogtoError(
-        'requester.failed',
-        logtoErrorMessage.error,
-        logtoErrorMessage.error_description,
-        logtoErrorMessage.message
-      );
+      // Expected request error from server
+      const { code, message } = await response.json<LogtoRequestErrorBody>();
+      throw new LogtoRequestError(code, message);
     }
 
-    return (await response.json()) as T;
+    return response.json<T>();
   };
 };
 
