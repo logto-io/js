@@ -1,5 +1,3 @@
-import { conditional, isNode } from '@silverhand/essentials';
-
 import { fetchTokenByRefreshToken, RefreshTokenTokenResponse } from './fetch-token';
 
 describe('fetch access token by providing valid refresh token', () => {
@@ -32,7 +30,7 @@ describe('fetch access token by providing valid refresh token', () => {
         refreshToken: 'refresh_token',
         scope: ['read', 'register', 'manage'],
       },
-      conditional(isNode() && fetchFunction)
+      fetchFunction // Always passing `fetchFunction` since Jest has no `fetch()`
     );
 
     expect(tokenResponse).toMatchObject(expectedTokenResponse);
