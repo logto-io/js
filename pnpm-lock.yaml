@@ -77,7 +77,7 @@ importers:
     specifiers:
       '@peculiar/webcrypto': ^1.1.7
       '@silverhand/eslint-config': ^0.6.1
-      '@silverhand/essentials': ^1.1.4
+      '@silverhand/essentials': ^1.1.5
       '@silverhand/ts-config': ^0.6.1
       '@types/jest': ^26.0.24
       '@types/lodash.get': ^4.4.6
@@ -98,12 +98,13 @@ importers:
       text-encoder: ^0.0.4
       ts-jest: ^27.0.4
       ts-loader: ^9.2.6
+      type-fest: ^2.10.0
       typescript: ^4.3.5
       webpack: ^5.58.2
       webpack-bundle-analyzer: ^4.5.0
       webpack-cli: ^4.9.1
     dependencies:
-      '@silverhand/essentials': 1.1.4
+      '@silverhand/essentials': 1.1.5
       jose: 4.3.8
       js-base64: 3.7.2
       lodash.get: 4.4.2
@@ -127,6 +128,7 @@ importers:
       text-encoder: 0.0.4
       ts-jest: 27.0.4_53a80b2445539e5ca18fca8f5a5b611d
       ts-loader: 9.2.6_typescript@4.4.4+webpack@5.61.0
+      type-fest: 2.10.0
       typescript: 4.4.4
       webpack: 5.61.0_webpack-cli@4.9.1
       webpack-bundle-analyzer: 4.5.0
@@ -3361,8 +3363,8 @@ packages:
       lodash.pick: 4.4.0
     dev: false
 
-  /@silverhand/essentials/1.1.4:
-    resolution: {integrity: sha512-5pHjIz42CjILcqGWhmfP7/RCbmlWIWmj0H3RMJDGW3QKZyNkWawG6gKwtEQ75N0MoZOzXjNE4HD4DK3moPa5sg==}
+  /@silverhand/essentials/1.1.5:
+    resolution: {integrity: sha512-lpOdV/e/5+tvY/RQt6yTsId7MxxhJSShRE0ts8UR4O5Lr32/naFjxl79yoPD8O0ABEnLQbwYlxRks1G+8jxkuA==}
     engines: {node: '>=14.15.0', pnpm: '>=6'}
     dependencies:
       lodash.orderby: 4.6.0
@@ -16218,6 +16220,11 @@ packages:
   /type-fest/0.8.1:
     resolution: {integrity: sha512-4dbzIzqvjtgiM5rw1k5rEHtBANKmdudhGyBEajN01fEyhaAIhsoKNy6y7+IN93IfpFtwY9iqi7kD+xwKhQsNJA==}
     engines: {node: '>=8'}
+    dev: true
+
+  /type-fest/2.10.0:
+    resolution: {integrity: sha512-u2yreDMllFI3VCpWt0rKrGs/E2LO0YHBwiiOIj+ilQh9+ALMaa4lNBSdoDvuHN3cbKcYk9L1BXP49x9RT+o/SA==}
+    engines: {node: '>=12.20'}
     dev: true
 
   /type-is/1.6.18:
