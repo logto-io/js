@@ -1,5 +1,5 @@
 import { KeysToCamelCase } from '@silverhand/essentials';
-import { string, number, assert, type, optional, Infer } from 'superstruct';
+import camelcaseKeys from 'camelcase-keys';
 import { Except } from 'type-fest';
 
 import { ContentType } from '../consts';
@@ -13,20 +13,17 @@ export interface FetchTokenByRefreshTokenParameters {
   scope?: string[];
 }
 
-const TokenResponseSchema = type({
-  access_token: string(),
-  refresh_token: string(),
-  id_token: string(),
-  scope: optional(string()),
-  expires_in: number(),
-});
-
-export type RefreshTokenTokenResponse = Except<
-  KeysToCamelCase<Infer<typeof TokenResponseSchema>>,
-  'scope'
-> & {
-  scope?: string[];
+type TokenSnakeCaseResponse = {
+  access_token: string;
+  refresh_token: string;
+  id_token: string;
+  scope?: string;
+  expires_in: number;
 };
+
+export type RefreshTokenTokenResponse = {
+  scope?: string[];
+} & Except<KeysToCamelCase<TokenSnakeCaseResponse>, 'scope'>;
 
 export const fetchTokenByRefreshToken = async (
   { clientId, tokenEndPoint, refreshToken, resource, scope }: FetchTokenByRefreshTokenParameters,
@@ -45,20 +42,13 @@ export const fetchTokenByRefreshToken = async (
   }
 
   const requester = createRequester(fetchFunction);
-  const response = await requester(tokenEndPoint, {
+  const tokenSnakeCaseResponse = await requester<TokenSnakeCaseResponse>(tokenEndPoint, {
     method: 'POST',
     headers: ContentType.formUrlEncoded,
     body: parameters,
   });
 
-  assert(response, TokenResponseSchema);
-  const { access_token, refresh_token, id_token, scope: response_scope, expires_in } = response;
+  const scopeValues = tokenSnakeCaseResponse.scope?.split(' ');
 
-  return {
-    accessToken: access_token,
-    refreshToken: refresh_token,
-    idToken: id_token,
-    scope: response_scope?.split(' '),
-    expiresIn: expires_in,
-  };
+  return camelcaseKeys({ ...tokenSnakeCaseResponse, scope: scopeValues });
 };
