@@ -1,7 +1,7 @@
 import { KeysToCamelCase } from '@silverhand/essentials';
 import camelcaseKeys from 'camelcase-keys';
 
-import { createRequester, Requester } from '../utils/requester';
+import { Requester } from '../utils/requester';
 
 type OidcConfigSnakeCaseResponse = {
   authorization_endpoint: string;
@@ -17,6 +17,6 @@ export type OidcConfigResponse = KeysToCamelCase<OidcConfigSnakeCaseResponse>;
 
 export const fetchOidcConfig = async (
   endpoint: string,
-  requester: Requester = createRequester()
+  requester: Requester
 ): Promise<OidcConfigResponse> =>
   camelcaseKeys(await requester<OidcConfigSnakeCaseResponse>(endpoint));
