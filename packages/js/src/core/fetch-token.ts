@@ -3,7 +3,7 @@ import camelcaseKeys from 'camelcase-keys';
 import { Except } from 'type-fest';
 
 import { ContentType } from '../consts';
-import { createRequester } from '../utils/requester';
+import { Requester } from '../utils/requester';
 
 export interface FetchTokenByRefreshTokenParameters {
   clientId: string;
@@ -27,7 +27,7 @@ export type RefreshTokenTokenResponse = {
 
 export const fetchTokenByRefreshToken = async (
   { clientId, tokenEndPoint, refreshToken, resource, scope }: FetchTokenByRefreshTokenParameters,
-  fetchFunction?: typeof fetch
+  requester: Requester
 ): Promise<RefreshTokenTokenResponse> => {
   const parameters = new URLSearchParams();
   parameters.append('client_id', clientId);
@@ -41,7 +41,6 @@ export const fetchTokenByRefreshToken = async (
     parameters.append('scope', scope.join(' '));
   }
 
-  const requester = createRequester(fetchFunction);
   const tokenSnakeCaseResponse = await requester<TokenSnakeCaseResponse>(tokenEndPoint, {
     method: 'POST',
     headers: ContentType.formUrlEncoded,

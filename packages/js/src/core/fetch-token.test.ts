@@ -18,10 +18,7 @@ describe('fetch access token by providing valid refresh token', () => {
       expiresIn: 3600,
     };
 
-    const fetchFunction = jest.fn().mockResolvedValue({
-      ok: true,
-      json: async () => mockedOidcResponse,
-    });
+    const fetchFunction = jest.fn().mockResolvedValue(mockedOidcResponse);
 
     const tokenResponse = await fetchTokenByRefreshToken(
       {
