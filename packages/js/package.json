@@ -51,7 +51,18 @@
     "webpack-cli": "^4.9.1"
   },
   "eslintConfig": {
-    "extends": "@silverhand/eslint-config"
+    "extends": "@silverhand/eslint-config",
+    "overrides": [
+      {
+        "files": ["*.ts"],
+        "rules": {
+          "max-params": [
+            "warn",
+            { "max": 6 }
+          ]
+        }
+      }
+    ]
   },
   "prettier": "@silverhand/eslint-config/.prettierrc"
 }
