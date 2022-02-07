@@ -7,7 +7,7 @@ import { Requester } from '../utils';
 
 export type FetchTokenByRefreshTokenParameters = {
   clientId: string;
-  tokenEndPoint: string;
+  tokenEndpoint: string;
   refreshToken: string;
   resource?: string;
   scopes?: string[];
@@ -44,7 +44,7 @@ export type RefreshTokenTokenResponse = {
 
 export const fetchTokenByRefreshToken = async ({
   clientId,
-  tokenEndPoint,
+  tokenEndpoint,
   refreshToken,
   resource,
   scopes,
@@ -62,7 +62,7 @@ export const fetchTokenByRefreshToken = async ({
     parameters.append('scope', scopes.join(' '));
   }
 
-  return requestToken(tokenEndPoint, parameters, requester);
+  return requestToken(tokenEndpoint, parameters, requester);
 };
 
 export type FetchTokenByAuthorizationCodeParameters = {
