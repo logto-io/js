@@ -10,7 +10,7 @@ export type FetchTokenByRefreshTokenParameters = {
   tokenEndPoint: string;
   refreshToken: string;
   resource?: string;
-  scope?: string[];
+  scopes?: string[];
 };
 
 type TokenSnakeCaseResponse = {
@@ -22,11 +22,11 @@ type TokenSnakeCaseResponse = {
 };
 
 export type RefreshTokenTokenResponse = {
-  scope?: string[];
+  scopes?: string[];
 } & Except<KeysToCamelCase<TokenSnakeCaseResponse>, 'scope'>;
 
 export const fetchTokenByRefreshToken = async (
-  { clientId, tokenEndPoint, refreshToken, resource, scope }: FetchTokenByRefreshTokenParameters,
+  { clientId, tokenEndPoint, refreshToken, resource, scopes }: FetchTokenByRefreshTokenParameters,
   requester: Requester
 ): Promise<RefreshTokenTokenResponse> => {
   const parameters = new URLSearchParams();
@@ -37,8 +37,8 @@ export const fetchTokenByRefreshToken = async (
     parameters.append('resource', resource);
   }
 
-  if (scope?.length) {
-    parameters.append('scope', scope.join(' '));
+  if (scopes?.length) {
+    parameters.append('scope', scopes.join(' '));
   }
 
   const tokenSnakeCaseResponse = await requester<TokenSnakeCaseResponse>(tokenEndPoint, {
@@ -49,5 +49,5 @@ export const fetchTokenByRefreshToken = async (
 
   const scopeValues = tokenSnakeCaseResponse.scope?.split(' ');
 
-  return camelcaseKeys({ ...tokenSnakeCaseResponse, scope: scopeValues });
+  return camelcaseKeys({ ...tokenSnakeCaseResponse, scopes: scopeValues });
 };
