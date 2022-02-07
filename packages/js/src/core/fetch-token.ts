@@ -11,6 +11,7 @@ export type FetchTokenByRefreshTokenParameters = {
   refreshToken: string;
   resource?: string;
   scopes?: string[];
+  requester: Requester;
 };
 
 type TokenSnakeCaseResponse = {
@@ -41,10 +42,14 @@ export type RefreshTokenTokenResponse = {
   scopes?: string[];
 } & Except<KeysToCamelCase<TokenSnakeCaseResponse>, 'scope'>;
 
-export const fetchTokenByRefreshToken = async (
-  { clientId, tokenEndPoint, refreshToken, resource, scopes }: FetchTokenByRefreshTokenParameters,
-  requester: Requester
-): Promise<RefreshTokenTokenResponse> => {
+export const fetchTokenByRefreshToken = async ({
+  clientId,
+  tokenEndPoint,
+  refreshToken,
+  resource,
+  scopes,
+  requester,
+}: FetchTokenByRefreshTokenParameters): Promise<RefreshTokenTokenResponse> => {
   const parameters = new URLSearchParams();
   parameters.append('client_id', clientId);
   parameters.append('refresh_token', refreshToken);

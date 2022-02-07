@@ -23,18 +23,16 @@ describe('fetch token by providing valid refresh token', () => {
       expiresIn: 3600,
     };
 
-    const fetchFunction = jest.fn().mockResolvedValue(mockedOidcResponse);
+    const requester = jest.fn().mockResolvedValue(mockedOidcResponse);
 
-    const tokenResponse = await fetchTokenByRefreshToken(
-      {
-        tokenEndPoint: 'https://logto.dev/oidc/token',
-        refreshToken: 'refresh_token',
-        clientId: 'client_id',
-        resource: 'resource',
-        scopes: ['read', 'register', 'manage'],
-      },
-      fetchFunction // Always passing `fetchFunction` since Jest has no `fetch()`
-    );
+    const tokenResponse = await fetchTokenByRefreshToken({
+      tokenEndPoint: 'https://logto.dev/oidc/token',
+      refreshToken: 'refresh_token',
+      clientId: 'client_id',
+      resource: 'resource',
+      scopes: ['read', 'register', 'manage'],
+      requester, // Always passing `fetchFunction` since Jest has no `fetch()`
+    });
 
     expect(tokenResponse).toMatchObject(expectedTokenResponse);
   });
