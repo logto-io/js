@@ -1,6 +1,6 @@
 import qs from 'query-string';
 
-import { withReservedScopes } from '../utils/scopes';
+import { withReservedScopes } from '../utils';
 
 const codeChallengeMethod = 'S256';
 const prompt = 'consent';

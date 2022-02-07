@@ -3,7 +3,7 @@ import camelcaseKeys from 'camelcase-keys';
 import { Except } from 'type-fest';
 
 import { ContentType } from '../consts';
-import { Requester } from '../utils/requester';
+import { Requester } from '../utils';
 
 export interface FetchTokenByRefreshTokenParameters {
   clientId: string;

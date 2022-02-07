@@ -1,7 +1,7 @@
 import { KeysToCamelCase } from '@silverhand/essentials';
 import camelcaseKeys from 'camelcase-keys';
 
-import { Requester } from '../utils/requester';
+import { Requester } from '../utils';
 
 type OidcConfigSnakeCaseResponse = {
   authorization_endpoint: string;

@@ -1,5 +1,5 @@
 import { ContentType } from '../consts';
-import { Requester } from '../utils/requester';
+import { Requester } from '../utils';
 
 export const revoke = async (
   revocationEndpoint: string,
