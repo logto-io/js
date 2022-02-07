@@ -14,7 +14,7 @@ describe('fetch access token by providing valid refresh token', () => {
       accessToken: 'access_token',
       refreshToken: 'refresh_token',
       idToken: 'id_token',
-      scope: ['read', 'register', 'manage'],
+      scope: 'read register manage',
       expiresIn: 3600,
     };
 
@@ -26,7 +26,7 @@ describe('fetch access token by providing valid refresh token', () => {
         tokenEndPoint: 'https://logto.dev/oidc/token',
         refreshToken: 'refresh_token',
         resource: 'resource',
-        scope: ['read', 'register', 'manage'],
+        scopes: ['read', 'register', 'manage'],
       },
       fetchFunction // Always passing `fetchFunction` since Jest has no `fetch()`
     );
