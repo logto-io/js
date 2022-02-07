@@ -2,12 +2,12 @@ import qs from 'query-string';
 
 import { LogtoError } from './errors';
 
-interface AuthenticationResult {
+type AuthenticationResult = {
   code?: string;
   state?: string;
   error?: string;
   error_description?: string;
-}
+};
 
 const parseCallbackUri = (url: string): AuthenticationResult => {
   const [, queryString = ''] = url.split('?');
