@@ -2,10 +2,10 @@ import { isNode } from '@silverhand/essentials';
 
 import { LogtoError, LogtoRequestError } from './errors';
 
-interface LogtoRequestErrorBody {
+type LogtoRequestErrorBody = {
   code: string;
   message: string;
-}
+};
 
 export const createRequester = (fetchFunction?: typeof fetch) => {
   if (!fetchFunction && isNode()) {

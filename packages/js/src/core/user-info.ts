@@ -1,4 +1,4 @@
-import { Requester } from '../utils/requester';
+import { Requester } from '../utils';
 
 export type UserInfoResponse = {
   sub: string;
