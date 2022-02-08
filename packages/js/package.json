@@ -23,7 +23,6 @@
     "jose": "^4.3.8",
     "js-base64": "^3.7.2",
     "lodash.get": "^4.4.2",
-    "query-string": "^7.0.1",
     "superstruct": "^0.15.3"
   },
   "devDependencies": {

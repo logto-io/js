@@ -1,5 +1,4 @@
-import qs from 'query-string';
-
+import { QueryKey } from '../consts';
 import { withReservedScopes } from '../utils';
 
 const codeChallengeMethod = 'S256';
@@ -24,15 +23,21 @@ export const generateSignInUri = ({
   state,
   scopes,
   resources,
-}: SignInUriParameters) =>
-  `${authorizationEndpoint}?${qs.stringify({
-    client_id: clientId,
-    redirect_uri: redirectUri,
-    code_challenge: codeChallenge,
-    code_challenge_method: codeChallengeMethod,
-    state,
-    response_type: responseType,
-    prompt,
-    scope: withReservedScopes(scopes),
-    resource: resources ?? [],
-  })}`;
+}: SignInUriParameters) => {
+  const urlSearchParameters = new URLSearchParams({
+    [QueryKey.ClientId]: clientId,
+    [QueryKey.RedirectUri]: redirectUri,
+    [QueryKey.CodeChallenge]: codeChallenge,
+    [QueryKey.CodeChallengeMethod]: codeChallengeMethod,
+    [QueryKey.State]: state,
+    [QueryKey.ResponseType]: responseType,
+    [QueryKey.Prompt]: prompt,
+    [QueryKey.Scope]: withReservedScopes(scopes),
+  });
+
+  for (const resource of resources ?? []) {
+    urlSearchParameters.append(QueryKey.Resource, resource);
+  }
+
+  return `${authorizationEndpoint}?${urlSearchParameters.toString()}`;
+};

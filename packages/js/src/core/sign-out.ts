@@ -1,4 +1,4 @@
-import qs from 'query-string';
+import { QueryKey } from '../consts';
 
 type SignOutUriParameters = {
   endSessionEndpoint: string;
@@ -11,15 +11,11 @@ export const generateSignOutUri = ({
   idToken,
   postLogoutRedirectUri,
 }: SignOutUriParameters) => {
-  const queryString = qs.stringify(
-    {
-      id_token_hint: idToken,
-      post_logout_redirect_uri: postLogoutRedirectUri,
-    },
-    {
-      skipNull: true,
-    }
-  );
+  const urlSearchParameters = new URLSearchParams({ id_token_hint: idToken });
 
-  return `${endSessionEndpoint}?${queryString}`;
+  if (postLogoutRedirectUri) {
+    urlSearchParameters.append(QueryKey.PostLogoutRedirectUri, postLogoutRedirectUri);
+  }
+
+  return `${endSessionEndpoint}?${urlSearchParameters.toString()}`;
 };
