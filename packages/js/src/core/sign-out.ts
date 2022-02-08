@@ -11,7 +11,7 @@ export const generateSignOutUri = ({
   idToken,
   postLogoutRedirectUri,
 }: SignOutUriParameters) => {
-  const urlSearchParameters = new URLSearchParams({ id_token_hint: idToken });
+  const urlSearchParameters = new URLSearchParams({ [QueryKey.IdTokenHint]: idToken });
 
   if (postLogoutRedirectUri) {
     urlSearchParameters.append(QueryKey.PostLogoutRedirectUri, postLogoutRedirectUri);

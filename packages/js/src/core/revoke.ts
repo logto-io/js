@@ -1,4 +1,4 @@
-import { ContentType } from '../consts';
+import { ContentType, QueryKey } from '../consts';
 import { Requester } from '../utils';
 
 export const revoke = async (
@@ -10,5 +10,8 @@ export const revoke = async (
   requester<void>(revocationEndpoint, {
     method: 'POST',
     headers: ContentType.formUrlEncoded,
-    body: new URLSearchParams({ client_id: clientId, token }),
+    body: new URLSearchParams({
+      [QueryKey.ClientId]: clientId,
+      [QueryKey.Token]: token,
+    }),
   });

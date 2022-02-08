@@ -17,6 +17,7 @@ export enum QueryKey {
   ErrorDescription = 'error_description',
   GrantType = 'grant_type',
   IdToken = 'id_token',
+  IdTokenHint = 'id_token_hint',
   PostLogoutRedirectUri = 'post_logout_redirect_uri',
   Prompt = 'prompt',
   RedirectUri = 'redirect_uri',
@@ -25,4 +26,5 @@ export enum QueryKey {
   ResponseType = 'response_type',
   Scope = 'scope',
   State = 'state',
+  Token = 'token',
 }
