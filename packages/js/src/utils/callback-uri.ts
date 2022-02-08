@@ -1,24 +1,10 @@
-import { conditional } from '@silverhand/essentials';
-
+import { QueryKey } from '../consts';
 import { LogtoError } from './errors';
 
-type AuthenticationResult = {
-  code?: string;
-  state?: string;
-  error?: string;
-  error_description?: string;
-};
+const parseUriParameters = (uri: string) => {
+  const [, queryString = ''] = uri.split('?');
 
-const parseCallbackUri = (url: string): AuthenticationResult => {
-  const [, queryString = ''] = url.split('?');
-  const urlSearchParameters = new URLSearchParams(queryString);
-
-  return {
-    code: conditional(urlSearchParameters.get('code')),
-    state: conditional(urlSearchParameters.get('state')),
-    error: conditional(urlSearchParameters.get('error')),
-    error_description: conditional(urlSearchParameters.get('error_description')),
-  };
+  return new URLSearchParams(queryString);
 };
 
 export const verifyAndParseCodeFromCallbackUri = (
@@ -29,18 +15,19 @@ export const verifyAndParseCodeFromCallbackUri = (
   if (!callbackUri.startsWith(redirectUri)) {
     throw new LogtoError('callback_uri_verification.redirect_uri_mismatched');
   }
+  const uriParameters = parseUriParameters(callbackUri);
 
-  const authenticationResult = parseCallbackUri(callbackUri);
-  const {
-    code,
-    state: stateFromCallbackUri,
-    error,
-    error_description: errorDescription,
-  } = authenticationResult;
+  const error = uriParameters.get(QueryKey.Error);
+  const errorDescription = uriParameters.get(QueryKey.ErrorDescription);
 
   if (error) {
-    throw new LogtoError('callback_uri_verification.error_found', { error, errorDescription });
+    throw new LogtoError('callback_uri_verification.error_found', {
+      error,
+      errorDescription,
+    });
   }
+
+  const stateFromCallbackUri = uriParameters.get(QueryKey.State);
 
   if (!stateFromCallbackUri) {
     throw new LogtoError('callback_uri_verification.missing_state');
@@ -49,6 +36,8 @@ export const verifyAndParseCodeFromCallbackUri = (
   if (stateFromCallbackUri !== state) {
     throw new LogtoError('callback_uri_verification.state_mismatched');
   }
+
+  const code = uriParameters.get(QueryKey.Code);
 
   if (!code) {
     throw new LogtoError('callback_uri_verification.missing_code');
