@@ -1,4 +1,4 @@
-import qs from 'query-string';
+import { conditional } from '@silverhand/essentials';
 
 import { LogtoError } from './errors';
 
@@ -11,8 +11,14 @@ type AuthenticationResult = {
 
 const parseCallbackUri = (url: string): AuthenticationResult => {
   const [, queryString = ''] = url.split('?');
+  const urlSearchParameters = new URLSearchParams(queryString);
 
-  return qs.parse(queryString);
+  return {
+    code: conditional(urlSearchParameters.get('code')),
+    state: conditional(urlSearchParameters.get('state')),
+    error: conditional(urlSearchParameters.get('error')),
+    error_description: conditional(urlSearchParameters.get('error_description')),
+  };
 };
 
 export const verifyAndParseCodeFromCallbackUri = (
