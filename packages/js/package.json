@@ -2,6 +2,7 @@
   "name": "@logto/js",
   "version": "0.0.1",
   "main": "lib/index.js",
+  "exports": "./lib/index.js",
   "typings": "lib/index.d.ts",
   "license": "MPL-2.0",
   "scripts": {
