@@ -22,6 +22,7 @@ importers:
     specifiers:
       '@logto/js': ^0.0.1
       '@silverhand/eslint-config': ^0.7.0
+      '@silverhand/essentials': ^1.1.5
       '@silverhand/ts-config': ^0.7.0
       codecov: ^3.8.3
       eslint: ^8.8.0
@@ -37,6 +38,7 @@ importers:
       webpack-cli: ^4.9.1
     dependencies:
       '@logto/js': link:../js
+      '@silverhand/essentials': 1.1.5
     devDependencies:
       '@silverhand/eslint-config': 0.7.0_93c6ce1132bfea333665fcd5223669e0
       '@silverhand/ts-config': 0.7.0_typescript@4.4.4
@@ -4422,7 +4424,7 @@ packages:
       webpack-cli: 4.x.x
     dependencies:
       envinfo: 7.8.1
-      webpack-cli: 4.9.1_51b97b2ad784f46f7873debea239ad34
+      webpack-cli: 4.9.1_ffb4ca0d42777c3f95985c39e374aaf9
     dev: true
 
   /@webpack-cli/serve/1.6.0_webpack-cli@4.9.1:
@@ -4434,7 +4436,7 @@ packages:
       webpack-dev-server:
         optional: true
     dependencies:
-      webpack-cli: 4.9.1_51b97b2ad784f46f7873debea239ad34
+      webpack-cli: 4.9.1_ffb4ca0d42777c3f95985c39e374aaf9
     dev: true
 
   /@xtuc/ieee754/1.2.0:
