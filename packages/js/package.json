@@ -15,8 +15,8 @@
     "test": "jest",
     "test:coverage": "jest --silent --env=jsdom && jest --silent --coverage",
     "test:report": "codecov -F js",
-    "prepublish": "npm run build && npm run package",
-    "report": "WITH_REPORT=true npm run package"
+    "prepublish": "pnpm build && pnpm package",
+    "report": "WITH_REPORT=true pnpm package"
   },
   "dependencies": {
     "@silverhand/essentials": "^1.1.5",

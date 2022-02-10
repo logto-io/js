@@ -15,8 +15,8 @@
     "test": "jest",
     "test:coverage": "jest --silent --coverage",
     "test:report": "codecov -F browser",
-    "prepublish": "npm run build && npm run package",
-    "report": "WITH_REPORT=true npm run package"
+    "prepublish": "pnpm build && pnpm package",
+    "report": "WITH_REPORT=true pnpm package"
   },
   "dependencies": {
     "@logto/js": "^0.0.1"
