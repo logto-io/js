@@ -1,8 +1,17 @@
-import { TODO } from './index';
+import { createRequester } from '@logto/js';
 
-describe('TODO', () => {
-  test('TODO', () => {
-    const todo: TODO = 'TODO';
-    expect(todo).toEqual('TODO');
+import LogtoClient from './index';
+
+describe('LogtoClient', () => {
+  test('constructor', () => {
+    expect(
+      () =>
+        new LogtoClient({
+          endpoint: 'https://logto.dev',
+          clientId: 'client_id_value',
+          usingPersistStorage: false,
+          requester: createRequester(),
+        })
+    ).not.toThrow();
   });
 });
