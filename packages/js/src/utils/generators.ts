@@ -28,6 +28,7 @@ export const generateCodeVerifier = () => generateRandomString();
  */
 export const generateCodeChallenge = async (codeVerifier: string): Promise<string> => {
   const encodedCodeVerifier = new TextEncoder().encode(codeVerifier);
+  // TODO: crypto related to linear issue LOG-1517
   const codeChallenge = new Uint8Array(await crypto.subtle.digest('SHA-256', encodedCodeVerifier));
 
   return fromUint8Array(codeChallenge, true);
