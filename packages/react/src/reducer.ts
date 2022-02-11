@@ -44,6 +44,7 @@ export const reducer = (state: AuthState, action: Action): AuthState => {
     return { ...state, isAuthenticated: false };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (action.type === 'ERROR') {
     const { error } = action.payload;
 

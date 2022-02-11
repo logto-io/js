@@ -28,7 +28,7 @@ export const verifyIdToken = async (
 ) => {
   const result = await jwtVerify(idToken, jwks, { audience: clientId, issuer });
 
-  if (Math.abs((result?.payload?.iat ?? 0) - Date.now() / 1000) > issuedAtTimeTolerance) {
+  if (Math.abs((result.payload.iat ?? 0) - Date.now() / 1000) > issuedAtTimeTolerance) {
     throw new LogtoError('id_token.invalid_iat');
   }
 };
