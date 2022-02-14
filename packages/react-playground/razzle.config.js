@@ -37,7 +37,7 @@ module.exports = {
     const config = {
       ...jestConfig,
       setupFilesAfterEnv: ['./jest.setup.js'],
-      coveragePathIgnorePatterns: ['/node_modules/', '/lib/'],
+      collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}', '!<rootDir>/node_modules/'],
       coverageReporters: ['text-summary', 'lcov'],
     };
 

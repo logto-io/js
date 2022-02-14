@@ -1,5 +1,5 @@
 module.exports = {
-  coveragePathIgnorePatterns: ['/node_modules/', '/lib/'],
+  collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}', '!<rootDir>/node_modules/'],
   coverageReporters: ['text-summary', 'lcov'],
   moduleFileExtensions: ['ts', 'js'],
   setupFilesAfterEnv: ['./jest.setup.js', 'jest-matcher-specific-error'],
