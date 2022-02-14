@@ -40,6 +40,10 @@ export default class LogtoClient {
     this.logtoConfig = logtoConfig;
   }
 
+  public get isAuthenticated() {
+    return Boolean(this.idToken);
+  }
+
   public async signIn(redirectUri: string) {
     const { clientId, resources, scopes: customScopes } = this.logtoConfig;
     const oidcConfig = await this.getOidcConfig();
