@@ -24,12 +24,16 @@ importers:
       '@silverhand/eslint-config': ^0.7.0
       '@silverhand/essentials': ^1.1.5
       '@silverhand/ts-config': ^0.7.0
+      '@types/lodash.get': ^4.4.6
       codecov: ^3.8.3
       eslint: ^8.8.0
       jest: ^27.0.6
       jest-location-mock: ^1.0.9
+      jest-matcher-specific-error: ^1.0.0
       lint-staged: ^12.3.3
+      lodash.get: ^4.4.2
       prettier: ^2.3.2
+      superstruct: ^0.15.3
       text-encoder: ^0.0.4
       ts-jest: ^27.0.4
       ts-loader: ^9.2.6
@@ -40,13 +44,17 @@ importers:
     dependencies:
       '@logto/js': link:../js
       '@silverhand/essentials': 1.1.5
+      lodash.get: 4.4.2
+      superstruct: 0.15.3
     devDependencies:
       '@silverhand/eslint-config': 0.7.0_93c6ce1132bfea333665fcd5223669e0
       '@silverhand/ts-config': 0.7.0_typescript@4.4.4
+      '@types/lodash.get': 4.4.6
       codecov: 3.8.3
       eslint: 8.8.0
       jest: 27.0.6
       jest-location-mock: 1.0.9
+      jest-matcher-specific-error: 1.0.0
       lint-staged: 12.3.3
       prettier: 2.3.2
       text-encoder: 0.0.4

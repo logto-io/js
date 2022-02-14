@@ -8,6 +8,10 @@ import {
   Requester,
   withReservedScopes,
 } from '@logto/js';
+import { Optional } from '@silverhand/essentials';
+import { assert, Infer, string, type } from 'superstruct';
+
+import { LogtoClientError } from './errors';
 
 const discoveryPath = '/oidc/.well-known/openid-configuration';
 const logtoStorageItemKeyPrefix = `logto`;
@@ -29,19 +33,57 @@ export type AccessToken = {
   expiresAt: number; // Unix Timestamp in seconds
 };
 
+export const LogtoSignInSessionItemSchema = type({
+  redirectUri: string(),
+  codeVerifier: string(),
+  state: string(),
+});
+
+export type LogtoSignInSessionItem = Infer<typeof LogtoSignInSessionItemSchema>;
+
 export default class LogtoClient {
   protected accessTokenMap = new Map<string, AccessToken>();
   protected refreshToken?: string;
   protected idToken?: string;
   protected logtoConfig: LogtoConfig;
   protected oidcConfig?: OidcConfigResponse;
+  protected logtoSignInSessionKey: string;
 
   constructor(logtoConfig: LogtoConfig) {
     this.logtoConfig = logtoConfig;
+    this.logtoSignInSessionKey = getLogtoKey(logtoConfig.clientId);
   }
 
   public get isAuthenticated() {
     return Boolean(this.idToken);
+  }
+
+  protected get signInSession(): Optional<LogtoSignInSessionItem> {
+    const jsonItem = sessionStorage.getItem(this.logtoSignInSessionKey);
+
+    if (!jsonItem) {
+      return undefined;
+    }
+
+    try {
+      const item: unknown = JSON.parse(jsonItem);
+      assert(item, LogtoSignInSessionItemSchema);
+
+      return item;
+    } catch (error: unknown) {
+      throw new LogtoClientError('sign_in_session.invalid', error);
+    }
+  }
+
+  protected set signInSession(logtoSignInSessionItem: Optional<LogtoSignInSessionItem>) {
+    if (!logtoSignInSessionItem) {
+      sessionStorage.removeItem(this.logtoSignInSessionKey);
+
+      return;
+    }
+
+    const jsonItem = JSON.stringify(logtoSignInSessionItem);
+    sessionStorage.setItem(this.logtoSignInSessionKey, jsonItem);
   }
 
   public async signIn(redirectUri: string) {
@@ -64,7 +106,7 @@ export default class LogtoClient {
       resources,
     });
 
-    // TODO: save redirectUri, codeVerifier and state
+    this.signInSession = { redirectUri, codeVerifier, state };
     window.location.assign(signInUri);
   }
 
@@ -78,3 +120,5 @@ export default class LogtoClient {
     return this.oidcConfig;
   }
 }
+
+export * from './errors';
