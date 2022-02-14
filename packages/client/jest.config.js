@@ -7,6 +7,6 @@ module.exports = {
   moduleFileExtensions: ['ts', 'tsx', 'js'],
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['./jest.setup.js'],
-  coveragePathIgnorePatterns: ['/node_modules/', '/lib/'],
+  collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}', '!<rootDir>/node_modules/'],
   coverageReporters: ['text-summary', 'lcov'],
 };
