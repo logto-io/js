@@ -2,6 +2,7 @@
   "name": "@logto/js",
   "version": "0.0.1",
   "main": "lib/index.js",
+  "exports": "./lib/index.js",
   "typings": "lib/index.d.ts",
   "license": "MPL-2.0",
   "scripts": {
@@ -14,8 +15,8 @@
     "test": "jest",
     "test:coverage": "jest --silent --env=jsdom && jest --silent --coverage",
     "test:report": "codecov -F js",
-    "prepublish": "npm run build && npm run package",
-    "report": "WITH_REPORT=true npm run package"
+    "prepublish": "pnpm build && pnpm package",
+    "report": "WITH_REPORT=true pnpm package"
   },
   "dependencies": {
     "@silverhand/essentials": "^1.1.5",

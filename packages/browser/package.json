@@ -2,6 +2,7 @@
   "name": "@logto/browser",
   "version": "0.0.1",
   "main": "lib/index.js",
+  "exports": "./lib/index.js",
   "typings": "lib/index.d.ts",
   "license": "MPL-2.0",
   "scripts": {
@@ -14,11 +15,12 @@
     "test": "jest",
     "test:coverage": "jest --silent --coverage",
     "test:report": "codecov -F browser",
-    "prepublish": "npm run build && npm run package",
-    "report": "WITH_REPORT=true npm run package"
+    "prepublish": "pnpm build && pnpm package",
+    "report": "WITH_REPORT=true pnpm package"
   },
   "dependencies": {
-    "@logto/js": "^0.0.1"
+    "@logto/js": "^0.0.1",
+    "@silverhand/essentials": "^1.1.5"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "^0.7.0",
@@ -26,6 +28,7 @@
     "codecov": "^3.8.3",
     "eslint": "^8.8.0",
     "jest": "^27.0.6",
+    "jest-location-mock": "^1.0.9",
     "lint-staged": "^12.3.3",
     "prettier": "^2.3.2",
     "text-encoder": "^0.0.4",

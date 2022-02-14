@@ -1,7 +1,7 @@
 import { QueryKey } from '../consts';
 import { LogtoError } from './errors';
 
-const parseUriParameters = (uri: string) => {
+export const parseUriParameters = (uri: string) => {
   const [, queryString = ''] = uri.split('?');
 
   return new URLSearchParams(queryString);
