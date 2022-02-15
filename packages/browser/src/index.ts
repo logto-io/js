@@ -3,9 +3,11 @@ import {
   generateCodeChallenge,
   generateCodeVerifier,
   generateSignInUri,
+  generateSignOutUri,
   generateState,
   OidcConfigResponse,
   Requester,
+  revoke,
   withReservedScopes,
 } from '@logto/js';
 
@@ -66,6 +68,35 @@ export default class LogtoClient {
 
     // TODO: save redirectUri, codeVerifier and state
     window.location.assign(signInUri);
+  }
+
+  public async signOut(postLogoutRedirectUri?: string) {
+    if (!this.idToken || !this.oidcConfig) {
+      return;
+    }
+
+    const { clientId, requester } = this.logtoConfig;
+    const { endSessionEndpoint, revocationEndpoint } = this.oidcConfig;
+    const logtoKey = getLogtoKey(clientId);
+
+    if (this.refreshToken) {
+      void revoke(revocationEndpoint, clientId, this.refreshToken, requester);
+    }
+
+    const url = generateSignOutUri({
+      endSessionEndpoint,
+      postLogoutRedirectUri,
+      idToken: this.idToken,
+    });
+
+    localStorage.removeItem(`${logtoKey}:idToken`);
+    localStorage.removeItem(`${logtoKey}:refreshToken`);
+
+    this.accessTokenMap.clear();
+    this.idToken = undefined;
+    this.refreshToken = undefined;
+
+    window.location.assign(url);
   }
 
   protected async getOidcConfig(): Promise<OidcConfigResponse> {
