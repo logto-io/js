@@ -134,9 +134,9 @@ describe('LogtoClient', () => {
 
     test('should not block sign out flow even if token revocation is failed', async () => {
       const logtoClient = new LogtoClient({ endpoint, clientId }, failingRequester);
-      await logtoClient.signOut();
 
-      expect(async () => logtoClient.signOut()).not.toThrow();
+      await expect(logtoClient.signOut()).resolves.not.toThrow();
+      expect(failingRequester).toBeCalledTimes(1);
       expect(localStorage.getItem(idTokenStorageKey)).toBeNull();
       expect(localStorage.getItem(refreshTokenStorageKey)).toBeNull();
       expect(window.location.toString()).toEqual(

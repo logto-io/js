@@ -1,21 +1,28 @@
 import {
   createRequester,
+  decodeIdToken,
   fetchOidcConfig,
+  fetchTokenByRefreshToken,
+  fetchUserInfo as fetchUserInfoCoreFunction,
   generateCodeChallenge,
   generateCodeVerifier,
   generateSignInUri,
   generateSignOutUri,
   generateState,
+  IdTokenClaims,
   OidcConfigResponse,
   Requester,
   revoke,
+  UserInfoResponse,
+  verifyIdToken as verifyIdTokenCoreFunction,
   withReservedScopes,
 } from '@logto/js';
 import { Nullable, Optional } from '@silverhand/essentials';
+import { createRemoteJWKSet } from 'jose';
 import { assert, Infer, string, type } from 'superstruct';
 
 import { LogtoClientError } from './errors';
-import { getDiscoveryEndpoint, getLogtoKey } from './utils';
+import { buildAccessTokenKey, getDiscoveryEndpoint, getLogtoKey } from './utils';
 
 export * from './errors';
 
@@ -90,6 +97,75 @@ export default class LogtoClient {
     sessionStorage.setItem(this.logtoStorageKey, jsonItem);
   }
 
+  public async getAccessToken(resource?: string): Promise<Optional<string>> {
+    if (!this.idToken) {
+      throw new LogtoClientError('not_authenticated');
+    }
+
+    const accessTokenKey = buildAccessTokenKey(resource);
+    const accessToken = this.accessTokenMap.get(accessTokenKey);
+
+    if (accessToken && accessToken.expiresAt > Date.now()) {
+      return accessToken.token;
+    }
+
+    // Token expired, remove it from the map
+    if (accessToken) {
+      this.accessTokenMap.delete(accessTokenKey);
+    }
+
+    // Fetch new access token by refresh token
+    const { clientId } = this.logtoConfig;
+
+    if (!this.refreshToken) {
+      throw new LogtoClientError('not_authenticated');
+    }
+
+    try {
+      const { tokenEndpoint } = await this.getOidcConfig();
+      const { accessToken, refreshToken, idToken, scope, expiresIn } =
+        await fetchTokenByRefreshToken(
+          { clientId, tokenEndpoint, refreshToken: this.refreshToken, resource },
+          this.requester
+        );
+      this.accessTokenMap.set(accessTokenKey, {
+        token: accessToken,
+        scope,
+        expiresAt: Math.round(Date.now() / 1000) + expiresIn,
+      });
+
+      localStorage.setItem(`${this.logtoStorageKey}:refreshToken`, refreshToken);
+
+      if (idToken) {
+        await this.verifyIdToken(idToken);
+        localStorage.setItem(`${this.logtoStorageKey}:idToken`, idToken);
+      }
+
+      return accessToken;
+    } catch (error: unknown) {
+      throw new LogtoClientError('get_access_token_by_refresh_token_failed', error);
+    }
+  }
+
+  public getIdTokenClaims(): IdTokenClaims {
+    if (!this.idToken) {
+      throw new LogtoClientError('not_authenticated');
+    }
+
+    return decodeIdToken(this.idToken);
+  }
+
+  public async fetchUserInfo(): Promise<UserInfoResponse> {
+    const { authorizationEndpoint } = await this.getOidcConfig();
+    const accessToken = await this.getAccessToken();
+
+    if (!accessToken) {
+      throw new LogtoClientError('fetch_user_info_failed');
+    }
+
+    return fetchUserInfoCoreFunction(authorizationEndpoint, accessToken, this.requester);
+  }
+
   public async signIn(redirectUri: string) {
     const { clientId, resources, scopes: customScopes } = this.logtoConfig;
     const { authorizationEndpoint } = await this.getOidcConfig();
@@ -114,7 +190,7 @@ export default class LogtoClient {
 
   public async signOut(postLogoutRedirectUri?: string) {
     if (!this.idToken) {
-      return;
+      throw new LogtoClientError('not_authenticated');
     }
 
     const { clientId } = this.logtoConfig;
@@ -144,7 +220,7 @@ export default class LogtoClient {
     window.location.assign(url);
   }
 
-  protected async getOidcConfig(): Promise<OidcConfigResponse> {
+  private async getOidcConfig(): Promise<OidcConfigResponse> {
     if (!this.oidcConfig) {
       const { endpoint } = this.logtoConfig;
       const discoveryEndpoint = getDiscoveryEndpoint(endpoint);
@@ -152,5 +228,21 @@ export default class LogtoClient {
     }
 
     return this.oidcConfig;
+  }
+
+  private async verifyIdToken(idToken: string) {
+    const { clientId } = this.logtoConfig;
+    const { issuer, jwksUri } = await this.getOidcConfig();
+
+    try {
+      await verifyIdTokenCoreFunction(
+        idToken,
+        clientId,
+        issuer,
+        createRemoteJWKSet(new URL(jwksUri))
+      );
+    } catch (error: unknown) {
+      throw new LogtoClientError('invalid_id_token', error);
+    }
   }
 }
