@@ -13,6 +13,8 @@ type OidcConfigSnakeCaseResponse = {
   issuer: string;
 };
 
+export const discoveryPath = '/oidc/.well-known/openid-configuration';
+
 export type OidcConfigResponse = KeysToCamelCase<OidcConfigSnakeCaseResponse>;
 
 export const fetchOidcConfig = async (

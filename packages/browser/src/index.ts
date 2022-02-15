@@ -14,11 +14,9 @@ import { Optional } from '@silverhand/essentials';
 import { assert, Infer, string, type } from 'superstruct';
 
 import { LogtoClientError } from './errors';
+import { getDiscoveryEndpoint, getLogtoKey } from './utils';
 
-const discoveryPath = '/oidc/.well-known/openid-configuration';
-const logtoStorageItemKeyPrefix = `logto`;
-
-export const getLogtoKey = (key: string) => `${logtoStorageItemKeyPrefix}:${key}`;
+export * from './errors';
 
 export type LogtoConfig = {
   endpoint: string;
@@ -90,9 +88,7 @@ export default class LogtoClient {
 
   public async signIn(redirectUri: string) {
     const { clientId, resources, scopes: customScopes } = this.logtoConfig;
-    const oidcConfig = await this.getOidcConfig();
-
-    const { authorizationEndpoint } = oidcConfig;
+    const { authorizationEndpoint } = await this.getOidcConfig();
     const codeVerifier = generateCodeVerifier();
     const codeChallenge = await generateCodeChallenge(codeVerifier);
     const state = generateState();
@@ -148,12 +144,10 @@ export default class LogtoClient {
   protected async getOidcConfig(): Promise<OidcConfigResponse> {
     if (!this.oidcConfig) {
       const { endpoint, requester } = this.logtoConfig;
-      const discoveryEndpoint = new URL(discoveryPath, endpoint);
-      this.oidcConfig = await fetchOidcConfig(discoveryEndpoint.toString(), requester);
+      const discoveryEndpoint = getDiscoveryEndpoint(endpoint);
+      this.oidcConfig = await fetchOidcConfig(discoveryEndpoint, requester);
     }
 
     return this.oidcConfig;
   }
 }
-
-export * from './errors';
