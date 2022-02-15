@@ -71,16 +71,20 @@ export default class LogtoClient {
   }
 
   public async signOut(postLogoutRedirectUri?: string) {
-    if (!this.idToken || !this.oidcConfig) {
+    if (!this.idToken) {
       return;
     }
 
     const { clientId, requester } = this.logtoConfig;
-    const { endSessionEndpoint, revocationEndpoint } = this.oidcConfig;
+    const { endSessionEndpoint, revocationEndpoint } = await this.getOidcConfig();
     const logtoKey = getLogtoKey(clientId);
 
     if (this.refreshToken) {
-      void revoke(revocationEndpoint, clientId, this.refreshToken, requester);
+      try {
+        await revoke(revocationEndpoint, clientId, this.refreshToken, requester);
+      } catch {
+        // Do nothing at this point, as we don't want to break the sign out flow even if the revocation is failed
+      }
     }
 
     const url = generateSignOutUri({
