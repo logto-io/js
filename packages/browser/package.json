@@ -2,7 +2,6 @@
   "name": "@logto/browser",
   "version": "0.0.1",
   "main": "lib/index.js",
-  "exports": "./lib/index.js",
   "typings": "lib/index.d.ts",
   "license": "MPL-2.0",
   "scripts": {
@@ -15,8 +14,8 @@
     "test": "jest",
     "test:coverage": "jest --silent --coverage",
     "test:report": "codecov -F browser",
-    "prepublish": "pnpm build && pnpm package",
-    "report": "WITH_REPORT=true pnpm package"
+    "prepublish": "npm run build && npm run package",
+    "report": "WITH_REPORT=true npm run package"
   },
   "dependencies": {
     "@logto/js": "^0.0.1",

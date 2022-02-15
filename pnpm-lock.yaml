@@ -4421,7 +4421,7 @@ packages:
       webpack-cli: 4.x.x
     dependencies:
       webpack: 5.68.0_webpack-cli@4.9.1
-      webpack-cli: 4.9.1_ffb4ca0d42777c3f95985c39e374aaf9
+      webpack-cli: 4.9.1_51b97b2ad784f46f7873debea239ad34
     dev: true
 
   /@webpack-cli/info/1.4.0_webpack-cli@4.9.1:
@@ -4442,7 +4442,7 @@ packages:
       webpack-dev-server:
         optional: true
     dependencies:
-      webpack-cli: 4.9.1_ffb4ca0d42777c3f95985c39e374aaf9
+      webpack-cli: 4.9.1_51b97b2ad784f46f7873debea239ad34
     dev: true
 
   /@xtuc/ieee754/1.2.0:
