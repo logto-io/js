@@ -1,4 +1,5 @@
 import {
+  createRequester,
   fetchOidcConfig,
   generateCodeChallenge,
   generateCodeVerifier,
@@ -24,7 +25,6 @@ export type LogtoConfig = {
   scopes?: string[];
   resources?: string[];
   usingPersistStorage?: boolean;
-  requester: Requester;
 };
 
 export type AccessToken = {
@@ -48,12 +48,14 @@ export default class LogtoClient {
   protected logtoConfig: LogtoConfig;
   protected oidcConfig?: OidcConfigResponse;
   protected logtoStorageKey: string;
+  protected requester: Requester;
 
-  constructor(logtoConfig: LogtoConfig) {
+  constructor(logtoConfig: LogtoConfig, requester = createRequester()) {
     this.logtoConfig = logtoConfig;
     this.logtoStorageKey = getLogtoKey(logtoConfig.clientId);
-    this.idToken = conditional(localStorage.getItem(`${this.logtoStorageKey}:idToken`));
+    this.requester = requester;
     this.refreshToken = conditional(localStorage.getItem(`${this.logtoStorageKey}:refreshToken`));
+    this.idToken = conditional(localStorage.getItem(`${this.logtoStorageKey}:idToken`));
   }
 
   public get isAuthenticated() {
@@ -115,12 +117,12 @@ export default class LogtoClient {
       return;
     }
 
-    const { clientId, requester } = this.logtoConfig;
+    const { clientId } = this.logtoConfig;
     const { endSessionEndpoint, revocationEndpoint } = await this.getOidcConfig();
 
     if (this.refreshToken) {
       try {
-        await revoke(revocationEndpoint, clientId, this.refreshToken, requester);
+        await revoke(revocationEndpoint, clientId, this.refreshToken, this.requester);
       } catch {
         // Do nothing at this point, as we don't want to break the sign out flow even if the revocation is failed
       }
@@ -144,9 +146,9 @@ export default class LogtoClient {
 
   protected async getOidcConfig(): Promise<OidcConfigResponse> {
     if (!this.oidcConfig) {
-      const { endpoint, requester } = this.logtoConfig;
+      const { endpoint } = this.logtoConfig;
       const discoveryEndpoint = getDiscoveryEndpoint(endpoint);
-      this.oidcConfig = await fetchOidcConfig(discoveryEndpoint, requester);
+      this.oidcConfig = await fetchOidcConfig(discoveryEndpoint, this.requester);
     }
 
     return this.oidcConfig;
