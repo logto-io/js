@@ -10,7 +10,7 @@ import {
   revoke,
   withReservedScopes,
 } from '@logto/js';
-import { Optional } from '@silverhand/essentials';
+import { conditional, Optional } from '@silverhand/essentials';
 import { assert, Infer, string, type } from 'superstruct';
 
 import { LogtoClientError } from './errors';
@@ -47,11 +47,13 @@ export default class LogtoClient {
   protected idToken?: string;
   protected logtoConfig: LogtoConfig;
   protected oidcConfig?: OidcConfigResponse;
-  protected logtoSignInSessionKey: string;
+  protected logtoStorageKey: string;
 
   constructor(logtoConfig: LogtoConfig) {
     this.logtoConfig = logtoConfig;
-    this.logtoSignInSessionKey = getLogtoKey(logtoConfig.clientId);
+    this.logtoStorageKey = getLogtoKey(logtoConfig.clientId);
+    this.idToken = conditional(localStorage.getItem(`${this.logtoStorageKey}:idToken`));
+    this.refreshToken = conditional(localStorage.getItem(`${this.logtoStorageKey}:refreshToken`));
   }
 
   public get isAuthenticated() {
@@ -59,7 +61,7 @@ export default class LogtoClient {
   }
 
   protected get signInSession(): Optional<LogtoSignInSessionItem> {
-    const jsonItem = sessionStorage.getItem(this.logtoSignInSessionKey);
+    const jsonItem = sessionStorage.getItem(this.logtoStorageKey);
 
     if (!jsonItem) {
       return undefined;
@@ -77,13 +79,13 @@ export default class LogtoClient {
 
   protected set signInSession(logtoSignInSessionItem: Optional<LogtoSignInSessionItem>) {
     if (!logtoSignInSessionItem) {
-      sessionStorage.removeItem(this.logtoSignInSessionKey);
+      sessionStorage.removeItem(this.logtoStorageKey);
 
       return;
     }
 
     const jsonItem = JSON.stringify(logtoSignInSessionItem);
-    sessionStorage.setItem(this.logtoSignInSessionKey, jsonItem);
+    sessionStorage.setItem(this.logtoStorageKey, jsonItem);
   }
 
   public async signIn(redirectUri: string) {
@@ -115,7 +117,6 @@ export default class LogtoClient {
 
     const { clientId, requester } = this.logtoConfig;
     const { endSessionEndpoint, revocationEndpoint } = await this.getOidcConfig();
-    const logtoKey = getLogtoKey(clientId);
 
     if (this.refreshToken) {
       try {
@@ -131,8 +132,8 @@ export default class LogtoClient {
       idToken: this.idToken,
     });
 
-    localStorage.removeItem(`${logtoKey}:idToken`);
-    localStorage.removeItem(`${logtoKey}:refreshToken`);
+    localStorage.removeItem(`${this.logtoStorageKey}:idToken`);
+    localStorage.removeItem(`${this.logtoStorageKey}:refreshToken`);
 
     this.accessTokenMap.clear();
     this.idToken = undefined;
