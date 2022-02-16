@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@logto/js": "^0.0.1",
-    "@silverhand/essentials": "^1.1.5",
+    "@silverhand/essentials": "^1.1.6",
     "lodash.get": "^4.4.2",
     "superstruct": "^0.15.3"
   },

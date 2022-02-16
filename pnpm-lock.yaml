@@ -22,7 +22,7 @@ importers:
     specifiers:
       '@logto/js': ^0.0.1
       '@silverhand/eslint-config': ^0.7.0
-      '@silverhand/essentials': ^1.1.5
+      '@silverhand/essentials': ^1.1.6
       '@silverhand/ts-config': ^0.7.0
       '@types/lodash.get': ^4.4.6
       codecov: ^3.8.3
@@ -43,7 +43,7 @@ importers:
       webpack-cli: ^4.9.1
     dependencies:
       '@logto/js': link:../js
-      '@silverhand/essentials': 1.1.5
+      '@silverhand/essentials': 1.1.6
       lodash.get: 4.4.2
       superstruct: 0.15.3
     devDependencies:
@@ -93,7 +93,7 @@ importers:
       webpack-bundle-analyzer: ^4.5.0
       webpack-cli: ^4.9.1
     dependencies:
-      '@silverhand/essentials': 1.1.2
+      '@silverhand/essentials': 1.1.6
       jose: 4.1.4
       js-base64: 3.7.2
       nanoid: 3.1.30
@@ -124,7 +124,7 @@ importers:
     specifiers:
       '@peculiar/webcrypto': ^1.1.7
       '@silverhand/eslint-config': ^0.7.0
-      '@silverhand/essentials': ^1.1.5
+      '@silverhand/essentials': ^1.1.6
       '@silverhand/ts-config': ^0.7.0
       '@types/jest': ^26.0.24
       '@types/lodash.get': ^4.4.6
@@ -151,7 +151,7 @@ importers:
       webpack-bundle-analyzer: ^4.5.0
       webpack-cli: ^4.9.1
     dependencies:
-      '@silverhand/essentials': 1.1.5
+      '@silverhand/essentials': 1.1.6
       camelcase-keys: 7.0.1
       jose: 4.3.8
       js-base64: 3.7.2
@@ -3496,16 +3496,8 @@ packages:
       lodash: 4.17.21
     dev: true
 
-  /@silverhand/essentials/1.1.2:
-    resolution: {integrity: sha512-LentlcxRnZ0pOwgH9lGERCrHwhnhoRgP5seHJkJRa9Y5DCAaNTabZ3ihlC7GhA8r7vEJsvRGp9JL7T2a2c6xFA==}
-    engines: {node: '>=14.15.0', pnpm: '>=6'}
-    dependencies:
-      lodash.orderby: 4.6.0
-      lodash.pick: 4.4.0
-    dev: false
-
-  /@silverhand/essentials/1.1.5:
-    resolution: {integrity: sha512-lpOdV/e/5+tvY/RQt6yTsId7MxxhJSShRE0ts8UR4O5Lr32/naFjxl79yoPD8O0ABEnLQbwYlxRks1G+8jxkuA==}
+  /@silverhand/essentials/1.1.6:
+    resolution: {integrity: sha512-Vl57z4HnEW/iSTHlFCPeJDLbg3OegrJy3gg0dbZsZwPifK0O5l5uBnrcpIYIPl3IhLSWw1ZqTyP7QWFpKadpEQ==}
     engines: {node: '>=14.15.0', pnpm: '>=6'}
     dependencies:
       lodash.orderby: 4.6.0
@@ -4438,7 +4430,7 @@ packages:
       webpack-cli: 4.x.x
     dependencies:
       envinfo: 7.8.1
-      webpack-cli: 4.9.1_ffb4ca0d42777c3f95985c39e374aaf9
+      webpack-cli: 4.9.1_51b97b2ad784f46f7873debea239ad34
     dev: true
 
   /@webpack-cli/serve/1.6.0_webpack-cli@4.9.1:
@@ -4450,7 +4442,7 @@ packages:
       webpack-dev-server:
         optional: true
     dependencies:
-      webpack-cli: 4.9.1_ffb4ca0d42777c3f95985c39e374aaf9
+      webpack-cli: 4.9.1_51b97b2ad784f46f7873debea239ad34
     dev: true
 
   /@xtuc/ieee754/1.2.0:

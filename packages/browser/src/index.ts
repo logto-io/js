@@ -11,7 +11,7 @@ import {
   revoke,
   withReservedScopes,
 } from '@logto/js';
-import { conditional, Optional } from '@silverhand/essentials';
+import { Nullable, Optional } from '@silverhand/essentials';
 import { assert, Infer, string, type } from 'superstruct';
 
 import { LogtoClientError } from './errors';
@@ -43,8 +43,8 @@ export type LogtoSignInSessionItem = Infer<typeof LogtoSignInSessionItemSchema>;
 
 export default class LogtoClient {
   protected accessTokenMap = new Map<string, AccessToken>();
-  protected refreshToken?: string;
-  protected idToken?: string;
+  protected refreshToken: Nullable<string>;
+  protected idToken: Nullable<string>;
   protected logtoConfig: LogtoConfig;
   protected oidcConfig?: OidcConfigResponse;
   protected logtoStorageKey: string;
@@ -54,8 +54,8 @@ export default class LogtoClient {
     this.logtoConfig = logtoConfig;
     this.logtoStorageKey = getLogtoKey(logtoConfig.clientId);
     this.requester = requester;
-    this.refreshToken = conditional(localStorage.getItem(`${this.logtoStorageKey}:refreshToken`));
-    this.idToken = conditional(localStorage.getItem(`${this.logtoStorageKey}:idToken`));
+    this.refreshToken = localStorage.getItem(`${this.logtoStorageKey}:refreshToken`);
+    this.idToken = localStorage.getItem(`${this.logtoStorageKey}:idToken`);
   }
 
   public get isAuthenticated() {
@@ -124,7 +124,7 @@ export default class LogtoClient {
       try {
         await revoke(revocationEndpoint, clientId, this.refreshToken, this.requester);
       } catch {
-        // Do nothing at this point, as we don't want to break the sign out flow even if the revocation is failed
+        // Do nothing at this point, as we don't want to break the sign-out flow even if the revocation is failed
       }
     }
 
@@ -138,8 +138,8 @@ export default class LogtoClient {
     localStorage.removeItem(`${this.logtoStorageKey}:refreshToken`);
 
     this.accessTokenMap.clear();
-    this.idToken = undefined;
-    this.refreshToken = undefined;
+    this.refreshToken = null;
+    this.idToken = null;
 
     window.location.assign(url);
   }
