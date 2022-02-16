@@ -19,7 +19,7 @@
     "report": "WITH_REPORT=true pnpm package"
   },
   "dependencies": {
-    "@silverhand/essentials": "^1.1.5",
+    "@silverhand/essentials": "^1.1.6",
     "camelcase-keys": "^7.0.1",
     "jose": "^4.3.8",
     "js-base64": "^3.7.2",
