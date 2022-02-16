@@ -35,16 +35,15 @@ class LogtoClientSignInSessionAccessor extends LogtoClient {
 
 describe('LogtoClient', () => {
   test('constructor', () => {
-    expect(() => new LogtoClient({ endpoint, clientId, requester })).not.toThrow();
+    expect(() => new LogtoClient({ endpoint, clientId }, requester)).not.toThrow();
   });
 
   describe('signInSession', () => {
     test('getter should throw LogtoClientError when signInSession does not contain the required property', () => {
-      const signInSessionAccessor = new LogtoClientSignInSessionAccessor({
-        endpoint,
-        clientId,
-        requester,
-      });
+      const signInSessionAccessor = new LogtoClientSignInSessionAccessor(
+        { endpoint, clientId },
+        requester
+      );
 
       // @ts-expect-error
       signInSessionAccessor.setSignInSessionItem({
@@ -61,11 +60,10 @@ describe('LogtoClient', () => {
     });
 
     test('should be able to set and get the undefined item (for clearing sign-in session)', () => {
-      const signInSessionAccessor = new LogtoClientSignInSessionAccessor({
-        endpoint,
-        clientId,
-        requester,
-      });
+      const signInSessionAccessor = new LogtoClientSignInSessionAccessor(
+        { endpoint, clientId },
+        requester
+      );
 
       // @ts-expect-error
       signInSessionAccessor.setSignInSessionItem();
@@ -73,11 +71,10 @@ describe('LogtoClient', () => {
     });
 
     test('should be able to set and get the correct item', () => {
-      const signInSessionAccessor = new LogtoClientSignInSessionAccessor({
-        endpoint,
-        clientId,
-        requester,
-      });
+      const signInSessionAccessor = new LogtoClientSignInSessionAccessor(
+        { endpoint, clientId },
+        requester
+      );
 
       const logtoSignInSessionItem: LogtoSignInSessionItem = {
         redirectUri,
@@ -92,7 +89,7 @@ describe('LogtoClient', () => {
 
   describe('signIn', () => {
     test('window.location should be correct signInUri', async () => {
-      const logtoClient = new LogtoClient({ endpoint, clientId, requester });
+      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
       await logtoClient.signIn(redirectUri);
       expect(window.location.toString()).toEqual(mockedSignInUri);
     });
