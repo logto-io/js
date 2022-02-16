@@ -124,7 +124,7 @@ export default class LogtoClient {
       try {
         await revoke(revocationEndpoint, clientId, this.refreshToken, this.requester);
       } catch {
-        // Do nothing at this point, as we don't want to break the sign out flow even if the revocation is failed
+        // Do nothing at this point, as we don't want to break the sign-out flow even if the revocation is failed
       }
     }
 
