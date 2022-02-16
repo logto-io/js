@@ -21,7 +21,17 @@ export type FetchTokenByRefreshTokenParameters = {
   scopes?: string[];
 };
 
-type TokenSnakeCaseResponse = {
+type SnakeCaseCodeTokenResponse = {
+  access_token: string;
+  refresh_token: string;
+  id_token: string;
+  scope: string;
+  expires_in: number;
+};
+
+export type CodeTokenResponse = KeysToCamelCase<SnakeCaseCodeTokenResponse>;
+
+type SnakeCaseRefreshTokenTokenResponse = {
   access_token: string;
   refresh_token: string;
   id_token?: string;
@@ -29,7 +39,7 @@ type TokenSnakeCaseResponse = {
   expires_in: number;
 };
 
-export type RefreshTokenTokenResponse = KeysToCamelCase<TokenSnakeCaseResponse>;
+export type RefreshTokenTokenResponse = KeysToCamelCase<SnakeCaseRefreshTokenTokenResponse>;
 
 export const fetchTokenByAuthorizationCode = async (
   {
@@ -41,7 +51,7 @@ export const fetchTokenByAuthorizationCode = async (
     resource,
   }: FetchTokenByAuthorizationCodeParameters,
   requester: Requester
-) => {
+): Promise<CodeTokenResponse> => {
   const parameters = new URLSearchParams();
   parameters.append(QueryKey.ClientId, clientId);
   parameters.append(QueryKey.Code, code);
@@ -53,13 +63,13 @@ export const fetchTokenByAuthorizationCode = async (
     parameters.append(QueryKey.Resource, resource);
   }
 
-  const tokenSnakeCaseResponse = await requester<TokenSnakeCaseResponse>(tokenEndpoint, {
+  const snakeCaseCodeTokenResponse = await requester<SnakeCaseCodeTokenResponse>(tokenEndpoint, {
     method: 'POST',
     headers: ContentType.formUrlEncoded,
     body: parameters,
   });
 
-  return camelcaseKeys(tokenSnakeCaseResponse);
+  return camelcaseKeys(snakeCaseCodeTokenResponse);
 };
 
 export const fetchTokenByRefreshToken = async (
@@ -79,11 +89,14 @@ export const fetchTokenByRefreshToken = async (
     parameters.append(QueryKey.Scope, scopes.join(' '));
   }
 
-  const tokenSnakeCaseResponse = await requester<TokenSnakeCaseResponse>(tokenEndpoint, {
-    method: 'POST',
-    headers: ContentType.formUrlEncoded,
-    body: parameters,
-  });
+  const snakeCaseRefreshTokenTokenResponse = await requester<SnakeCaseRefreshTokenTokenResponse>(
+    tokenEndpoint,
+    {
+      method: 'POST',
+      headers: ContentType.formUrlEncoded,
+      body: parameters,
+    }
+  );
 
-  return camelcaseKeys(tokenSnakeCaseResponse);
+  return camelcaseKeys(snakeCaseRefreshTokenTokenResponse);
 };
