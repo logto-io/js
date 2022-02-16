@@ -1,6 +1,7 @@
 import {
   fetchTokenByAuthorizationCode,
   fetchTokenByRefreshToken,
+  CodeTokenResponse,
   RefreshTokenTokenResponse,
 } from '.';
 
@@ -13,7 +14,7 @@ describe('fetch access token by providing authorization code', () => {
       scope: 'read register',
       expires_in: 3600,
     };
-    const expectedTokenResponse: RefreshTokenTokenResponse = {
+    const expectedTokenResponse: CodeTokenResponse = {
       accessToken: 'access_token_value',
       refreshToken: 'refresh_token_value',
       idToken: 'id_token_value',
