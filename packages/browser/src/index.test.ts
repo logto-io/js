@@ -108,14 +108,14 @@ describe('LogtoClient', () => {
     });
 
     test('should call token revocation endpoint with requester', async () => {
-      const logtoClient = new LogtoClient({ endpoint, clientId, requester });
+      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
       await logtoClient.signOut(postSignOutRedirectUri);
 
       expect(requester).toBeCalledTimes(1);
     });
 
     test('should clear id token and refresh token in local storage', async () => {
-      const logtoClient = new LogtoClient({ endpoint, clientId, requester });
+      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
       await logtoClient.signOut(postSignOutRedirectUri);
 
       expect(localStorage.getItem(idTokenStorageKey)).toBeNull();
@@ -123,7 +123,7 @@ describe('LogtoClient', () => {
     });
 
     test('should redirect to post sign-out URI after signing out', async () => {
-      const logtoClient = new LogtoClient({ endpoint, clientId, requester });
+      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
       await logtoClient.signOut(postSignOutRedirectUri);
       const encodedRedirectUri = encodeURIComponent(postSignOutRedirectUri);
 
@@ -133,7 +133,7 @@ describe('LogtoClient', () => {
     });
 
     test('should not block sign out flow even if token revocation is failed', async () => {
-      const logtoClient = new LogtoClient({ endpoint, clientId, requester: failingRequester });
+      const logtoClient = new LogtoClient({ endpoint, clientId }, failingRequester);
       await logtoClient.signOut();
 
       expect(async () => logtoClient.signOut()).not.toThrow();
