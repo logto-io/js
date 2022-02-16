@@ -41,6 +41,8 @@ export const decodeIdToken = (token: string): IdTokenClaims => {
   }
 
   const json = UrlSafeBase64.decode(encodedPayload);
+  const idTokenClaims: unknown = JSON.parse(json);
+  s.assert(idTokenClaims, IdTokenClaimsSchema);
 
-  return s.create(JSON.parse(json), IdTokenClaimsSchema);
+  return idTokenClaims;
 };
