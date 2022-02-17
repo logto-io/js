@@ -1,7 +1,9 @@
 import {
+  CodeTokenResponse,
   createRequester,
   decodeIdToken,
   fetchOidcConfig,
+  fetchTokenByAuthorizationCode,
   fetchTokenByRefreshToken,
   fetchUserInfo,
   generateCodeChallenge,
@@ -14,10 +16,11 @@ import {
   Requester,
   revoke,
   UserInfoResponse,
+  verifyAndParseCodeFromCallbackUri,
   verifyIdToken,
   withReservedScopes,
 } from '@logto/js';
-import { Nullable, Optional } from '@silverhand/essentials';
+import { Nullable } from '@silverhand/essentials';
 import { createRemoteJWKSet } from 'jose';
 import { assert, Infer, string, type } from 'superstruct';
 
@@ -55,31 +58,33 @@ export const LogtoSignInSessionItemSchema = type({
 export type LogtoSignInSessionItem = Infer<typeof LogtoSignInSessionItemSchema>;
 
 export default class LogtoClient {
-  protected accessTokenMap = new Map<string, AccessToken>();
-  protected refreshToken: Nullable<string>;
-  protected idToken: Nullable<string>;
   protected logtoConfig: LogtoConfig;
   protected oidcConfig?: OidcConfigResponse;
+
   protected logtoStorageKey: string;
   protected requester: Requester;
+
+  protected accessTokenMap = new Map<string, AccessToken>();
+  private _refreshToken: Nullable<string>;
+  private _idToken: Nullable<string>;
 
   constructor(logtoConfig: LogtoConfig, requester = createRequester()) {
     this.logtoConfig = logtoConfig;
     this.logtoStorageKey = buildLogtoKey(logtoConfig.clientId);
     this.requester = requester;
-    this.refreshToken = localStorage.getItem(buildRefreshTokenKey(this.logtoStorageKey));
-    this.idToken = localStorage.getItem(buildIdTokenKey(this.logtoStorageKey));
+    this._refreshToken = localStorage.getItem(buildRefreshTokenKey(this.logtoStorageKey));
+    this._idToken = localStorage.getItem(buildIdTokenKey(this.logtoStorageKey));
   }
 
   public get isAuthenticated() {
     return Boolean(this.idToken);
   }
 
-  protected get signInSession(): Optional<LogtoSignInSessionItem> {
+  protected get signInSession(): Nullable<LogtoSignInSessionItem> {
     const jsonItem = sessionStorage.getItem(this.logtoStorageKey);
 
     if (!jsonItem) {
-      return undefined;
+      return null;
     }
 
     try {
@@ -92,7 +97,7 @@ export default class LogtoClient {
     }
   }
 
-  protected set signInSession(logtoSignInSessionItem: Optional<LogtoSignInSessionItem>) {
+  protected set signInSession(logtoSignInSessionItem: Nullable<LogtoSignInSessionItem>) {
     if (!logtoSignInSessionItem) {
       sessionStorage.removeItem(this.logtoStorageKey);
 
@@ -103,7 +108,43 @@ export default class LogtoClient {
     sessionStorage.setItem(this.logtoStorageKey, jsonItem);
   }
 
-  public async getAccessToken(resource?: string): Promise<Optional<string>> {
+  private get refreshToken() {
+    return this._refreshToken;
+  }
+
+  private set refreshToken(refreshToken: Nullable<string>) {
+    this._refreshToken = refreshToken;
+
+    const refreshTokenKey = buildRefreshTokenKey(this.logtoStorageKey);
+
+    if (!refreshToken) {
+      localStorage.removeItem(refreshTokenKey);
+
+      return;
+    }
+
+    localStorage.setItem(refreshTokenKey, refreshToken);
+  }
+
+  private get idToken() {
+    return this._idToken;
+  }
+
+  private set idToken(idToken: Nullable<string>) {
+    this._idToken = idToken;
+
+    const idTokenKey = buildIdTokenKey(this.logtoStorageKey);
+
+    if (!idToken) {
+      localStorage.removeItem(idTokenKey);
+
+      return;
+    }
+
+    localStorage.setItem(idTokenKey, idToken);
+  }
+
+  public async getAccessToken(resource?: string): Promise<Nullable<string>> {
     if (!this.idToken) {
       throw new LogtoClientError('not_authenticated');
     }
@@ -140,12 +181,10 @@ export default class LogtoClient {
         expiresAt: Math.round(Date.now() / 1000) + expiresIn,
       });
 
-      localStorage.setItem(buildRefreshTokenKey(this.logtoStorageKey), refreshToken);
       this.refreshToken = refreshToken;
 
       if (idToken) {
         await this.verifyIdToken(idToken);
-        localStorage.setItem(buildIdTokenKey(this.logtoStorageKey), idToken);
         this.idToken = idToken;
       }
 
@@ -196,6 +235,34 @@ export default class LogtoClient {
     window.location.assign(signInUri);
   }
 
+  public async handleSignInCallback(callbackUri: string) {
+    const { signInSession, logtoConfig, requester } = this;
+
+    if (!signInSession) {
+      throw new LogtoClientError('sign_in_session.not_found');
+    }
+
+    const { redirectUri, state, codeVerifier } = signInSession;
+    const code = verifyAndParseCodeFromCallbackUri(callbackUri, redirectUri, state);
+
+    const { clientId } = logtoConfig;
+    const { tokenEndpoint } = await this.getOidcConfig();
+    const codeTokenResponse = await fetchTokenByAuthorizationCode(
+      {
+        clientId,
+        tokenEndpoint,
+        redirectUri,
+        codeVerifier,
+        code,
+      },
+      requester
+    );
+
+    await this.verifyIdToken(codeTokenResponse.idToken);
+
+    this.saveCodeToken(codeTokenResponse);
+  }
+
   public async signOut(postLogoutRedirectUri?: string) {
     if (!this.idToken) {
       throw new LogtoClientError('not_authenticated');
@@ -217,9 +284,6 @@ export default class LogtoClient {
       postLogoutRedirectUri,
       idToken: this.idToken,
     });
-
-    localStorage.removeItem(buildRefreshTokenKey(this.logtoStorageKey));
-    localStorage.removeItem(buildIdTokenKey(this.logtoStorageKey));
 
     this.accessTokenMap.clear();
     this.refreshToken = null;
@@ -247,5 +311,21 @@ export default class LogtoClient {
     } catch (error: unknown) {
       throw new LogtoClientError('invalid_id_token', error);
     }
+  }
+
+  private saveCodeToken({
+    refreshToken,
+    idToken,
+    scope,
+    accessToken,
+    expiresIn,
+  }: CodeTokenResponse) {
+    this.refreshToken = refreshToken;
+    this.idToken = idToken;
+
+    // NOTE: Will add scope to accessTokenKey when needed. (Linear issue LOG-1589)
+    const accessTokenKey = buildAccessTokenKey();
+    const expiresAt = Date.now() / 1000 + expiresIn;
+    this.accessTokenMap.set(accessTokenKey, { token: accessToken, scope, expiresAt });
   }
 }

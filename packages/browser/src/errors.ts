@@ -4,6 +4,7 @@ import get from 'lodash.get';
 const logtoClientErrorCodes = Object.freeze({
   sign_in_session: {
     invalid: 'Invalid sign-in session.',
+    not_found: 'Sign-in session not found.',
   },
   not_authenticated: 'Not authenticated.',
   get_access_token_by_refresh_token_failed: 'Failed to get access token by refresh token.',
