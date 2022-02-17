@@ -3,7 +3,7 @@ import {
   decodeIdToken,
   fetchOidcConfig,
   fetchTokenByRefreshToken,
-  fetchUserInfo as fetchUserInfoCoreFunction,
+  fetchUserInfo,
   generateCodeChallenge,
   generateCodeVerifier,
   generateSignInUri,
@@ -14,7 +14,7 @@ import {
   Requester,
   revoke,
   UserInfoResponse,
-  verifyIdToken as verifyIdTokenCoreFunction,
+  verifyIdToken,
   withReservedScopes,
 } from '@logto/js';
 import { Nullable, Optional } from '@silverhand/essentials';
@@ -163,7 +163,7 @@ export default class LogtoClient {
       throw new LogtoClientError('fetch_user_info_failed');
     }
 
-    return fetchUserInfoCoreFunction(authorizationEndpoint, accessToken, this.requester);
+    return fetchUserInfo(authorizationEndpoint, accessToken, this.requester);
   }
 
   public async signIn(redirectUri: string) {
@@ -235,12 +235,7 @@ export default class LogtoClient {
     const { issuer, jwksUri } = await this.getOidcConfig();
 
     try {
-      await verifyIdTokenCoreFunction(
-        idToken,
-        clientId,
-        issuer,
-        createRemoteJWKSet(new URL(jwksUri))
-      );
+      await verifyIdToken(idToken, clientId, issuer, createRemoteJWKSet(new URL(jwksUri)));
     } catch (error: unknown) {
       throw new LogtoClientError('invalid_id_token', error);
     }
