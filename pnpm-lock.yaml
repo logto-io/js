@@ -30,6 +30,7 @@ importers:
       jest: ^27.0.6
       jest-location-mock: ^1.0.9
       jest-matcher-specific-error: ^1.0.0
+      jose: ^4.5.0
       lint-staged: ^12.3.3
       lodash.get: ^4.4.2
       prettier: ^2.3.2
@@ -44,6 +45,7 @@ importers:
     dependencies:
       '@logto/js': link:../js
       '@silverhand/essentials': 1.1.6
+      jose: 4.5.0
       lodash.get: 4.4.2
       superstruct: 0.15.3
     devDependencies:
@@ -4430,7 +4432,7 @@ packages:
       webpack-cli: 4.x.x
     dependencies:
       envinfo: 7.8.1
-      webpack-cli: 4.9.1_51b97b2ad784f46f7873debea239ad34
+      webpack-cli: 4.9.1_ffb4ca0d42777c3f95985c39e374aaf9
     dev: true
 
   /@webpack-cli/serve/1.6.0_webpack-cli@4.9.1:
@@ -4442,7 +4444,7 @@ packages:
       webpack-dev-server:
         optional: true
     dependencies:
-      webpack-cli: 4.9.1_51b97b2ad784f46f7873debea239ad34
+      webpack-cli: 4.9.1_ffb4ca0d42777c3f95985c39e374aaf9
     dev: true
 
   /@xtuc/ieee754/1.2.0:
@@ -11113,6 +11115,10 @@ packages:
 
   /jose/4.3.8:
     resolution: {integrity: sha512-dFiqN5FPLNWa/v+J3ShFjV/9sRGickxMbGUbqBrYr+BkrqLOieACaavSi9XmLJXe0Uzd7Cgs1oYtDvDrOyWLgw==}
+    dev: false
+
+  /jose/4.5.0:
+    resolution: {integrity: sha512-GFcVFQwYQKbQTUOo2JlpFGXTkgBw26uzDsRMD2q1WgSKNSnpKS9Ug7bdQ8dS+p4sZHNH6iRPu6WK2jLIjspaMA==}
     dev: false
 
   /js-base64/3.7.2:
