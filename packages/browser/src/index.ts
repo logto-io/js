@@ -22,7 +22,13 @@ import { createRemoteJWKSet } from 'jose';
 import { assert, Infer, string, type } from 'superstruct';
 
 import { LogtoClientError } from './errors';
-import { buildAccessTokenKey, getDiscoveryEndpoint, getLogtoKey } from './utils';
+import {
+  buildAccessTokenKey,
+  getDiscoveryEndpoint,
+  buildIdTokenKey,
+  buildLogtoKey,
+  buildRefreshTokenKey,
+} from './utils';
 
 export * from './errors';
 
@@ -59,10 +65,10 @@ export default class LogtoClient {
 
   constructor(logtoConfig: LogtoConfig, requester = createRequester()) {
     this.logtoConfig = logtoConfig;
-    this.logtoStorageKey = getLogtoKey(logtoConfig.clientId);
+    this.logtoStorageKey = buildLogtoKey(logtoConfig.clientId);
     this.requester = requester;
-    this.refreshToken = localStorage.getItem(`${this.logtoStorageKey}:refreshToken`);
-    this.idToken = localStorage.getItem(`${this.logtoStorageKey}:idToken`);
+    this.refreshToken = localStorage.getItem(buildRefreshTokenKey(this.logtoStorageKey));
+    this.idToken = localStorage.getItem(buildIdTokenKey(this.logtoStorageKey));
   }
 
   public get isAuthenticated() {
@@ -134,12 +140,12 @@ export default class LogtoClient {
         expiresAt: Math.round(Date.now() / 1000) + expiresIn,
       });
 
-      localStorage.setItem(`${this.logtoStorageKey}:refreshToken`, refreshToken);
+      localStorage.setItem(buildRefreshTokenKey(this.logtoStorageKey), refreshToken);
       this.refreshToken = refreshToken;
 
       if (idToken) {
         await this.verifyIdToken(idToken);
-        localStorage.setItem(`${this.logtoStorageKey}:idToken`, idToken);
+        localStorage.setItem(buildIdTokenKey(this.logtoStorageKey), idToken);
         this.idToken = idToken;
       }
 
@@ -212,8 +218,8 @@ export default class LogtoClient {
       idToken: this.idToken,
     });
 
-    localStorage.removeItem(`${this.logtoStorageKey}:idToken`);
-    localStorage.removeItem(`${this.logtoStorageKey}:refreshToken`);
+    localStorage.removeItem(buildRefreshTokenKey(this.logtoStorageKey));
+    localStorage.removeItem(buildIdTokenKey(this.logtoStorageKey));
 
     this.accessTokenMap.clear();
     this.refreshToken = null;
