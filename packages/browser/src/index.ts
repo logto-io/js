@@ -135,10 +135,12 @@ export default class LogtoClient {
       });
 
       localStorage.setItem(`${this.logtoStorageKey}:refreshToken`, refreshToken);
+      this.refreshToken = refreshToken;
 
       if (idToken) {
         await this.verifyIdToken(idToken);
         localStorage.setItem(`${this.logtoStorageKey}:idToken`, idToken);
+        this.idToken = idToken;
       }
 
       return accessToken;
