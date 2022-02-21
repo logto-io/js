@@ -28,10 +28,10 @@
   },
   "devDependencies": {
     "@peculiar/webcrypto": "^1.1.7",
-    "@silverhand/eslint-config": "^0.7.0",
-    "@silverhand/eslint-config-react": "^0.7.0",
-    "@silverhand/ts-config": "^0.7.0",
-    "@silverhand/ts-config-react": "^0.7.0",
+    "@silverhand/eslint-config": "^0.8.1",
+    "@silverhand/eslint-config-react": "^0.8.1",
+    "@silverhand/ts-config": "^0.8.1",
+    "@silverhand/ts-config-react": "^0.8.1",
     "@types/jest": "^26.0.23",
     "@types/react": "^17.0.11",
     "@types/react-dom": "^17.0.8",
@@ -53,7 +53,7 @@
     "razzle-plugin-scss": "^4.2.6",
     "stylelint": "^13.13.1",
     "text-encoder": "^0.0.4",
-    "typescript": "^4.3.5",
+    "typescript": "^4.5.5",
     "webpack": "^4.44.1",
     "webpack-bundle-analyzer": "^4.5.0",
     "webpack-dev-server": "^3.11.2"
