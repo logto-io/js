@@ -57,7 +57,9 @@ export const generateScope = (originalScope?: string | string[]): string => {
       : Array.isArray(originalScope)
       ? originalScope
       : originalScope.split(' ');
-  const nonEmptyScopeValues = originalScopeValues.map((s) => s.trim()).filter((s) => s.length > 0);
+  const nonEmptyScopeValues = originalScopeValues
+    .map((scope) => scope.trim())
+    .filter((scope) => scope.length > 0);
   const uniqueScopeValues = new Set([...DEFAULT_SCOPE_VALUES, ...nonEmptyScopeValues]);
 
   return Array.from(uniqueScopeValues).join(' ');

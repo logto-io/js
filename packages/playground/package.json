@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@logto/client": "^0.0.1",
+    "@silverhand/essentials": "^1.1.6",
     "js-base64": "^3.6.1",
     "query-string": "^7.0.1",
     "react": "^17.0.2",
@@ -28,10 +29,10 @@
   },
   "devDependencies": {
     "@peculiar/webcrypto": "^1.1.7",
-    "@silverhand/eslint-config": "^0.8.1",
-    "@silverhand/eslint-config-react": "^0.8.1",
-    "@silverhand/ts-config": "^0.8.1",
-    "@silverhand/ts-config-react": "^0.8.1",
+    "@silverhand/eslint-config": "^0.9.1",
+    "@silverhand/eslint-config-react": "^0.9.1",
+    "@silverhand/ts-config": "^0.9.1",
+    "@silverhand/ts-config-react": "^0.9.1",
     "@types/jest": "^26.0.23",
     "@types/react": "^17.0.11",
     "@types/react-dom": "^17.0.8",

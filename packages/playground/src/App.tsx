@@ -1,4 +1,5 @@
 import LogtoClient from '@logto/client';
+import { Nullable } from '@silverhand/essentials';
 import React, { useState, useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
 
@@ -10,7 +11,7 @@ import Home from './pages/Home';
 import './scss/normalized.scss';
 
 const App = () => {
-  const [logtoClient, setLogtoClient] = useState<LogtoClient | null>(null);
+  const [logtoClient, setLogtoClient] = useState<Nullable<LogtoClient>>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

@@ -4,61 +4,61 @@ import { LocalStorage, MemoryStorage, SessionStorage } from './storage';
 
 describe('LocalStorage', () => {
   /* eslint-disable-next-line @silverhand/fp/no-let */
-  let s: LocalStorage;
+  let ls: LocalStorage;
 
   beforeAll(() => {
     /* eslint-disable-next-line @silverhand/fp/no-mutation */
-    s = new LocalStorage();
-    s.setItem('foo', { value: 'foz' });
-    s.setItem('string', 'foz');
-    s.setItem('expired', { value: 'foz' }, { millisecondsUntilExpire: 0 });
-    s.setItem('to-be-remove', { value: 'foz' });
+    ls = new LocalStorage();
+    ls.setItem('foo', { value: 'foz' });
+    ls.setItem('string', 'foz');
+    ls.setItem('expired', { value: 'foz' }, { millisecondsUntilExpire: 0 });
+    ls.setItem('to-be-remove', { value: 'foz' });
   });
 
   test('saves object', () => {
-    expect(s.getItem('foo')).toMatchObject({ value: 'foz' });
+    expect(ls.getItem('foo')).toMatchObject({ value: 'foz' });
   });
 
   test('saves string', () => {
-    expect(s.getItem('string')).toEqual('foz');
+    expect(ls.getItem('string')).toEqual('foz');
   });
 
   test('returns undefined when there is no object', () => {
-    expect(s.getItem('invalid-key')).toBeUndefined();
+    expect(ls.getItem('invalid-key')).toBeUndefined();
   });
 
   test('returns undefined when expired', () => {
-    expect(s.getItem('expired')).toBeUndefined();
+    expect(ls.getItem('expired')).toBeUndefined();
   });
 });
 
 describe('SessionStorage', () => {
   /* eslint-disable-next-line @silverhand/fp/no-let */
-  let s: SessionStorage;
+  let ls: SessionStorage;
 
   beforeAll(() => {
     /* eslint-disable-next-line @silverhand/fp/no-mutation */
-    s = new SessionStorage();
-    s.setItem('foo', { value: 'foz' });
-    s.setItem('string', 'foz');
-    s.setItem('expired', { value: 'foz' }, { millisecondsUntilExpire: 0 });
-    s.setItem('to-be-remove', { value: 'foz' });
+    ls = new SessionStorage();
+    ls.setItem('foo', { value: 'foz' });
+    ls.setItem('string', 'foz');
+    ls.setItem('expired', { value: 'foz' }, { millisecondsUntilExpire: 0 });
+    ls.setItem('to-be-remove', { value: 'foz' });
   });
 
   test('saves object', () => {
-    expect(s.getItem('foo')).toMatchObject({ value: 'foz' });
+    expect(ls.getItem('foo')).toMatchObject({ value: 'foz' });
   });
 
   test('saves string', () => {
-    expect(s.getItem('string')).toEqual('foz');
+    expect(ls.getItem('string')).toEqual('foz');
   });
 
   test('returns undefined when there is no object', () => {
-    expect(s.getItem('invalid-key')).toBeUndefined();
+    expect(ls.getItem('invalid-key')).toBeUndefined();
   });
 
   test('returns undefined when expired', () => {
-    expect(s.getItem('expired')).toBeUndefined();
+    expect(ls.getItem('expired')).toBeUndefined();
   });
 });
 
