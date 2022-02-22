@@ -28,8 +28,8 @@
   },
   "devDependencies": {
     "@peculiar/webcrypto": "^1.1.7",
-    "@silverhand/eslint-config": "^0.8.1",
-    "@silverhand/ts-config": "^0.8.1",
+    "@silverhand/eslint-config": "^0.9.1",
+    "@silverhand/ts-config": "^0.9.1",
     "@types/jest": "^26.0.24",
     "@types/lodash.get": "^4.4.6",
     "@types/webpack": "^5.28.0",

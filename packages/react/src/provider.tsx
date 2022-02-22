@@ -48,10 +48,12 @@ export const LogtoProvider = ({ logtoConfig, children }: LogtoProviderProperties
     async (redirectUri: string) => {
       if (!logtoClient) {
         dispatch({ type: 'ERROR', payload: { error: new Error('Should init first') } });
+
         return;
       }
 
       dispatch({ type: 'LOGIN_WITH_REDIRECT' });
+
       try {
         await logtoClient.loginWithRedirect(redirectUri);
       } catch (error: unknown) {
@@ -65,14 +67,17 @@ export const LogtoProvider = ({ logtoConfig, children }: LogtoProviderProperties
     async (uri: string) => {
       if (!logtoClient) {
         dispatch({ type: 'ERROR', payload: { error: new Error('Should init first') } });
+
         return;
       }
 
       dispatch({ type: 'HANDLE_CALLBACK_REQUEST' });
+
       try {
-        const { redirectUri = '' } = logtoClient.sessionManager?.get() ?? {};
+        const { redirectUri = '' } = logtoClient.sessionManager.get() ?? {};
         await logtoClient.handleCallback(uri);
         dispatch({ type: 'HANDLE_CALLBACK_SUCCESS', payload: { claims: logtoClient.getClaims() } });
+
         if (redirectUri) {
           history.replaceState(history.state, '', redirectUri);
         }
@@ -87,6 +92,7 @@ export const LogtoProvider = ({ logtoConfig, children }: LogtoProviderProperties
     (redirectUri: string) => {
       if (!logtoClient) {
         dispatch({ type: 'ERROR', payload: { error: new Error('Should init first') } });
+
         return;
       }
 

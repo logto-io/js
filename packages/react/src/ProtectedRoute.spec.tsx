@@ -26,6 +26,7 @@ jest.mock('@logto/client', () => {
       getClaims,
     };
   });
+
   return {
     default: Mocked,
     create: jest.fn(() => new Mocked()),

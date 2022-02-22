@@ -31,6 +31,13 @@ export interface ConfigParameters {
 }
 
 export default class LogtoClient {
+  static async create(config: ConfigParameters): Promise<LogtoClient> {
+    return new LogtoClient(
+      config,
+      await discover(`https://${config.domain}`, createRequester(config.customFetchFunction))
+    );
+  }
+
   public readonly oidcConfig: OidcConfigResponse;
   public readonly clientId: string;
   public readonly scope: string;
@@ -52,13 +59,6 @@ export default class LogtoClient {
   private get tokenSetCacheKey() {
     return encodeURIComponent(
       `${TOKEN_SET_CACHE_KEY}::${this.oidcConfig.issuer}::${this.clientId}::${this.scope}`
-    );
-  }
-
-  static async create(config: ConfigParameters): Promise<LogtoClient> {
-    return new LogtoClient(
-      config,
-      await discover(`https://${config.domain}`, createRequester(config.customFetchFunction))
     );
   }
 
@@ -144,7 +144,7 @@ export default class LogtoClient {
   }
 
   public getClaims() {
-    if (!this.isAuthenticated || !this.tokenSet) {
+    if (!this.isAuthenticated() || !this.tokenSet) {
       throw new Error('Not authenticated');
     }
 
@@ -156,7 +156,7 @@ export default class LogtoClient {
   }
 
   public async getAccessToken() {
-    if (!this.isAuthenticated || !this.tokenSet) {
+    if (!this.isAuthenticated() || !this.tokenSet) {
       throw new Error('Not authenticated');
     }
 

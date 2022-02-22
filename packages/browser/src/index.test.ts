@@ -51,7 +51,7 @@ describe('LogtoClient', () => {
         requester
       );
 
-      // @ts-expect-error
+      // @ts-expect-error expected to set object without required property
       signInSessionAccessor.setSignInSessionItem({
         redirectUri,
         codeVerifier: mockedCodeVerifier,
@@ -71,7 +71,7 @@ describe('LogtoClient', () => {
         requester
       );
 
-      // @ts-expect-error
+      // @ts-expect-error expected to set undefined
       signInSessionAccessor.setSignInSessionItem();
       expect(signInSessionAccessor.getSignInSessionItem()).toBeUndefined();
     });

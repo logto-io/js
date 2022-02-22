@@ -19,6 +19,7 @@ const getClaims = jest.fn(() => ({
 jest.mock('@logto/client', () => {
   const Mocked = jest.fn(() => {
     return {
+      sessionManager: { get: jest.fn() },
       isAuthenticated,
       handleCallback,
       logout: jest.fn(),
@@ -26,6 +27,7 @@ jest.mock('@logto/client', () => {
       getClaims,
     };
   });
+
   return {
     default: Mocked,
     create: jest.fn(() => new Mocked()),
@@ -61,7 +63,7 @@ describe('useLogto', () => {
     expect(result.error).not.toBeUndefined();
   });
 
-  test('inited and not authenticated', async () => {
+  test('initiated and not authenticated', async () => {
     const { result, waitFor } = renderHook(() => useLogto(), {
       wrapper: createHookWrapper(),
     });
