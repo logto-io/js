@@ -36,6 +36,7 @@ const idToken = 'id_token_value';
 
 const requester = jest.fn();
 const failingRequester = jest.fn().mockRejectedValue(new Error('Failed!'));
+const currentUnixTimeStamp = Date.now() / 1000;
 
 jest.mock('@logto/js', () => ({
   ...jest.requireActual('@logto/js'),
@@ -54,6 +55,20 @@ jest.mock('@logto/js', () => ({
     scope: 'read register manage',
     expiresIn: 3600,
   })),
+  fetchTokenByRefreshToken: async () => ({
+    accessToken: 'access_token_value',
+    refreshToken: 'new_refresh_token_value',
+    expiresIn: 3600,
+  }),
+  decodeIdToken: () => ({
+    iss: 'issuer_value',
+    sub: 'subject_value',
+    aud: 'audience_value',
+    exp: currentUnixTimeStamp + 3600,
+    iat: currentUnixTimeStamp,
+    at_hash: 'at_hash_value',
+  }),
+  fetchUserInfo: async () => ({ sub: 'subject_value' }),
   generateCodeChallenge: jest.fn(async () => mockCodeChallenge),
   generateCodeVerifier: jest.fn(() => mockedCodeVerifier),
   generateState: jest.fn(() => mockedState),
@@ -205,6 +220,91 @@ describe('LogtoClient', () => {
       expect(window.location.toString()).toEqual(
         `${endSessionEndpoint}?id_token_hint=id_token_value`
       );
+    });
+  });
+
+  describe('getAccessToken', () => {
+    test('should throw if idToken is empty', async () => {
+      localStorage.removeItem(idTokenStorageKey);
+      localStorage.setItem(refreshTokenStorageKey, 'refresh_token_value');
+      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+
+      await expect(logtoClient.getAccessToken()).rejects.toMatchError(
+        new LogtoClientError('not_authenticated')
+      );
+    });
+
+    test('should throw if refresh token is empty', async () => {
+      localStorage.setItem(idTokenStorageKey, 'id_token_value');
+      localStorage.removeItem(refreshTokenStorageKey);
+      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+
+      await expect(logtoClient.getAccessToken()).rejects.toMatchError(
+        new LogtoClientError('not_authenticated')
+      );
+    });
+
+    test('should return access token by valid refresh token', async () => {
+      localStorage.setItem(idTokenStorageKey, 'id_token_value');
+      localStorage.setItem(refreshTokenStorageKey, 'refresh_token_value');
+
+      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+      const accessToken = await logtoClient.getAccessToken();
+
+      expect(accessToken).toEqual('access_token_value');
+    });
+
+    afterAll(() => {
+      localStorage.removeItem(idTokenStorageKey);
+      localStorage.removeItem(refreshTokenStorageKey);
+    });
+  });
+
+  describe('getIdTokenClaims', () => {
+    test('should throw if id token is empty', async () => {
+      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+
+      expect(() => logtoClient.getIdTokenClaims()).toMatchError(
+        new LogtoClientError('not_authenticated')
+      );
+    });
+
+    test('should return id token claims', async () => {
+      localStorage.setItem(idTokenStorageKey, 'id_token_value');
+
+      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+      const idTokenClaims = logtoClient.getIdTokenClaims();
+
+      expect(idTokenClaims).toEqual({
+        iss: 'issuer_value',
+        sub: 'subject_value',
+        aud: 'audience_value',
+        exp: currentUnixTimeStamp + 3600,
+        iat: currentUnixTimeStamp,
+        at_hash: 'at_hash_value',
+      });
+    });
+  });
+
+  describe('fetchUserInfo', () => {
+    test('should throw if access token is empty', async () => {
+      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+
+      await expect(logtoClient.fetchUserInfo()).rejects.toMatchError(
+        new LogtoClientError('not_authenticated')
+      );
+    });
+
+    test('should return user information', async () => {
+      localStorage.setItem(idTokenStorageKey, 'id_token_value');
+      localStorage.setItem(refreshTokenStorageKey, 'refresh_token_value');
+
+      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+      const userInfo = await logtoClient.fetchUserInfo();
+
+      expect(userInfo).toEqual({
+        sub: 'subject_value',
+      });
     });
   });
 });
