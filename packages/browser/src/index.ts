@@ -111,7 +111,7 @@ export default class LogtoClient {
     const accessTokenKey = buildAccessTokenKey(resource);
     const accessToken = this.accessTokenMap.get(accessTokenKey);
 
-    if (accessToken && accessToken.expiresAt > Date.now()) {
+    if (accessToken && accessToken.expiresAt > Date.now() / 1000) {
       return accessToken.token;
     }
 
