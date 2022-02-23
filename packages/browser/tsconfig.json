@@ -1,10 +1,13 @@
 {
     "extends": "@silverhand/ts-config/tsconfig.base",
     "compilerOptions": {
+        "lib": [
+            "dom",
+            "esnext"
+        ],
         "outDir": "lib",
         "target": "es5",
         "types": [
-            "node",
             "jest",
             "jest-matcher-specific-error"
         ]
