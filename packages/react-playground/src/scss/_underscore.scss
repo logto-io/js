@@ -1,3 +1,0 @@
-@function unit($factor, $unit: 'px') {
-  @return #{$factor * 4}#{$unit};
-}
