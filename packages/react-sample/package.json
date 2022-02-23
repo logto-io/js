@@ -1,0 +1,43 @@
+{
+  "name": "react-sample",
+  "version": "0.1.0",
+  "license": "MIT",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "precommit": "lint-staged",
+    "start": "parcel src/index.html",
+    "check": "tsc --noEmit",
+    "build": "pnpm check && rm -rf dist && parcel build src/index.html --no-autoinstall",
+    "lint": "eslint --ext .ts --ext .tsx src",
+    "stylelint": "stylelint \"src/**/*.scss\""
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "@parcel/core": "^2.3.2",
+    "@parcel/transformer-sass": "^2.3.2",
+    "@silverhand/eslint-config": "^0.9.1",
+    "@silverhand/eslint-config-react": "^0.9.1",
+    "@silverhand/ts-config": "^0.9.1",
+    "@silverhand/ts-config-react": "^0.9.1",
+    "@types/react": "^17.0.39",
+    "@types/react-dom": "^17.0.11",
+    "eslint": "^8.9.0",
+    "lint-staged": "^12.3.4",
+    "parcel": "^2.3.2",
+    "postcss": "^8.4.6",
+    "postcss-modules": "^4.3.0",
+    "prettier": "^2.5.1",
+    "stylelint": "^13.13.1",
+    "typescript": "^4.5.5"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand/react"
+  },
+  "stylelint": {
+    "extends": "@silverhand/eslint-config-react/.stylelintrc"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc"
+}

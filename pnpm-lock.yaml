@@ -407,6 +407,47 @@ importers:
       webpack-bundle-analyzer: 4.5.0
       webpack-dev-server: 3.11.2_webpack@4.46.0
 
+  packages/react-sample:
+    specifiers:
+      '@parcel/core': ^2.3.2
+      '@parcel/transformer-sass': ^2.3.2
+      '@silverhand/eslint-config': ^0.9.1
+      '@silverhand/eslint-config-react': ^0.9.1
+      '@silverhand/ts-config': ^0.9.1
+      '@silverhand/ts-config-react': ^0.9.1
+      '@types/react': ^17.0.39
+      '@types/react-dom': ^17.0.11
+      eslint: ^8.9.0
+      lint-staged: ^12.3.4
+      parcel: ^2.3.2
+      postcss: ^8.4.6
+      postcss-modules: ^4.3.0
+      prettier: ^2.5.1
+      react: ^17.0.2
+      react-dom: ^17.0.2
+      stylelint: ^13.13.1
+      typescript: ^4.5.5
+    dependencies:
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+    devDependencies:
+      '@parcel/core': 2.3.2
+      '@parcel/transformer-sass': 2.3.2_@parcel+core@2.3.2
+      '@silverhand/eslint-config': 0.9.1_e76591a86d1a18308a5596326ddf9c7e
+      '@silverhand/eslint-config-react': 0.9.1_0ef89fbb1934b6d734eb57576b2b6e2d
+      '@silverhand/ts-config': 0.9.1_typescript@4.5.5
+      '@silverhand/ts-config-react': 0.9.1_typescript@4.5.5
+      '@types/react': 17.0.39
+      '@types/react-dom': 17.0.11
+      eslint: 8.9.0
+      lint-staged: 12.3.4
+      parcel: 2.3.2_postcss@8.4.6
+      postcss: 8.4.6
+      postcss-modules: 4.3.1_postcss@8.4.6
+      prettier: 2.5.1
+      stylelint: 13.13.1
+      typescript: 4.5.5
+
 packages:
 
   /@babel/code-frame/7.10.4:
@@ -4069,6 +4110,24 @@ packages:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
     dev: true
 
+  /@silverhand/eslint-config-react/0.9.1_0ef89fbb1934b6d734eb57576b2b6e2d:
+    resolution: {integrity: sha512-ajNInWD91DGy8vkBzNJDSHncA4tXnbREzBxdvdyS0PJzO/dxLgiUx+Hnn5YMKiYIfS5Hbyidj4m2ZljGUbiK+w==}
+    peerDependencies:
+      stylelint: ^13.13.1
+    dependencies:
+      '@silverhand/eslint-config': 0.9.1_e76591a86d1a18308a5596326ddf9c7e
+      eslint-config-xo-react: 0.25.0_413f01b9095b18077bfe7fb44ea9a196
+      eslint-plugin-react: 7.27.1_eslint@8.9.0
+      eslint-plugin-react-hooks: 4.3.0_eslint@8.9.0
+      stylelint: 13.13.1
+      stylelint-config-xo-scss: 0.14.0_stylelint@13.13.1
+    transitivePeerDependencies:
+      - eslint
+      - prettier
+      - supports-color
+      - typescript
+    dev: true
+
   /@silverhand/eslint-config-react/0.9.1_8e1e1a63dd756434291a86320d5dee2c:
     resolution: {integrity: sha512-ajNInWD91DGy8vkBzNJDSHncA4tXnbREzBxdvdyS0PJzO/dxLgiUx+Hnn5YMKiYIfS5Hbyidj4m2ZljGUbiK+w==}
     peerDependencies:
@@ -4162,6 +4221,37 @@ packages:
       eslint-plugin-sql: 2.0.0_eslint@8.2.0
       eslint-plugin-unicorn: 39.0.0_eslint@8.2.0
       prettier: 2.3.2
+      typescript: 4.5.5
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@silverhand/eslint-config/0.9.1_e76591a86d1a18308a5596326ddf9c7e:
+    resolution: {integrity: sha512-kQJcdR7ElJ22uY/aLUqcmJj3XlcM32R+uoYaqBfWFlh2afHziLkoFD4gM3ZsqRNEW8C/Ji908TNUMSISPXbGUQ==}
+    engines: {node: '>=14.15.0'}
+    peerDependencies:
+      eslint: ^8.1.0
+      prettier: ^2.3.2
+      typescript: ^4.3.5
+    dependencies:
+      '@silverhand/eslint-plugin-fp': 2.5.0_eslint@8.9.0
+      '@typescript-eslint/eslint-plugin': 5.12.1_aa3af6382115a42a71cc388b7b2c30b3
+      '@typescript-eslint/parser': 5.12.1_eslint@8.9.0+typescript@4.5.5
+      eslint: 8.9.0
+      eslint-config-prettier: 8.3.0_eslint@8.9.0
+      eslint-config-xo: 0.40.0_eslint@8.9.0
+      eslint-config-xo-typescript: 0.50.0_4f577ff3ace83ac3a8d66a10ef1cd9d7
+      eslint-import-resolver-typescript: 2.5.0_d5a3639c6b9c9a7bf5869b0ffb350a53
+      eslint-plugin-consistent-default-export-name: 0.0.7
+      eslint-plugin-eslint-comments: 3.2.0_eslint@8.9.0
+      eslint-plugin-import: 2.25.3_eslint@8.9.0
+      eslint-plugin-no-use-extend-native: 0.5.0
+      eslint-plugin-node: 11.1.0_eslint@8.9.0
+      eslint-plugin-prettier: 3.4.1_07b422646bb75d3db791621d4fdbc992
+      eslint-plugin-promise: 6.0.0_eslint@8.9.0
+      eslint-plugin-sql: 2.0.0_eslint@8.9.0
+      eslint-plugin-unicorn: 39.0.0_eslint@8.9.0
+      prettier: 2.5.1
       typescript: 4.5.5
     transitivePeerDependencies:
       - supports-color
@@ -8410,6 +8500,19 @@ packages:
       eslint-plugin-react-hooks: 4.3.0
     dev: true
 
+  /eslint-config-xo-react/0.25.0_413f01b9095b18077bfe7fb44ea9a196:
+    resolution: {integrity: sha512-YpABFxnoATAYtxsZQChZEbOkWqzCtcQDRdiUqHhLgG7hzbAEzPDmsRUWnTP8oTVLVFWrbgdf913b8kQJaR1cBA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      eslint: '>=7'
+      eslint-plugin-react: '>=7.22.0'
+      eslint-plugin-react-hooks: '>=4.2.0'
+    dependencies:
+      eslint: 8.9.0
+      eslint-plugin-react: 7.27.1_eslint@8.9.0
+      eslint-plugin-react-hooks: 4.3.0_eslint@8.9.0
+    dev: true
+
   /eslint-config-xo-react/0.25.0_f62e3e2c4342faa3a91e96701da6f7af:
     resolution: {integrity: sha512-YpABFxnoATAYtxsZQChZEbOkWqzCtcQDRdiUqHhLgG7hzbAEzPDmsRUWnTP8oTVLVFWrbgdf913b8kQJaR1cBA==}
     engines: {node: '>=10'}
@@ -8799,6 +8902,23 @@ packages:
       prettier-linter-helpers: 1.0.0
     dev: true
 
+  /eslint-plugin-prettier/3.4.1_07b422646bb75d3db791621d4fdbc992:
+    resolution: {integrity: sha512-htg25EUYUeIhKHXjOinK4BgCcDwtLHjqaxCDsMy5nbnUMkKFvIhMVCp+5GFUXQ4Nr8lBsPqtGAqBenbpFqAA2g==}
+    engines: {node: '>=6.0.0'}
+    peerDependencies:
+      eslint: '>=5.0.0'
+      eslint-config-prettier: '*'
+      prettier: '>=1.13.0'
+    peerDependenciesMeta:
+      eslint-config-prettier:
+        optional: true
+    dependencies:
+      eslint: 8.9.0
+      eslint-config-prettier: 8.3.0_eslint@8.9.0
+      prettier: 2.5.1
+      prettier-linter-helpers: 1.0.0
+    dev: true
+
   /eslint-plugin-prettier/3.4.1_1be155cb2dbe4e43ba4178cf9969f296:
     resolution: {integrity: sha512-htg25EUYUeIhKHXjOinK4BgCcDwtLHjqaxCDsMy5nbnUMkKFvIhMVCp+5GFUXQ4Nr8lBsPqtGAqBenbpFqAA2g==}
     engines: {node: '>=6.0.0'}
@@ -8857,6 +8977,15 @@ packages:
       eslint: 8.2.0
     dev: true
 
+  /eslint-plugin-react-hooks/4.3.0_eslint@8.9.0:
+    resolution: {integrity: sha512-XslZy0LnMn+84NEG9jSGR6eGqaZB3133L8xewQo3fQagbQuGt7a63gf+P1NGKZavEYEC3UXaWEAA/AqDkuN6xA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
+    dependencies:
+      eslint: 8.9.0
+    dev: true
+
   /eslint-plugin-react/7.27.1:
     resolution: {integrity: sha512-meyunDjMMYeWr/4EBLTV1op3iSG3mjT/pz5gti38UzfM4OPpNc2m0t2xvKCOMU5D6FSdd34BIMFOvQbW+i8GAA==}
     engines: {node: '>=4'}
@@ -8889,6 +9018,29 @@ packages:
       array.prototype.flatmap: 1.2.5
       doctrine: 2.1.0
       eslint: 8.2.0
+      estraverse: 5.3.0
+      jsx-ast-utils: 3.2.1
+      minimatch: 3.0.4
+      object.entries: 1.1.5
+      object.fromentries: 2.0.5
+      object.hasown: 1.1.0
+      object.values: 1.1.5
+      prop-types: 15.7.2
+      resolve: 2.0.0-next.3
+      semver: 6.3.0
+      string.prototype.matchall: 4.0.6
+    dev: true
+
+  /eslint-plugin-react/7.27.1_eslint@8.9.0:
+    resolution: {integrity: sha512-meyunDjMMYeWr/4EBLTV1op3iSG3mjT/pz5gti38UzfM4OPpNc2m0t2xvKCOMU5D6FSdd34BIMFOvQbW+i8GAA==}
+    engines: {node: '>=4'}
+    peerDependencies:
+      eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
+    dependencies:
+      array-includes: 3.1.4
+      array.prototype.flatmap: 1.2.5
+      doctrine: 2.1.0
+      eslint: 8.9.0
       estraverse: 5.3.0
       jsx-ast-utils: 3.2.1
       minimatch: 3.0.4
@@ -9912,6 +10064,12 @@ packages:
       wide-align: 1.1.3
     dev: true
 
+  /generic-names/4.0.0:
+    resolution: {integrity: sha512-ySFolZQfw9FoDb3ed9d80Cm9f0+r7qj+HJkWjeD9RBfpxEVTlVhol+gvaQB/78WbwYfbnNh8nWHHBSlg072y6A==}
+    dependencies:
+      loader-utils: 3.2.0
+    dev: true
+
   /gensync/1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
@@ -10637,6 +10795,10 @@ packages:
     dev: true
     optional: true
 
+  /icss-replace-symbols/1.1.0:
+    resolution: {integrity: sha1-Bupvg2ead0njhs/h/oEq5dsiPe0=}
+    dev: true
+
   /icss-utils/5.1.0_postcss@8.3.11:
     resolution: {integrity: sha512-soFhflCVWLfRNOPU3iv5Z9VUdT44xFRbzjLsEzSr5AQmgqPMTHdU3PMT1Cf1ssx8fLNJDA1juftYl+PUcv3MqA==}
     engines: {node: ^10 || ^12 || >= 14}
@@ -10644,6 +10806,15 @@ packages:
       postcss: ^8.1.0
     dependencies:
       postcss: 8.3.11
+    dev: true
+
+  /icss-utils/5.1.0_postcss@8.4.6:
+    resolution: {integrity: sha512-soFhflCVWLfRNOPU3iv5Z9VUdT44xFRbzjLsEzSr5AQmgqPMTHdU3PMT1Cf1ssx8fLNJDA1juftYl+PUcv3MqA==}
+    engines: {node: ^10 || ^12 || >= 14}
+    peerDependencies:
+      postcss: ^8.1.0
+    dependencies:
+      postcss: 8.4.6
     dev: true
 
   /ieee754/1.2.1:
@@ -12832,6 +13003,11 @@ packages:
       big.js: 5.2.2
       emojis-list: 3.0.0
       json5: 2.2.0
+    dev: true
+
+  /loader-utils/3.2.0:
+    resolution: {integrity: sha512-HVl9ZqccQihZ7JM85dco1MvO9G+ONvxoGa9rkhzFsneGLKSUg1gJf9bWzhRhcvm2qChhWpebQhP44qxjKIUCaQ==}
+    engines: {node: '>= 12.13.0'}
     dev: true
 
   /locate-path/2.0.0:
@@ -15069,6 +15245,15 @@ packages:
       postcss: 8.3.11
     dev: true
 
+  /postcss-modules-extract-imports/3.0.0_postcss@8.4.6:
+    resolution: {integrity: sha512-bdHleFnP3kZ4NYDhuGlVK+CMrQ/pqUm8bx/oGL93K6gVwiclvX5x0n76fYMKuIGKzlABOy13zsvqjb0f92TEXw==}
+    engines: {node: ^10 || ^12 || >= 14}
+    peerDependencies:
+      postcss: ^8.1.0
+    dependencies:
+      postcss: 8.4.6
+    dev: true
+
   /postcss-modules-local-by-default/4.0.0_postcss@8.3.11:
     resolution: {integrity: sha512-sT7ihtmGSF9yhm6ggikHdV0hlziDTX7oFoXtuVWeDd3hHObNkcHRo9V3yg7vCAY7cONyxJC/XXCmmiHHcvX7bQ==}
     engines: {node: ^10 || ^12 || >= 14}
@@ -15077,6 +15262,18 @@ packages:
     dependencies:
       icss-utils: 5.1.0_postcss@8.3.11
       postcss: 8.3.11
+      postcss-selector-parser: 6.0.6
+      postcss-value-parser: 4.1.0
+    dev: true
+
+  /postcss-modules-local-by-default/4.0.0_postcss@8.4.6:
+    resolution: {integrity: sha512-sT7ihtmGSF9yhm6ggikHdV0hlziDTX7oFoXtuVWeDd3hHObNkcHRo9V3yg7vCAY7cONyxJC/XXCmmiHHcvX7bQ==}
+    engines: {node: ^10 || ^12 || >= 14}
+    peerDependencies:
+      postcss: ^8.1.0
+    dependencies:
+      icss-utils: 5.1.0_postcss@8.4.6
+      postcss: 8.4.6
       postcss-selector-parser: 6.0.6
       postcss-value-parser: 4.1.0
     dev: true
@@ -15091,6 +15288,16 @@ packages:
       postcss-selector-parser: 6.0.6
     dev: true
 
+  /postcss-modules-scope/3.0.0_postcss@8.4.6:
+    resolution: {integrity: sha512-hncihwFA2yPath8oZ15PZqvWGkWf+XUfQgUGamS4LqoP1anQLOsOJw0vr7J7IwLpoY9fatA2qiGUGmuZL0Iqlg==}
+    engines: {node: ^10 || ^12 || >= 14}
+    peerDependencies:
+      postcss: ^8.1.0
+    dependencies:
+      postcss: 8.4.6
+      postcss-selector-parser: 6.0.6
+    dev: true
+
   /postcss-modules-values/4.0.0_postcss@8.3.11:
     resolution: {integrity: sha512-RDxHkAiEGI78gS2ofyvCsu7iycRv7oqw5xMWn9iMoR0N/7mf9D50ecQqUo5BZ9Zh2vH4bCUR/ktCqbB9m8vJjQ==}
     engines: {node: ^10 || ^12 || >= 14}
@@ -15099,6 +15306,32 @@ packages:
     dependencies:
       icss-utils: 5.1.0_postcss@8.3.11
       postcss: 8.3.11
+    dev: true
+
+  /postcss-modules-values/4.0.0_postcss@8.4.6:
+    resolution: {integrity: sha512-RDxHkAiEGI78gS2ofyvCsu7iycRv7oqw5xMWn9iMoR0N/7mf9D50ecQqUo5BZ9Zh2vH4bCUR/ktCqbB9m8vJjQ==}
+    engines: {node: ^10 || ^12 || >= 14}
+    peerDependencies:
+      postcss: ^8.1.0
+    dependencies:
+      icss-utils: 5.1.0_postcss@8.4.6
+      postcss: 8.4.6
+    dev: true
+
+  /postcss-modules/4.3.1_postcss@8.4.6:
+    resolution: {integrity: sha512-ItUhSUxBBdNamkT3KzIZwYNNRFKmkJrofvC2nWab3CPKhYBQ1f27XXh1PAPE27Psx58jeelPsxWB/+og+KEH0Q==}
+    peerDependencies:
+      postcss: ^8.0.0
+    dependencies:
+      generic-names: 4.0.0
+      icss-replace-symbols: 1.1.0
+      lodash.camelcase: 4.3.0
+      postcss: 8.4.6
+      postcss-modules-extract-imports: 3.0.0_postcss@8.4.6
+      postcss-modules-local-by-default: 4.0.0_postcss@8.4.6
+      postcss-modules-scope: 3.0.0_postcss@8.4.6
+      postcss-modules-values: 4.0.0_postcss@8.4.6
+      string-hash: 1.1.3
     dev: true
 
   /postcss-normalize-charset/4.0.1:
