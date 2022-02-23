@@ -1,40 +1,74 @@
-import { Optional } from '@silverhand/essentials';
+import { generateSignInUri } from '@logto/js';
+import { Nullable } from '@silverhand/essentials';
 
 import LogtoClient, { LogtoClientError, LogtoSignInSessionItem } from '.';
 
 const clientId = 'client_id_value';
 const endpoint = 'https://logto.dev';
+
 const authorizationEndpoint = `${endpoint}/oidc/auth`;
+const tokenEndpoint = `${endpoint}/oidc/token`;
 const endSessionEndpoint = `${endpoint}/oidc/session/end`;
 const revocationEndpoint = `${endpoint}/oidc/token/revocation`;
-const mockedCodeVerifier = 'code_verifier_value';
-const mockedState = 'state_value';
-const mockedSignInUri = `${authorizationEndpoint}?foo=bar`;
+const jwksUri = `${endpoint}/oidc/jwks`;
+const issuer = 'http://localhost:443/oidc';
+
 const redirectUri = 'http://localhost:3000/callback';
 const postSignOutRedirectUri = 'http://localhost:3000';
-const idTokenStorageKey = `logto:${clientId}:idToken`;
+
+const mockCodeChallenge = 'code_challenge_value';
+const mockedCodeVerifier = 'code_verifier_value';
+const mockedState = 'state_value';
+const mockedSignInUri = generateSignInUri({
+  authorizationEndpoint,
+  clientId,
+  redirectUri,
+  codeChallenge: mockCodeChallenge,
+  state: mockedState,
+});
+
 const refreshTokenStorageKey = `logto:${clientId}:refreshToken`;
+const idTokenStorageKey = `logto:${clientId}:idToken`;
+
+const accessToken = 'access_token_value';
+const refreshToken = 'new_refresh_token_value';
+const idToken = 'id_token_value';
+
 const requester = jest.fn();
 const failingRequester = jest.fn().mockRejectedValue(new Error('Failed!'));
 
 jest.mock('@logto/js', () => ({
   ...jest.requireActual('@logto/js'),
-  fetchOidcConfig: async () => ({ authorizationEndpoint, endSessionEndpoint, revocationEndpoint }),
-  generateCodeChallenge: jest.fn().mockResolvedValue('code_challenge_value'),
+  fetchOidcConfig: jest.fn(async () => ({
+    authorizationEndpoint,
+    tokenEndpoint,
+    endSessionEndpoint,
+    revocationEndpoint,
+    jwksUri,
+    issuer,
+  })),
+  fetchTokenByAuthorizationCode: jest.fn(async () => ({
+    accessToken,
+    refreshToken,
+    idToken,
+    scope: 'read register manage',
+    expiresIn: 3600,
+  })),
+  generateCodeChallenge: jest.fn(async () => mockCodeChallenge),
   generateCodeVerifier: jest.fn(() => mockedCodeVerifier),
-  generateSignInUri: jest.fn(() => mockedSignInUri),
   generateState: jest.fn(() => mockedState),
+  verifyIdToken: jest.fn(),
 }));
 
 /**
  * Make LogtoClient.signInSession accessible for test
  */
 class LogtoClientSignInSessionAccessor extends LogtoClient {
-  public getSignInSessionItem(): Optional<LogtoSignInSessionItem> {
+  public getSignInSessionItem(): Nullable<LogtoSignInSessionItem> {
     return this.signInSession;
   }
 
-  public setSignInSessionItem(item: Optional<LogtoSignInSessionItem>) {
+  public setSignInSessionItem(item: Nullable<LogtoSignInSessionItem>) {
     this.signInSession = item;
   }
 }
@@ -45,6 +79,10 @@ describe('LogtoClient', () => {
   });
 
   describe('signInSession', () => {
+    beforeEach(() => {
+      sessionStorage.clear();
+    });
+
     test('getter should throw LogtoClientError when signInSession does not contain the required property', () => {
       const signInSessionAccessor = new LogtoClientSignInSessionAccessor(
         { endpoint, clientId },
@@ -71,9 +109,8 @@ describe('LogtoClient', () => {
         requester
       );
 
-      // @ts-expect-error expected to set undefined
-      signInSessionAccessor.setSignInSessionItem();
-      expect(signInSessionAccessor.getSignInSessionItem()).toBeUndefined();
+      signInSessionAccessor.setSignInSessionItem(null);
+      expect(signInSessionAccessor.getSignInSessionItem()).toBeNull();
     });
 
     test('should be able to set and get the correct item', () => {
@@ -93,11 +130,37 @@ describe('LogtoClient', () => {
     });
   });
 
-  describe('signIn', () => {
-    test('window.location should be correct signInUri', async () => {
+  describe('signIn and handleSignInCallback', () => {
+    beforeEach(() => {
+      localStorage.clear();
+      sessionStorage.clear();
+    });
+
+    test('should redirect to signInUri just after calling signIn', async () => {
       const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
       await logtoClient.signIn(redirectUri);
       expect(window.location.toString()).toEqual(mockedSignInUri);
+    });
+
+    test('handleSignInCallback should throw LogtoClientError when the sign-in session does not exist', async () => {
+      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+      await expect(logtoClient.handleSignInCallback(redirectUri)).rejects.toMatchError(
+        new LogtoClientError('sign_in_session.not_found')
+      );
+    });
+
+    test('tokens should be set after calling signIn and handleSignInCallback successfully', async () => {
+      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+      await logtoClient.signIn(redirectUri);
+
+      const code = `code_value`;
+      const callbackUri = `${redirectUri}?code=${code}&state=${mockedState}&codeVerifier=${mockedCodeVerifier}`;
+
+      await expect(logtoClient.handleSignInCallback(callbackUri)).resolves.not.toThrow();
+
+      await expect(logtoClient.getAccessToken()).resolves.toEqual(accessToken);
+      expect(localStorage.getItem(refreshTokenStorageKey)).toEqual(refreshToken);
+      expect(localStorage.getItem(idTokenStorageKey)).toEqual(idToken);
     });
   });
 
