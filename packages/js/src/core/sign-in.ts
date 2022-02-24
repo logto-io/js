@@ -3,7 +3,7 @@ import { withReservedScopes } from '../utils';
 
 const codeChallengeMethod = 'S256';
 const prompt = 'consent';
-const responseType = 'authorization_code';
+const responseType = 'code';
 
 export type SignInUriParameters = {
   authorizationEndpoint: string;
