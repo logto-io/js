@@ -1,0 +1,36 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background: #101419;
+  color: #dadae0;
+  text-align: center;
+}
+
+.container {
+  width: 100%;
+  padding: 20px;
+}
+
+table {
+  margin: 50px auto;
+  table-layout: fixed;
+  width: 800px;
+  border: 1px solid #333;
+  border-spacing: 0;
+
+  th,
+  td {
+    padding: 10px;
+    word-wrap: break-word;
+    border: 1px solid #333;
+  }
+
+  th {
+    font-weight: bold;
+  }
+}
+
+button {
+  cursor: pointer;
+}
