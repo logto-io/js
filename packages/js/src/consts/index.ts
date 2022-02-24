@@ -3,7 +3,7 @@ export const ContentType = {
 };
 
 export enum TokenGrantType {
-  AuthorizationCode = 'code',
+  AuthorizationCode = 'authorization_code',
   RefreshToken = 'refresh_token',
 }
 
