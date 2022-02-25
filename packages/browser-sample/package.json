@@ -5,8 +5,8 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "precommit": "lint-staged",
-    "start": "parcel src/index.html",
-    "build": "rm -rf dist && parcel build src/index.html --no-autoinstall",
+    "start": "parcel public/index.html -p 3000",
+    "build": "rm -rf dist && parcel build public/index.html --no-autoinstall",
     "lint": "eslint --ext .js src",
     "stylelint": "stylelint \"src/**/*.scss\""
   },
@@ -18,10 +18,13 @@
     "@parcel/transformer-sass": "^2.3.2",
     "@silverhand/eslint-config": "^0.9.1",
     "@silverhand/eslint-config-react": "^0.9.1",
+    "buffer": "^6.0.3",
+    "eslint": "^8.9.0",
     "lint-staged": "^12.3.4",
     "parcel": "^2.3.2",
     "postcss": "^8.4.6",
     "prettier": "^2.5.1",
+    "process": "^0.11.10",
     "stylelint": "^13.13.1"
   },
   "eslintConfig": {
