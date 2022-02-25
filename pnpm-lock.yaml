@@ -20,6 +20,7 @@ importers:
 
   packages/browser:
     specifiers:
+      '@jest/types': ^27.5.1
       '@logto/js': ^0.1.0
       '@silverhand/eslint-config': ^0.9.1
       '@silverhand/essentials': ^1.1.6
@@ -28,7 +29,7 @@ importers:
       '@types/lodash.get': ^4.4.6
       codecov: ^3.8.3
       eslint: ^8.9.0
-      jest: ^27.0.6
+      jest: ^27.5.1
       jest-location-mock: ^1.0.9
       jest-matcher-specific-error: ^1.0.0
       jose: ^4.5.0
@@ -50,6 +51,7 @@ importers:
       lodash.get: 4.4.2
       superstruct: 0.15.3
     devDependencies:
+      '@jest/types': 27.5.1
       '@silverhand/eslint-config': 0.9.1_e76591a86d1a18308a5596326ddf9c7e
       '@silverhand/ts-config': 0.9.1_typescript@4.5.5
       '@types/jest': 27.4.1
