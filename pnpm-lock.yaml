@@ -167,6 +167,39 @@ importers:
       webpack-bundle-analyzer: 4.5.0
       webpack-cli: 4.9.2_857d0ca7812a6b4440411036f1e21c78
 
+  packages/react:
+    specifiers:
+      '@jest/types': ^27.5.1
+      '@logto/browser': ^0.1.0
+      '@silverhand/eslint-config': ^0.9.1
+      '@silverhand/eslint-config-react': ^0.9.1
+      '@silverhand/ts-config': ^0.9.1
+      '@silverhand/ts-config-react': ^0.9.1
+      '@types/jest': ^27.4.1
+      codecov: ^3.8.3
+      eslint: ^8.9.0
+      jest: ^27.5.1
+      lint-staged: ^12.3.4
+      prettier: ^2.5.1
+      ts-jest: ^27.0.4
+      typescript: ^4.5.5
+    dependencies:
+      '@logto/browser': link:../browser
+    devDependencies:
+      '@jest/types': 27.5.1
+      '@silverhand/eslint-config': 0.9.1_e76591a86d1a18308a5596326ddf9c7e
+      '@silverhand/eslint-config-react': 0.9.1_e76591a86d1a18308a5596326ddf9c7e
+      '@silverhand/ts-config': 0.9.1_typescript@4.5.5
+      '@silverhand/ts-config-react': 0.9.1_typescript@4.5.5
+      '@types/jest': 27.4.1
+      codecov: 3.8.3
+      eslint: 8.9.0
+      jest: 27.5.1
+      lint-staged: 12.3.4
+      prettier: 2.5.1
+      ts-jest: 27.1.3_8fa130d172bf7d71653f05507c50c5a3
+      typescript: 4.5.5
+
   packages/react-sample:
     specifiers:
       '@parcel/core': ^2.3.2
@@ -2563,6 +2596,23 @@ packages:
       eslint-plugin-react-hooks: 4.3.0_eslint@8.9.0
       stylelint: 13.13.1
       stylelint-config-xo-scss: 0.14.0_stylelint@13.13.1
+    transitivePeerDependencies:
+      - eslint
+      - prettier
+      - supports-color
+      - typescript
+    dev: true
+
+  /@silverhand/eslint-config-react/0.9.1_e76591a86d1a18308a5596326ddf9c7e:
+    resolution: {integrity: sha512-ajNInWD91DGy8vkBzNJDSHncA4tXnbREzBxdvdyS0PJzO/dxLgiUx+Hnn5YMKiYIfS5Hbyidj4m2ZljGUbiK+w==}
+    peerDependencies:
+      stylelint: ^13.13.1
+    dependencies:
+      '@silverhand/eslint-config': 0.9.1_e76591a86d1a18308a5596326ddf9c7e
+      eslint-config-xo-react: 0.25.0_525b37837aa73776ea53a3c7796c062f
+      eslint-plugin-react: 7.28.0_eslint@8.9.0
+      eslint-plugin-react-hooks: 4.3.0_eslint@8.9.0
+      stylelint-config-xo-scss: 0.14.0
     transitivePeerDependencies:
       - eslint
       - prettier
@@ -9947,6 +9997,16 @@ packages:
       postcss-selector-parser: 6.0.9
     dev: true
 
+  /stylelint-config-xo-scss/0.14.0:
+    resolution: {integrity: sha512-B+7xC8GryR85beOtuYxSNxqc7GTnOIxrGxVxpJJeUGV8T+qVg82o/mRiw0AcmXIulqQtJIsgomcmeZI5wEtrAg==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      stylelint: '>=13.7.0'
+    dependencies:
+      stylelint-config-xo: 0.20.1
+      stylelint-scss: 3.21.0
+    dev: true
+
   /stylelint-config-xo-scss/0.14.0_stylelint@13.13.1:
     resolution: {integrity: sha512-B+7xC8GryR85beOtuYxSNxqc7GTnOIxrGxVxpJJeUGV8T+qVg82o/mRiw0AcmXIulqQtJIsgomcmeZI5wEtrAg==}
     engines: {node: '>=10'}
@@ -9956,6 +10016,16 @@ packages:
       stylelint: 13.13.1
       stylelint-config-xo: 0.20.1_stylelint@13.13.1
       stylelint-scss: 3.21.0_stylelint@13.13.1
+    dev: true
+
+  /stylelint-config-xo/0.20.1:
+    resolution: {integrity: sha512-0GyI476/CMf9xYbz04jAvQcWtTD2jJgrSFXh3i+MQeGWpCdD5sUGUUdvW4GY9PABfh7QhRmzhA8B3qCuPtMx6Q==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      stylelint: '>=13.7.0'
+    dependencies:
+      stylelint-declaration-block-no-ignored-properties: 2.5.0
+      stylelint-order: 4.1.0
     dev: true
 
   /stylelint-config-xo/0.20.1_stylelint@13.13.1:
@@ -9969,6 +10039,13 @@ packages:
       stylelint-order: 4.1.0_stylelint@13.13.1
     dev: true
 
+  /stylelint-declaration-block-no-ignored-properties/2.5.0:
+    resolution: {integrity: sha512-UNz5nUC5GMgMb6GPc/pHUTC0+ydxTdj2mUn7XcKRdwQoiUzzUmWWdSf1aFv2UzrW4x8JYNReE1u5JOj7g0ThJw==}
+    engines: {node: '>=6'}
+    peerDependencies:
+      stylelint: ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0 || ^14.0.0
+    dev: true
+
   /stylelint-declaration-block-no-ignored-properties/2.5.0_stylelint@13.13.1:
     resolution: {integrity: sha512-UNz5nUC5GMgMb6GPc/pHUTC0+ydxTdj2mUn7XcKRdwQoiUzzUmWWdSf1aFv2UzrW4x8JYNReE1u5JOj7g0ThJw==}
     engines: {node: '>=6'}
@@ -9976,6 +10053,16 @@ packages:
       stylelint: ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0 || ^14.0.0
     dependencies:
       stylelint: 13.13.1
+    dev: true
+
+  /stylelint-order/4.1.0:
+    resolution: {integrity: sha512-sVTikaDvMqg2aJjh4r48jsdfmqLT+nqB1MOsaBnvM3OwLx4S+WXcsxsgk5w18h/OZoxZCxuyXMh61iBHcj9Qiw==}
+    peerDependencies:
+      stylelint: ^10.0.1 || ^11.0.0 || ^12.0.0 || ^13.0.0
+    dependencies:
+      lodash: 4.17.21
+      postcss: 7.0.39
+      postcss-sorting: 5.0.1
     dev: true
 
   /stylelint-order/4.1.0_stylelint@13.13.1:
@@ -9987,6 +10074,19 @@ packages:
       postcss: 7.0.39
       postcss-sorting: 5.0.1
       stylelint: 13.13.1
+    dev: true
+
+  /stylelint-scss/3.21.0:
+    resolution: {integrity: sha512-CMI2wSHL+XVlNExpauy/+DbUcB/oUZLARDtMIXkpV/5yd8nthzylYd1cdHeDMJVBXeYHldsnebUX6MoV5zPW4A==}
+    engines: {node: '>=8'}
+    peerDependencies:
+      stylelint: ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0
+    dependencies:
+      lodash: 4.17.21
+      postcss-media-query-parser: 0.2.3
+      postcss-resolve-nested-selector: 0.1.1
+      postcss-selector-parser: 6.0.9
+      postcss-value-parser: 4.2.0
     dev: true
 
   /stylelint-scss/3.21.0_stylelint@13.13.1:
