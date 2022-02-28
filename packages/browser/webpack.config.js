@@ -7,25 +7,10 @@ module.exports = () => {
 
   return {
     mode: 'production',
-    entry: './src/index.ts',
+    entry: './lib/index.js',
     output: {
-      path: path.resolve(__dirname, 'dist'),
-      filename: 'logto.browser.min.js',
-      library: {
-        type: 'umd',
-        name: 'logto',
-      },
-    },
-    module: {
-      rules: [
-        {
-          exclude: /node_modules/,
-          use: 'ts-loader',
-        },
-      ],
-    },
-    resolve: {
-      extensions: ['.ts', '.js'],
+      filename: 'logto-browser.min.js',
+      path: path.resolve(__dirname, 'lib'),
     },
     plugins: WITH_REPORT ? [new BundleAnalyzerPlugin()] : [],
   };
