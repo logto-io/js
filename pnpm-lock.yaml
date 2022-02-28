@@ -39,7 +39,6 @@ importers:
       superstruct: ^0.15.3
       text-encoder: ^0.0.4
       ts-jest: ^27.0.4
-      ts-loader: ^9.2.6
       typescript: ^4.5.5
       webpack: ^5.68.0
       webpack-bundle-analyzer: ^4.5.0
@@ -65,7 +64,6 @@ importers:
       prettier: 2.5.1
       text-encoder: 0.0.4
       ts-jest: 27.1.3_8fa130d172bf7d71653f05507c50c5a3
-      ts-loader: 9.2.6_typescript@4.5.5+webpack@5.69.1
       typescript: 4.5.5
       webpack: 5.69.1_webpack-cli@4.9.2
       webpack-bundle-analyzer: 4.5.0
@@ -128,7 +126,6 @@ importers:
       superstruct: ^0.15.3
       text-encoder: ^0.0.4
       ts-jest: ^27.0.4
-      ts-loader: ^9.2.6
       type-fest: ^2.10.0
       typescript: ^4.5.5
       webpack: ^5.58.2
@@ -160,7 +157,6 @@ importers:
       prettier: 2.5.1
       text-encoder: 0.0.4
       ts-jest: 27.1.3_8fa130d172bf7d71653f05507c50c5a3
-      ts-loader: 9.2.6_typescript@4.5.5+webpack@5.69.1
       type-fest: 2.12.0
       typescript: 4.5.5
       webpack: 5.69.1_webpack-cli@4.9.2
@@ -10489,21 +10485,6 @@ packages:
       semver: 7.3.5
       typescript: 4.5.5
       yargs-parser: 20.2.9
-    dev: true
-
-  /ts-loader/9.2.6_typescript@4.5.5+webpack@5.69.1:
-    resolution: {integrity: sha512-QMTC4UFzHmu9wU2VHZEmWWE9cUajjfcdcws+Gh7FhiO+Dy0RnR1bNz0YCHqhI0yRowCE9arVnNxYHqELOy9Hjw==}
-    engines: {node: '>=12.0.0'}
-    peerDependencies:
-      typescript: '*'
-      webpack: ^5.0.0
-    dependencies:
-      chalk: 4.1.2
-      enhanced-resolve: 5.9.0
-      micromatch: 4.0.4
-      semver: 7.3.5
-      typescript: 4.5.5
-      webpack: 5.69.1_webpack-cli@4.9.2
     dev: true
 
   /ts-node/9.1.1_typescript@4.5.5:
