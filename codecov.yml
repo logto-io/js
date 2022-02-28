@@ -1,5 +1,22 @@
 coverage:
   status:
     project:
-      default:
-        target: 70%
+      default: off
+      js:
+        target: auto
+        threshold: 1%
+        flags:
+          - js
+      browser:
+        target: auto
+        threshold: 1%
+        flags:
+          - browser
+
+flags:
+  js:
+    paths:
+      - ./packages/js
+  browser:
+    paths:
+      - ./packages/browser
