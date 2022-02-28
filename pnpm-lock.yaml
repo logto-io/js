@@ -128,7 +128,6 @@ importers:
       superstruct: ^0.15.3
       text-encoder: ^0.0.4
       ts-jest: ^27.0.4
-      ts-loader: ^9.2.6
       type-fest: ^2.10.0
       typescript: ^4.5.5
       webpack: ^5.58.2
@@ -160,7 +159,6 @@ importers:
       prettier: 2.5.1
       text-encoder: 0.0.4
       ts-jest: 27.1.3_8fa130d172bf7d71653f05507c50c5a3
-      ts-loader: 9.2.6_typescript@4.5.5+webpack@5.69.1
       type-fest: 2.12.0
       typescript: 4.5.5
       webpack: 5.69.1_webpack-cli@4.9.2
