@@ -33,6 +33,7 @@ import {
   buildRefreshTokenKey,
 } from './utils';
 
+export type { IdTokenClaims, UserInfoResponse } from '@logto/js';
 export * from './errors';
 
 export type LogtoConfig = {
