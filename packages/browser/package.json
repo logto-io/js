@@ -14,7 +14,6 @@
     "package": "pnpm build && webpack",
     "test": "jest",
     "test:coverage": "jest --silent --coverage",
-    "test:report": "codecov -F browser",
     "prepublish": "pnpm package",
     "report": "WITH_REPORT=true pnpm package"
   },
@@ -31,7 +30,6 @@
     "@silverhand/ts-config": "^0.9.1",
     "@types/jest": "^27.4.0",
     "@types/lodash.get": "^4.4.6",
-    "codecov": "^3.8.3",
     "eslint": "^8.9.0",
     "jest": "^27.5.1",
     "jest-location-mock": "^1.0.9",

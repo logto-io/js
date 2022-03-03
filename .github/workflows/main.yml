@@ -27,5 +27,14 @@ jobs:
       - name: Test
         run: pnpm -- lerna run --parallel test:coverage
 
-      - name: Upload Coverage
-        run: pnpm -- lerna run --parallel test:report
+      - name: Codecov js
+        uses: codecov/codecov-action@v2
+        with:
+          flags: js
+          directory: ./packages/js
+
+      - name: Codecov browser
+        uses: codecov/codecov-action@v2
+        with:
+          flags: browser
+          directory: ./packages/browser
