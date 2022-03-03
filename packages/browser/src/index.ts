@@ -236,6 +236,17 @@ export default class LogtoClient {
     window.location.assign(signInUri);
   }
 
+  public isSignInRedirected(url: string): boolean {
+    const { signInSession } = this;
+
+    if (!signInSession) {
+      throw new LogtoClientError('sign_in_session.not_found');
+    }
+    const { redirectUri } = signInSession;
+
+    return url.startsWith(redirectUri);
+  }
+
   public async handleSignInCallback(callbackUri: string) {
     const { signInSession, logtoConfig, requester } = this;
 

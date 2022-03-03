@@ -145,7 +145,7 @@ describe('LogtoClient', () => {
     });
   });
 
-  describe('signIn and handleSignInCallback', () => {
+  describe('signIn, isSignInRedirected and handleSignInCallback', () => {
     beforeEach(() => {
       localStorage.clear();
       sessionStorage.clear();
@@ -164,6 +164,15 @@ describe('LogtoClient', () => {
       );
     });
 
+    test('isSignInRedirected should return true after calling signIn', async () => {
+      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+      expect(() => logtoClient.isSignInRedirected(redirectUri)).toMatchError(
+        new LogtoClientError('sign_in_session.not_found')
+      );
+      await logtoClient.signIn(redirectUri);
+      expect(logtoClient.isSignInRedirected(redirectUri)).toBeTruthy();
+    });
+
     test('tokens should be set after calling signIn and handleSignInCallback successfully', async () => {
       const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
       await logtoClient.signIn(redirectUri);
@@ -172,7 +181,6 @@ describe('LogtoClient', () => {
       const callbackUri = `${redirectUri}?code=${code}&state=${mockedState}&codeVerifier=${mockedCodeVerifier}`;
 
       await expect(logtoClient.handleSignInCallback(callbackUri)).resolves.not.toThrow();
-
       await expect(logtoClient.getAccessToken()).resolves.toEqual(accessToken);
       expect(localStorage.getItem(refreshTokenStorageKey)).toEqual(refreshToken);
       expect(localStorage.getItem(idTokenStorageKey)).toEqual(idToken);
