@@ -240,7 +240,7 @@ export default class LogtoClient {
     const { signInSession } = this;
 
     if (!signInSession) {
-      throw new LogtoClientError('sign_in_session.not_found');
+      return false;
     }
     const { redirectUri } = signInSession;
 
