@@ -166,9 +166,7 @@ describe('LogtoClient', () => {
 
     test('isSignInRedirected should return true after calling signIn', async () => {
       const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
-      expect(() => logtoClient.isSignInRedirected(redirectUri)).toMatchError(
-        new LogtoClientError('sign_in_session.not_found')
-      );
+      expect(logtoClient.isSignInRedirected(redirectUri)).toBeFalsy();
       await logtoClient.signIn(redirectUri);
       expect(logtoClient.isSignInRedirected(redirectUri)).toBeTruthy();
     });
