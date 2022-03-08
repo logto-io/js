@@ -5,15 +5,17 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "precommit": "lint-staged",
-    "start": "parcel src/index.html",
+    "start": "parcel src/index.html -p 3000",
     "check": "tsc --noEmit",
     "build": "pnpm check && rm -rf dist && parcel build src/index.html --no-autoinstall",
     "lint": "eslint --ext .ts --ext .tsx src",
     "stylelint": "stylelint \"src/**/*.scss\""
   },
   "dependencies": {
+    "@logto/react": "^0.1.0",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^6.2.2"
   },
   "devDependencies": {
     "@parcel/core": "^2.3.2",
@@ -24,6 +26,7 @@
     "@silverhand/ts-config-react": "^0.9.1",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
+    "@types/react-router-dom": "^5.3.3",
     "eslint": "^8.9.0",
     "lint-staged": "^12.3.4",
     "parcel": "^2.3.2",
