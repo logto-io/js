@@ -204,14 +204,14 @@ export default class LogtoClient {
   }
 
   public async fetchUserInfo(): Promise<UserInfoResponse> {
-    const { authorizationEndpoint } = await this.getOidcConfig();
+    const { userinfoEndpoint } = await this.getOidcConfig();
     const accessToken = await this.getAccessToken();
 
     if (!accessToken) {
       throw new LogtoClientError('fetch_user_info_failed');
     }
 
-    return fetchUserInfo(authorizationEndpoint, accessToken, this.requester);
+    return fetchUserInfo(userinfoEndpoint, accessToken, this.requester);
   }
 
   public async signIn(redirectUri: string) {

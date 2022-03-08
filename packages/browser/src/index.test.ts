@@ -7,6 +7,7 @@ const clientId = 'client_id_value';
 const endpoint = 'https://logto.dev';
 
 const authorizationEndpoint = `${endpoint}/oidc/auth`;
+const userinfoEndpoint = `${endpoint}/oidc/me`;
 const tokenEndpoint = `${endpoint}/oidc/token`;
 const endSessionEndpoint = `${endpoint}/oidc/session/end`;
 const revocationEndpoint = `${endpoint}/oidc/token/revocation`;
@@ -42,6 +43,7 @@ jest.mock('@logto/js', () => ({
   ...jest.requireActual('@logto/js'),
   fetchOidcConfig: jest.fn(async () => ({
     authorizationEndpoint,
+    userinfoEndpoint,
     tokenEndpoint,
     endSessionEndpoint,
     revocationEndpoint,
@@ -55,20 +57,19 @@ jest.mock('@logto/js', () => ({
     scope: 'read register manage',
     expiresIn: 3600,
   })),
-  fetchTokenByRefreshToken: async () => ({
+  fetchTokenByRefreshToken: jest.fn(async () => ({
     accessToken: 'access_token_value',
     refreshToken: 'new_refresh_token_value',
     expiresIn: 3600,
-  }),
-  decodeIdToken: () => ({
+  })),
+  decodeIdToken: jest.fn(() => ({
     iss: 'issuer_value',
     sub: 'subject_value',
     aud: 'audience_value',
     exp: currentUnixTimeStamp + 3600,
     iat: currentUnixTimeStamp,
     at_hash: 'at_hash_value',
-  }),
-  fetchUserInfo: async () => ({ sub: 'subject_value' }),
+  })),
   generateCodeChallenge: jest.fn(async () => mockCodeChallenge),
   generateCodeVerifier: jest.fn(() => mockedCodeVerifier),
   generateState: jest.fn(() => mockedState),
@@ -302,15 +303,18 @@ describe('LogtoClient', () => {
     });
 
     test('should return user information', async () => {
+      requester.mockClear();
+      requester.mockImplementation(async () => ({ sub: 'subject_value' }));
       localStorage.setItem(idTokenStorageKey, 'id_token_value');
       localStorage.setItem(refreshTokenStorageKey, 'refresh_token_value');
 
       const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
       const userInfo = await logtoClient.fetchUserInfo();
 
-      expect(userInfo).toEqual({
-        sub: 'subject_value',
+      expect(requester).toHaveBeenCalledWith(userinfoEndpoint, {
+        headers: { Authorization: 'Bearer access_token_value' },
       });
+      expect(userInfo).toEqual({ sub: 'subject_value' });
     });
   });
 });
