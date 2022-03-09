@@ -10,7 +10,6 @@ type Logto = {
   fetchUserInfo: () => Promise<UserInfoResponse>;
   getAccessToken: (resource?: string) => Promise<Nullable<string>>;
   getIdTokenClaims: () => IdTokenClaims;
-  handleSignInCallback: (callbackUri: string) => Promise<void>;
   signIn: (redirectUri: string) => Promise<void>;
   signOut: (postLogoutRedirectUri: string) => Promise<void>;
 };
@@ -114,7 +113,6 @@ export default function useLogto(): Logto {
     isAuthenticated,
     isLoading,
     signIn,
-    handleSignInCallback,
     signOut,
     fetchUserInfo,
     getAccessToken,
