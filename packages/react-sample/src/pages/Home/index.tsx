@@ -41,7 +41,7 @@ const Home = () => {
       )}
       {isAuthenticated && idTokenClaims && (
         <>
-          <table>
+          <table className={styles.table}>
             <thead>
               <tr>
                 <th>Name</th>
