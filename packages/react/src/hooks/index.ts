@@ -2,7 +2,7 @@ import { IdTokenClaims, UserInfoResponse } from '@logto/browser';
 import { Nullable } from '@silverhand/essentials';
 import { useCallback, useContext, useEffect, useState } from 'react';
 
-import { LogtoContext } from '../context';
+import { LogtoContext, throwContextError } from '../context';
 
 type Logto = {
   isAuthenticated: boolean;
@@ -14,8 +14,6 @@ type Logto = {
   signIn: (redirectUri: string) => Promise<void>;
   signOut: (postLogoutRedirectUri: string) => Promise<void>;
 };
-
-const notInProviderErrorMessage = 'useLogto hook must be used inside LogtoProvider context';
 
 export default function useLogto(): Logto {
   const { logtoClient, loadingCount, setLoadingCount } = useContext(LogtoContext);
@@ -36,7 +34,7 @@ export default function useLogto(): Logto {
   const signIn = useCallback(
     async (redirectUri: string) => {
       if (!logtoClient) {
-        throw new Error(notInProviderErrorMessage);
+        return throwContextError();
       }
 
       setLoadingState(true);
@@ -49,7 +47,7 @@ export default function useLogto(): Logto {
   const handleSignInCallback = useCallback(
     async (callbackUri: string) => {
       if (!logtoClient) {
-        throw new Error(notInProviderErrorMessage);
+        return throwContextError();
       }
       setLoadingState(true);
       await logtoClient.handleSignInCallback(callbackUri);
@@ -62,7 +60,7 @@ export default function useLogto(): Logto {
   const signOut = useCallback(
     async (postLogoutRedirectUri: string) => {
       if (!logtoClient) {
-        throw new Error(notInProviderErrorMessage);
+        return throwContextError();
       }
       setLoadingState(true);
       await logtoClient.signOut(postLogoutRedirectUri);
@@ -74,7 +72,7 @@ export default function useLogto(): Logto {
 
   const fetchUserInfo = useCallback(async () => {
     if (!logtoClient) {
-      throw new Error(notInProviderErrorMessage);
+      return throwContextError();
     }
     setLoadingState(true);
     const userInfo = await logtoClient.fetchUserInfo();
@@ -85,7 +83,7 @@ export default function useLogto(): Logto {
 
   const getAccessToken = useCallback(async () => {
     if (!logtoClient) {
-      throw new Error(notInProviderErrorMessage);
+      return throwContextError();
     }
     setLoadingState(true);
     const accessToken = await logtoClient.getAccessToken();
@@ -96,7 +94,7 @@ export default function useLogto(): Logto {
 
   const getIdTokenClaims = useCallback(() => {
     if (!logtoClient) {
-      throw new Error(notInProviderErrorMessage);
+      return throwContextError();
     }
 
     return logtoClient.getIdTokenClaims();
@@ -109,7 +107,7 @@ export default function useLogto(): Logto {
   }, [handleSignInCallback, isAuthenticated, logtoClient]);
 
   if (!logtoClient) {
-    throw new Error(notInProviderErrorMessage);
+    return throwContextError();
   }
 
   return {

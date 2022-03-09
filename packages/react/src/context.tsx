@@ -7,10 +7,12 @@ export type LogtoContextProps = {
   setLoadingCount: React.Dispatch<React.SetStateAction<number>>;
 };
 
+export const throwContextError = (): never => {
+  throw new Error('Must be used inside <LogtoProvider> context.');
+};
+
 export const LogtoContext = createContext<LogtoContextProps>({
   logtoClient: undefined,
   loadingCount: 0,
-  setLoadingCount: (): never => {
-    throw new Error('Must be used inside <LogtoProvider>');
-  },
+  setLoadingCount: throwContextError,
 });
