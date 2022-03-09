@@ -243,8 +243,9 @@ export default class LogtoClient {
       return false;
     }
     const { redirectUri } = signInSession;
+    const { origin, pathname } = new URL(url);
 
-    return url.startsWith(redirectUri);
+    return `${origin}${pathname}` === redirectUri;
   }
 
   public async handleSignInCallback(callbackUri: string) {
