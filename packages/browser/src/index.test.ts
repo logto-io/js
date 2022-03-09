@@ -50,18 +50,6 @@ jest.mock('@logto/js', () => ({
     jwksUri,
     issuer,
   })),
-  fetchTokenByAuthorizationCode: jest.fn(async () => ({
-    accessToken,
-    refreshToken,
-    idToken,
-    scope: 'read register manage',
-    expiresIn: 3600,
-  })),
-  fetchTokenByRefreshToken: jest.fn(async () => ({
-    accessToken: 'access_token_value',
-    refreshToken: 'new_refresh_token_value',
-    expiresIn: 3600,
-  })),
   decodeIdToken: jest.fn(() => ({
     iss: 'issuer_value',
     sub: 'subject_value',
@@ -173,6 +161,13 @@ describe('LogtoClient', () => {
     });
 
     test('tokens should be set after calling signIn and handleSignInCallback successfully', async () => {
+      requester.mockClear().mockImplementation(async () => ({
+        accessToken,
+        refreshToken,
+        idToken,
+        scope: 'read register manage',
+        expiresIn: 3600,
+      }));
       const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
       await logtoClient.signIn(redirectUri);
 
@@ -183,6 +178,7 @@ describe('LogtoClient', () => {
       await expect(logtoClient.getAccessToken()).resolves.toEqual(accessToken);
       expect(localStorage.getItem(refreshTokenStorageKey)).toEqual(refreshToken);
       expect(localStorage.getItem(idTokenStorageKey)).toEqual(idToken);
+      expect(requester).toHaveBeenCalledWith(tokenEndpoint, expect.anything());
     });
   });
 
@@ -196,7 +192,7 @@ describe('LogtoClient', () => {
       const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
       await logtoClient.signOut(postSignOutRedirectUri);
 
-      expect(requester).toBeCalledTimes(1);
+      expect(requester).toHaveBeenCalledWith(revocationEndpoint, expect.anything());
     });
 
     test('should clear id token and refresh token in local storage', async () => {
@@ -252,12 +248,18 @@ describe('LogtoClient', () => {
     });
 
     test('should return access token by valid refresh token', async () => {
+      requester.mockClear().mockImplementation(async () => ({
+        accessToken: 'access_token_value',
+        refreshToken: 'new_refresh_token_value',
+        expiresIn: 3600,
+      }));
       localStorage.setItem(idTokenStorageKey, 'id_token_value');
       localStorage.setItem(refreshTokenStorageKey, 'refresh_token_value');
 
       const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
       const accessToken = await logtoClient.getAccessToken();
 
+      expect(requester).toHaveBeenCalledWith(tokenEndpoint, expect.anything());
       expect(accessToken).toEqual('access_token_value');
     });
 
@@ -303,8 +305,14 @@ describe('LogtoClient', () => {
     });
 
     test('should return user information', async () => {
-      requester.mockClear();
-      requester.mockImplementation(async () => ({ sub: 'subject_value' }));
+      requester
+        .mockClear()
+        .mockImplementationOnce(async () => ({
+          accessToken: 'access_token_value',
+        }))
+        .mockImplementationOnce(async () => ({
+          sub: 'subject_value',
+        }));
       localStorage.setItem(idTokenStorageKey, 'id_token_value');
       localStorage.setItem(refreshTokenStorageKey, 'refresh_token_value');
 
