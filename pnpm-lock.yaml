@@ -7,6 +7,7 @@ importers:
       '@commitlint/cli': ^13.1.0
       '@commitlint/config-conventional': ^13.1.0
       '@commitlint/types': ^13.1.0
+      conventional-changelog-conventionalcommits: ^4.6.3
       husky: ^7.0.1
       lerna: ^4.0.0
       typescript: ^4.5.5
@@ -14,6 +15,7 @@ importers:
       '@commitlint/cli': 13.2.1
       '@commitlint/config-conventional': 13.2.0
       '@commitlint/types': 13.2.0
+      conventional-changelog-conventionalcommits: 4.6.3
       husky: 7.0.4
       lerna: 4.0.0
       typescript: 4.5.5
