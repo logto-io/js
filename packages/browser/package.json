@@ -17,7 +17,6 @@
     "package": "pnpm build && webpack",
     "test": "jest",
     "test:coverage": "jest --silent --coverage",
-    "prepublish": "pnpm package",
     "report": "WITH_REPORT=true pnpm package",
     "prepack": "pnpm test && pnpm build"
   },
