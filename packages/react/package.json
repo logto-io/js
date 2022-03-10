@@ -1,21 +1,24 @@
 {
   "name": "@logto/react",
   "version": "0.1.0",
-  "source": "src/index.ts",
-  "main": "lib/index.js",
+  "main": "./lib/index.js",
   "exports": "./lib/index.js",
-  "typings": "lib/index.d.ts",
+  "typings": "./lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
   "license": "MPL-2.0",
   "scripts": {
     "dev:tsc": "tsc -p tsconfig.build.json -w --preserveWatchOutput",
     "preinstall": "npx only-allow pnpm",
     "precommit": "lint-staged",
-    "build": "tsc -p tsconfig.build.json",
+    "build": "rm -rf lib/ && tsc -p tsconfig.build.json",
     "lint": "eslint --ext .ts --ext .tsx src",
     "test": "jest",
     "test:coverage": "jest --silent --coverage",
     "prepublish": "pnpm build",
-    "report": "WITH_REPORT=true pnpm build"
+    "report": "WITH_REPORT=true pnpm build",
+    "prepack": "pnpm test && pnpm build"
   },
   "dependencies": {
     "@logto/browser": "^0.1.0",
