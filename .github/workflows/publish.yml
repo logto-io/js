@@ -36,7 +36,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_REPO_TOKEN }}
 
       - name: Update pnpm lockfile
-        run: pnpm i --frozen-lockfile=false --offline
+        run: pnpm i --frozen-lockfile=false
 
       - name: Commit and push lockfile changes
         continue-on-error: true
