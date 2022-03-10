@@ -8,6 +8,11 @@
     "lib"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/logto-io/js.git",
+    "directory": "packages/js"
+  },
   "scripts": {
     "dev:tsc": "tsc -p tsconfig.build.json -w --preserveWatchOutput",
     "preinstall": "npx only-allow pnpm",
