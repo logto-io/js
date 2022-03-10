@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [0.1.2-rc.0](https://github.com/logto-io/js/compare/v0.1.1-rc.0...v0.1.2-rc.0) (2022-03-10)
+
+
+### Bug Fixes
+
+* remove `prepublish` script ([#221](https://github.com/logto-io/js/issues/221)) ([cc89533](https://github.com/logto-io/js/commit/cc895337762cf7740578a8eb14835ed0d5d72905))
+* remove offline option when updating lockfile ([3e4f331](https://github.com/logto-io/js/commit/3e4f331859abfafece2b35761aa142f8543b8713))
+
+
+
 ### [0.1.1-rc.0](https://github.com/logto-io/js/compare/v0.1.0...v0.1.1-rc.0) (2022-03-10)
 
 
