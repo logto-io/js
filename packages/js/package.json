@@ -1,21 +1,25 @@
 {
   "name": "@logto/js",
   "version": "0.1.0",
-  "main": "lib/index.js",
+  "main": "./lib/index.js",
   "exports": "./lib/index.js",
-  "typings": "lib/index.d.ts",
+  "typings": "./lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
   "license": "MPL-2.0",
   "scripts": {
     "dev:tsc": "tsc -p tsconfig.build.json -w --preserveWatchOutput",
     "preinstall": "npx only-allow pnpm",
     "precommit": "lint-staged",
-    "build": "tsc -p tsconfig.build.json",
+    "build": "rm -rf lib/ && tsc -p tsconfig.build.json",
     "lint": "eslint --ext .ts src",
     "package": "pnpm build && webpack",
     "test": "jest",
     "test:coverage": "jest --silent --env=jsdom && jest --silent --coverage",
     "prepublish": "pnpm package",
-    "report": "WITH_REPORT=true pnpm package"
+    "report": "WITH_REPORT=true pnpm package",
+    "prepack": "pnpm test && pnpm build"
   },
   "dependencies": {
     "@silverhand/essentials": "^1.1.6",
