@@ -1,4 +1,4 @@
-import { LogtoProvider } from '@logto/react';
+import { LogtoProvider, LogtoConfig } from '@logto/react';
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -11,14 +11,14 @@ import ProtectedResource from './pages/ProtectedResource';
 import './App.module.scss';
 
 export const App = () => {
-  const logtoConfig = {
+  const config: LogtoConfig = {
     clientId,
     endpoint,
   };
 
   return (
     <BrowserRouter>
-      <LogtoProvider logtoConfig={logtoConfig}>
+      <LogtoProvider config={config}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/callback" element={<Callback />} />

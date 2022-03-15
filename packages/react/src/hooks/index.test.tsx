@@ -25,7 +25,7 @@ const clientId = 'foo';
 const createHookWrapper =
   () =>
   ({ children }: { children: ComponentType<unknown> }) =>
-    <LogtoProvider logtoConfig={{ endpoint, clientId }}>{children}</LogtoProvider>;
+    <LogtoProvider config={{ endpoint, clientId }}>{children}</LogtoProvider>;
 
 describe('useLogto', () => {
   test('without provider should throw', () => {

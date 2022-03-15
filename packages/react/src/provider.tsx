@@ -1,19 +1,16 @@
 import LogtoClient, { LogtoConfig } from '@logto/browser';
-import React, { useMemo, useState } from 'react';
+import React, { ReactNode, useMemo, useState } from 'react';
 
 import { LogtoContext } from './context';
 
 export type LogtoProviderProps = {
-  logtoConfig: LogtoConfig;
-  children?: React.ReactNode;
+  config: LogtoConfig;
+  children?: ReactNode;
 };
 
-export const LogtoProvider = ({ logtoConfig, children }: LogtoProviderProps) => {
+export const LogtoProvider = ({ config, children }: LogtoProviderProps) => {
   const [loadingCount, setLoadingCount] = useState(0);
-  const memorizedLogtoClient = useMemo(
-    () => ({ logtoClient: new LogtoClient(logtoConfig) }),
-    [logtoConfig]
-  );
+  const memorizedLogtoClient = useMemo(() => ({ logtoClient: new LogtoClient(config) }), [config]);
   const memorizedContextValue = useMemo(
     () => ({
       ...memorizedLogtoClient,
