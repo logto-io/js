@@ -2,7 +2,7 @@ import LogtoClient from '@logto/browser';
 import { renderHook, act } from '@testing-library/react-hooks';
 import React, { ComponentType } from 'react';
 
-import useLogto from '.';
+import { useLogto, useHandleSignInCallback } from '.';
 import { LogtoProvider } from '../provider';
 
 const isSignInRedirected = jest.fn(() => false);
@@ -59,18 +59,32 @@ describe('useLogto', () => {
   });
 
   test('not in callback url should not call `handleSignInCallback`', async () => {
-    const { result } = renderHook(() => useLogto(), {
-      wrapper: createHookWrapper(),
-    });
+    const { result } = renderHook(
+      () => {
+        useHandleSignInCallback();
+
+        return useLogto();
+      },
+      {
+        wrapper: createHookWrapper(),
+      }
+    );
     await act(async () => result.current.signIn('redirectUri'));
     expect(handleSignInCallback).not.toHaveBeenCalled();
   });
 
   test('in callback url should call `handleSignInCallback`', async () => {
     isSignInRedirected.mockImplementation(() => true);
-    const { result, waitFor } = renderHook(() => useLogto(), {
-      wrapper: createHookWrapper(),
-    });
+    const { result, waitFor } = renderHook(
+      () => {
+        useHandleSignInCallback();
+
+        return useLogto();
+      },
+      {
+        wrapper: createHookWrapper(),
+      }
+    );
     await act(async () => result.current.signIn('redirectUri'));
     await waitFor(() => {
       expect(handleSignInCallback).toHaveBeenCalledTimes(1);
