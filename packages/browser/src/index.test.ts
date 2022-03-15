@@ -248,19 +248,35 @@ describe('LogtoClient', () => {
     });
 
     test('should return access token by valid refresh token', async () => {
-      requester.mockClear().mockImplementation(async () => ({
-        accessToken: 'access_token_value',
-        refreshToken: 'new_refresh_token_value',
-        expiresIn: 3600,
-      }));
+      // eslint-disable-next-line @silverhand/fp/no-let
+      let count = 0;
+
+      requester.mockClear().mockImplementation(async () => {
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        count += 1;
+        await new Promise((resolve) => {
+          setTimeout(resolve, 0);
+        });
+
+        return {
+          accessToken: count === 1 ? 'access_token_value' : 'nope',
+          refreshToken: count === 1 ? 'new_refresh_token_value' : 'nope',
+          expiresIn: 3600,
+        };
+      });
       localStorage.setItem(idTokenStorageKey, 'id_token_value');
       localStorage.setItem(refreshTokenStorageKey, 'refresh_token_value');
 
       const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
-      const accessToken = await logtoClient.getAccessToken();
+      const [accessToken_1, accessToken_2] = await Promise.all([
+        logtoClient.getAccessToken(),
+        logtoClient.getAccessToken(),
+      ]);
 
       expect(requester).toHaveBeenCalledWith(tokenEndpoint, expect.anything());
-      expect(accessToken).toEqual('access_token_value');
+      expect(accessToken_1).toEqual('access_token_value');
+      expect(accessToken_2).toEqual('access_token_value');
+      expect(logtoClient.refreshToken).toEqual('new_refresh_token_value');
     });
 
     afterAll(() => {
