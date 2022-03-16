@@ -28,6 +28,7 @@
     "@silverhand/essentials": "^1.1.6",
     "jose": "^4.5.0",
     "lodash.get": "^4.4.2",
+    "lodash.once": "^4.1.1",
     "superstruct": "^0.15.3"
   },
   "devDependencies": {
@@ -36,6 +37,7 @@
     "@silverhand/ts-config": "^0.9.1",
     "@types/jest": "^27.4.0",
     "@types/lodash.get": "^4.4.6",
+    "@types/lodash.once": "^4.1.6",
     "eslint": "^8.9.0",
     "jest": "^27.5.1",
     "jest-location-mock": "^1.0.9",
