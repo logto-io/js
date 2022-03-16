@@ -66,6 +66,8 @@ export default class LogtoClient {
   protected requester: Requester;
 
   protected accessTokenMap = new Map<string, AccessToken>();
+
+  private readonly getAccessTokenPromiseMap = new Map<string, Promise<string>>();
   private _refreshToken: Nullable<string>;
   private _idToken: Nullable<string>;
 
@@ -109,7 +111,7 @@ export default class LogtoClient {
     sessionStorage.setItem(this.logtoStorageKey, jsonItem);
   }
 
-  private get refreshToken() {
+  get refreshToken() {
     return this._refreshToken;
   }
 
@@ -127,7 +129,7 @@ export default class LogtoClient {
     localStorage.setItem(refreshTokenKey, refreshToken);
   }
 
-  private get idToken() {
+  get idToken() {
     return this._idToken;
   }
 
@@ -145,7 +147,7 @@ export default class LogtoClient {
     localStorage.setItem(idTokenKey, idToken);
   }
 
-  public async getAccessToken(resource?: string): Promise<Nullable<string>> {
+  public async getAccessToken(resource?: string): Promise<string> {
     if (!this.idToken) {
       throw new LogtoClientError('not_authenticated');
     }
@@ -157,42 +159,28 @@ export default class LogtoClient {
       return accessToken.token;
     }
 
-    // Token expired, remove it from the map
-    if (accessToken) {
-      this.accessTokenMap.delete(accessTokenKey);
+    /**
+     * Token has expired, need to fetch a new one using refresh token.
+     * Reuse the cached promise if exists.
+     */
+    const cachedPromise = this.getAccessTokenPromiseMap.get(accessTokenKey);
+
+    if (cachedPromise) {
+      return cachedPromise;
     }
 
-    // Fetch new access token by refresh token
-    const { clientId } = this.logtoConfig;
+    /**
+     * Create a new promise and cache in map to avoid race condition.
+     * Since we enable "refresh token rotation" by default,
+     * it will be problematic when calling multiple `getAccessToken()` closely.
+     */
+    const promise = this.getAccessTokenByRefreshToken(resource);
+    this.getAccessTokenPromiseMap.set(accessTokenKey, promise);
 
-    if (!this.refreshToken) {
-      throw new LogtoClientError('not_authenticated');
-    }
+    const token = await promise;
+    this.getAccessTokenPromiseMap.delete(accessTokenKey);
 
-    try {
-      const { tokenEndpoint } = await this.getOidcConfig();
-      const { accessToken, refreshToken, idToken, scope, expiresIn } =
-        await fetchTokenByRefreshToken(
-          { clientId, tokenEndpoint, refreshToken: this.refreshToken, resource },
-          this.requester
-        );
-      this.accessTokenMap.set(accessTokenKey, {
-        token: accessToken,
-        scope,
-        expiresAt: Math.round(Date.now() / 1000) + expiresIn,
-      });
-
-      this.refreshToken = refreshToken;
-
-      if (idToken) {
-        await this.verifyIdToken(idToken);
-        this.idToken = idToken;
-      }
-
-      return accessToken;
-    } catch (error: unknown) {
-      throw new LogtoClientError('get_access_token_by_refresh_token_failed', error);
-    }
+    return token;
   }
 
   public getIdTokenClaims(): IdTokenClaims {
@@ -303,6 +291,47 @@ export default class LogtoClient {
     this.idToken = null;
 
     window.location.assign(url);
+  }
+
+  private async getAccessTokenByRefreshToken(resource?: string): Promise<string> {
+    const accessTokenKey = buildAccessTokenKey(resource);
+
+    // Token expired, remove it from the map
+    if (this.accessTokenMap.has(accessTokenKey)) {
+      this.accessTokenMap.delete(accessTokenKey);
+    }
+
+    // Fetch new access token by refresh token
+    const { clientId } = this.logtoConfig;
+
+    if (!this.refreshToken) {
+      throw new LogtoClientError('not_authenticated');
+    }
+
+    try {
+      const { tokenEndpoint } = await this.getOidcConfig();
+      const { accessToken, refreshToken, idToken, scope, expiresIn } =
+        await fetchTokenByRefreshToken(
+          { clientId, tokenEndpoint, refreshToken: this.refreshToken, resource },
+          this.requester
+        );
+      this.accessTokenMap.set(accessTokenKey, {
+        token: accessToken,
+        scope,
+        expiresAt: Math.round(Date.now() / 1000) + expiresIn,
+      });
+
+      this.refreshToken = refreshToken;
+
+      if (idToken) {
+        await this.verifyIdToken(idToken);
+        this.idToken = idToken;
+      }
+
+      return accessToken;
+    } catch (error: unknown) {
+      throw new LogtoClientError('get_access_token_by_refresh_token_failed', error);
+    }
   }
 
   private async getOidcConfig(): Promise<OidcConfigResponse> {
