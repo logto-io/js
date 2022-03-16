@@ -1,6 +1,6 @@
 import { IdTokenClaims, UserInfoResponse } from '@logto/browser';
 import { Nullable } from '@silverhand/essentials';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 
 import { LogtoContext, throwContextError } from '../context';
 
@@ -14,10 +14,8 @@ type Logto = {
   signOut: (postLogoutRedirectUri: string) => Promise<void>;
 };
 
-export default function useLogto(): Logto {
-  const { logtoClient, loadingCount, setLoadingCount } = useContext(LogtoContext);
-  const [isAuthenticated, setIsAuthenticated] = useState(logtoClient?.isAuthenticated ?? false);
-  const isLoading = loadingCount > 0;
+const useLoadingState = (): ((state: boolean) => void) => {
+  const { setLoadingCount } = useContext(LogtoContext);
 
   const setLoadingState = useCallback(
     (state: boolean) => {
@@ -29,6 +27,39 @@ export default function useLogto(): Logto {
     },
     [setLoadingCount]
   );
+
+  return setLoadingState;
+};
+
+const useHandleSignInCallback = (): void => {
+  const { logtoClient, isAuthenticated, setIsAuthenticated } = useContext(LogtoContext);
+  const setLoadingState = useLoadingState();
+
+  const handleSignInCallback = useCallback(
+    async (callbackUri: string) => {
+      if (!logtoClient) {
+        return throwContextError();
+      }
+      setLoadingState(true);
+      await logtoClient.handleSignInCallback(callbackUri);
+      setLoadingState(false);
+      setIsAuthenticated(true);
+    },
+    [logtoClient, setIsAuthenticated, setLoadingState]
+  );
+
+  useEffect(() => {
+    if (!isAuthenticated && logtoClient?.isSignInRedirected(window.location.href)) {
+      void handleSignInCallback(window.location.href);
+    }
+  }, [handleSignInCallback, isAuthenticated, logtoClient]);
+};
+
+const useLogto = (): Logto => {
+  const { logtoClient, loadingCount, isAuthenticated, setIsAuthenticated } =
+    useContext(LogtoContext);
+  const setLoadingState = useLoadingState();
+  const isLoading = loadingCount > 0;
 
   const signIn = useCallback(
     async (redirectUri: string) => {
@@ -43,19 +74,6 @@ export default function useLogto(): Logto {
     [logtoClient, setLoadingState]
   );
 
-  const handleSignInCallback = useCallback(
-    async (callbackUri: string) => {
-      if (!logtoClient) {
-        return throwContextError();
-      }
-      setLoadingState(true);
-      await logtoClient.handleSignInCallback(callbackUri);
-      setLoadingState(false);
-      setIsAuthenticated(true);
-    },
-    [logtoClient, setLoadingState]
-  );
-
   const signOut = useCallback(
     async (postLogoutRedirectUri: string) => {
       if (!logtoClient) {
@@ -66,7 +84,7 @@ export default function useLogto(): Logto {
       setLoadingState(false);
       setIsAuthenticated(false);
     },
-    [logtoClient, setLoadingState]
+    [logtoClient, setIsAuthenticated, setLoadingState]
   );
 
   const fetchUserInfo = useCallback(async () => {
@@ -80,16 +98,19 @@ export default function useLogto(): Logto {
     return userInfo;
   }, [logtoClient, setLoadingState]);
 
-  const getAccessToken = useCallback(async () => {
-    if (!logtoClient) {
-      return throwContextError();
-    }
-    setLoadingState(true);
-    const accessToken = await logtoClient.getAccessToken();
-    setLoadingState(false);
+  const getAccessToken = useCallback(
+    async (resource?: string) => {
+      if (!logtoClient) {
+        return throwContextError();
+      }
+      setLoadingState(true);
+      const accessToken = await logtoClient.getAccessToken(resource);
+      setLoadingState(false);
 
-    return accessToken;
-  }, [logtoClient, setLoadingState]);
+      return accessToken;
+    },
+    [logtoClient, setLoadingState]
+  );
 
   const getIdTokenClaims = useCallback(() => {
     if (!logtoClient) {
@@ -98,12 +119,6 @@ export default function useLogto(): Logto {
 
     return logtoClient.getIdTokenClaims();
   }, [logtoClient]);
-
-  useEffect(() => {
-    if (!isAuthenticated && logtoClient?.isSignInRedirected(window.location.href)) {
-      void handleSignInCallback(window.location.href);
-    }
-  }, [handleSignInCallback, isAuthenticated, logtoClient]);
 
   if (!logtoClient) {
     return throwContextError();
@@ -118,4 +133,6 @@ export default function useLogto(): Logto {
     getAccessToken,
     getIdTokenClaims,
   };
-}
+};
+
+export { useLogto, useHandleSignInCallback };

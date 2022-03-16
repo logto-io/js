@@ -11,13 +11,18 @@ export type LogtoProviderProps = {
 export const LogtoProvider = ({ config, children }: LogtoProviderProps) => {
   const [loadingCount, setLoadingCount] = useState(0);
   const memorizedLogtoClient = useMemo(() => ({ logtoClient: new LogtoClient(config) }), [config]);
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    memorizedLogtoClient.logtoClient.isAuthenticated
+  );
   const memorizedContextValue = useMemo(
     () => ({
       ...memorizedLogtoClient,
+      isAuthenticated,
+      setIsAuthenticated,
       loadingCount,
       setLoadingCount,
     }),
-    [memorizedLogtoClient, loadingCount]
+    [memorizedLogtoClient, isAuthenticated, loadingCount]
   );
 
   return <LogtoContext.Provider value={memorizedContextValue}>{children}</LogtoContext.Provider>;
