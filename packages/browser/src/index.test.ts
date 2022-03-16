@@ -1,7 +1,7 @@
 import { generateSignInUri } from '@logto/js';
 import { Nullable } from '@silverhand/essentials';
 
-import LogtoClient, { LogtoClientError, LogtoSignInSessionItem } from '.';
+import LogtoClient, { AccessToken, LogtoClientError, LogtoSignInSessionItem } from '.';
 
 const clientId = 'client_id_value';
 const endpoint = 'https://logto.dev';
@@ -74,6 +74,10 @@ class LogtoClientSignInSessionAccessor extends LogtoClient {
 
   public setSignInSessionItem(item: Nullable<LogtoSignInSessionItem>) {
     this.signInSession = item;
+  }
+
+  public getAccessTokenMap(): Map<string, AccessToken> {
+    return this.accessTokenMap;
   }
 }
 
@@ -277,6 +281,29 @@ describe('LogtoClient', () => {
       expect(accessToken_1).toEqual('access_token_value');
       expect(accessToken_2).toEqual('access_token_value');
       expect(logtoClient.refreshToken).toEqual('new_refresh_token_value');
+    });
+
+    test('should delete expired access token once', async () => {
+      requester.mockClear().mockImplementation(async () => ({
+        accessToken: 'access_token_value',
+        refreshToken: 'new_refresh_token_value',
+        expiresIn: 3600,
+      }));
+      localStorage.setItem(idTokenStorageKey, 'id_token_value');
+      localStorage.setItem(refreshTokenStorageKey, 'refresh_token_value');
+
+      const logtoClient = new LogtoClientSignInSessionAccessor({ endpoint, clientId }, requester);
+
+      const accessTokenMap = logtoClient.getAccessTokenMap();
+      jest.spyOn(accessTokenMap, 'delete');
+      accessTokenMap.set('@', {
+        token: 'token_value',
+        scope: 'scope_value',
+        expiresAt: Date.now() / 1000 - 1,
+      });
+
+      await Promise.all([logtoClient.getAccessToken(), logtoClient.getAccessToken()]);
+      expect(accessTokenMap.delete).toBeCalledTimes(1);
     });
 
     afterAll(() => {
