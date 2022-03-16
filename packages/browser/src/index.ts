@@ -21,16 +21,16 @@ import {
   withReservedScopes,
 } from '@logto/js';
 import { Nullable } from '@silverhand/essentials';
-import { createRemoteJWKSet } from 'jose';
+import { createRemoteJWKSet, JWTVerifyGetKey } from 'jose';
 import { assert, Infer, string, type } from 'superstruct';
 
 import { LogtoClientError } from './errors';
 import {
   buildAccessTokenKey,
-  getDiscoveryEndpoint,
   buildIdTokenKey,
   buildLogtoKey,
   buildRefreshTokenKey,
+  getDiscoveryEndpoint,
 } from './utils';
 
 export type { IdTokenClaims, UserInfoResponse } from '@logto/js';
@@ -61,6 +61,7 @@ export type LogtoSignInSessionItem = Infer<typeof LogtoSignInSessionItemSchema>;
 export default class LogtoClient {
   protected logtoConfig: LogtoConfig;
   protected oidcConfig?: OidcConfigResponse;
+  protected jwtVerifyGetKey?: JWTVerifyGetKey;
 
   protected logtoStorageKey: string;
   protected requester: Requester;
@@ -344,12 +345,22 @@ export default class LogtoClient {
     return this.oidcConfig;
   }
 
+  private async getJwtVerifyGetKey(): Promise<JWTVerifyGetKey> {
+    if (!this.jwtVerifyGetKey) {
+      const { jwksUri } = await this.getOidcConfig();
+      this.jwtVerifyGetKey = createRemoteJWKSet(new URL(jwksUri));
+    }
+
+    return this.jwtVerifyGetKey;
+  }
+
   private async verifyIdToken(idToken: string) {
     const { clientId } = this.logtoConfig;
-    const { issuer, jwksUri } = await this.getOidcConfig();
+    const { issuer } = await this.getOidcConfig();
+    const jwtVerifyGetKey = await this.getJwtVerifyGetKey();
 
     try {
-      await verifyIdToken(idToken, clientId, issuer, createRemoteJWKSet(new URL(jwksUri)));
+      await verifyIdToken(idToken, clientId, issuer, jwtVerifyGetKey);
     } catch (error: unknown) {
       throw new LogtoClientError('invalid_id_token', error);
     }
