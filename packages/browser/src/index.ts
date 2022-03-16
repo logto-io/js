@@ -159,8 +159,13 @@ export default class LogtoClient {
       return accessToken.token;
     }
 
+    // Since the access token has expired, delete it from the map.
+    if (accessToken) {
+      this.accessTokenMap.delete(accessTokenKey);
+    }
+
     /**
-     * Token has expired, need to fetch a new one using refresh token.
+     * Need to fetch a new access token using refresh token.
      * Reuse the cached promise if exists.
      */
     const cachedPromise = this.getAccessTokenPromiseMap.get(accessTokenKey);
@@ -294,27 +299,20 @@ export default class LogtoClient {
   }
 
   private async getAccessTokenByRefreshToken(resource?: string): Promise<string> {
-    const accessTokenKey = buildAccessTokenKey(resource);
-
-    // Token expired, remove it from the map
-    if (this.accessTokenMap.has(accessTokenKey)) {
-      this.accessTokenMap.delete(accessTokenKey);
-    }
-
-    // Fetch new access token by refresh token
-    const { clientId } = this.logtoConfig;
-
     if (!this.refreshToken) {
       throw new LogtoClientError('not_authenticated');
     }
 
     try {
+      const accessTokenKey = buildAccessTokenKey(resource);
+      const { clientId } = this.logtoConfig;
       const { tokenEndpoint } = await this.getOidcConfig();
       const { accessToken, refreshToken, idToken, scope, expiresIn } =
         await fetchTokenByRefreshToken(
           { clientId, tokenEndpoint, refreshToken: this.refreshToken, resource },
           this.requester
         );
+
       this.accessTokenMap.set(accessTokenKey, {
         token: accessToken,
         scope,
