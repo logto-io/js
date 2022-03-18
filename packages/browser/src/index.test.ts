@@ -39,9 +39,12 @@ const requester = jest.fn();
 const failingRequester = jest.fn().mockRejectedValue(new Error('Failed!'));
 const currentUnixTimeStamp = Date.now() / 1000;
 
-jest.mock('@logto/js', () => ({
-  ...jest.requireActual('@logto/js'),
-  fetchOidcConfig: jest.fn(async () => ({
+const fetchOidcConfig = jest.fn(async () => {
+  await new Promise((resolve) => {
+    setTimeout(resolve, 0);
+  });
+
+  return {
     authorizationEndpoint,
     userinfoEndpoint,
     tokenEndpoint,
@@ -49,7 +52,12 @@ jest.mock('@logto/js', () => ({
     revocationEndpoint,
     jwksUri,
     issuer,
-  })),
+  };
+});
+
+jest.mock('@logto/js', () => ({
+  ...jest.requireActual('@logto/js'),
+  fetchOidcConfig: async () => fetchOidcConfig(),
   decodeIdToken: jest.fn(() => ({
     iss: 'issuer_value',
     sub: 'subject_value',
@@ -62,6 +70,13 @@ jest.mock('@logto/js', () => ({
   generateCodeVerifier: jest.fn(() => mockedCodeVerifier),
   generateState: jest.fn(() => mockedState),
   verifyIdToken: jest.fn(),
+}));
+
+const createRemoteJWKSet = jest.fn(async () => '');
+
+jest.mock('jose', () => ({
+  ...jest.requireActual('jose'),
+  createRemoteJWKSet: async () => createRemoteJWKSet(),
 }));
 
 /**
@@ -142,6 +157,13 @@ describe('LogtoClient', () => {
     beforeEach(() => {
       localStorage.clear();
       sessionStorage.clear();
+    });
+
+    test('should reuse oidcConfig', async () => {
+      fetchOidcConfig.mockClear();
+      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+      await Promise.all([logtoClient.signIn(redirectUri), logtoClient.signIn(redirectUri)]);
+      expect(fetchOidcConfig).toBeCalledTimes(1);
     });
 
     test('should redirect to signInUri just after calling signIn', async () => {
@@ -304,6 +326,28 @@ describe('LogtoClient', () => {
 
       await Promise.all([logtoClient.getAccessToken(), logtoClient.getAccessToken()]);
       expect(accessTokenMap.delete).toBeCalledTimes(1);
+    });
+
+    test('should reuse jwk set', async () => {
+      requester.mockImplementation(async () => {
+        await new Promise((resolve) => {
+          setTimeout(resolve, 0);
+        });
+
+        return {
+          IdToken: 'id_token_value',
+          accessToken: 'access_token_value',
+          refreshToken: 'new_refresh_token_value',
+          expiresIn: 3600,
+        };
+      });
+      localStorage.setItem(idTokenStorageKey, 'id_token_value');
+      localStorage.setItem(refreshTokenStorageKey, 'refresh_token_value');
+
+      createRemoteJWKSet.mockClear();
+      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+      await Promise.all([logtoClient.getAccessToken('a'), logtoClient.getAccessToken('b')]);
+      expect(createRemoteJWKSet).toBeCalledTimes(1);
     });
 
     afterAll(() => {

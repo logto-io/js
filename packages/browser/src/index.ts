@@ -12,7 +12,6 @@ import {
   generateSignOutUri,
   generateState,
   IdTokenClaims,
-  OidcConfigResponse,
   Requester,
   revoke,
   UserInfoResponse,
@@ -22,15 +21,16 @@ import {
 } from '@logto/js';
 import { Nullable } from '@silverhand/essentials';
 import { createRemoteJWKSet } from 'jose';
+import once from 'lodash.once';
 import { assert, Infer, string, type } from 'superstruct';
 
 import { LogtoClientError } from './errors';
 import {
   buildAccessTokenKey,
-  getDiscoveryEndpoint,
   buildIdTokenKey,
   buildLogtoKey,
   buildRefreshTokenKey,
+  getDiscoveryEndpoint,
 } from './utils';
 
 export type { IdTokenClaims, UserInfoResponse } from '@logto/js';
@@ -59,13 +59,14 @@ export const LogtoSignInSessionItemSchema = type({
 export type LogtoSignInSessionItem = Infer<typeof LogtoSignInSessionItemSchema>;
 
 export default class LogtoClient {
-  protected logtoConfig: LogtoConfig;
-  protected oidcConfig?: OidcConfigResponse;
+  protected readonly logtoConfig: LogtoConfig;
+  protected readonly getOidcConfig = once(this._getOidcConfig);
+  protected readonly getJwtVerifyGetKey = once(this._getJwtVerifyGetKey);
 
-  protected logtoStorageKey: string;
-  protected requester: Requester;
+  protected readonly logtoStorageKey: string;
+  protected readonly requester: Requester;
 
-  protected accessTokenMap = new Map<string, AccessToken>();
+  protected readonly accessTokenMap = new Map<string, AccessToken>();
 
   private readonly getAccessTokenPromiseMap = new Map<string, Promise<string>>();
   private _refreshToken: Nullable<string>;
@@ -332,22 +333,26 @@ export default class LogtoClient {
     }
   }
 
-  private async getOidcConfig(): Promise<OidcConfigResponse> {
-    if (!this.oidcConfig) {
-      const { endpoint } = this.logtoConfig;
-      const discoveryEndpoint = getDiscoveryEndpoint(endpoint);
-      this.oidcConfig = await fetchOidcConfig(discoveryEndpoint, this.requester);
-    }
+  private async _getOidcConfig() {
+    const { endpoint } = this.logtoConfig;
+    const discoveryEndpoint = getDiscoveryEndpoint(endpoint);
 
-    return this.oidcConfig;
+    return fetchOidcConfig(discoveryEndpoint, this.requester);
+  }
+
+  private async _getJwtVerifyGetKey() {
+    const { jwksUri } = await this.getOidcConfig();
+
+    return createRemoteJWKSet(new URL(jwksUri));
   }
 
   private async verifyIdToken(idToken: string) {
     const { clientId } = this.logtoConfig;
-    const { issuer, jwksUri } = await this.getOidcConfig();
+    const { issuer } = await this.getOidcConfig();
+    const jwtVerifyGetKey = await this.getJwtVerifyGetKey();
 
     try {
-      await verifyIdToken(idToken, clientId, issuer, createRemoteJWKSet(new URL(jwksUri)));
+      await verifyIdToken(idToken, clientId, issuer, jwtVerifyGetKey);
     } catch (error: unknown) {
       throw new LogtoClientError('invalid_id_token', error);
     }
