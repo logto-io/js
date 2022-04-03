@@ -21,7 +21,7 @@
     "lint": "eslint --ext .ts src",
     "test": "jest",
     "test:coverage": "jest --silent --env=jsdom && jest --silent --coverage",
-    "prepack": "pnpm test && pnpm build"
+    "prepack": "pnpm test"
   },
   "dependencies": {
     "@silverhand/essentials": "^1.1.6",
