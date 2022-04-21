@@ -3,7 +3,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import RequireAuth from './RequireAuth';
-import { clientId, endpoint } from './consts';
+import { appId, endpoint } from './consts';
 import Callback from './pages/Callback';
 import Home from './pages/Home';
 import ProtectedResource from './pages/ProtectedResource';
@@ -12,7 +12,7 @@ import './App.module.scss';
 
 export const App = () => {
   const config: LogtoConfig = {
-    clientId,
+    appId,
     endpoint,
   };
 

@@ -13,13 +13,13 @@ describe('browser SDK utilities', () => {
   });
 
   test('build refresh token key', () => {
-    const logtoKey = buildLogtoKey('clientIdValue');
-    expect(buildRefreshTokenKey(logtoKey)).toEqual('logto:clientIdValue:refreshToken');
+    const logtoKey = buildLogtoKey('appIdValue');
+    expect(buildRefreshTokenKey(logtoKey)).toEqual('logto:appIdValue:refreshToken');
   });
 
   test('build id token key', () => {
-    const logtoKey = buildLogtoKey('clientIdValue');
-    expect(buildIdTokenKey(logtoKey)).toEqual('logto:clientIdValue:idToken');
+    const logtoKey = buildLogtoKey('appIdValue');
+    expect(buildIdTokenKey(logtoKey)).toEqual('logto:appIdValue:idToken');
   });
 
   test('get discovery endpoint', () => {
