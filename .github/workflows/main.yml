@@ -26,13 +26,13 @@ jobs:
         run: pnpm -- lerna run --parallel test:coverage
 
       - name: Codecov js
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           flags: js
           directory: ./packages/js
 
       - name: Codecov browser
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           flags: browser
           directory: ./packages/browser
