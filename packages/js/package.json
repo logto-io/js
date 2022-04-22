@@ -35,7 +35,7 @@
     "@jest/types": "^27.5.1",
     "@peculiar/webcrypto": "^1.1.7",
     "@silverhand/eslint-config": "^0.9.1",
-    "@silverhand/ts-config": "^0.9.1",
+    "@silverhand/ts-config": "^0.10.0",
     "@types/jest": "^27.4.1",
     "@types/lodash.get": "^4.4.6",
     "@types/node": "^17.0.19",
