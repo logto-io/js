@@ -34,7 +34,7 @@
   "devDependencies": {
     "@jest/types": "^27.5.1",
     "@silverhand/eslint-config": "^0.9.1",
-    "@silverhand/ts-config": "^0.9.1",
+    "@silverhand/ts-config": "^0.10.0",
     "@types/jest": "^27.4.0",
     "@types/lodash.get": "^4.4.6",
     "@types/lodash.once": "^4.1.6",

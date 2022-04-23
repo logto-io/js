@@ -31,7 +31,7 @@
     "@jest/types": "^27.5.1",
     "@silverhand/eslint-config": "^0.9.1",
     "@silverhand/eslint-config-react": "^0.9.1",
-    "@silverhand/ts-config": "^0.9.1",
+    "@silverhand/ts-config": "^0.10.0",
     "@silverhand/ts-config-react": "^0.9.1",
     "@testing-library/react-hooks": "^7.0.2",
     "@types/jest": "^27.4.1",
