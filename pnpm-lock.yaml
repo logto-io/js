@@ -160,7 +160,7 @@ importers:
       '@silverhand/essentials': ^1.1.6
       '@silverhand/ts-config': ^0.10.0
       '@silverhand/ts-config-react': ^0.10.0
-      '@testing-library/react-hooks': ^7.0.2
+      '@testing-library/react-hooks': ^8.0.0
       '@types/jest': ^27.4.1
       '@types/react': ^17.0.39
       eslint: ^8.9.0
@@ -180,7 +180,7 @@ importers:
       '@silverhand/eslint-config-react': 0.9.1_8062cfb3643d5fe7411f73b420677a90
       '@silverhand/ts-config': 0.10.2_typescript@4.6.2
       '@silverhand/ts-config-react': 0.10.3_typescript@4.6.2
-      '@testing-library/react-hooks': 7.0.2_react@17.0.2
+      '@testing-library/react-hooks': 8.0.0_a0c521d4794c7ad97f5f4c1c4a7d5818
       '@types/jest': 27.4.1
       '@types/react': 17.0.39
       eslint: 8.9.0
@@ -2858,14 +2858,17 @@ packages:
     resolution: {integrity: sha512-wpCQMhf5p5GhNg2MmGKXzUNwxe7zRiCsmqYsamez2beP7mKPCSiu+BjZcdN95yYSzO857kr0VfQewmGpS77nqA==}
     dev: true
 
-  /@testing-library/react-hooks/7.0.2_react@17.0.2:
-    resolution: {integrity: sha512-dYxpz8u9m4q1TuzfcUApqi8iFfR6R0FaMbr2hjZJy1uC8z+bO/K4v8Gs9eogGKYQop7QsrBTFkv/BCF7MzD2Cg==}
+  /@testing-library/react-hooks/8.0.0_a0c521d4794c7ad97f5f4c1c4a7d5818:
+    resolution: {integrity: sha512-uZqcgtcUUtw7Z9N32W13qQhVAD+Xki2hxbTR461MKax8T6Jr8nsUvZB+vcBTkzY2nFvsUet434CsgF0ncW2yFw==}
     engines: {node: '>=12'}
     peerDependencies:
-      react: '>=16.9.0'
-      react-dom: '>=16.9.0'
-      react-test-renderer: '>=16.9.0'
+      '@types/react': ^16.9.0 || ^17.0.0
+      react: ^16.9.0 || ^17.0.0
+      react-dom: ^16.9.0 || ^17.0.0
+      react-test-renderer: ^16.9.0 || ^17.0.0
     peerDependenciesMeta:
+      '@types/react':
+        optional: true
       react-dom:
         optional: true
       react-test-renderer:
@@ -2873,8 +2876,6 @@ packages:
     dependencies:
       '@babel/runtime': 7.17.2
       '@types/react': 17.0.39
-      '@types/react-dom': 17.0.11
-      '@types/react-test-renderer': 17.0.1
       react: 17.0.2
       react-error-boundary: 3.1.4_react@17.0.2
     dev: true
@@ -3047,12 +3048,6 @@ packages:
     resolution: {integrity: sha512-YYknwy0D0iOwKQgz9v8nOzt2J6l4gouBmDnWqUUznltOTaon+r8US8ky8HvN0tXvc38U9m6z/t2RsVsnd1zM0g==}
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 17.0.39
-    dev: true
-
-  /@types/react-test-renderer/17.0.1:
-    resolution: {integrity: sha512-3Fi2O6Zzq/f3QR9dRnlnHso9bMl7weKCviFmfF6B4LS1Uat6Hkm15k0ZAQuDz+UBq6B3+g+NM6IT2nr5QgPzCw==}
-    dependencies:
       '@types/react': 17.0.39
     dev: true
 
