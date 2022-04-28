@@ -162,7 +162,7 @@ importers:
       '@silverhand/ts-config-react': ^0.10.0
       '@testing-library/react-hooks': ^7.0.2
       '@types/jest': ^27.4.1
-      '@types/react': ^17.0.39
+      '@types/react': ^18.0.0
       eslint: ^8.9.0
       jest: ^27.5.1
       lint-staged: ^12.3.4
@@ -182,7 +182,7 @@ importers:
       '@silverhand/ts-config-react': 0.10.3_typescript@4.6.2
       '@testing-library/react-hooks': 7.0.2_react@17.0.2
       '@types/jest': 27.4.1
-      '@types/react': 17.0.39
+      '@types/react': 18.0.8
       eslint: 8.9.0
       jest: 27.5.1
       lint-staged: 12.3.4
@@ -201,7 +201,7 @@ importers:
       '@silverhand/eslint-config-react': ^0.9.1
       '@silverhand/ts-config': ^0.10.0
       '@silverhand/ts-config-react': ^0.10.0
-      '@types/react': ^17.0.39
+      '@types/react': ^18.0.0
       '@types/react-dom': ^17.0.11
       '@types/react-router-dom': ^5.3.3
       eslint: ^8.9.0
@@ -227,7 +227,7 @@ importers:
       '@silverhand/eslint-config-react': 0.9.1_0ef89fbb1934b6d734eb57576b2b6e2d
       '@silverhand/ts-config': 0.10.2_typescript@4.5.5
       '@silverhand/ts-config-react': 0.10.3_typescript@4.5.5
-      '@types/react': 17.0.39
+      '@types/react': 18.0.8
       '@types/react-dom': 17.0.11
       '@types/react-router-dom': 5.3.3
       eslint: 8.9.0
@@ -2872,7 +2872,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.17.2
-      '@types/react': 17.0.39
+      '@types/react': 18.0.8
       '@types/react-dom': 17.0.11
       '@types/react-test-renderer': 17.0.1
       react: 17.0.2
@@ -3032,14 +3032,14 @@ packages:
   /@types/react-dom/17.0.11:
     resolution: {integrity: sha512-f96K3k+24RaLGVu/Y2Ng3e1EbZ8/cVJvypZWd7cy0ofCBaf2lcM46xNhycMZ2xGwbBjRql7hOlZ+e2WlJ5MH3Q==}
     dependencies:
-      '@types/react': 17.0.39
+      '@types/react': 18.0.8
     dev: true
 
   /@types/react-router-dom/5.3.3:
     resolution: {integrity: sha512-kpqnYK4wcdm5UaWI3fLcELopqLrHgLqNsdpHauzlQktfkHL3npOSwtj1Uz9oKBAzs7lFtVkV8j83voAz2D8fhw==}
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 17.0.39
+      '@types/react': 18.0.8
       '@types/react-router': 5.1.18
     dev: true
 
@@ -3047,17 +3047,17 @@ packages:
     resolution: {integrity: sha512-YYknwy0D0iOwKQgz9v8nOzt2J6l4gouBmDnWqUUznltOTaon+r8US8ky8HvN0tXvc38U9m6z/t2RsVsnd1zM0g==}
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 17.0.39
+      '@types/react': 18.0.8
     dev: true
 
   /@types/react-test-renderer/17.0.1:
     resolution: {integrity: sha512-3Fi2O6Zzq/f3QR9dRnlnHso9bMl7weKCviFmfF6B4LS1Uat6Hkm15k0ZAQuDz+UBq6B3+g+NM6IT2nr5QgPzCw==}
     dependencies:
-      '@types/react': 17.0.39
+      '@types/react': 18.0.8
     dev: true
 
-  /@types/react/17.0.39:
-    resolution: {integrity: sha512-UVavlfAxDd/AgAacMa60Azl7ygyQNRwC/DsHZmKgNvPmRR5p70AJ5Q9EAmL2NWOJmeV+vVUI4IAP7GZrN8h8Ug==}
+  /@types/react/18.0.8:
+    resolution: {integrity: sha512-+j2hk9BzCOrrOSJASi5XiOyBbERk9jG5O73Ya4M0env5Ixi6vUNli4qy994AINcEF+1IEHISYFfIT4zwr++LKw==}
     dependencies:
       '@types/prop-types': 15.7.4
       '@types/scheduler': 0.16.2

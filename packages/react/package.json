@@ -35,7 +35,7 @@
     "@silverhand/ts-config-react": "^0.10.0",
     "@testing-library/react-hooks": "^7.0.2",
     "@types/jest": "^27.4.1",
-    "@types/react": "^17.0.39",
+    "@types/react": "^18.0.0",
     "eslint": "^8.9.0",
     "jest": "^27.5.1",
     "lint-staged": "^12.3.4",
