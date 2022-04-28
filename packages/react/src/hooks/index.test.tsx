@@ -20,12 +20,12 @@ jest.mock('@logto/browser', () => {
 });
 
 const endpoint = 'https://logto.dev';
-const clientId = 'foo';
+const appId = 'foo';
 
 const createHookWrapper =
   () =>
   ({ children }: { children: ComponentType<unknown> }) =>
-    <LogtoProvider config={{ endpoint, clientId }}>{children}</LogtoProvider>;
+    <LogtoProvider config={{ endpoint, appId }}>{children}</LogtoProvider>;
 
 describe('useLogto', () => {
   test('without provider should throw', () => {
@@ -38,7 +38,7 @@ describe('useLogto', () => {
       wrapper: createHookWrapper(),
     });
 
-    expect(LogtoClient).toHaveBeenCalledWith({ endpoint, clientId });
+    expect(LogtoClient).toHaveBeenCalledWith({ endpoint, appId });
   });
 
   test('useLogto should return LogtoClient property methods', async () => {

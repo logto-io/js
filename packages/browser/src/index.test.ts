@@ -3,7 +3,7 @@ import { Nullable } from '@silverhand/essentials';
 
 import LogtoClient, { AccessToken, LogtoClientError, LogtoSignInSessionItem } from '.';
 
-const clientId = 'client_id_value';
+const appId = 'app_id_value';
 const endpoint = 'https://logto.dev';
 
 const authorizationEndpoint = `${endpoint}/oidc/auth`;
@@ -22,14 +22,14 @@ const mockedCodeVerifier = 'code_verifier_value';
 const mockedState = 'state_value';
 const mockedSignInUri = generateSignInUri({
   authorizationEndpoint,
-  clientId,
+  clientId: appId,
   redirectUri,
   codeChallenge: mockCodeChallenge,
   state: mockedState,
 });
 
-const refreshTokenStorageKey = `logto:${clientId}:refreshToken`;
-const idTokenStorageKey = `logto:${clientId}:idToken`;
+const refreshTokenStorageKey = `logto:${appId}:refreshToken`;
+const idTokenStorageKey = `logto:${appId}:idToken`;
 
 const accessToken = 'access_token_value';
 const refreshToken = 'new_refresh_token_value';
@@ -98,7 +98,7 @@ class LogtoClientSignInSessionAccessor extends LogtoClient {
 
 describe('LogtoClient', () => {
   test('constructor', () => {
-    expect(() => new LogtoClient({ endpoint, clientId }, requester)).not.toThrow();
+    expect(() => new LogtoClient({ endpoint, appId }, requester)).not.toThrow();
   });
 
   describe('signInSession', () => {
@@ -108,7 +108,7 @@ describe('LogtoClient', () => {
 
     test('getter should throw LogtoClientError when signInSession does not contain the required property', () => {
       const signInSessionAccessor = new LogtoClientSignInSessionAccessor(
-        { endpoint, clientId },
+        { endpoint, appId },
         requester
       );
 
@@ -128,7 +128,7 @@ describe('LogtoClient', () => {
 
     test('should be able to set and get the undefined item (for clearing sign-in session)', () => {
       const signInSessionAccessor = new LogtoClientSignInSessionAccessor(
-        { endpoint, clientId },
+        { endpoint, appId },
         requester
       );
 
@@ -138,7 +138,7 @@ describe('LogtoClient', () => {
 
     test('should be able to set and get the correct item', () => {
       const signInSessionAccessor = new LogtoClientSignInSessionAccessor(
-        { endpoint, clientId },
+        { endpoint, appId },
         requester
       );
 
@@ -161,26 +161,26 @@ describe('LogtoClient', () => {
 
     test('should reuse oidcConfig', async () => {
       fetchOidcConfig.mockClear();
-      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+      const logtoClient = new LogtoClient({ endpoint, appId }, requester);
       await Promise.all([logtoClient.signIn(redirectUri), logtoClient.signIn(redirectUri)]);
       expect(fetchOidcConfig).toBeCalledTimes(1);
     });
 
     test('should redirect to signInUri just after calling signIn', async () => {
-      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+      const logtoClient = new LogtoClient({ endpoint, appId }, requester);
       await logtoClient.signIn(redirectUri);
       expect(window.location.toString()).toEqual(mockedSignInUri);
     });
 
     test('handleSignInCallback should throw LogtoClientError when the sign-in session does not exist', async () => {
-      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+      const logtoClient = new LogtoClient({ endpoint, appId }, requester);
       await expect(logtoClient.handleSignInCallback(redirectUri)).rejects.toMatchError(
         new LogtoClientError('sign_in_session.not_found')
       );
     });
 
     test('isSignInRedirected should return true after calling signIn', async () => {
-      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+      const logtoClient = new LogtoClient({ endpoint, appId }, requester);
       expect(logtoClient.isSignInRedirected(redirectUri)).toBeFalsy();
       await logtoClient.signIn(redirectUri);
       expect(logtoClient.isSignInRedirected(redirectUri)).toBeTruthy();
@@ -194,7 +194,7 @@ describe('LogtoClient', () => {
         scope: 'read register manage',
         expiresIn: 3600,
       }));
-      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+      const logtoClient = new LogtoClient({ endpoint, appId }, requester);
       await logtoClient.signIn(redirectUri);
 
       const code = `code_value`;
@@ -215,14 +215,14 @@ describe('LogtoClient', () => {
     });
 
     test('should call token revocation endpoint with requester', async () => {
-      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+      const logtoClient = new LogtoClient({ endpoint, appId }, requester);
       await logtoClient.signOut(postSignOutRedirectUri);
 
       expect(requester).toHaveBeenCalledWith(revocationEndpoint, expect.anything());
     });
 
     test('should clear id token and refresh token in local storage', async () => {
-      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+      const logtoClient = new LogtoClient({ endpoint, appId }, requester);
       await logtoClient.signOut(postSignOutRedirectUri);
 
       expect(localStorage.getItem(idTokenStorageKey)).toBeNull();
@@ -230,7 +230,7 @@ describe('LogtoClient', () => {
     });
 
     test('should redirect to post sign-out URI after signing out', async () => {
-      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+      const logtoClient = new LogtoClient({ endpoint, appId }, requester);
       await logtoClient.signOut(postSignOutRedirectUri);
       const encodedRedirectUri = encodeURIComponent(postSignOutRedirectUri);
 
@@ -240,7 +240,7 @@ describe('LogtoClient', () => {
     });
 
     test('should not block sign out flow even if token revocation is failed', async () => {
-      const logtoClient = new LogtoClient({ endpoint, clientId }, failingRequester);
+      const logtoClient = new LogtoClient({ endpoint, appId }, failingRequester);
 
       await expect(logtoClient.signOut()).resolves.not.toThrow();
       expect(failingRequester).toBeCalledTimes(1);
@@ -256,7 +256,7 @@ describe('LogtoClient', () => {
     test('should throw if idToken is empty', async () => {
       localStorage.removeItem(idTokenStorageKey);
       localStorage.setItem(refreshTokenStorageKey, 'refresh_token_value');
-      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+      const logtoClient = new LogtoClient({ endpoint, appId }, requester);
 
       await expect(logtoClient.getAccessToken()).rejects.toMatchError(
         new LogtoClientError('not_authenticated')
@@ -266,7 +266,7 @@ describe('LogtoClient', () => {
     test('should throw if refresh token is empty', async () => {
       localStorage.setItem(idTokenStorageKey, 'id_token_value');
       localStorage.removeItem(refreshTokenStorageKey);
-      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+      const logtoClient = new LogtoClient({ endpoint, appId }, requester);
 
       await expect(logtoClient.getAccessToken()).rejects.toMatchError(
         new LogtoClientError('not_authenticated')
@@ -293,7 +293,7 @@ describe('LogtoClient', () => {
       localStorage.setItem(idTokenStorageKey, 'id_token_value');
       localStorage.setItem(refreshTokenStorageKey, 'refresh_token_value');
 
-      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+      const logtoClient = new LogtoClient({ endpoint, appId }, requester);
       const [accessToken_1, accessToken_2] = await Promise.all([
         logtoClient.getAccessToken(),
         logtoClient.getAccessToken(),
@@ -314,7 +314,7 @@ describe('LogtoClient', () => {
       localStorage.setItem(idTokenStorageKey, 'id_token_value');
       localStorage.setItem(refreshTokenStorageKey, 'refresh_token_value');
 
-      const logtoClient = new LogtoClientSignInSessionAccessor({ endpoint, clientId }, requester);
+      const logtoClient = new LogtoClientSignInSessionAccessor({ endpoint, appId }, requester);
 
       const accessTokenMap = logtoClient.getAccessTokenMap();
       jest.spyOn(accessTokenMap, 'delete');
@@ -345,7 +345,7 @@ describe('LogtoClient', () => {
       localStorage.setItem(refreshTokenStorageKey, 'refresh_token_value');
 
       createRemoteJWKSet.mockClear();
-      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+      const logtoClient = new LogtoClient({ endpoint, appId }, requester);
       await Promise.all([logtoClient.getAccessToken('a'), logtoClient.getAccessToken('b')]);
       expect(createRemoteJWKSet).toBeCalledTimes(1);
     });
@@ -358,7 +358,7 @@ describe('LogtoClient', () => {
 
   describe('getIdTokenClaims', () => {
     test('should throw if id token is empty', async () => {
-      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+      const logtoClient = new LogtoClient({ endpoint, appId }, requester);
 
       expect(() => logtoClient.getIdTokenClaims()).toMatchError(
         new LogtoClientError('not_authenticated')
@@ -368,7 +368,7 @@ describe('LogtoClient', () => {
     test('should return id token claims', async () => {
       localStorage.setItem(idTokenStorageKey, 'id_token_value');
 
-      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+      const logtoClient = new LogtoClient({ endpoint, appId }, requester);
       const idTokenClaims = logtoClient.getIdTokenClaims();
 
       expect(idTokenClaims).toEqual({
@@ -384,7 +384,7 @@ describe('LogtoClient', () => {
 
   describe('fetchUserInfo', () => {
     test('should throw if access token is empty', async () => {
-      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+      const logtoClient = new LogtoClient({ endpoint, appId }, requester);
 
       await expect(logtoClient.fetchUserInfo()).rejects.toMatchError(
         new LogtoClientError('not_authenticated')
@@ -403,7 +403,7 @@ describe('LogtoClient', () => {
       localStorage.setItem(idTokenStorageKey, 'id_token_value');
       localStorage.setItem(refreshTokenStorageKey, 'refresh_token_value');
 
-      const logtoClient = new LogtoClient({ endpoint, clientId }, requester);
+      const logtoClient = new LogtoClient({ endpoint, appId }, requester);
       const userInfo = await logtoClient.fetchUserInfo();
 
       expect(requester).toHaveBeenCalledWith(userinfoEndpoint, {

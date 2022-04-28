@@ -38,7 +38,7 @@ export * from './errors';
 
 export type LogtoConfig = {
   endpoint: string;
-  clientId: string;
+  appId: string;
   scopes?: string[];
   resources?: string[];
   usingPersistStorage?: boolean;
@@ -74,7 +74,7 @@ export default class LogtoClient {
 
   constructor(logtoConfig: LogtoConfig, requester = createRequester()) {
     this.logtoConfig = logtoConfig;
-    this.logtoStorageKey = buildLogtoKey(logtoConfig.clientId);
+    this.logtoStorageKey = buildLogtoKey(logtoConfig.appId);
     this.requester = requester;
     this._refreshToken = localStorage.getItem(buildRefreshTokenKey(this.logtoStorageKey));
     this._idToken = localStorage.getItem(buildIdTokenKey(this.logtoStorageKey));
@@ -209,7 +209,7 @@ export default class LogtoClient {
   }
 
   public async signIn(redirectUri: string) {
-    const { clientId, resources, scopes: customScopes } = this.logtoConfig;
+    const { appId: clientId, resources, scopes: customScopes } = this.logtoConfig;
     const { authorizationEndpoint } = await this.getOidcConfig();
     const codeVerifier = generateCodeVerifier();
     const codeChallenge = await generateCodeChallenge(codeVerifier);
@@ -252,7 +252,7 @@ export default class LogtoClient {
     const { redirectUri, state, codeVerifier } = signInSession;
     const code = verifyAndParseCodeFromCallbackUri(callbackUri, redirectUri, state);
 
-    const { clientId } = logtoConfig;
+    const { appId: clientId } = logtoConfig;
     const { tokenEndpoint } = await this.getOidcConfig();
     const codeTokenResponse = await fetchTokenByAuthorizationCode(
       {
@@ -275,7 +275,7 @@ export default class LogtoClient {
       throw new LogtoClientError('not_authenticated');
     }
 
-    const { clientId } = this.logtoConfig;
+    const { appId: clientId } = this.logtoConfig;
     const { endSessionEndpoint, revocationEndpoint } = await this.getOidcConfig();
 
     if (this.refreshToken) {
@@ -306,7 +306,7 @@ export default class LogtoClient {
 
     try {
       const accessTokenKey = buildAccessTokenKey(resource);
-      const { clientId } = this.logtoConfig;
+      const { appId: clientId } = this.logtoConfig;
       const { tokenEndpoint } = await this.getOidcConfig();
       const { accessToken, refreshToken, idToken, scope, expiresIn } =
         await fetchTokenByRefreshToken(
@@ -347,12 +347,12 @@ export default class LogtoClient {
   }
 
   private async verifyIdToken(idToken: string) {
-    const { clientId } = this.logtoConfig;
+    const { appId } = this.logtoConfig;
     const { issuer } = await this.getOidcConfig();
     const jwtVerifyGetKey = await this.getJwtVerifyGetKey();
 
     try {
-      await verifyIdToken(idToken, clientId, issuer, jwtVerifyGetKey);
+      await verifyIdToken(idToken, appId, issuer, jwtVerifyGetKey);
     } catch (error: unknown) {
       throw new LogtoClientError('invalid_id_token', error);
     }

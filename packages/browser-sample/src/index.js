@@ -1,13 +1,12 @@
 import LogtoClient from '@logto/browser';
 
-import { endpoint, clientId } from './consts.js';
+import { endpoint, appId } from './consts.js';
 import Callback from './pages/Callback.js';
 import Home from './pages/Home.js';
 
 import './index.scss';
 
-const logtoClient = new LogtoClient({ endpoint, clientId });
-
+const logtoClient = new LogtoClient({ endpoint, appId });
 const app = document.querySelector('#app');
 
 // Could replace this with a formal router solution
