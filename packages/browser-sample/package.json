@@ -26,7 +26,7 @@
     "postcss": "^8.4.6",
     "prettier": "^2.5.1",
     "process": "^0.11.10",
-    "stylelint": "^13.13.1"
+    "stylelint": "^14.0.0"
   },
   "eslintConfig": {
     "extends": "@silverhand",
