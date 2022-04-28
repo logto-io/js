@@ -30,6 +30,7 @@ const mockedSignInUri = generateSignInUri({
 
 const refreshTokenStorageKey = `logto:${appId}:refreshToken`;
 const idTokenStorageKey = `logto:${appId}:idToken`;
+const signInSessionStorageKey = `logto:${appId}`;
 
 const accessToken = 'access_token_value';
 const refreshToken = 'new_refresh_token_value';
@@ -200,11 +201,13 @@ describe('LogtoClient', () => {
       const code = `code_value`;
       const callbackUri = `${redirectUri}?code=${code}&state=${mockedState}&codeVerifier=${mockedCodeVerifier}`;
 
+      expect(sessionStorage.getItem(signInSessionStorageKey)).not.toBeNull();
       await expect(logtoClient.handleSignInCallback(callbackUri)).resolves.not.toThrow();
       await expect(logtoClient.getAccessToken()).resolves.toEqual(accessToken);
       expect(localStorage.getItem(refreshTokenStorageKey)).toEqual(refreshToken);
       expect(localStorage.getItem(idTokenStorageKey)).toEqual(idToken);
       expect(requester).toHaveBeenCalledWith(tokenEndpoint, expect.anything());
+      expect(sessionStorage.getItem(signInSessionStorageKey)).toBeNull();
     });
   });
 

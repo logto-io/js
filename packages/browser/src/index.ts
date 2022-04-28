@@ -268,6 +268,7 @@ export default class LogtoClient {
     await this.verifyIdToken(codeTokenResponse.idToken);
 
     this.saveCodeToken(codeTokenResponse);
+    this.signInSession = null;
   }
 
   public async signOut(postLogoutRedirectUri?: string) {
