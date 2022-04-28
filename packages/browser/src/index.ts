@@ -69,14 +69,12 @@ export default class LogtoClient {
   protected readonly accessTokenMap = new Map<string, AccessToken>();
 
   private readonly getAccessTokenPromiseMap = new Map<string, Promise<string>>();
-  private _refreshToken: Nullable<string>;
   private _idToken: Nullable<string>;
 
   constructor(logtoConfig: LogtoConfig, requester = createRequester()) {
     this.logtoConfig = logtoConfig;
     this.logtoStorageKey = buildLogtoKey(logtoConfig.appId);
     this.requester = requester;
-    this._refreshToken = localStorage.getItem(buildRefreshTokenKey(this.logtoStorageKey));
     this._idToken = localStorage.getItem(buildIdTokenKey(this.logtoStorageKey));
   }
 
@@ -113,12 +111,10 @@ export default class LogtoClient {
   }
 
   get refreshToken() {
-    return this._refreshToken;
+    return localStorage.getItem(buildRefreshTokenKey(this.logtoStorageKey));
   }
 
   private set refreshToken(refreshToken: Nullable<string>) {
-    this._refreshToken = refreshToken;
-
     const refreshTokenKey = buildRefreshTokenKey(this.logtoStorageKey);
 
     if (!refreshToken) {
