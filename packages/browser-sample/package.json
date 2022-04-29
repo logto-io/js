@@ -20,7 +20,7 @@
     "@silverhand/eslint-config": "^0.10.0",
     "@silverhand/eslint-config-react": "^0.10.0",
     "buffer": "^6.0.3",
-    "eslint": "^8.9.0",
+    "eslint": "^8.10.0",
     "lint-staged": "^12.3.4",
     "parcel": "^2.3.2",
     "postcss": "^8.4.6",

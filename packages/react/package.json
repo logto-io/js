@@ -36,7 +36,7 @@
     "@testing-library/react-hooks": "^8.0.0",
     "@types/jest": "^27.4.1",
     "@types/react": "^17.0.39",
-    "eslint": "^8.9.0",
+    "eslint": "^8.10.0",
     "jest": "^27.5.1",
     "lint-staged": "^12.3.4",
     "prettier": "^2.5.1",
