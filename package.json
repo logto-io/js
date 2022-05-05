@@ -6,7 +6,7 @@
     "bootstrap": "lerna bootstrap",
     "test": "lerna run test",
     "lerna": "lerna",
-    "prepack": "lerna run build --since --include-dependencies --no-private",
+    "prerelease": "lerna run build --since --include-dependencies --no-private",
     "prepare": "if test \"$NODE_ENV\" != \"production\" ; then husky install ; fi"
   },
   "devDependencies": {
