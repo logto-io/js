@@ -21,7 +21,7 @@ jobs:
           token: ${{ secrets.GH_REPO_TOKEN }}
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v1.1.0
+        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.1
 
       - name: Configure Git user
         run: |
