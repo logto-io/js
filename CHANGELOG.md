@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [0.1.5](https://github.com/logto-io/js/compare/v0.1.4...v0.1.5) (2022-05-05)
+
+
+### Bug Fixes
+
+* **browser:** read/write refreshToken from/to localStorage only ([5e95349](https://github.com/logto-io/js/commit/5e9534945bfb069d5e1b6206a1899ef6e69ab4d9))
+* **browser:** remove session item after successful sign-in ([f33bcd2](https://github.com/logto-io/js/commit/f33bcd23807a09e84a491e535fc288a4e1f33f19))
+* leverage root `prepack` lifecycle for publish ([#235](https://github.com/logto-io/js/issues/235)) ([8e66d82](https://github.com/logto-io/js/commit/8e66d82dacd204c32ffc39f4440b47e0f7541cc3))
+
+
+
 ### [0.1.4](https://github.com/logto-io/js/compare/v0.1.3...v0.1.4) (2022-03-18)
 
 
