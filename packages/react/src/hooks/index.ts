@@ -14,8 +14,9 @@ type Logto = {
   signOut: (postLogoutRedirectUri: string) => Promise<void>;
 };
 
-const useLoadingState = (): ((state: boolean) => void) => {
-  const { setLoadingCount } = useContext(LogtoContext);
+const useLoadingState = () => {
+  const { loadingCount, setLoadingCount } = useContext(LogtoContext);
+  const isLoading = loadingCount > 0;
 
   const setLoadingState = useCallback(
     (state: boolean) => {
@@ -28,12 +29,12 @@ const useLoadingState = (): ((state: boolean) => void) => {
     [setLoadingCount]
   );
 
-  return setLoadingState;
+  return { isLoading, setLoadingState };
 };
 
-const useHandleSignInCallback = (): void => {
+const useHandleSignInCallback = (returnToPageUrl = window.location.origin) => {
   const { logtoClient, isAuthenticated, setIsAuthenticated } = useContext(LogtoContext);
-  const setLoadingState = useLoadingState();
+  const { isLoading, setLoadingState } = useLoadingState();
 
   const handleSignInCallback = useCallback(
     async (callbackUri: string) => {
@@ -44,8 +45,10 @@ const useHandleSignInCallback = (): void => {
       await logtoClient.handleSignInCallback(callbackUri);
       setLoadingState(false);
       setIsAuthenticated(true);
+
+      window.location.assign(returnToPageUrl);
     },
-    [logtoClient, setIsAuthenticated, setLoadingState]
+    [logtoClient, returnToPageUrl, setIsAuthenticated, setLoadingState]
   );
 
   useEffect(() => {
@@ -53,12 +56,17 @@ const useHandleSignInCallback = (): void => {
       void handleSignInCallback(window.location.href);
     }
   }, [handleSignInCallback, isAuthenticated, logtoClient]);
+
+  return {
+    isLoading,
+    isAuthenticated,
+  };
 };
 
 const useLogto = (): Logto => {
   const { logtoClient, loadingCount, isAuthenticated, setIsAuthenticated } =
     useContext(LogtoContext);
-  const setLoadingState = useLoadingState();
+  const { setLoadingState } = useLoadingState();
   const isLoading = loadingCount > 0;
 
   const signIn = useCallback(
