@@ -1,5 +1,4 @@
 import { IdTokenClaims, UserInfoResponse } from '@logto/browser';
-import { Nullable } from '@silverhand/essentials';
 import { useCallback, useContext, useEffect } from 'react';
 
 import { LogtoContext, throwContextError } from '../context';
@@ -7,9 +6,10 @@ import { LogtoContext, throwContextError } from '../context';
 type Logto = {
   isAuthenticated: boolean;
   isLoading: boolean;
-  fetchUserInfo: () => Promise<UserInfoResponse>;
-  getAccessToken: (resource?: string) => Promise<Nullable<string>>;
-  getIdTokenClaims: () => IdTokenClaims;
+  error?: Error;
+  fetchUserInfo: () => Promise<UserInfoResponse | undefined>;
+  getAccessToken: (resource?: string) => Promise<string | undefined>;
+  getIdTokenClaims: () => IdTokenClaims | undefined;
   signIn: (redirectUri: string) => Promise<void>;
   signOut: (postLogoutRedirectUri: string) => Promise<void>;
 };
@@ -32,9 +32,27 @@ const useLoadingState = () => {
   return { isLoading, setLoadingState };
 };
 
+const useErrorHandler = () => {
+  const { setError } = useContext(LogtoContext);
+
+  const handleError = useCallback(
+    (error: unknown, fallbackErrorMessage?: string) => {
+      if (error instanceof Error) {
+        setError(error);
+      } else if (fallbackErrorMessage) {
+        setError(new Error(fallbackErrorMessage));
+      }
+    },
+    [setError]
+  );
+
+  return { handleError };
+};
+
 const useHandleSignInCallback = (returnToPageUrl = window.location.origin) => {
   const { logtoClient, isAuthenticated, setIsAuthenticated } = useContext(LogtoContext);
   const { isLoading, setLoadingState } = useLoadingState();
+  const { handleError } = useErrorHandler();
 
   const handleSignInCallback = useCallback(
     async (callbackUri: string) => {
@@ -42,13 +60,19 @@ const useHandleSignInCallback = (returnToPageUrl = window.location.origin) => {
         return throwContextError();
       }
       setLoadingState(true);
-      await logtoClient.handleSignInCallback(callbackUri);
-      setLoadingState(false);
-      setIsAuthenticated(true);
+
+      try {
+        await logtoClient.handleSignInCallback(callbackUri);
+        setIsAuthenticated(true);
+      } catch (error: unknown) {
+        handleError(error, 'Unexpected error occurred while handling sign in callback.');
+      } finally {
+        setLoadingState(false);
+      }
 
       window.location.assign(returnToPageUrl);
     },
-    [logtoClient, returnToPageUrl, setIsAuthenticated, setLoadingState]
+    [logtoClient, returnToPageUrl, setIsAuthenticated, setLoadingState, handleError]
   );
 
   useEffect(() => {
@@ -64,9 +88,11 @@ const useHandleSignInCallback = (returnToPageUrl = window.location.origin) => {
 };
 
 const useLogto = (): Logto => {
-  const { logtoClient, loadingCount, isAuthenticated, setIsAuthenticated } =
+  const { logtoClient, loadingCount, isAuthenticated, error, setIsAuthenticated } =
     useContext(LogtoContext);
   const { setLoadingState } = useLoadingState();
+  const { handleError } = useErrorHandler();
+
   const isLoading = loadingCount > 0;
 
   const signIn = useCallback(
@@ -76,10 +102,16 @@ const useLogto = (): Logto => {
       }
 
       setLoadingState(true);
-      await logtoClient.signIn(redirectUri);
-      setLoadingState(false);
+
+      try {
+        await logtoClient.signIn(redirectUri);
+      } catch (error: unknown) {
+        handleError(error, 'Unexpected error occurred while signing in.');
+      } finally {
+        setLoadingState(false);
+      }
     },
-    [logtoClient, setLoadingState]
+    [logtoClient, setLoadingState, handleError]
   );
 
   const signOut = useCallback(
@@ -88,11 +120,17 @@ const useLogto = (): Logto => {
         return throwContextError();
       }
       setLoadingState(true);
-      await logtoClient.signOut(postLogoutRedirectUri);
-      setLoadingState(false);
-      setIsAuthenticated(false);
+
+      try {
+        await logtoClient.signOut(postLogoutRedirectUri);
+        setIsAuthenticated(false);
+      } catch (error: unknown) {
+        handleError(error, 'Unexpected error occurred while signing out.');
+      } finally {
+        setLoadingState(false);
+      }
     },
-    [logtoClient, setIsAuthenticated, setLoadingState]
+    [logtoClient, setIsAuthenticated, setLoadingState, handleError]
   );
 
   const fetchUserInfo = useCallback(async () => {
@@ -100,24 +138,33 @@ const useLogto = (): Logto => {
       return throwContextError();
     }
     setLoadingState(true);
-    const userInfo = await logtoClient.fetchUserInfo();
-    setLoadingState(false);
 
-    return userInfo;
-  }, [logtoClient, setLoadingState]);
+    try {
+      return await logtoClient.fetchUserInfo();
+    } catch (error: unknown) {
+      handleError(error, 'Unexpected error occurred while fetching user info.');
+    } finally {
+      setLoadingState(false);
+    }
+  }, [logtoClient, setLoadingState, handleError]);
 
   const getAccessToken = useCallback(
     async (resource?: string) => {
       if (!logtoClient) {
         return throwContextError();
       }
-      setLoadingState(true);
-      const accessToken = await logtoClient.getAccessToken(resource);
-      setLoadingState(false);
 
-      return accessToken;
+      setLoadingState(true);
+
+      try {
+        return await logtoClient.getAccessToken(resource);
+      } catch (error: unknown) {
+        handleError(error, 'Unexpected error occurred while getting access token.');
+      } finally {
+        setLoadingState(false);
+      }
     },
-    [logtoClient, setLoadingState]
+    [logtoClient, setLoadingState, handleError]
   );
 
   const getIdTokenClaims = useCallback(() => {
@@ -125,8 +172,12 @@ const useLogto = (): Logto => {
       return throwContextError();
     }
 
-    return logtoClient.getIdTokenClaims();
-  }, [logtoClient]);
+    try {
+      return logtoClient.getIdTokenClaims();
+    } catch (error: unknown) {
+      handleError(error, 'Unexpected error occurred while getting id token claims.');
+    }
+  }, [logtoClient, handleError]);
 
   if (!logtoClient) {
     return throwContextError();
@@ -135,6 +186,7 @@ const useLogto = (): Logto => {
   return {
     isAuthenticated,
     isLoading,
+    error,
     signIn,
     signOut,
     fetchUserInfo,

@@ -7,12 +7,16 @@ import { LogtoProvider } from '../provider';
 
 const isSignInRedirected = jest.fn(() => false);
 const handleSignInCallback = jest.fn(async () => Promise.resolve());
+const getAccessToken = jest.fn(() => {
+  throw new Error('not authenticated');
+});
 
 jest.mock('@logto/browser', () => {
   return jest.fn().mockImplementation(() => {
     return {
       isSignInRedirected,
       handleSignInCallback,
+      getAccessToken,
       signIn: jest.fn(async () => Promise.resolve()),
       signOut: jest.fn(async () => Promise.resolve()),
     };
@@ -88,6 +92,20 @@ describe('useLogto', () => {
     await act(async () => result.current.signIn('redirectUri'));
     await waitFor(() => {
       expect(handleSignInCallback).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  test('useLogto hook should return error when getAccessToken fails', async () => {
+    const { result, waitFor } = renderHook(() => useLogto(), {
+      wrapper: createHookWrapper(),
+    });
+
+    await act(async () => {
+      await result.current.getAccessToken();
+    });
+    await waitFor(() => {
+      expect(result.current.error).not.toBeUndefined();
+      expect(result.current.error?.message).toBe('not authenticated');
     });
   });
 });
