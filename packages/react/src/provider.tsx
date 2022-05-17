@@ -14,6 +14,7 @@ export const LogtoProvider = ({ config, children }: LogtoProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState(
     memorizedLogtoClient.logtoClient.isAuthenticated
   );
+  const [error, setError] = useState<Error>();
   const memorizedContextValue = useMemo(
     () => ({
       ...memorizedLogtoClient,
@@ -21,8 +22,10 @@ export const LogtoProvider = ({ config, children }: LogtoProviderProps) => {
       setIsAuthenticated,
       loadingCount,
       setLoadingCount,
+      error,
+      setError,
     }),
-    [memorizedLogtoClient, isAuthenticated, loadingCount]
+    [memorizedLogtoClient, isAuthenticated, loadingCount, error]
   );
 
   return <LogtoContext.Provider value={memorizedContextValue}>{children}</LogtoContext.Provider>;
