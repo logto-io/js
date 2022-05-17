@@ -1,5 +1,5 @@
 /* eslint-disable @silverhand/fp/no-mutation */
-import { baseUrl } from '../consts.js';
+import { baseUrl } from '../consts';
 
 const Callback = async (app, logtoClient) => {
   if (!logtoClient) {

@@ -1,6 +1,7 @@
 /* eslint-disable @silverhand/fp/no-mutation */
-import { baseUrl, redirectUrl } from '../consts.js';
+import { baseUrl, redirectUrl } from '../consts';
 
+// eslint-disable-next-line complexity
 const Home = (app, logtoClient) => {
   if (!logtoClient) {
     throw new Error('no logto client found');
