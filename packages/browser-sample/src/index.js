@@ -1,8 +1,8 @@
 import LogtoClient from '@logto/browser';
 
-import { endpoint, appId } from './consts.js';
-import Callback from './pages/Callback.js';
-import Home from './pages/Home.js';
+import { endpoint, appId } from './consts';
+import Callback from './pages/Callback';
+import Home from './pages/Home';
 
 import './index.scss';
 

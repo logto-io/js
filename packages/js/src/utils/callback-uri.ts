@@ -7,6 +7,7 @@ export const parseUriParameters = (uri: string) => {
   return new URLSearchParams(queryString);
 };
 
+// eslint-disable-next-line complexity
 export const verifyAndParseCodeFromCallbackUri = (
   callbackUri: string,
   redirectUri: string,

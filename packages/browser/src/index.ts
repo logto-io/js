@@ -144,6 +144,7 @@ export default class LogtoClient {
     localStorage.setItem(idTokenKey, idToken);
   }
 
+  // eslint-disable-next-line complexity
   public async getAccessToken(resource?: string): Promise<string> {
     if (!this.idToken) {
       throw new LogtoClientError('not_authenticated');
