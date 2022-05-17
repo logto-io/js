@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [0.1.6](https://github.com/logto-io/js/compare/v0.1.5...v0.1.6) (2022-05-17)
+
+
+### Features
+
+* **react:** add error prop to useLogto context ([ebe9e96](https://github.com/logto-io/js/commit/ebe9e962d65fa547d5a6349b2beb99b35e50dfe0))
+
+
+
 ### [0.1.5](https://github.com/logto-io/js/compare/v0.1.4...v0.1.5) (2022-05-05)
 
 

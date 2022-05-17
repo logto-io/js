@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [0.1.6](https://github.com/logto-io/js/compare/v0.1.5...v0.1.6) (2022-05-17)
+
+
+### Features
+
+* **react:** add error prop to useLogto context ([ebe9e96](https://github.com/logto-io/js/commit/ebe9e962d65fa547d5a6349b2beb99b35e50dfe0))
+
+
+### Bug Fixes
+
+* lockfile ([3fae0c9](https://github.com/logto-io/js/commit/3fae0c97d15d0a7be51039b162c1b9bdc5ec3237))
+* manually run script before publish ([#258](https://github.com/logto-io/js/issues/258)) ([1b67085](https://github.com/logto-io/js/commit/1b6708539c7f8a16bc5000f4cab12bdca08b5c50))
+
+
+
 ### [0.1.5](https://github.com/logto-io/js/compare/v0.1.4...v0.1.5) (2022-05-05)
 
 
