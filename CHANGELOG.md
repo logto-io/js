@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [0.1.7](https://github.com/logto-io/js/compare/v0.1.6...v0.1.7) (2022-05-17)
+
+
+### Bug Fixes
+
+* **browser:** clear authenticated status before signing-in ([bd0b921](https://github.com/logto-io/js/commit/bd0b921eb78176d13df6d1c990efe7a1f513f4b8))
+* lockfile ([f2e1908](https://github.com/logto-io/js/commit/f2e1908725148b25bca54d86e106f98df2501fc1))
+
+
+
 ### [0.1.6](https://github.com/logto-io/js/compare/v0.1.5...v0.1.6) (2022-05-17)
 
 
