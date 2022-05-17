@@ -194,7 +194,7 @@ importers:
 
   packages/react-sample:
     specifiers:
-      '@logto/react': ^0.1.5
+      '@logto/react': ^0.1.6
       '@parcel/core': ^2.3.2
       '@parcel/transformer-sass': ^2.3.2
       '@silverhand/eslint-config': ^0.10.0
