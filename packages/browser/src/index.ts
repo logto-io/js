@@ -223,6 +223,9 @@ export default class LogtoClient {
     });
 
     this.signInSession = { redirectUri, codeVerifier, state };
+    this.refreshToken = null;
+    this.idToken = null;
+
     window.location.assign(signInUri);
   }
 
