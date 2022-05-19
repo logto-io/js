@@ -23,7 +23,7 @@ importers:
   packages/browser:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/js': ^0.1.5
+      '@logto/js': ^0.1.7
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.6
       '@silverhand/ts-config': ^0.14.0
@@ -69,7 +69,7 @@ importers:
 
   packages/browser-sample:
     specifiers:
-      '@logto/browser': ^0.1.5
+      '@logto/browser': ^0.1.7
       '@parcel/core': ^2.3.2
       '@parcel/transformer-sass': ^2.3.2
       '@silverhand/eslint-config': ^0.14.0
@@ -154,7 +154,7 @@ importers:
   packages/react:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/browser': ^0.1.5
+      '@logto/browser': ^0.1.7
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/eslint-config-react': ^0.14.0
       '@silverhand/essentials': ^1.1.6
@@ -196,7 +196,7 @@ importers:
 
   packages/react-sample:
     specifiers:
-      '@logto/react': ^0.1.6
+      '@logto/react': ^0.1.7
       '@parcel/core': ^2.3.2
       '@parcel/transformer-sass': ^2.3.2
       '@silverhand/eslint-config': ^0.14.0
