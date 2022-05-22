@@ -59,18 +59,18 @@ const useHandleSignInCallback = (returnToPageUrl = window.location.origin) => {
       if (!logtoClient) {
         return throwContextError();
       }
-      setLoadingState(true);
 
       try {
+        setLoadingState(true);
+
         await logtoClient.handleSignInCallback(callbackUri);
         setIsAuthenticated(true);
+        window.location.assign(returnToPageUrl);
       } catch (error: unknown) {
         handleError(error, 'Unexpected error occurred while handling sign in callback.');
       } finally {
         setLoadingState(false);
       }
-
-      window.location.assign(returnToPageUrl);
     },
     [logtoClient, returnToPageUrl, setIsAuthenticated, setLoadingState, handleError]
   );
@@ -101,9 +101,9 @@ const useLogto = (): Logto => {
         return throwContextError();
       }
 
-      setLoadingState(true);
-
       try {
+        setLoadingState(true);
+
         await logtoClient.signIn(redirectUri);
       } catch (error: unknown) {
         handleError(error, 'Unexpected error occurred while signing in.');
@@ -119,9 +119,10 @@ const useLogto = (): Logto => {
       if (!logtoClient) {
         return throwContextError();
       }
-      setLoadingState(true);
 
       try {
+        setLoadingState(true);
+
         await logtoClient.signOut(postLogoutRedirectUri);
         setIsAuthenticated(false);
       } catch (error: unknown) {
@@ -137,9 +138,10 @@ const useLogto = (): Logto => {
     if (!logtoClient) {
       return throwContextError();
     }
-    setLoadingState(true);
 
     try {
+      setLoadingState(true);
+
       return await logtoClient.fetchUserInfo();
     } catch (error: unknown) {
       handleError(error, 'Unexpected error occurred while fetching user info.');
@@ -154,9 +156,9 @@ const useLogto = (): Logto => {
         return throwContextError();
       }
 
-      setLoadingState(true);
-
       try {
+        setLoadingState(true);
+
         return await logtoClient.getAccessToken(resource);
       } catch (error: unknown) {
         handleError(error, 'Unexpected error occurred while getting access token.');
