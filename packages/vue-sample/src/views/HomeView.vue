@@ -1,41 +1,28 @@
-<script lang="ts">
+<script setup lang="ts">
 import { useLogto, type IdTokenClaims } from "@logto/vue";
 import { RouterLink } from "vue-router";
 import { ref, watchEffect } from "vue";
 import { baseUrl, redirectUrl } from "../consts";
 
-export default {
-  setup() {
-    const { isAuthenticated, getIdTokenClaims, signIn, signOut } = useLogto();
-    const idTokenClaims = ref<IdTokenClaims>();
+const { isAuthenticated, getIdTokenClaims, signIn, signOut } = useLogto();
+const idTokenClaims = ref<IdTokenClaims>();
 
-    const onClickSignIn = () => {
-      void signIn(redirectUrl);
-    };
-
-    const onClickSignOut = () => {
-      void signOut(baseUrl);
-    };
-
-    watchEffect(async () => {
-      if (isAuthenticated.value) {
-        const claims = getIdTokenClaims();
-        idTokenClaims.value = claims;
-      }
-    });
-
-    return {
-      idTokenClaims,
-      isAuthenticated,
-      onClickSignIn,
-      onClickSignOut,
-    };
-  },
-  components: {
-    RouterLink,
-  },
+const onClickSignIn = () => {
+  void signIn(redirectUrl);
 };
+
+const onClickSignOut = () => {
+  void signOut(baseUrl);
+};
+
+watchEffect(async () => {
+  if (isAuthenticated.value) {
+    const claims = getIdTokenClaims();
+    idTokenClaims.value = claims;
+  }
+});
 </script>
+
 <template>
   <div class="container">
     <h3>Logto Vue Sample</h3>
@@ -60,6 +47,7 @@ export default {
     </div>
   </div>
 </template>
+
 <style lang="scss">
 .container {
   padding: 20px;
