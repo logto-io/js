@@ -16,7 +16,7 @@ export default defineConfig({
   },
   build: {
     commonjsOptions: {
-      include: [/linked-dep/, /node_modules/],
+      include: [/vue/, /node_modules/],
     },
   },
 });
