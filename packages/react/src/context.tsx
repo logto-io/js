@@ -1,14 +1,14 @@
-import LogtoClient from '@logto/browser';
+import LogtoClient, { LogtoClientError } from '@logto/browser';
 import { createContext } from 'react';
 
 export type LogtoContextProps = {
   logtoClient?: LogtoClient;
   isAuthenticated: boolean;
   loadingCount: number;
-  error?: Error;
+  error?: LogtoClientError;
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
   setLoadingCount: React.Dispatch<React.SetStateAction<number>>;
-  setError: React.Dispatch<React.SetStateAction<Error | undefined>>;
+  setError: React.Dispatch<React.SetStateAction<LogtoClientError | undefined>>;
 };
 
 export const throwContextError = (): never => {

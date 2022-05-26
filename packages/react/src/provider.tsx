@@ -1,4 +1,4 @@
-import LogtoClient, { LogtoConfig } from '@logto/browser';
+import LogtoClient, { LogtoClientError, LogtoConfig } from '@logto/browser';
 import React, { ReactNode, useMemo, useState } from 'react';
 
 import { LogtoContext } from './context';
@@ -14,7 +14,7 @@ export const LogtoProvider = ({ config, children }: LogtoProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState(
     memorizedLogtoClient.logtoClient.isAuthenticated
   );
-  const [error, setError] = useState<Error>();
+  const [error, setError] = useState<LogtoClientError>();
   const memorizedContextValue = useMemo(
     () => ({
       ...memorizedLogtoClient,

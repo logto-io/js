@@ -1,4 +1,4 @@
-import { IdTokenClaims, UserInfoResponse } from '@logto/browser';
+import { IdTokenClaims, LogtoClientError, UserInfoResponse } from '@logto/browser';
 import { useCallback, useContext, useEffect } from 'react';
 
 import { LogtoContext, throwContextError } from '../context';
@@ -6,7 +6,7 @@ import { LogtoContext, throwContextError } from '../context';
 type Logto = {
   isAuthenticated: boolean;
   isLoading: boolean;
-  error?: Error;
+  error?: LogtoClientError;
   fetchUserInfo: () => Promise<UserInfoResponse | undefined>;
   getAccessToken: (resource?: string) => Promise<string | undefined>;
   getIdTokenClaims: () => IdTokenClaims | undefined;
@@ -36,11 +36,11 @@ const useErrorHandler = () => {
   const { setError } = useContext(LogtoContext);
 
   const handleError = useCallback(
-    (error: unknown, fallbackErrorMessage?: string) => {
-      if (error instanceof Error) {
+    (error: unknown) => {
+      if (error instanceof LogtoClientError) {
         setError(error);
-      } else if (fallbackErrorMessage) {
-        setError(new Error(fallbackErrorMessage));
+      } else {
+        throw error;
       }
     },
     [setError]
@@ -50,7 +50,7 @@ const useErrorHandler = () => {
 };
 
 const useHandleSignInCallback = (returnToPageUrl = window.location.origin) => {
-  const { logtoClient, isAuthenticated, setIsAuthenticated } = useContext(LogtoContext);
+  const { logtoClient, isAuthenticated, error, setIsAuthenticated } = useContext(LogtoContext);
   const { isLoading, setLoadingState } = useLoadingState();
   const { handleError } = useErrorHandler();
 
@@ -67,7 +67,7 @@ const useHandleSignInCallback = (returnToPageUrl = window.location.origin) => {
         setIsAuthenticated(true);
         window.location.assign(returnToPageUrl);
       } catch (error: unknown) {
-        handleError(error, 'Unexpected error occurred while handling sign in callback.');
+        handleError(error);
       } finally {
         setLoadingState(false);
       }
@@ -84,6 +84,7 @@ const useHandleSignInCallback = (returnToPageUrl = window.location.origin) => {
   return {
     isLoading,
     isAuthenticated,
+    error,
   };
 };
 
@@ -106,7 +107,7 @@ const useLogto = (): Logto => {
 
         await logtoClient.signIn(redirectUri);
       } catch (error: unknown) {
-        handleError(error, 'Unexpected error occurred while signing in.');
+        handleError(error);
       } finally {
         setLoadingState(false);
       }
@@ -126,7 +127,7 @@ const useLogto = (): Logto => {
         await logtoClient.signOut(postLogoutRedirectUri);
         setIsAuthenticated(false);
       } catch (error: unknown) {
-        handleError(error, 'Unexpected error occurred while signing out.');
+        handleError(error);
       } finally {
         setLoadingState(false);
       }
@@ -144,7 +145,7 @@ const useLogto = (): Logto => {
 
       return await logtoClient.fetchUserInfo();
     } catch (error: unknown) {
-      handleError(error, 'Unexpected error occurred while fetching user info.');
+      handleError(error);
     } finally {
       setLoadingState(false);
     }
@@ -161,7 +162,7 @@ const useLogto = (): Logto => {
 
         return await logtoClient.getAccessToken(resource);
       } catch (error: unknown) {
-        handleError(error, 'Unexpected error occurred while getting access token.');
+        handleError(error);
       } finally {
         setLoadingState(false);
       }
@@ -177,7 +178,7 @@ const useLogto = (): Logto => {
     try {
       return logtoClient.getIdTokenClaims();
     } catch (error: unknown) {
-      handleError(error, 'Unexpected error occurred while getting id token claims.');
+      handleError(error);
     }
   }, [logtoClient, handleError]);
 

@@ -1,4 +1,4 @@
-import LogtoClient from '@logto/browser';
+import LogtoClient, { LogtoClientError } from '@logto/browser';
 import { renderHook, act } from '@testing-library/react-hooks';
 import React, { ComponentType } from 'react';
 
@@ -8,19 +8,23 @@ import { LogtoProvider } from '../provider';
 const isSignInRedirected = jest.fn(() => false);
 const handleSignInCallback = jest.fn(async () => Promise.resolve());
 const getAccessToken = jest.fn(() => {
-  throw new Error('not authenticated');
+  throw new LogtoClientError('get_access_token_by_refresh_token_failed');
 });
 
 jest.mock('@logto/browser', () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      isSignInRedirected,
-      handleSignInCallback,
-      getAccessToken,
-      signIn: jest.fn(async () => Promise.resolve()),
-      signOut: jest.fn(async () => Promise.resolve()),
-    };
-  });
+  return {
+    __esModule: true,
+    ...jest.requireActual('@logto/browser'),
+    default: jest.fn().mockImplementation(() => {
+      return {
+        isSignInRedirected,
+        handleSignInCallback,
+        getAccessToken,
+        signIn: jest.fn(async () => Promise.resolve()),
+        signOut: jest.fn(async () => Promise.resolve()),
+      };
+    }),
+  };
 });
 
 const endpoint = 'https://logto.dev';
@@ -105,7 +109,7 @@ describe('useLogto', () => {
     });
     await waitFor(() => {
       expect(result.current.error).not.toBeUndefined();
-      expect(result.current.error?.message).toBe('not authenticated');
+      expect(result.current.error?.message).toBe('Failed to get access token by refresh token.');
     });
   });
 });
