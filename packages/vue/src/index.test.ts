@@ -1,4 +1,4 @@
-import LogtoClient from '@logto/browser';
+import LogtoClient, { LogtoClientError } from '@logto/browser';
 import { App, readonly } from 'vue';
 
 import { useLogto, useHandleSignInCallback, createLogto } from '.';
@@ -9,23 +9,27 @@ import { createPluginMethods } from './plugin';
 const isSignInRedirected = jest.fn(() => false);
 const handleSignInCallback = jest.fn(async () => Promise.resolve());
 const getAccessToken = jest.fn(() => {
-  throw new Error('not authenticated');
+  throw new LogtoClientError('get_access_token_by_refresh_token_failed');
 });
 const injectMock = jest.fn<any, string[]>((): any => {
   return undefined;
 });
 
 jest.mock('@logto/browser', () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      isAuthenticated: false,
-      isSignInRedirected,
-      handleSignInCallback,
-      getAccessToken,
-      signIn: jest.fn(async () => Promise.resolve()),
-      signOut: jest.fn(async () => Promise.resolve()),
-    };
-  });
+  return {
+    __esModule: true,
+    ...jest.requireActual('@logto/browser'),
+    default: jest.fn().mockImplementation(() => {
+      return {
+        isAuthenticated: false,
+        isSignInRedirected,
+        handleSignInCallback,
+        getAccessToken,
+        signIn: jest.fn(async () => Promise.resolve()),
+        signOut: jest.fn(async () => Promise.resolve()),
+      };
+    }),
+  };
 });
 
 jest.mock('vue', () => {
@@ -98,7 +102,7 @@ describe('useLogto', () => {
 
     expect(isAuthenticated.value).toBe(false);
     expect(isLoading.value).toBe(false);
-    expect(error?.value).toBeUndefined();
+    expect(error.value).toBeUndefined();
     expect(signIn).toBeInstanceOf(Function);
     expect(signOut).toBeInstanceOf(Function);
     expect(getAccessToken).toBeInstanceOf(Function);
@@ -114,7 +118,7 @@ describe('useLogto', () => {
 
     await getAccessToken();
     expect(error.value).not.toBeUndefined();
-    expect(error.value?.message).toBe('not authenticated');
+    expect(error.value?.message).toBe('Failed to get access token by refresh token.');
   });
 });
 

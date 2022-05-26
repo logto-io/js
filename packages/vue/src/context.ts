@@ -1,11 +1,11 @@
-import LogtoClient from '@logto/browser';
+import LogtoClient, { LogtoClientError } from '@logto/browser';
 import { computed, ComputedRef, reactive, Ref, toRefs, UnwrapRef } from 'vue';
 
 type LogtoContextProperties = {
   logtoClient: LogtoClient | undefined;
   isAuthenticated: boolean;
   loadingCount: number;
-  error: Error | undefined;
+  error: LogtoClientError | undefined;
 };
 
 export type Context = {
@@ -13,7 +13,7 @@ export type Context = {
   logtoClient: Ref<UnwrapRef<LogtoClient | undefined>>;
   isAuthenticated: Ref<boolean>;
   loadingCount: Ref<number>;
-  error: Ref<Error | undefined>;
+  error: Ref<LogtoClientError | undefined>;
   isLoading: ComputedRef<boolean>;
   setError: (error: unknown, fallbackErrorMessage?: string | undefined) => void;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
@@ -35,11 +35,11 @@ export const createContext = (client: LogtoClient): Context => {
   const isLoading = computed(() => loadingCount.value > 0);
 
   /* eslint-disable @silverhand/fp/no-mutation */
-  const setError = (_error: unknown, fallbackErrorMessage?: string) => {
-    if (_error instanceof Error) {
+  const setError = (_error: unknown) => {
+    if (_error instanceof LogtoClientError) {
       error.value = _error;
-    } else if (fallbackErrorMessage) {
-      error.value = new Error(fallbackErrorMessage);
+    } else {
+      throw _error;
     }
   };
 
