@@ -5,7 +5,13 @@ import { logtoInjectionKey, contextInjectionKey } from './consts';
 import { Context, createContext, throwContextError } from './context';
 import { createPluginMethods } from './plugin';
 
-export type { LogtoConfig, IdTokenClaims, UserInfoResponse } from '@logto/browser';
+export type {
+  LogtoConfig,
+  IdTokenClaims,
+  UserInfoResponse,
+  LogtoClientError,
+  LogtoClientErrorCode,
+} from '@logto/browser';
 
 type LogtoVuePlugin = {
   install: (app: App, config: LogtoConfig) => void;
@@ -14,7 +20,7 @@ type LogtoVuePlugin = {
 type Logto = {
   isAuthenticated: Readonly<Ref<boolean>>;
   isLoading: Readonly<Ref<boolean>>;
-  error?: Readonly<Ref<Error | undefined>>;
+  error: Readonly<Ref<Error | undefined>>;
   fetchUserInfo: () => Promise<UserInfoResponse | undefined>;
   getAccessToken: (resource?: string) => Promise<string | undefined>;
   getIdTokenClaims: () => IdTokenClaims | undefined;
@@ -113,7 +119,7 @@ export const useHandleSignInCallback = (returnToPageUrl = window.location.origin
   }
 
   const currentPageUrl = window.location.href;
-  const { isAuthenticated, isLoading, logtoClient } = context;
+  const { isAuthenticated, isLoading, logtoClient, error } = context;
   const { handleSignInCallback } = createPluginMethods(context);
 
   watchEffect(() => {
@@ -125,5 +131,6 @@ export const useHandleSignInCallback = (returnToPageUrl = window.location.origin
   return {
     isLoading: readonly(isLoading),
     isAuthenticated: readonly(isAuthenticated),
+    error: readonly(error),
   };
 };

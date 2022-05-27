@@ -98,7 +98,7 @@ describe('useLogto', () => {
 
     expect(isAuthenticated.value).toBe(false);
     expect(isLoading.value).toBe(false);
-    expect(error?.value).toBeUndefined();
+    expect(error.value).toBeUndefined();
     expect(signIn).toBeInstanceOf(Function);
     expect(signOut).toBeInstanceOf(Function);
     expect(getAccessToken).toBeInstanceOf(Function);
