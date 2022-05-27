@@ -51,3 +51,13 @@ export class LogtoRequestError extends Error {
     this.code = code;
   }
 }
+
+export class OidcError {
+  error: string;
+  errorDescription: string;
+
+  constructor(error: string, errorDescription: string) {
+    this.error = error;
+    this.errorDescription = errorDescription;
+  }
+}

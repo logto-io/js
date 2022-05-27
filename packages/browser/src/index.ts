@@ -34,6 +34,7 @@ import {
 } from './utils';
 
 export type { IdTokenClaims, UserInfoResponse } from '@logto/js';
+export { OidcError } from '@logto/js';
 export * from './errors';
 
 export type LogtoConfig = {
