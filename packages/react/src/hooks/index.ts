@@ -50,7 +50,7 @@ const useErrorHandler = () => {
 };
 
 const useHandleSignInCallback = (returnToPageUrl = window.location.origin) => {
-  const { logtoClient, isAuthenticated, setIsAuthenticated } = useContext(LogtoContext);
+  const { logtoClient, isAuthenticated, error, setIsAuthenticated } = useContext(LogtoContext);
   const { isLoading, setLoadingState } = useLoadingState();
   const { handleError } = useErrorHandler();
 
@@ -84,6 +84,7 @@ const useHandleSignInCallback = (returnToPageUrl = window.location.origin) => {
   return {
     isLoading,
     isAuthenticated,
+    error,
   };
 };
 
