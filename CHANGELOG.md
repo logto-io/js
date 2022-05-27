@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [0.1.8](https://github.com/logto-io/js/compare/v0.1.7...v0.1.8) (2022-05-27)
+
+
+### Features
+
+* **vue-sample:** add vue sample project to demonstrate vue sdk ([717e53b](https://github.com/logto-io/js/commit/717e53b78a029de7a173ccb7f5b0ffa08445c95d))
+* **vue:** create vue sdk ([6a68267](https://github.com/logto-io/js/commit/6a68267ff8c86bdde22050f351b95afae63753e2))
+
+
+### Bug Fixes
+
+* **browser-sample:** add typescript to browser-sample dev dependencies ([756283c](https://github.com/logto-io/js/commit/756283cf39254e4c3e6d45bb66dff9bb72d41c7c))
+* **vue-sample:** include link dependency correctly in build options ([8b37058](https://github.com/logto-io/js/commit/8b37058d4e0d049e464d28c57d9c97599f3dfde6))
+
+
+
 ### [0.1.7](https://github.com/logto-io/js/compare/v0.1.6...v0.1.7) (2022-05-17)
 
 

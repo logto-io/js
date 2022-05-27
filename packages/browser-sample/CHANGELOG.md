@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [0.1.8](https://github.com/logto-io/js/compare/v0.1.7...v0.1.8) (2022-05-27)
+
+
+### Bug Fixes
+
+* **browser-sample:** add typescript to browser-sample dev dependencies ([756283c](https://github.com/logto-io/js/commit/756283cf39254e4c3e6d45bb66dff9bb72d41c7c))
+
+
+
 ### [0.1.7](https://github.com/logto-io/js/compare/v0.1.6...v0.1.7) (2022-05-17)
 
 **Note:** Version bump only for package @logto/browser-sample

@@ -1,6 +1,6 @@
 {
   "name": "@logto/vue",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "main": "./lib/index.js",
   "exports": "./lib/index.js",
   "typings": "./lib/index.d.ts",
@@ -47,7 +47,14 @@
   "eslintConfig": {
     "extends": "@silverhand",
     "rules": {
-      "unicorn/prevent-abbreviations": ["error", { "replacements": { "ref": false }}]
+      "unicorn/prevent-abbreviations": [
+        "error",
+        {
+          "replacements": {
+            "ref": false
+          }
+        }
+      ]
     }
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
