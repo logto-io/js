@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [0.1.10](https://github.com/logto-io/js/compare/v0.1.9...v0.1.10) (2022-05-28)
+
+**Note:** Version bump only for package @logto/vue-sample
+
+
+
+
+
 ### [0.1.9](https://github.com/logto-io/js/compare/v0.1.8...v0.1.9) (2022-05-27)
 
 **Note:** Version bump only for package @logto/vue-sample

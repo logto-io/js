@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [0.1.10](https://github.com/logto-io/js/compare/v0.1.9...v0.1.10) (2022-05-28)
+
+
+### Bug Fixes
+
+* **js:** oidc error description should be optional string ([0867e34](https://github.com/logto-io/js/commit/0867e34cb570c603f2611f0d26156210eebd0de1))
+
+
+
 ### [0.1.7](https://github.com/logto-io/js/compare/v0.1.6...v0.1.7) (2022-05-17)
 
 **Note:** Version bump only for package @logto/js
