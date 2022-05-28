@@ -33,8 +33,8 @@ import {
   getDiscoveryEndpoint,
 } from './utils';
 
-export type { IdTokenClaims, UserInfoResponse } from '@logto/js';
-export { OidcError } from '@logto/js';
+export type { IdTokenClaims, UserInfoResponse, LogtoErrorCode } from '@logto/js';
+export { LogtoError, OidcError } from '@logto/js';
 export * from './errors';
 
 export type LogtoConfig = {

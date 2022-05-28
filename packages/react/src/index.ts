@@ -4,10 +4,11 @@ export type {
   LogtoConfig,
   IdTokenClaims,
   UserInfoResponse,
+  LogtoErrorCode,
   LogtoClientErrorCode,
 } from '@logto/browser';
 
-export { LogtoClientError, OidcError } from '@logto/browser';
+export { LogtoError, LogtoClientError, OidcError } from '@logto/browser';
 
 export * from './provider';
 
