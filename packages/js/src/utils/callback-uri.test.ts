@@ -1,5 +1,5 @@
 import { verifyAndParseCodeFromCallbackUri } from './callback-uri';
-import { LogtoError } from './errors';
+import { LogtoError, OidcError } from './errors';
 
 const code = 'some_code';
 const state = 'some_state';
@@ -23,7 +23,7 @@ describe('verifyAndParseCodeFromCallbackUri', () => {
   test('callback uri, containing error parameter, should throw', () => {
     const callbackUrl = `http://localhost:3000/callback?code=${code}&state=${state}&error=${error}`;
     expect(() => verifyAndParseCodeFromCallbackUri(callbackUrl, redirectUri, state)).toMatchError(
-      new LogtoError('callback_uri_verification.error_found', { error, errorDescription: null })
+      new LogtoError('callback_uri_verification.error_found', new OidcError(error))
     );
   });
 

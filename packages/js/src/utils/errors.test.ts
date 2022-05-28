@@ -1,3 +1,4 @@
+import { OidcError } from '.';
 import { LogtoError, LogtoErrorCode, LogtoRequestError } from './errors';
 
 describe('LogtoError', () => {
@@ -15,10 +16,11 @@ describe('LogtoError', () => {
     const code: LogtoErrorCode = 'callback_uri_verification';
     const error = 'error_value';
     const errorDescription = 'error_description_content';
-    const logtoError = new LogtoError(code, { error, errorDescription });
+    const logtoError = new LogtoError(code, new OidcError(error, errorDescription));
     expect(logtoError).toHaveProperty('code', code);
     expect(logtoError).toHaveProperty('message', code);
     expect(logtoError).toHaveProperty('data', { error, errorDescription });
+    expect(logtoError.data).toBeInstanceOf(OidcError);
   });
 });
 
