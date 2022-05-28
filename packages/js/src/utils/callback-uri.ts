@@ -1,5 +1,7 @@
+import { conditional } from '@silverhand/essentials';
+
 import { QueryKey } from '../consts';
-import { LogtoError } from './errors';
+import { LogtoError, OidcError } from './errors';
 
 export const parseUriParameters = (uri: string) => {
   const [, queryString = ''] = uri.split('?');
@@ -18,14 +20,14 @@ export const verifyAndParseCodeFromCallbackUri = (
   }
   const uriParameters = parseUriParameters(callbackUri);
 
-  const error = uriParameters.get(QueryKey.Error);
-  const errorDescription = uriParameters.get(QueryKey.ErrorDescription);
+  const error = conditional(uriParameters.get(QueryKey.Error));
+  const errorDescription = conditional(uriParameters.get(QueryKey.ErrorDescription));
 
   if (error) {
-    throw new LogtoError('callback_uri_verification.error_found', {
-      error,
-      errorDescription,
-    });
+    throw new LogtoError(
+      'callback_uri_verification.error_found',
+      new OidcError(error, errorDescription)
+    );
   }
 
   const stateFromCallbackUri = uriParameters.get(QueryKey.State);
