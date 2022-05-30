@@ -42,6 +42,7 @@ const useErrorHandler = () => {
       } else if (fallbackErrorMessage) {
         setError(new Error(fallbackErrorMessage));
       }
+      console.error(error);
     },
     [setError]
   );
