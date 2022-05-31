@@ -28,7 +28,10 @@ export const createPluginMethods = (context: Context) => {
       setLoading(true);
 
       await logtoClient.value.signOut(postLogoutRedirectUri);
-      setIsAuthenticated(false);
+
+      // We deliberately do NOT set isAuthenticated to false here, because the app state may change immediately
+      // even before navigating to the oidc end session endpoint, which might cause rendering problems.
+      // Instead, we will reload isAuthenticated state when the user is redirected back to the app.
     } catch (error: unknown) {
       setError(error, 'Unexpected error occurred while signing out.');
     } finally {

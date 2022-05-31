@@ -90,8 +90,7 @@ const useHandleSignInCallback = (returnToPageUrl = window.location.origin) => {
 };
 
 const useLogto = (): Logto => {
-  const { logtoClient, loadingCount, isAuthenticated, error, setIsAuthenticated } =
-    useContext(LogtoContext);
+  const { logtoClient, loadingCount, isAuthenticated, error } = useContext(LogtoContext);
   const { setLoadingState } = useLoadingState();
   const { handleError } = useErrorHandler();
 
@@ -126,14 +125,17 @@ const useLogto = (): Logto => {
         setLoadingState(true);
 
         await logtoClient.signOut(postLogoutRedirectUri);
-        setIsAuthenticated(false);
+
+        // We deliberately do NOT set isAuthenticated to false here, because the app state may change immediately
+        // even before navigating to the oidc end session endpoint, which might cause rendering problems.
+        // Instead, we will reload isAuthenticated state when the user is redirected back to the app.
       } catch (error: unknown) {
         handleError(error, 'Unexpected error occurred while signing out.');
       } finally {
         setLoadingState(false);
       }
     },
-    [logtoClient, setIsAuthenticated, setLoadingState, handleError]
+    [logtoClient, setLoadingState, handleError]
   );
 
   const fetchUserInfo = useCallback(async () => {
