@@ -180,10 +180,10 @@ const useLogto = (): Logto => {
 
     try {
       return logtoClient.getIdTokenClaims();
-    } catch (error: unknown) {
-      handleError(error, 'Unexpected error occurred while getting id token claims.');
+    } catch {
+      // Do nothing if any exception occurs. Caller will get undefined value.
     }
-  }, [logtoClient, handleError]);
+  }, [logtoClient]);
 
   if (!logtoClient) {
     return throwContextError();
