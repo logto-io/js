@@ -1,6 +1,6 @@
 {
   "name": "@logto/react",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "main": "./lib/index.js",
   "exports": "./lib/index.js",
   "typings": "./lib/index.d.ts",

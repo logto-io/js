@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [0.1.12](https://github.com/logto-io/js/compare/v0.1.11...v0.1.12) (2022-05-31)
+
+
+### Bug Fixes
+
+* **react:** calling getIdTokenClaims will not cause infinite loop ([10a5caa](https://github.com/logto-io/js/commit/10a5caad9a7f90c93f8251fef60d94bb088a4e59))
+
+
+
 ### [0.1.11](https://github.com/logto-io/js/compare/v0.1.10...v0.1.11) (2022-05-28)
 
 **Note:** Version bump only for package @logto/react
