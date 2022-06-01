@@ -51,7 +51,7 @@ const useErrorHandler = () => {
 };
 
 const useHandleSignInCallback = (returnToPageUrl = window.location.origin) => {
-  const { logtoClient, isAuthenticated, error, setIsAuthenticated } = useContext(LogtoContext);
+  const { logtoClient, isAuthenticated, error } = useContext(LogtoContext);
   const { isLoading, setLoadingState } = useLoadingState();
   const { handleError } = useErrorHandler();
 
@@ -65,7 +65,11 @@ const useHandleSignInCallback = (returnToPageUrl = window.location.origin) => {
         setLoadingState(true);
 
         await logtoClient.handleSignInCallback(callbackUri);
-        setIsAuthenticated(true);
+
+        // We deliberately do NOT set isAuthenticated to true here, because the app state may change immediately
+        // even before navigating to the return page URL, which might cause rendering problems.
+        // Instead, we will reload isAuthenticated state when the user is redirected back and the client app is reloaded.
+
         window.location.assign(returnToPageUrl);
       } catch (error: unknown) {
         handleError(error, 'Unexpected error occurred while handling sign in callback.');
@@ -73,7 +77,7 @@ const useHandleSignInCallback = (returnToPageUrl = window.location.origin) => {
         setLoadingState(false);
       }
     },
-    [logtoClient, returnToPageUrl, setIsAuthenticated, setLoadingState, handleError]
+    [logtoClient, returnToPageUrl, setLoadingState, handleError]
   );
 
   useEffect(() => {
@@ -128,7 +132,7 @@ const useLogto = (): Logto => {
 
         // We deliberately do NOT set isAuthenticated to false here, because the app state may change immediately
         // even before navigating to the oidc end session endpoint, which might cause rendering problems.
-        // Instead, we will reload isAuthenticated state when the user is redirected back to the app.
+        // Instead, we will reload isAuthenticated state when the user is redirected back and the client app is reloaded.
       } catch (error: unknown) {
         handleError(error, 'Unexpected error occurred while signing out.');
       } finally {

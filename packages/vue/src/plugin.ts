@@ -1,7 +1,7 @@
 import { Context, throwContextError } from './context';
 
 export const createPluginMethods = (context: Context) => {
-  const { logtoClient, setLoading, setError, setIsAuthenticated } = context;
+  const { logtoClient, setLoading, setError } = context;
 
   const signIn = async (redirectUri: string) => {
     if (!logtoClient.value) {
@@ -31,7 +31,7 @@ export const createPluginMethods = (context: Context) => {
 
       // We deliberately do NOT set isAuthenticated to false here, because the app state may change immediately
       // even before navigating to the oidc end session endpoint, which might cause rendering problems.
-      // Instead, we will reload isAuthenticated state when the user is redirected back to the app.
+      // Instead, we will reload isAuthenticated state when the user is redirected back and the client app is reloaded.
     } catch (error: unknown) {
       setError(error, 'Unexpected error occurred while signing out.');
     } finally {
@@ -91,7 +91,11 @@ export const createPluginMethods = (context: Context) => {
     try {
       setLoading(true);
       await logtoClient.value.handleSignInCallback(callbackUri);
-      setIsAuthenticated(true);
+
+      // We deliberately do NOT set isAuthenticated to true here, because the app state may change immediately
+      // even before navigating to the return page URL, which might cause rendering problems.
+      // Instead, we will reload isAuthenticated state when the user is redirected back and the client app is reloaded.
+
       window.location.assign(returnToPageUrl);
     } catch (error: unknown) {
       setError(error, 'Unexpected error occurred while handling sign in callback.');
