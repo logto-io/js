@@ -308,11 +308,12 @@ export default class LogtoClient {
 
     try {
       const accessTokenKey = buildAccessTokenKey(resource);
-      const { appId: clientId } = this.logtoConfig;
+      const { appId: clientId, scopes: customScopes } = this.logtoConfig;
       const { tokenEndpoint } = await this.getOidcConfig();
+      const scopes = withReservedScopes(customScopes).split(' ');
       const { accessToken, refreshToken, idToken, scope, expiresIn } =
         await fetchTokenByRefreshToken(
-          { clientId, tokenEndpoint, refreshToken: this.refreshToken, resource },
+          { clientId, tokenEndpoint, refreshToken: this.refreshToken, resource, scopes },
           this.requester
         );
 
