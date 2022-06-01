@@ -68,7 +68,7 @@ const useHandleSignInCallback = (returnToPageUrl = window.location.origin) => {
 
         // We deliberately do NOT set isAuthenticated to true here, because the app state may change immediately
         // even before navigating to the return page URL, which might cause rendering problems.
-        // Instead, we will reload isAuthenticated state when the user is redirected back and the client app is reloaded.
+        // Moreover, since the location will be redirected, the isAuthenticated state will not matter any more.
 
         window.location.assign(returnToPageUrl);
       } catch (error: unknown) {
@@ -132,7 +132,7 @@ const useLogto = (): Logto => {
 
         // We deliberately do NOT set isAuthenticated to false here, because the app state may change immediately
         // even before navigating to the oidc end session endpoint, which might cause rendering problems.
-        // Instead, we will reload isAuthenticated state when the user is redirected back and the client app is reloaded.
+        // Moreover, since the location will be redirected, the isAuthenticated state will not matter any more.
       } catch (error: unknown) {
         handleError(error, 'Unexpected error occurred while signing out.');
       } finally {
