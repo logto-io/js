@@ -4,7 +4,8 @@ const email = 'email';
 const name = 'name';
 const offlineAccess = 'offline_access';
 const openid = 'openid';
-const reservedScopes = [openid, offlineAccess];
+const profile = 'profile';
+const reservedScopes = [openid, offlineAccess, profile];
 const reservedScopesString = reservedScopes.join(' ');
 
 describe('withReservedScopes', () => {
