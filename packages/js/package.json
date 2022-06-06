@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@silverhand/essentials": "^1.1.6",
-    "camelcase-keys": "^7.0.1",
+    "camelcase-keys": "^8.0.0",
     "jose": "^4.3.8",
     "js-base64": "^3.7.2",
     "lodash.get": "^4.4.2",
