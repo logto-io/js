@@ -1,5 +1,5 @@
 import { IdTokenClaims, UserInfoResponse } from '@logto/browser';
-import { useCallback, useContext, useEffect } from 'react';
+import { useCallback, useContext, useEffect, useRef } from 'react';
 
 import { LogtoContext, throwContextError } from '../context';
 
@@ -50,10 +50,16 @@ const useErrorHandler = () => {
   return { handleError };
 };
 
-const useHandleSignInCallback = (returnToPageUrl = window.location.origin) => {
-  const { logtoClient, isAuthenticated, error } = useContext(LogtoContext);
+const useHandleSignInCallback = (callback?: () => void) => {
+  const { logtoClient, isAuthenticated, error, setIsAuthenticated } = useContext(LogtoContext);
   const { isLoading, setLoadingState } = useLoadingState();
   const { handleError } = useErrorHandler();
+  const callbackRef = useRef<() => void>();
+
+  useEffect(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    callbackRef.current = callback; // Update ref to the latest callback.
+  }, [callback]);
 
   const handleSignInCallback = useCallback(
     async (callbackUri: string) => {
@@ -63,26 +69,23 @@ const useHandleSignInCallback = (returnToPageUrl = window.location.origin) => {
 
       try {
         setLoadingState(true);
-
         await logtoClient.handleSignInCallback(callbackUri);
-
-        // We deliberately do NOT set isAuthenticated to true here, because the app state may change immediately
-        // even before navigating to the return page URL, which might cause rendering problems.
-        // Moreover, since the location will be redirected, the isAuthenticated state will not matter any more.
-
-        window.location.assign(returnToPageUrl);
+        setIsAuthenticated(true);
+        callbackRef.current?.();
       } catch (error: unknown) {
         handleError(error, 'Unexpected error occurred while handling sign in callback.');
       } finally {
         setLoadingState(false);
       }
     },
-    [logtoClient, returnToPageUrl, setLoadingState, handleError]
+    [logtoClient, setLoadingState, setIsAuthenticated, handleError]
   );
 
   useEffect(() => {
-    if (!isAuthenticated && logtoClient?.isSignInRedirected(window.location.href)) {
-      void handleSignInCallback(window.location.href);
+    const currentPageUrl = window.location.href;
+
+    if (!isAuthenticated && logtoClient?.isSignInRedirected(currentPageUrl)) {
+      void handleSignInCallback(currentPageUrl);
     }
   }, [handleSignInCallback, isAuthenticated, logtoClient]);
 

@@ -113,20 +113,21 @@ export const useLogto = (): Logto => {
  *
  * Use this in the setup script of your Callback page to make sure the injection works
  */
-export const useHandleSignInCallback = (returnToPageUrl = window.location.origin) => {
+export const useHandleSignInCallback = (callback?: () => void) => {
   const context = inject<Context>(contextInjectionKey);
 
   if (!context) {
     return throwContextError();
   }
 
-  const currentPageUrl = window.location.href;
   const { isAuthenticated, isLoading, logtoClient, error } = context;
   const { handleSignInCallback } = createPluginMethods(context);
 
   watchEffect(() => {
+    const currentPageUrl = window.location.href;
+
     if (!isAuthenticated.value && logtoClient.value?.isSignInRedirected(currentPageUrl)) {
-      void handleSignInCallback(currentPageUrl, returnToPageUrl);
+      void handleSignInCallback(currentPageUrl, callback);
     }
   });
 
