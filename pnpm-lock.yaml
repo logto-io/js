@@ -196,7 +196,7 @@ importers:
 
   packages/react-sample:
     specifiers:
-      '@logto/react': ^0.1.14
+      '@logto/react': ^0.1.15
       '@parcel/core': ^2.3.2
       '@parcel/transformer-sass': ^2.3.2
       '@silverhand/eslint-config': ^0.14.0
@@ -276,7 +276,7 @@ importers:
 
   packages/vue-sample:
     specifiers:
-      '@logto/vue': ^0.1.14
+      '@logto/vue': ^0.1.15
       '@rushstack/eslint-patch': ^1.1.0
       '@types/node': ^16.11.27
       '@vitejs/plugin-vue': ^2.3.1
