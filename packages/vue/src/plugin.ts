@@ -1,7 +1,7 @@
 import { Context, throwContextError } from './context';
 
 export const createPluginMethods = (context: Context) => {
-  const { logtoClient, setLoading, setError } = context;
+  const { logtoClient, setLoading, setError, setIsAuthenticated } = context;
 
   const signIn = async (redirectUri: string) => {
     if (!logtoClient.value) {
@@ -83,7 +83,7 @@ export const createPluginMethods = (context: Context) => {
     }
   };
 
-  const handleSignInCallback = async (callbackUri: string, returnToPageUrl: string) => {
+  const handleSignInCallback = async (callbackUri: string, callbackFunction?: () => void) => {
     if (!logtoClient.value) {
       return throwContextError();
     }
@@ -91,12 +91,8 @@ export const createPluginMethods = (context: Context) => {
     try {
       setLoading(true);
       await logtoClient.value.handleSignInCallback(callbackUri);
-
-      // We deliberately do NOT set isAuthenticated to true here, because the app state may change immediately
-      // even before navigating to the return page URL, which might cause rendering problems.
-      // Moreover, since the location will be redirected, the isAuthenticated state will not matter any more.
-
-      window.location.assign(returnToPageUrl);
+      setIsAuthenticated(true);
+      callbackFunction?.();
     } catch (error: unknown) {
       setError(error, 'Unexpected error occurred while handling sign in callback.');
     } finally {
