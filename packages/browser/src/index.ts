@@ -73,7 +73,10 @@ export default class LogtoClient {
   private _idToken: Nullable<string>;
 
   constructor(logtoConfig: LogtoConfig, requester = createRequester()) {
-    this.logtoConfig = logtoConfig;
+    this.logtoConfig = {
+      ...logtoConfig,
+      scopes: withReservedScopes(logtoConfig.scopes).split(' '),
+    };
     this.logtoStorageKey = buildLogtoKey(logtoConfig.appId);
     this.requester = requester;
     this._idToken = localStorage.getItem(buildIdTokenKey(this.logtoStorageKey));
@@ -207,12 +210,11 @@ export default class LogtoClient {
   }
 
   public async signIn(redirectUri: string) {
-    const { appId: clientId, resources, scopes: customScopes } = this.logtoConfig;
+    const { appId: clientId, resources, scopes } = this.logtoConfig;
     const { authorizationEndpoint } = await this.getOidcConfig();
     const codeVerifier = generateCodeVerifier();
     const codeChallenge = await generateCodeChallenge(codeVerifier);
     const state = generateState();
-    const scopes = withReservedScopes(customScopes).split(' ');
 
     const signInUri = generateSignInUri({
       authorizationEndpoint,
@@ -308,12 +310,11 @@ export default class LogtoClient {
 
     try {
       const accessTokenKey = buildAccessTokenKey(resource);
-      const { appId: clientId, scopes: customScopes } = this.logtoConfig;
+      const { appId: clientId } = this.logtoConfig;
       const { tokenEndpoint } = await this.getOidcConfig();
-      const scopes = withReservedScopes(customScopes).split(' ');
       const { accessToken, refreshToken, idToken, scope, expiresIn } =
         await fetchTokenByRefreshToken(
-          { clientId, tokenEndpoint, refreshToken: this.refreshToken, resource, scopes },
+          { clientId, tokenEndpoint, refreshToken: this.refreshToken, resource },
           this.requester
         );
 
