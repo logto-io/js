@@ -102,6 +102,11 @@ class LogtoClientSignInSessionAccessor extends LogtoClient {
 }
 
 describe('LogtoClient', () => {
+  afterEach(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+  });
+
   describe('constructor', () => {
     it('should not throw', () => {
       expect(() => new LogtoClient({ endpoint, appId }, requester)).not.toThrow();
@@ -122,10 +127,6 @@ describe('LogtoClient', () => {
   });
 
   describe('signInSession', () => {
-    beforeEach(() => {
-      sessionStorage.clear();
-    });
-
     test('getter should throw LogtoClientError when signInSession does not contain the required property', () => {
       const signInSessionAccessor = new LogtoClientSignInSessionAccessor(
         { endpoint, appId },
@@ -146,7 +147,7 @@ describe('LogtoClient', () => {
       );
     });
 
-    test('should be able to set and get the undefined item (for clearing sign-in session)', () => {
+    it('should be able to set and get the undefined item (for clearing sign-in session)', () => {
       const signInSessionAccessor = new LogtoClientSignInSessionAccessor(
         { endpoint, appId },
         requester
@@ -156,7 +157,7 @@ describe('LogtoClient', () => {
       expect(signInSessionAccessor.getSignInSessionItem()).toBeNull();
     });
 
-    test('should be able to set and get the correct item', () => {
+    it('should be able to set and get the correct item', () => {
       const signInSessionAccessor = new LogtoClientSignInSessionAccessor(
         { endpoint, appId },
         requester
@@ -173,40 +174,39 @@ describe('LogtoClient', () => {
     });
   });
 
-  describe('signIn, isSignInRedirected and handleSignInCallback', () => {
-    beforeEach(() => {
-      localStorage.clear();
-      sessionStorage.clear();
-    });
-
-    test('should reuse oidcConfig', async () => {
+  describe('signIn', () => {
+    it('should reuse oidcConfig', async () => {
       fetchOidcConfig.mockClear();
       const logtoClient = new LogtoClient({ endpoint, appId }, requester);
       await Promise.all([logtoClient.signIn(redirectUri), logtoClient.signIn(redirectUri)]);
       expect(fetchOidcConfig).toBeCalledTimes(1);
     });
 
-    test('should redirect to signInUri just after calling signIn', async () => {
+    it('should redirect to signInUri just after calling signIn', async () => {
       const logtoClient = new LogtoClient({ endpoint, appId }, requester);
       await logtoClient.signIn(redirectUri);
       expect(window.location.toString()).toEqual(mockedSignInUri);
     });
+  });
 
-    test('handleSignInCallback should throw LogtoClientError when the sign-in session does not exist', async () => {
+  describe('isSignInRedirected', () => {
+    it('should return true after calling signIn', async () => {
+      const logtoClient = new LogtoClient({ endpoint, appId }, requester);
+      expect(logtoClient.isSignInRedirected(redirectUri)).toBeFalsy();
+      await logtoClient.signIn(redirectUri);
+      expect(logtoClient.isSignInRedirected(redirectUri)).toBeTruthy();
+    });
+  });
+
+  describe('handleSignInCallback', () => {
+    it('should throw LogtoClientError when the sign-in session does not exist', async () => {
       const logtoClient = new LogtoClient({ endpoint, appId }, requester);
       await expect(logtoClient.handleSignInCallback(redirectUri)).rejects.toMatchError(
         new LogtoClientError('sign_in_session.not_found')
       );
     });
 
-    test('isSignInRedirected should return true after calling signIn', async () => {
-      const logtoClient = new LogtoClient({ endpoint, appId }, requester);
-      expect(logtoClient.isSignInRedirected(redirectUri)).toBeFalsy();
-      await logtoClient.signIn(redirectUri);
-      expect(logtoClient.isSignInRedirected(redirectUri)).toBeTruthy();
-    });
-
-    test('tokens should be set after calling signIn and handleSignInCallback successfully', async () => {
+    it('should set tokens after calling signIn and handleSignInCallback successfully', async () => {
       requester.mockClear().mockImplementation(async () => ({
         accessToken,
         refreshToken,
@@ -236,14 +236,14 @@ describe('LogtoClient', () => {
       localStorage.setItem(refreshTokenStorageKey, 'refresh_token_value');
     });
 
-    test('should call token revocation endpoint with requester', async () => {
+    it('should call token revocation endpoint with requester', async () => {
       const logtoClient = new LogtoClient({ endpoint, appId }, requester);
       await logtoClient.signOut(postSignOutRedirectUri);
 
       expect(requester).toHaveBeenCalledWith(revocationEndpoint, expect.anything());
     });
 
-    test('should clear id token and refresh token in local storage', async () => {
+    it('should clear id token and refresh token in local storage', async () => {
       const logtoClient = new LogtoClient({ endpoint, appId }, requester);
       await logtoClient.signOut(postSignOutRedirectUri);
 
@@ -251,7 +251,7 @@ describe('LogtoClient', () => {
       expect(localStorage.getItem(refreshTokenStorageKey)).toBeNull();
     });
 
-    test('should redirect to post sign-out URI after signing out', async () => {
+    it('should redirect to post sign-out URI after signing out', async () => {
       const logtoClient = new LogtoClient({ endpoint, appId }, requester);
       await logtoClient.signOut(postSignOutRedirectUri);
       const encodedRedirectUri = encodeURIComponent(postSignOutRedirectUri);
@@ -261,7 +261,7 @@ describe('LogtoClient', () => {
       );
     });
 
-    test('should not block sign out flow even if token revocation is failed', async () => {
+    it('should not block sign out flow even if token revocation is failed', async () => {
       const logtoClient = new LogtoClient({ endpoint, appId }, failingRequester);
 
       await expect(logtoClient.signOut()).resolves.not.toThrow();
@@ -275,7 +275,7 @@ describe('LogtoClient', () => {
   });
 
   describe('getAccessToken', () => {
-    test('should throw if idToken is empty', async () => {
+    it('should throw if idToken is empty', async () => {
       localStorage.removeItem(idTokenStorageKey);
       localStorage.setItem(refreshTokenStorageKey, 'refresh_token_value');
       const logtoClient = new LogtoClient({ endpoint, appId }, requester);
@@ -285,7 +285,7 @@ describe('LogtoClient', () => {
       );
     });
 
-    test('should throw if refresh token is empty', async () => {
+    it('should throw if refresh token is empty', async () => {
       localStorage.setItem(idTokenStorageKey, 'id_token_value');
       localStorage.removeItem(refreshTokenStorageKey);
       const logtoClient = new LogtoClient({ endpoint, appId }, requester);
@@ -295,7 +295,7 @@ describe('LogtoClient', () => {
       );
     });
 
-    test('should return access token by valid refresh token', async () => {
+    it('should return access token by valid refresh token', async () => {
       // eslint-disable-next-line @silverhand/fp/no-let
       let count = 0;
 
@@ -327,7 +327,7 @@ describe('LogtoClient', () => {
       expect(logtoClient.refreshToken).toEqual('new_refresh_token_value');
     });
 
-    test('should delete expired access token once', async () => {
+    it('should delete expired access token once', async () => {
       requester.mockClear().mockImplementation(async () => ({
         accessToken: 'access_token_value',
         refreshToken: 'new_refresh_token_value',
@@ -350,7 +350,7 @@ describe('LogtoClient', () => {
       expect(accessTokenMap.delete).toBeCalledTimes(1);
     });
 
-    test('should reuse jwk set', async () => {
+    it('should reuse jwk set', async () => {
       requester.mockImplementation(async () => {
         await new Promise((resolve) => {
           setTimeout(resolve, 0);
@@ -379,7 +379,7 @@ describe('LogtoClient', () => {
   });
 
   describe('getIdTokenClaims', () => {
-    test('should throw if id token is empty', async () => {
+    it('should throw if id token is empty', async () => {
       const logtoClient = new LogtoClient({ endpoint, appId }, requester);
 
       expect(() => logtoClient.getIdTokenClaims()).toMatchError(
@@ -387,7 +387,7 @@ describe('LogtoClient', () => {
       );
     });
 
-    test('should return id token claims', async () => {
+    it('should return id token claims', async () => {
       localStorage.setItem(idTokenStorageKey, 'id_token_value');
 
       const logtoClient = new LogtoClient({ endpoint, appId }, requester);
@@ -405,7 +405,7 @@ describe('LogtoClient', () => {
   });
 
   describe('fetchUserInfo', () => {
-    test('should throw if access token is empty', async () => {
+    it('should throw if access token is empty', async () => {
       const logtoClient = new LogtoClient({ endpoint, appId }, requester);
 
       await expect(logtoClient.fetchUserInfo()).rejects.toMatchError(
@@ -413,7 +413,7 @@ describe('LogtoClient', () => {
       );
     });
 
-    test('should return user information', async () => {
+    it('should return user information', async () => {
       requester
         .mockClear()
         .mockImplementationOnce(async () => ({
