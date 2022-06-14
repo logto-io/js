@@ -4,7 +4,6 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
     "precommit": "lint-staged",
     "start": "parcel public/index.html -p 3000",
     "build": "rm -rf dist && parcel build public/index.html --no-autoinstall",
