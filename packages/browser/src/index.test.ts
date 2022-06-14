@@ -1,7 +1,7 @@
 import { generateSignInUri } from '@logto/js';
 import { Nullable } from '@silverhand/essentials';
 
-import LogtoClient, { AccessToken, LogtoClientError, LogtoSignInSessionItem } from '.';
+import LogtoClient, { AccessToken, LogtoClientError, LogtoConfig, LogtoSignInSessionItem } from '.';
 
 const appId = 'app_id_value';
 const endpoint = 'https://logto.dev';
@@ -84,6 +84,10 @@ jest.mock('jose', () => ({
  * Make LogtoClient.signInSession accessible for test
  */
 class LogtoClientSignInSessionAccessor extends LogtoClient {
+  public getLogtoConfig(): Nullable<LogtoConfig> {
+    return this.logtoConfig;
+  }
+
   public getSignInSessionItem(): Nullable<LogtoSignInSessionItem> {
     return this.signInSession;
   }
@@ -98,8 +102,23 @@ class LogtoClientSignInSessionAccessor extends LogtoClient {
 }
 
 describe('LogtoClient', () => {
-  test('constructor', () => {
-    expect(() => new LogtoClient({ endpoint, appId }, requester)).not.toThrow();
+  describe('constructor', () => {
+    it('should not throw', () => {
+      expect(() => new LogtoClient({ endpoint, appId }, requester)).not.toThrow();
+    });
+
+    it('should append reserved scopes', () => {
+      const logtoClient = new LogtoClientSignInSessionAccessor(
+        { endpoint, appId, scopes: ['foo'] },
+        requester
+      );
+      expect(logtoClient.getLogtoConfig()).toHaveProperty('scopes', [
+        'openid',
+        'offline_access',
+        'profile',
+        'foo',
+      ]);
+    });
   });
 
   describe('signInSession', () => {
