@@ -21,7 +21,7 @@ importers:
   packages/browser:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/js': ^0.1.14
+      '@logto/js': ^0.1.16
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.6
       '@silverhand/ts-config': ^0.14.0
@@ -67,7 +67,7 @@ importers:
 
   packages/browser-sample:
     specifiers:
-      '@logto/browser': ^0.1.14
+      '@logto/browser': ^0.1.16
       '@parcel/core': ^2.3.2
       '@parcel/transformer-sass': ^2.3.2
       '@silverhand/eslint-config': ^0.14.0
@@ -154,7 +154,7 @@ importers:
   packages/react:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/browser': ^0.1.14
+      '@logto/browser': ^0.1.16
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/eslint-config-react': ^0.14.0
       '@silverhand/essentials': ^1.1.6
@@ -196,7 +196,7 @@ importers:
 
   packages/react-sample:
     specifiers:
-      '@logto/react': ^0.1.15
+      '@logto/react': ^0.1.16
       '@parcel/core': ^2.3.2
       '@parcel/transformer-sass': ^2.3.2
       '@silverhand/eslint-config': ^0.14.0
@@ -244,7 +244,7 @@ importers:
   packages/vue:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/browser': ^0.1.14
+      '@logto/browser': ^0.1.16
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/ts-config': ^0.14.0
       '@types/jest': ^27.4.1
@@ -276,7 +276,7 @@ importers:
 
   packages/vue-sample:
     specifiers:
-      '@logto/vue': ^0.1.15
+      '@logto/vue': ^0.1.16
       '@rushstack/eslint-patch': ^1.1.0
       '@types/node': ^16.11.27
       '@vitejs/plugin-vue': ^2.3.1
