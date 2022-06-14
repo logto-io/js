@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [0.1.16](https://github.com/logto-io/js/compare/v0.1.15...v0.1.16) (2022-06-14)
+
+
+### Features
+
+* **browser:** append reserved scopes in LogtoClient constructor ([#305](https://github.com/logto-io/js/issues/305)) ([296f6d6](https://github.com/logto-io/js/commit/296f6d65a2ef7514a035c8f06dc921ce049e62b2))
+
+
+
 ### [0.1.15](https://github.com/logto-io/js/compare/v0.1.14...v0.1.15) (2022-06-08)
 
 **Note:** Version bump only for package root

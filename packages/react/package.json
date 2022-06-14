@@ -1,6 +1,6 @@
 {
   "name": "@logto/react",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "main": "./lib/index.js",
   "exports": "./lib/index.js",
   "typings": "./lib/index.d.ts",
@@ -23,7 +23,7 @@
     "prepack": "pnpm test"
   },
   "dependencies": {
-    "@logto/browser": "^0.1.14",
+    "@logto/browser": "^0.1.16",
     "@silverhand/essentials": "^1.1.6"
   },
   "devDependencies": {
