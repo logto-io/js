@@ -16,6 +16,10 @@ const IdTokenClaimsSchema = s.type({
   exp: s.number(),
   iat: s.number(),
   at_hash: s.optional(s.string()),
+  name: s.optional(s.string()),
+  username: s.optional(s.string()),
+  avatar: s.optional(s.string()),
+  role_names: s.optional(s.array(s.string())),
 });
 
 export type IdTokenClaims = s.Infer<typeof IdTokenClaimsSchema>;
