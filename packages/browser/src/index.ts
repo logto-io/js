@@ -314,7 +314,13 @@ export default class LogtoClient {
       const { tokenEndpoint } = await this.getOidcConfig();
       const { accessToken, refreshToken, idToken, scope, expiresIn } =
         await fetchTokenByRefreshToken(
-          { clientId, tokenEndpoint, refreshToken: this.refreshToken, resource },
+          {
+            clientId,
+            tokenEndpoint,
+            refreshToken: this.refreshToken,
+            resource,
+            scopes: ['offline_access'], // Force remove openid scope from the request
+          },
           this.requester
         );
 
