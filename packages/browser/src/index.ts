@@ -12,6 +12,7 @@ import {
   generateSignOutUri,
   generateState,
   IdTokenClaims,
+  PromptValue,
   Requester,
   revoke,
   UserInfoResponse,
@@ -42,6 +43,7 @@ export type LogtoConfig = {
   appId: string;
   scopes?: string[];
   resources?: string[];
+  prompt?: PromptValue;
   usingPersistStorage?: boolean;
 };
 
@@ -75,6 +77,7 @@ export default class LogtoClient {
   constructor(logtoConfig: LogtoConfig, requester = createRequester()) {
     this.logtoConfig = {
       ...logtoConfig,
+      prompt: logtoConfig.prompt ?? PromptValue.Consent,
       scopes: withReservedScopes(logtoConfig.scopes).split(' '),
     };
     this.logtoStorageKey = buildLogtoKey(logtoConfig.appId);
@@ -375,7 +378,7 @@ export default class LogtoClient {
     accessToken,
     expiresIn,
   }: CodeTokenResponse) {
-    this.refreshToken = refreshToken;
+    this.refreshToken = refreshToken ?? null;
     this.idToken = idToken;
 
     // NOTE: Will add scope to accessTokenKey when needed. (Linear issue LOG-1589)
