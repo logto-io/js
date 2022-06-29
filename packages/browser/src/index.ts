@@ -319,7 +319,7 @@ export default class LogtoClient {
             tokenEndpoint,
             refreshToken: this.refreshToken,
             resource,
-            scopes: ['offline_access'], // Force remove openid scope from the request
+            scopes: resource ? ['offline_access'] : undefined, // Force remove openid scope from the request
           },
           this.requester
         );
