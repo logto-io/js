@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [0.1.18](https://github.com/logto-io/js/compare/v0.1.17...v0.1.18) (2022-06-29)
+
+
+### Bug Fixes
+
+* **js:** support null in id token ([#314](https://github.com/logto-io/js/issues/314)) ([abb53e2](https://github.com/logto-io/js/commit/abb53e296ed50afb339a7f4864e7f368cacb0e1e))
+
+
+
 ### [0.1.17](https://github.com/logto-io/js/compare/v0.1.16...v0.1.17) (2022-06-29)
 
 
