@@ -1,3 +1,4 @@
+import { Prompt } from '../consts';
 import { generateSignInUri } from './sign-in';
 
 const authorizationEndpoint = 'https://logto.dev/oidc/sign-in';
@@ -7,7 +8,7 @@ const codeChallenge = 'codeChallenge';
 const state = 'state';
 
 describe('generateSignInUri', () => {
-  test('without scopes and resources', () => {
+  test('without prompt, scopes and resources', () => {
     const signInUri = generateSignInUri({
       authorizationEndpoint,
       clientId,
@@ -20,7 +21,7 @@ describe('generateSignInUri', () => {
     );
   });
 
-  test('with scopes and resources', () => {
+  test('with prompt, scopes and resources', () => {
     const signInUri = generateSignInUri({
       authorizationEndpoint,
       clientId,
@@ -29,9 +30,10 @@ describe('generateSignInUri', () => {
       state,
       scopes: ['scope1', 'scope2'],
       resources: ['resource1', 'resource2'],
+      prompt: Prompt.Login,
     });
     expect(signInUri).toEqual(
-      'https://logto.dev/oidc/sign-in?client_id=clientId&redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&code_challenge=codeChallenge&code_challenge_method=S256&state=state&response_type=code&prompt=consent&scope=openid+offline_access+profile+scope1+scope2&resource=resource1&resource=resource2'
+      'https://logto.dev/oidc/sign-in?client_id=clientId&redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&code_challenge=codeChallenge&code_challenge_method=S256&state=state&response_type=code&prompt=login&scope=openid+offline_access+profile+scope1+scope2&resource=resource1&resource=resource2'
     );
   });
 });

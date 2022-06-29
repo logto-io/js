@@ -1,4 +1,4 @@
-import { generateSignInUri } from '@logto/js';
+import { generateSignInUri, Prompt } from '@logto/js';
 import { Nullable } from '@silverhand/essentials';
 
 import LogtoClient, { AccessToken, LogtoClientError, LogtoConfig, LogtoSignInSessionItem } from '.';
@@ -123,6 +123,19 @@ describe('LogtoClient', () => {
         'profile',
         'foo',
       ]);
+    });
+
+    it('should use the default prompt value "consent" if we does not provide the custom prompt', () => {
+      const logtoClient = new LogtoClientSignInSessionAccessor({ endpoint, appId }, requester);
+      expect(logtoClient.getLogtoConfig()).toHaveProperty('prompt', Prompt.Consent);
+    });
+
+    it('should use the custom prompt value "login"', () => {
+      const logtoClient = new LogtoClientSignInSessionAccessor(
+        { endpoint, appId, prompt: Prompt.Login },
+        requester
+      );
+      expect(logtoClient.getLogtoConfig()).toHaveProperty('prompt', 'login');
     });
   });
 

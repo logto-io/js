@@ -28,3 +28,8 @@ export enum QueryKey {
   State = 'state',
   Token = 'token',
 }
+
+export enum Prompt {
+  Consent = 'consent',
+  Login = 'login',
+}

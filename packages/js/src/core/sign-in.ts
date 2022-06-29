@@ -1,8 +1,7 @@
-import { QueryKey } from '../consts';
+import { Prompt, QueryKey } from '../consts';
 import { withReservedScopes } from '../utils';
 
 const codeChallengeMethod = 'S256';
-const prompt = 'consent';
 const responseType = 'code';
 
 export type SignInUriParameters = {
@@ -13,6 +12,7 @@ export type SignInUriParameters = {
   state: string;
   scopes?: string[];
   resources?: string[];
+  prompt?: Prompt;
 };
 
 export const generateSignInUri = ({
@@ -23,6 +23,7 @@ export const generateSignInUri = ({
   state,
   scopes,
   resources,
+  prompt,
 }: SignInUriParameters) => {
   const urlSearchParameters = new URLSearchParams({
     [QueryKey.ClientId]: clientId,
@@ -31,7 +32,7 @@ export const generateSignInUri = ({
     [QueryKey.CodeChallengeMethod]: codeChallengeMethod,
     [QueryKey.State]: state,
     [QueryKey.ResponseType]: responseType,
-    [QueryKey.Prompt]: prompt,
+    [QueryKey.Prompt]: prompt ?? Prompt.Consent,
     [QueryKey.Scope]: withReservedScopes(scopes),
   });
 
