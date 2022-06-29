@@ -1,11 +1,13 @@
+import { Nullable } from '@silverhand/essentials';
+
 import { Requester } from '../utils';
 
 export type UserInfoResponse = {
   sub: string;
-  name?: string;
-  username?: string;
-  avatar?: string;
-  role_names?: string[];
+  name?: Nullable<string>;
+  username?: Nullable<string>;
+  avatar?: Nullable<string>;
+  role_names?: Nullable<string[]>;
 };
 
 export const fetchUserInfo = async (
