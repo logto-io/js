@@ -214,7 +214,7 @@ describe('verifyIdToken', () => {
 describe('decodeIdToken', () => {
   test('decoding valid JWT should return claims', async () => {
     const { privateKey } = await generateKeyPair('RS256');
-    const jwt = await new SignJWT({})
+    const jwt = await new SignJWT({ name: null, avatar: undefined, role_names: ['admin'] })
       .setProtectedHeader({ alg: 'RS256' })
       .setIssuer('foo')
       .setSubject('bar')
@@ -229,7 +229,22 @@ describe('decodeIdToken', () => {
       aud: 'qux',
       exp: 2000,
       iat: 1000,
+      name: null,
+      role_names: ['admin'],
     });
+  });
+
+  test('decoding valid JWT with wrong payload type should throw', async () => {
+    const { privateKey } = await generateKeyPair('RS256');
+    const jwt = await new SignJWT({ name: null, avatar: undefined, role_names: [123] })
+      .setProtectedHeader({ alg: 'RS256' })
+      .setIssuer('foo')
+      .setSubject('bar')
+      .setAudience('qux')
+      .setExpirationTime(2000)
+      .setIssuedAt(1000)
+      .sign(privateKey);
+    expect(() => decodeIdToken(jwt)).toThrowError(StructError);
   });
 
   test('decoding valid JWT with non-predefined claims should return all claims', async () => {
