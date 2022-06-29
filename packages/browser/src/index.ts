@@ -12,7 +12,7 @@ import {
   generateSignOutUri,
   generateState,
   IdTokenClaims,
-  PromptValue,
+  Prompt,
   Requester,
   revoke,
   UserInfoResponse,
@@ -43,7 +43,7 @@ export type LogtoConfig = {
   appId: string;
   scopes?: string[];
   resources?: string[];
-  prompt?: PromptValue;
+  prompt?: Prompt;
   usingPersistStorage?: boolean;
 };
 
@@ -77,7 +77,7 @@ export default class LogtoClient {
   constructor(logtoConfig: LogtoConfig, requester = createRequester()) {
     this.logtoConfig = {
       ...logtoConfig,
-      prompt: logtoConfig.prompt ?? PromptValue.Consent,
+      prompt: logtoConfig.prompt ?? Prompt.Consent,
       scopes: withReservedScopes(logtoConfig.scopes).split(' '),
     };
     this.logtoStorageKey = buildLogtoKey(logtoConfig.appId);

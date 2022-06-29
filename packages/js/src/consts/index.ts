@@ -29,7 +29,7 @@ export enum QueryKey {
   Token = 'token',
 }
 
-export enum PromptValue {
+export enum Prompt {
   Consent = 'consent',
   Login = 'login',
 }
