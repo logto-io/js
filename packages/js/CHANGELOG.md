@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [0.1.17](https://github.com/logto-io/js/compare/v0.1.16...v0.1.17) (2022-06-29)
+
+
+### Bug Fixes
+
+* **deps:** update dependency superstruct to ^0.16.0 ([#302](https://github.com/logto-io/js/issues/302)) ([d23c3d3](https://github.com/logto-io/js/commit/d23c3d393a55e508c2173d0ce0a14320e33f2873))
+
+
+
 ### [0.1.16](https://github.com/logto-io/js/compare/v0.1.15...v0.1.16) (2022-06-14)
 
 **Note:** Version bump only for package @logto/js

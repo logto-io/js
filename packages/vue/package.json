@@ -1,6 +1,6 @@
 {
   "name": "@logto/vue",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "main": "./lib/index.js",
   "exports": "./lib/index.js",
   "typings": "./lib/index.d.ts",
@@ -23,7 +23,7 @@
     "prepack": "pnpm test"
   },
   "dependencies": {
-    "@logto/browser": "^0.1.16"
+    "@logto/browser": "^0.1.17"
   },
   "devDependencies": {
     "@jest/types": "^27.5.1",
