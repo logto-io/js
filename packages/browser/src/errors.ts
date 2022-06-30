@@ -8,7 +8,6 @@ const logtoClientErrorCodes = Object.freeze({
   },
   not_authenticated: 'Not authenticated.',
   get_access_token_by_refresh_token_failed: 'Failed to get access token by refresh token.',
-  fetch_user_info_failed: 'Unable to fetch user info. The access token may be invalid.',
   invalid_id_token: 'Invalid id token.',
 });
 

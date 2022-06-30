@@ -5,7 +5,6 @@ import {
   fetchOidcConfig,
   fetchTokenByAuthorizationCode,
   fetchTokenByRefreshToken,
-  fetchUserInfo,
   generateCodeChallenge,
   generateCodeVerifier,
   generateSignInUri,
@@ -15,7 +14,6 @@ import {
   Prompt,
   Requester,
   revoke,
-  UserInfoResponse,
   verifyAndParseCodeFromCallbackUri,
   verifyIdToken,
   withReservedScopes,
@@ -34,7 +32,7 @@ import {
   getDiscoveryEndpoint,
 } from './utils';
 
-export type { IdTokenClaims, UserInfoResponse, LogtoErrorCode } from '@logto/js';
+export type { IdTokenClaims, LogtoErrorCode } from '@logto/js';
 export { LogtoError, OidcError } from '@logto/js';
 export * from './errors';
 
@@ -199,17 +197,6 @@ export default class LogtoClient {
     }
 
     return decodeIdToken(this.idToken);
-  }
-
-  public async fetchUserInfo(): Promise<UserInfoResponse> {
-    const { userinfoEndpoint } = await this.getOidcConfig();
-    const accessToken = await this.getAccessToken();
-
-    if (!accessToken) {
-      throw new LogtoClientError('fetch_user_info_failed');
-    }
-
-    return fetchUserInfo(userinfoEndpoint, accessToken, this.requester);
   }
 
   public async signIn(redirectUri: string) {

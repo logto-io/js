@@ -7,7 +7,6 @@ const appId = 'app_id_value';
 const endpoint = 'https://logto.dev';
 
 const authorizationEndpoint = `${endpoint}/oidc/auth`;
-const userinfoEndpoint = `${endpoint}/oidc/me`;
 const tokenEndpoint = `${endpoint}/oidc/token`;
 const endSessionEndpoint = `${endpoint}/oidc/session/end`;
 const revocationEndpoint = `${endpoint}/oidc/token/revocation`;
@@ -47,7 +46,6 @@ const fetchOidcConfig = jest.fn(async () => {
 
   return {
     authorizationEndpoint,
-    userinfoEndpoint,
     tokenEndpoint,
     endSessionEndpoint,
     revocationEndpoint,
@@ -414,37 +412,6 @@ describe('LogtoClient', () => {
         iat: currentUnixTimeStamp,
         at_hash: 'at_hash_value',
       });
-    });
-  });
-
-  describe('fetchUserInfo', () => {
-    it('should throw if access token is empty', async () => {
-      const logtoClient = new LogtoClient({ endpoint, appId }, requester);
-
-      await expect(logtoClient.fetchUserInfo()).rejects.toMatchError(
-        new LogtoClientError('not_authenticated')
-      );
-    });
-
-    it('should return user information', async () => {
-      requester
-        .mockClear()
-        .mockImplementationOnce(async () => ({
-          accessToken: 'access_token_value',
-        }))
-        .mockImplementationOnce(async () => ({
-          sub: 'subject_value',
-        }));
-      localStorage.setItem(idTokenStorageKey, 'id_token_value');
-      localStorage.setItem(refreshTokenStorageKey, 'refresh_token_value');
-
-      const logtoClient = new LogtoClient({ endpoint, appId }, requester);
-      const userInfo = await logtoClient.fetchUserInfo();
-
-      expect(requester).toHaveBeenCalledWith(userinfoEndpoint, {
-        headers: { Authorization: 'Bearer access_token_value' },
-      });
-      expect(userInfo).toEqual({ sub: 'subject_value' });
     });
   });
 });

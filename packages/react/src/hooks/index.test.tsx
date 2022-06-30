@@ -51,12 +51,11 @@ describe('useLogto', () => {
     });
 
     await waitFor(() => {
-      const { signIn, signOut, fetchUserInfo, getAccessToken, getIdTokenClaims } = result.current;
+      const { signIn, signOut, getAccessToken, getIdTokenClaims } = result.current;
 
       expect(result.error).toBeUndefined();
       expect(signIn).not.toBeUndefined();
       expect(signOut).not.toBeUndefined();
-      expect(fetchUserInfo).not.toBeUndefined();
       expect(getAccessToken).not.toBeUndefined();
       expect(getIdTokenClaims).not.toBeUndefined();
     });

@@ -5,7 +5,6 @@ describe('fetchOidcConfig', () => {
     const requester = jest.fn().mockResolvedValue({
       authorization_endpoint: 'foo',
       token_endpoint: 'foo',
-      userinfo_endpoint: 'foo',
       end_session_endpoint: 'foo',
       revocation_endpoint: 'foo',
       jwks_uri: 'foo',
@@ -16,7 +15,6 @@ describe('fetchOidcConfig', () => {
     ).resolves.toEqual({
       authorizationEndpoint: 'foo',
       tokenEndpoint: 'foo',
-      userinfoEndpoint: 'foo',
       endSessionEndpoint: 'foo',
       revocationEndpoint: 'foo',
       jwksUri: 'foo',

@@ -1,4 +1,4 @@
-import LogtoClient, { IdTokenClaims, LogtoConfig, UserInfoResponse } from '@logto/browser';
+import LogtoClient, { IdTokenClaims, LogtoConfig } from '@logto/browser';
 import { App, inject, readonly, Ref, watchEffect } from 'vue';
 
 import { logtoInjectionKey, contextInjectionKey } from './consts';
@@ -8,7 +8,6 @@ import { createPluginMethods } from './plugin';
 export type {
   LogtoConfig,
   IdTokenClaims,
-  UserInfoResponse,
   LogtoErrorCode,
   LogtoClientErrorCode,
 } from '@logto/browser';
@@ -23,7 +22,6 @@ type Logto = {
   isAuthenticated: Readonly<Ref<boolean>>;
   isLoading: Readonly<Ref<boolean>>;
   error: Readonly<Ref<Error | undefined>>;
-  fetchUserInfo: () => Promise<UserInfoResponse | undefined>;
   getAccessToken: (resource?: string) => Promise<string | undefined>;
   getIdTokenClaims: () => IdTokenClaims | undefined;
   signIn: (redirectUri: string) => Promise<void>;
