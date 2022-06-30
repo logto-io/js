@@ -3,7 +3,6 @@ export type { LogtoContextProps } from './context';
 export type {
   LogtoConfig,
   IdTokenClaims,
-  UserInfoResponse,
   LogtoErrorCode,
   LogtoClientErrorCode,
 } from '@logto/browser';

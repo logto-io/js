@@ -1,4 +1,4 @@
-import { IdTokenClaims, UserInfoResponse } from '@logto/browser';
+import { IdTokenClaims } from '@logto/browser';
 import { useCallback, useContext, useEffect, useRef } from 'react';
 
 import { LogtoContext, throwContextError } from '../context';
@@ -7,7 +7,6 @@ type Logto = {
   isAuthenticated: boolean;
   isLoading: boolean;
   error?: Error;
-  fetchUserInfo: () => Promise<UserInfoResponse | undefined>;
   getAccessToken: (resource?: string) => Promise<string | undefined>;
   getIdTokenClaims: () => IdTokenClaims | undefined;
   signIn: (redirectUri: string) => Promise<void>;
@@ -145,22 +144,6 @@ const useLogto = (): Logto => {
     [logtoClient, setLoadingState, handleError]
   );
 
-  const fetchUserInfo = useCallback(async () => {
-    if (!logtoClient) {
-      return throwContextError();
-    }
-
-    try {
-      setLoadingState(true);
-
-      return await logtoClient.fetchUserInfo();
-    } catch (error: unknown) {
-      handleError(error, 'Unexpected error occurred while fetching user info.');
-    } finally {
-      setLoadingState(false);
-    }
-  }, [logtoClient, setLoadingState, handleError]);
-
   const getAccessToken = useCallback(
     async (resource?: string) => {
       if (!logtoClient) {
@@ -202,7 +185,6 @@ const useLogto = (): Logto => {
     error,
     signIn,
     signOut,
-    fetchUserInfo,
     getAccessToken,
     getIdTokenClaims,
   };
