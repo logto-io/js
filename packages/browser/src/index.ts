@@ -200,7 +200,7 @@ export default class LogtoClient {
   }
 
   public async signIn(redirectUri: string) {
-    const { appId: clientId, resources, scopes } = this.logtoConfig;
+    const { appId: clientId, prompt, resources, scopes } = this.logtoConfig;
     const { authorizationEndpoint } = await this.getOidcConfig();
     const codeVerifier = generateCodeVerifier();
     const codeChallenge = await generateCodeChallenge(codeVerifier);
@@ -214,6 +214,7 @@ export default class LogtoClient {
       state,
       scopes,
       resources,
+      prompt,
     });
 
     this.signInSession = { redirectUri, codeVerifier, state };
