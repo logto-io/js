@@ -33,7 +33,7 @@ import {
 } from './utils';
 
 export type { IdTokenClaims, LogtoErrorCode } from '@logto/js';
-export { LogtoError, OidcError } from '@logto/js';
+export { LogtoError, OidcError, Prompt } from '@logto/js';
 export * from './errors';
 
 export type LogtoConfig = {

@@ -7,7 +7,7 @@ export type {
   LogtoClientErrorCode,
 } from '@logto/browser';
 
-export { LogtoError, LogtoClientError, OidcError } from '@logto/browser';
+export { LogtoError, LogtoClientError, OidcError, Prompt } from '@logto/browser';
 
 export * from './provider';
 
