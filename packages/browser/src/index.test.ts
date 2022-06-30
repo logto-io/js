@@ -26,6 +26,14 @@ const mockedSignInUri = generateSignInUri({
   codeChallenge: mockCodeChallenge,
   state: mockedState,
 });
+const mockedSignInUriWithLoginPrompt = generateSignInUri({
+  authorizationEndpoint,
+  clientId: appId,
+  redirectUri,
+  codeChallenge: mockCodeChallenge,
+  state: mockedState,
+  prompt: Prompt.Login,
+});
 
 const refreshTokenStorageKey = `logto:${appId}:refreshToken`;
 const idTokenStorageKey = `logto:${appId}:idToken`;
@@ -197,6 +205,12 @@ describe('LogtoClient', () => {
       const logtoClient = new LogtoClient({ endpoint, appId }, requester);
       await logtoClient.signIn(redirectUri);
       expect(window.location.toString()).toEqual(mockedSignInUri);
+    });
+
+    it('should redirect to signInUri just after calling signIn with user specified prompt', async () => {
+      const logtoClient = new LogtoClient({ endpoint, appId, prompt: Prompt.Login }, requester);
+      await logtoClient.signIn(redirectUri);
+      expect(window.location.toString()).toEqual(mockedSignInUriWithLoginPrompt);
     });
   });
 
