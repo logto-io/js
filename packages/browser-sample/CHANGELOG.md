@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.0](https://github.com/logto-io/js/compare/v0.1.18...v0.2.0) (2022-06-30)
+
+**Note:** Version bump only for package @logto/browser-sample
+
+
+
+
+
 ### [0.1.18](https://github.com/logto-io/js/compare/v0.1.17...v0.1.18) (2022-06-29)
 
 **Note:** Version bump only for package @logto/browser-sample

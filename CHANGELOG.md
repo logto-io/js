@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.0](https://github.com/logto-io/js/compare/v0.1.18...v0.2.0) (2022-06-30)
+
+
+### Features
+
+* **js,browser:** configurable prompt ([#311](https://github.com/logto-io/js/issues/311)) ([2b9ae04](https://github.com/logto-io/js/commit/2b9ae0460f35e636aee448c46f810c74b6e5b230))
+* remove userinfo ([#317](https://github.com/logto-io/js/issues/317)) ([3f9d412](https://github.com/logto-io/js/commit/3f9d412cb2ec930fe036c8ad9c7d1568498581e8))
+
+
+
 ### [0.1.18](https://github.com/logto-io/js/compare/v0.1.17...v0.1.18) (2022-06-29)
 
 
