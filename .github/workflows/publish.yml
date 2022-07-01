@@ -6,6 +6,10 @@ on:
       semver:
         description: 'Semver bump type'
         required: true
+    preid:
+        description: Pre ID
+        required: true
+        default: alpha
 
 jobs:
   publish-to-npm:
@@ -18,15 +22,15 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          token: ${{ secrets.GH_REPO_TOKEN }}
+          token: ${{ secrets.BOT_PAT }}
 
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.2
 
       - name: Configure Git user
         run: |
-          git config --global user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git config --global user.name github-actions
+          git config --global user.email bot@silverhand.io
+          git config --global user.name silverhand-bot
       
       - name: Prerelease
         run: pnpm prerelease
@@ -34,15 +38,6 @@ jobs:
       - name: Publish to NPM
         # add `no-verify-access` due to https://github.com/lerna/lerna/issues/2788
         run: |
-          pnpm -- lerna publish -m "release: %s" --conventional-commits --preid=rc --no-verify-access --create-release=github --yes ${{ github.event.inputs.semver }}
+          pnpm -- lerna publish -m "release: %s" --conventional-commits --preid=${{ github.event.inputs.preid }} --no-verify-access --create-release=github --yes ${{ github.event.inputs.semver }}
         env:
-          GH_TOKEN: ${{ secrets.GH_REPO_TOKEN }}
-
-      - name: Update pnpm lockfile
-        run: pnpm i --frozen-lockfile=false
-
-      - name: Commit and push lockfile changes
-        continue-on-error: true
-        run: |
-          git commit -am'chore: update lockfile'
-          git push
+          GH_TOKEN: ${{ secrets.BOT_PAT }}
