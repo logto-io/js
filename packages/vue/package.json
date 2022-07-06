@@ -1,9 +1,14 @@
 {
   "name": "@logto/vue",
   "version": "0.2.2",
+  "source": "./src/index.ts",
   "main": "./lib/index.js",
-  "exports": "./lib/index.js",
-  "typings": "./lib/index.d.ts",
+  "exports": {
+    "require": "./lib/index.js",
+    "import": "./lib/module.js"
+  },
+  "module": "./lib/module.js",
+  "types": "./lib/index.d.ts",
   "files": [
     "lib"
   ],
@@ -16,7 +21,7 @@
   "scripts": {
     "dev:tsc": "tsc -p tsconfig.build.json -w --preserveWatchOutput",
     "precommit": "lint-staged",
-    "build": "rm -rf lib/ && tsc -p tsconfig.build.json",
+    "build": "rm -rf lib/ && parcel build",
     "lint": "eslint --ext .ts src",
     "test": "jest",
     "test:coverage": "jest --silent --coverage",
@@ -27,12 +32,16 @@
   },
   "devDependencies": {
     "@jest/types": "^27.5.1",
+    "@parcel/core": "^2.6.2",
+    "@parcel/packager-ts": "^2.6.2",
+    "@parcel/transformer-typescript-types": "^2.6.2",
     "@silverhand/eslint-config": "^0.14.0",
     "@silverhand/ts-config": "^0.14.0",
     "@types/jest": "^27.4.1",
     "eslint": "^8.9.0",
     "jest": "^27.5.1",
     "lint-staged": "^13.0.0",
+    "parcel": "^2.6.2",
     "postcss": "^8.4.6",
     "prettier": "^2.5.1",
     "stylelint": "^14.8.2",

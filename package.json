@@ -5,6 +5,7 @@
     "preinstall": "npx only-allow pnpm",
     "version": "pnpm i --frozen-lockfile=false && git add pnpm-lock.yaml",
     "bootstrap": "lerna bootstrap",
+    "build": "lerna run --stream build",
     "test": "lerna run test",
     "lerna": "lerna",
     "prerelease": "lerna run build --since --include-dependencies --no-private",
