@@ -43,7 +43,7 @@ jobs:
           git config --global user.name silverhand-bot
       
       - name: Prerelease
-        run: pnpm prerelease ${{ !contains(github.event.inputs.append, '--force-publish') && '--since' }}
+        run: pnpm prerelease ${{ !contains(github.event.inputs.append, '--force-publish') && '--since' || '' }}
 
       - name: Publish
         # add `no-verify-access` due to https://github.com/lerna/lerna/issues/2788
