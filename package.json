@@ -8,7 +8,7 @@
     "build": "lerna run --stream build",
     "test": "lerna run test",
     "lerna": "lerna",
-    "prerelease": "lerna run build --since --include-dependencies --no-private",
+    "prerelease": "lerna run build --include-dependencies --no-private",
     "prepare": "if test \"$NODE_ENV\" != \"production\" ; then husky install ; fi"
   },
   "devDependencies": {
