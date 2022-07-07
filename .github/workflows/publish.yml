@@ -68,18 +68,3 @@ jobs:
           branch: master
           tags: true
           timeout: 20
-
-      - name: Extract changelog
-        run: |
-          git diff HEAD~1 HEAD --exit-code -- CHANGELOG.md | \
-          tail -n +5 | \
-          grep -E "^\+" | \
-          sed -E 's/^\+//' | \
-          cat -s \
-          > /tmp/changelog.txt
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          token: ${{ secrets.BOT_PAT }}
-          body_path: /tmp/changelog.txt
