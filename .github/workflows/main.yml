@@ -2,9 +2,14 @@ name: Main
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
+      - 'push-action/**'
   pull_request:
-    branches: [master]
+
+concurrency:
+  group: main-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
 
 jobs:
   main:

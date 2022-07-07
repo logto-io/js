@@ -1,11 +1,19 @@
 name: Commitlint
 
 on:
+  push:
+    branches:
+      - 'push-action/**'
   pull_request:
     types: [opened, edited, synchronize, reopened]
 
+concurrency: 
+  group: commitlint-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint-commits:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
