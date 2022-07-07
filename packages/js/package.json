@@ -21,7 +21,8 @@
   "scripts": {
     "dev:tsc": "tsc -p tsconfig.build.json -w --preserveWatchOutput",
     "precommit": "lint-staged",
-    "build": "rm -rf lib/ && parcel build",
+    "check": "tsc --noEmit",
+    "build": "rm -rf lib/ && pnpm check && parcel build",
     "lint": "eslint --ext .ts src",
     "test": "jest",
     "test:coverage": "jest --silent --env=jsdom && jest --silent --coverage",
