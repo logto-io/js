@@ -2,6 +2,8 @@
 
 import { fromUint8Array } from 'js-base64';
 
+import { LogtoError } from './errors';
+
 /**
  * @param length The length of the raw random data.
  */
@@ -27,8 +29,17 @@ export const generateCodeVerifier = () => generateRandomString();
  * @link [Client Creates the Code Challenge](https://datatracker.ietf.org/doc/html/rfc7636#section-4.2)
  */
 export const generateCodeChallenge = async (codeVerifier: string): Promise<string> => {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (crypto.subtle === undefined) {
+    /**
+     * `crypto.subtle` is available only in secure contexts (HTTPS) in some or all supporting browsers,
+     * https://developer.mozilla.org/en-US/docs/Web/API/Crypto/subtle
+     * https://www.chromium.org/blink/webcrypto/#accessing-it
+     */
+    throw new LogtoError('crypto_subtle_unavailable');
+  }
+
   const encodedCodeVerifier = new TextEncoder().encode(codeVerifier);
-  // TODO: crypto related to linear issue LOG-1517
   const codeChallenge = new Uint8Array(await crypto.subtle.digest('SHA-256', encodedCodeVerifier));
 
   return fromUint8Array(codeChallenge, true);
