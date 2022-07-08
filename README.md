@@ -3,7 +3,7 @@
       <img src="./logo.png" width="100">
   </a>
   <br/>
-  <span><i><a href="https://logto.io" target="_blank">Logto</a> helps you quickly focus on everything after signing in.</i></span>
+  <span><i><a href="https://logto.io" target="_blank">Logto</a> helps you build the sign-in experience and user identity within minutes.</i></span>
 </p>
 
 # Logto JavaScript SDKs
