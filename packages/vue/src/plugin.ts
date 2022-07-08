@@ -19,7 +19,7 @@ export const createPluginMethods = (context: Context) => {
     }
   };
 
-  const signOut = async (postLogoutRedirectUri: string) => {
+  const signOut = async (postLogoutRedirectUri?: string) => {
     if (!logtoClient.value) {
       return throwContextError();
     }

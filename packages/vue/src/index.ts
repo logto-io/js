@@ -25,7 +25,7 @@ type Logto = {
   getAccessToken: (resource?: string) => Promise<string | undefined>;
   getIdTokenClaims: () => IdTokenClaims | undefined;
   signIn: (redirectUri: string) => Promise<void>;
-  signOut: (postLogoutRedirectUri: string) => Promise<void>;
+  signOut: (postLogoutRedirectUri?: string) => Promise<void>;
 };
 
 /**
