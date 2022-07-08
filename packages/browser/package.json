@@ -1,6 +1,6 @@
 {
   "name": "@logto/browser",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "source": "./src/index.ts",
   "main": "./lib/index.js",
   "exports": {
@@ -29,7 +29,7 @@
     "prepack": "pnpm test"
   },
   "dependencies": {
-    "@logto/js": "^1.0.0-alpha.1",
+    "@logto/js": "^1.0.0-alpha.2",
     "@silverhand/essentials": "^1.1.6",
     "jose": "^4.5.0",
     "lodash.get": "^4.4.2",

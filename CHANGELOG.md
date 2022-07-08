@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-alpha.2](https://github.com/logto-io/js/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2022-07-08)
+
+
+### Features
+
+* **js:** optimize error message for unavailable crypto.subtle in insecure contexts ([#324](https://github.com/logto-io/js/issues/324)) ([38aedf7](https://github.com/logto-io/js/commit/38aedf7256cbc3b9d3d9056211025f59526edeff))
+
+
+
 ## [1.0.0-alpha.1](https://github.com/logto-io/js/compare/v1.0.0-alpha.0...v1.0.0-alpha.1) (2022-07-07)
 
 **Note:** Version bump only for package root
