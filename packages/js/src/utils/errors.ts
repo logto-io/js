@@ -16,6 +16,7 @@ const logtoErrorCodes = Object.freeze({
   requester: {
     not_provide_fetch: 'Should provide a fetch function under Node.js',
   },
+  crypto_subtle_unavailable: 'Crypto.subtle is unavailable in insecure contexts (non-HTTPS).',
 });
 
 export type LogtoErrorCode = NormalizeKeyPaths<typeof logtoErrorCodes>;

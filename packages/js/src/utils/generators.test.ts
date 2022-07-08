@@ -1,6 +1,7 @@
 import { UrlSafeBase64 } from '@silverhand/essentials';
 import { toUint8Array } from 'js-base64';
 
+import { LogtoError } from './errors';
 import { generateCodeChallenge, generateCodeVerifier, generateState } from './generators';
 
 describe('generateState', () => {
@@ -40,6 +41,22 @@ describe('generateCodeVerifier', () => {
 });
 
 describe('generateCodeChallenge', () => {
+  test('should throw optimized error message when crypto.subtle is unavailable', async () => {
+    const originalSubtle = crypto.subtle;
+    // @ts-expect-error make it undefined on purpose
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    crypto.subtle = undefined;
+
+    const codeVerifier = generateCodeVerifier();
+    await expect(generateCodeChallenge(codeVerifier)).rejects.toMatchError(
+      new LogtoError('crypto_subtle_unavailable')
+    );
+
+    // @ts-expect-error revert it to the original value
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    crypto.subtle = originalSubtle;
+  });
+
   test('dealing with different code verifiers should not be equal', async () => {
     const codeVerifier1 = generateCodeVerifier();
     const codeChallenge1 = await generateCodeChallenge(codeVerifier1);
