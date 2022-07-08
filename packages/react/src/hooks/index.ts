@@ -10,7 +10,7 @@ type Logto = {
   getAccessToken: (resource?: string) => Promise<string | undefined>;
   getIdTokenClaims: () => IdTokenClaims | undefined;
   signIn: (redirectUri: string) => Promise<void>;
-  signOut: (postLogoutRedirectUri: string) => Promise<void>;
+  signOut: (postLogoutRedirectUri?: string) => Promise<void>;
 };
 
 const useLoadingState = () => {
@@ -122,7 +122,7 @@ const useLogto = (): Logto => {
   );
 
   const signOut = useCallback(
-    async (postLogoutRedirectUri: string) => {
+    async (postLogoutRedirectUri?: string) => {
       if (!logtoClient) {
         return throwContextError();
       }
