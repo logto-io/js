@@ -22,7 +22,6 @@ const logtoErrorCodes = Object.freeze({
 export type LogtoErrorCode = NormalizeKeyPaths<typeof logtoErrorCodes>;
 
 const getMessageByErrorCode = (errorCode: LogtoErrorCode): string => {
-  // TODO: linear issue LOG-1419
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const message = get(logtoErrorCodes, errorCode);
 
