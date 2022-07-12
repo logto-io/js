@@ -1,8 +1,7 @@
 /** @link [Proof Key for Code Exchange by OAuth Public Clients](https://datatracker.ietf.org/doc/html/rfc7636) */
 
+import { LogtoError } from '@logto/client';
 import { fromUint8Array } from 'js-base64';
-
-import { LogtoError } from './errors';
 
 /**
  * @param length The length of the raw random data.

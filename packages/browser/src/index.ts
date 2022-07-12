@@ -7,6 +7,8 @@ import BaseClient, {
 } from '@logto/client';
 import { Nullable } from '@silverhand/essentials';
 
+import { generateCodeChallenge, generateCodeVerifier, generateState } from './utils/generators';
+
 export type {
   IdTokenClaims,
   LogtoErrorCode,
@@ -28,7 +30,7 @@ const requester = async <T>(...args: Parameters<typeof fetch>): Promise<T> => {
   return response.json<T>();
 };
 
-const handleRedirect = (url: string) => {
+const navigate = (url: string) => {
   window.location.assign(url);
 };
 
@@ -72,8 +74,11 @@ export default class LogtoClient extends BaseClient {
   constructor(config: LogtoConfig) {
     super(config, {
       requester,
-      handleRedirect,
+      navigate,
       storage: new BrowserStorage(config.appId),
+      generateCodeChallenge,
+      generateCodeVerifier,
+      generateState,
     });
   }
 }
