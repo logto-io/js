@@ -2,7 +2,7 @@ import { KeysToCamelCase } from '@silverhand/essentials';
 import camelcaseKeys from 'camelcase-keys';
 
 import { ContentType, QueryKey, TokenGrantType } from '../consts';
-import { Requester } from '../utils';
+import { Requester } from '../types';
 
 export type FetchTokenByAuthorizationCodeParameters = {
   clientId: string;

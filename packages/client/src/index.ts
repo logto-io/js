@@ -26,9 +26,10 @@ import { LogtoClientError } from './errors';
 import { Storage } from './storage';
 import { buildAccessTokenKey, getDiscoveryEndpoint } from './utils';
 
-export type { IdTokenClaims, LogtoErrorCode } from '@logto/js';
-export { LogtoError, OidcError, Prompt } from '@logto/js';
+export type { IdTokenClaims, LogtoErrorCode, LogtoRequestErrorBody } from '@logto/js';
+export { LogtoError, OidcError, Prompt, LogtoRequestError } from '@logto/js';
 export * from './errors';
+export type { Storage, StorageKey } from './storage';
 
 export type LogtoConfig = {
   endpoint: string;
