@@ -22,7 +22,6 @@ importers:
     specifiers:
       '@jest/types': ^27.5.1
       '@logto/client': ^1.0.0-alpha.2
-      '@logto/js': ^1.0.0-alpha.2
       '@parcel/core': ^2.6.2
       '@parcel/packager-ts': ^2.6.2
       '@parcel/transformer-typescript-types': ^2.6.2
@@ -47,7 +46,6 @@ importers:
       js-base64: 3.7.2
     devDependencies:
       '@jest/types': 27.5.1
-      '@logto/js': link:../js
       '@parcel/core': 2.6.2
       '@parcel/packager-ts': 2.6.2_@parcel+core@2.6.2
       '@parcel/transformer-typescript-types': 2.6.2_xzish6xme2buyxhmq5bzjnp4jm
@@ -6021,7 +6019,7 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.12.1_fhzmdq77bspfhxkfuzq4fbrdsy
+      '@typescript-eslint/parser': 5.12.1_4gmsiq4b4nr3cnbd3xuvl5c34u
       debug: 3.2.7
       eslint-import-resolver-node: 0.3.6
       eslint-import-resolver-typescript: 2.5.0_cmtdok55f7srt3k3ux6kqq5jcq
@@ -6072,7 +6070,7 @@ packages:
       '@typescript-eslint/parser':
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.12.1_fhzmdq77bspfhxkfuzq4fbrdsy
+      '@typescript-eslint/parser': 5.12.1_4gmsiq4b4nr3cnbd3xuvl5c34u
       array-includes: 3.1.4
       array.prototype.flat: 1.2.5
       debug: 2.6.9
