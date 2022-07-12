@@ -59,6 +59,13 @@ jest.mock('@logto/js', () => ({
   })),
 }));
 
+jest.mock('./utils/generators', () => ({
+  ...jest.requireActual('./utils/generators'),
+  generateCodeChallenge: jest.fn(async () => mockCodeChallenge),
+  generateCodeVerifier: jest.fn(() => mockedCodeVerifier),
+  generateState: jest.fn(() => mockedState),
+}));
+
 const createRemoteJWKSet = jest.fn(async () => '');
 
 jest.mock('jose', () => ({

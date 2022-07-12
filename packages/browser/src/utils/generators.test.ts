@@ -1,7 +1,6 @@
 import { UrlSafeBase64 } from '@silverhand/essentials';
 import { toUint8Array } from 'js-base64';
 
-import { LogtoError } from './errors';
 import { generateCodeChallenge, generateCodeVerifier, generateState } from './generators';
 
 describe('generateState', () => {
@@ -48,9 +47,7 @@ describe('generateCodeChallenge', () => {
     crypto.subtle = undefined;
 
     const codeVerifier = generateCodeVerifier();
-    await expect(generateCodeChallenge(codeVerifier)).rejects.toMatchError(
-      new LogtoError('crypto_subtle_unavailable')
-    );
+    await expect(generateCodeChallenge(codeVerifier)).rejects.toThrow();
 
     // @ts-expect-error revert it to the original value
     // eslint-disable-next-line @silverhand/fp/no-mutation

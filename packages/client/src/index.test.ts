@@ -6,9 +6,8 @@ import {
   currentUnixTimeStamp,
   endpoint,
   fetchOidcConfig,
-  handleRedirect,
+  navigate,
   LogtoClientSignInSessionAccessor,
-  mockCodeChallenge,
   mockedCodeVerifier,
   mockedState,
   MockedStorage,
@@ -25,6 +24,7 @@ import {
   revocationEndpoint,
   endSessionEndpoint,
   failingRequester,
+  createAdapters,
 } from './mock';
 
 jest.mock('@logto/js', () => ({
@@ -38,9 +38,6 @@ jest.mock('@logto/js', () => ({
     iat: currentUnixTimeStamp,
     at_hash: 'at_hash_value',
   })),
-  generateCodeChallenge: jest.fn(async () => mockCodeChallenge),
-  generateCodeVerifier: jest.fn(() => mockedCodeVerifier),
-  generateState: jest.fn(() => mockedState),
   verifyIdToken: jest.fn(),
 }));
 
@@ -60,11 +57,7 @@ describe('LogtoClient', () => {
     it('should append reserved scopes', () => {
       const logtoClient = new LogtoClientSignInSessionAccessor(
         { endpoint, appId, scopes: ['foo'] },
-        {
-          requester,
-          storage: new MockedStorage(),
-          handleRedirect,
-        }
+        createAdapters()
       );
       expect(logtoClient.getLogtoConfig()).toHaveProperty('scopes', [
         'openid',
@@ -77,11 +70,7 @@ describe('LogtoClient', () => {
     it('should use the default prompt value "consent" if we does not provide the custom prompt', () => {
       const logtoClient = new LogtoClientSignInSessionAccessor(
         { endpoint, appId },
-        {
-          requester,
-          storage: new MockedStorage(),
-          handleRedirect,
-        }
+        createAdapters()
       );
       expect(logtoClient.getLogtoConfig()).toHaveProperty('prompt', Prompt.Consent);
     });
@@ -89,11 +78,7 @@ describe('LogtoClient', () => {
     it('should use the custom prompt value "login"', () => {
       const logtoClient = new LogtoClientSignInSessionAccessor(
         { endpoint, appId, prompt: Prompt.Login },
-        {
-          requester,
-          storage: new MockedStorage(),
-          handleRedirect,
-        }
+        createAdapters()
       );
       expect(logtoClient.getLogtoConfig()).toHaveProperty('prompt', 'login');
     });
@@ -103,11 +88,7 @@ describe('LogtoClient', () => {
     test('getter should throw LogtoClientError when signInSession does not contain the required property', () => {
       const signInSessionAccessor = new LogtoClientSignInSessionAccessor(
         { endpoint, appId },
-        {
-          requester,
-          storage: new MockedStorage(),
-          handleRedirect,
-        }
+        createAdapters()
       );
 
       // @ts-expect-error expected to set object without required property
@@ -127,11 +108,7 @@ describe('LogtoClient', () => {
     it('should be able to set and get the undefined item (for clearing sign-in session)', () => {
       const signInSessionAccessor = new LogtoClientSignInSessionAccessor(
         { endpoint, appId },
-        {
-          requester,
-          storage: new MockedStorage(),
-          handleRedirect,
-        }
+        createAdapters()
       );
 
       signInSessionAccessor.setSignInSessionItem(null);
@@ -141,11 +118,7 @@ describe('LogtoClient', () => {
     it('should be able to set and get the correct item', () => {
       const signInSessionAccessor = new LogtoClientSignInSessionAccessor(
         { endpoint, appId },
-        {
-          requester,
-          storage: new MockedStorage(),
-          handleRedirect,
-        }
+        createAdapters()
       );
 
       const logtoSignInSessionItem: LogtoSignInSessionItem = {
@@ -170,13 +143,13 @@ describe('LogtoClient', () => {
     it('should redirect to signInUri just after calling signIn', async () => {
       const logtoClient = createClient();
       await logtoClient.signIn(redirectUri);
-      expect(handleRedirect).toHaveBeenCalledWith(mockedSignInUri);
+      expect(navigate).toHaveBeenCalledWith(mockedSignInUri);
     });
 
     it('should redirect to signInUri just after calling signIn with user specified prompt', async () => {
       const logtoClient = createClient(Prompt.Login);
       await logtoClient.signIn(redirectUri);
-      expect(handleRedirect).toHaveBeenCalledWith(mockedSignInUriWithLoginPrompt);
+      expect(navigate).toHaveBeenCalledWith(mockedSignInUriWithLoginPrompt);
     });
   });
 
@@ -252,7 +225,7 @@ describe('LogtoClient', () => {
       await logtoClient.signOut(postSignOutRedirectUri);
       const encodedRedirectUri = encodeURIComponent(postSignOutRedirectUri);
 
-      expect(handleRedirect).toHaveBeenCalledWith(
+      expect(navigate).toHaveBeenCalledWith(
         `${endSessionEndpoint}?id_token_hint=id_token_value&post_logout_redirect_uri=${encodedRedirectUri}`
       );
     });
@@ -261,9 +234,9 @@ describe('LogtoClient', () => {
       const logtoClient = new LogtoClient(
         { endpoint, appId },
         {
+          ...createAdapters(),
           requester: failingRequester,
           storage,
-          handleRedirect,
         }
       );
 
@@ -271,9 +244,7 @@ describe('LogtoClient', () => {
       expect(failingRequester).toBeCalledTimes(1);
       expect(storage.getItem('idToken')).toBeNull();
       expect(storage.getItem('refreshToken')).toBeNull();
-      expect(handleRedirect).toHaveBeenCalledWith(
-        `${endSessionEndpoint}?id_token_hint=id_token_value`
-      );
+      expect(navigate).toHaveBeenCalledWith(`${endSessionEndpoint}?id_token_hint=id_token_value`);
     });
   });
 
@@ -350,12 +321,11 @@ describe('LogtoClient', () => {
       const logtoClient = new LogtoClientSignInSessionAccessor(
         { endpoint, appId },
         {
-          requester,
+          ...createAdapters(),
           storage: new MockedStorage({
             idToken: 'id_token_value',
             refreshToken: 'refresh_token_value',
           }),
-          handleRedirect,
         }
       );
 

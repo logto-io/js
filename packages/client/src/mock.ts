@@ -2,7 +2,7 @@ import { generateSignInUri, Prompt } from '@logto/js';
 import { Nullable } from '@silverhand/essentials';
 
 import LogtoClient, { AccessToken, LogtoConfig, LogtoSignInSessionItem } from '.';
-import { Storage } from './storage';
+import { Storage } from './adapter';
 
 export const appId = 'app_id_value';
 export const endpoint = 'https://logto.dev';
@@ -92,15 +92,26 @@ export const fetchOidcConfig = jest.fn(async () => {
 
 export const requester = jest.fn();
 export const failingRequester = jest.fn().mockRejectedValue(new Error('Failed!'));
-export const handleRedirect = jest.fn();
+export const navigate = jest.fn();
+export const generateCodeChallenge = jest.fn(async () => mockCodeChallenge);
+export const generateCodeVerifier = jest.fn(() => mockedCodeVerifier);
+export const generateState = jest.fn(() => mockedState);
+
+export const createAdapters = () => ({
+  requester,
+  storage: new MockedStorage(),
+  navigate,
+  generateCodeChallenge,
+  generateCodeVerifier,
+  generateState,
+});
 
 export const createClient = (prompt?: Prompt, storage = new MockedStorage()) =>
   new LogtoClient(
     { endpoint, appId, prompt },
     {
-      requester,
+      ...createAdapters(),
       storage,
-      handleRedirect,
     }
   );
 
