@@ -1,6 +1,6 @@
 import { Nullable } from '@silverhand/essentials';
 
-type StorageKey = 'idToken' | 'refreshToken' | 'accessToken' | 'signInSession';
+export type StorageKey = 'idToken' | 'refreshToken' | 'accessToken' | 'signInSession';
 
 export interface Storage {
   getItem(key: StorageKey): Nullable<string>;
