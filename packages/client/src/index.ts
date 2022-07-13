@@ -22,10 +22,11 @@ import { ClientAdapter } from './adapter';
 import { LogtoClientError } from './errors';
 import { buildAccessTokenKey, getDiscoveryEndpoint } from './utils';
 
-export type { IdTokenClaims, LogtoErrorCode, LogtoRequestErrorBody } from '@logto/js';
+export type { IdTokenClaims, LogtoErrorCode } from '@logto/js';
 export { LogtoError, OidcError, Prompt, LogtoRequestError } from '@logto/js';
 export * from './errors';
 export type { Storage, StorageKey } from './adapter';
+export { createRequester } from './utils';
 
 export type LogtoConfig = {
   endpoint: string;

@@ -4,6 +4,7 @@
 const crypto = require('crypto');
 
 const { location } = require('jest-location-mock');
+const fetch = require('node-fetch');
 const { TextDecoder, TextEncoder } = require('text-encoder');
 /* eslint-enable unicorn/prefer-module */
 
@@ -13,6 +14,7 @@ global.crypto = {
   subtle: crypto.webcrypto.subtle,
 };
 global.location = location;
+global.fetch = fetch;
 global.TextDecoder = TextDecoder;
 global.TextEncoder = TextEncoder;
 /* eslint-enable @silverhand/fp/no-mutation */
