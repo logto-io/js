@@ -35,7 +35,6 @@
   },
   "devDependencies": {
     "@jest/types": "^27.5.1",
-    "@logto/js": "^1.0.0-alpha.2",
     "@parcel/core": "^2.6.2",
     "@parcel/packager-ts": "^2.6.2",
     "@parcel/transformer-typescript-types": "^2.6.2",
