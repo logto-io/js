@@ -69,7 +69,7 @@ importers:
       '@parcel/core': ^2.6.2
       '@parcel/transformer-sass': ^2.6.2
       '@silverhand/eslint-config': ^0.14.0
-      '@silverhand/eslint-config-react': ^0.14.0
+      '@silverhand/eslint-config-react': ^0.15.0
       buffer: ^6.0.3
       eslint: ^8.9.0
       lint-staged: ^13.0.0
@@ -85,7 +85,7 @@ importers:
       '@parcel/core': 2.6.2
       '@parcel/transformer-sass': 2.6.2_@parcel+core@2.6.2
       '@silverhand/eslint-config': 0.14.0_olllqumueb3v7rts5ghh64o4um
-      '@silverhand/eslint-config-react': 0.14.0_7ccgw2hms7sbmtc6ldwgpujtxm
+      '@silverhand/eslint-config-react': 0.15.0_7ccgw2hms7sbmtc6ldwgpujtxm
       buffer: 6.0.3
       eslint: 8.9.0
       lint-staged: 13.0.0
@@ -220,7 +220,7 @@ importers:
       '@parcel/packager-ts': ^2.6.2
       '@parcel/transformer-typescript-types': ^2.6.2
       '@silverhand/eslint-config': ^0.14.0
-      '@silverhand/eslint-config-react': ^0.14.0
+      '@silverhand/eslint-config-react': ^0.15.0
       '@silverhand/essentials': ^1.1.6
       '@silverhand/ts-config': ^0.14.0
       '@silverhand/ts-config-react': ^0.15.0
@@ -246,7 +246,7 @@ importers:
       '@parcel/packager-ts': 2.6.2_@parcel+core@2.6.2
       '@parcel/transformer-typescript-types': 2.6.2_cidn6tixyhj3ci4abgencflu6m
       '@silverhand/eslint-config': 0.14.0_olllqumueb3v7rts5ghh64o4um
-      '@silverhand/eslint-config-react': 0.14.0_72oumii2yl2gsxfhdrqknoqdsm
+      '@silverhand/eslint-config-react': 0.15.0_72oumii2yl2gsxfhdrqknoqdsm
       '@silverhand/ts-config': 0.14.0_typescript@4.6.2
       '@silverhand/ts-config-react': 0.15.0_typescript@4.6.2
       '@testing-library/react-hooks': 8.0.0_udcsdvdzjr5ns727jqoeu7kyda
@@ -269,7 +269,7 @@ importers:
       '@parcel/core': ^2.6.2
       '@parcel/transformer-sass': ^2.6.2
       '@silverhand/eslint-config': ^0.14.0
-      '@silverhand/eslint-config-react': ^0.14.0
+      '@silverhand/eslint-config-react': ^0.15.0
       '@silverhand/ts-config': ^0.14.0
       '@silverhand/ts-config-react': ^0.15.0
       '@types/react': ^17.0.39
@@ -295,7 +295,7 @@ importers:
       '@parcel/core': 2.6.2
       '@parcel/transformer-sass': 2.6.2_@parcel+core@2.6.2
       '@silverhand/eslint-config': 0.14.0_45szdkdndimdbcsvsyzg3x44py
-      '@silverhand/eslint-config-react': 0.14.0_24uiwxvzusmeqbot4tdiltzkni
+      '@silverhand/eslint-config-react': 0.15.0_24uiwxvzusmeqbot4tdiltzkni
       '@silverhand/ts-config': 0.14.0_typescript@4.5.5
       '@silverhand/ts-config-react': 0.15.0_typescript@4.5.5
       '@types/react': 17.0.39
@@ -3242,12 +3242,12 @@ packages:
     resolution: {integrity: sha512-WiBSI6JBIhC6LRIsB2Kwh8DsGTlbBU+mLRxJmAe3LjHTdkDpwIbEOZgoXBbZilk/vlfjK8i6nKRAvIRn1XaIMw==}
     dev: true
 
-  /@silverhand/eslint-config-react/0.14.0_24uiwxvzusmeqbot4tdiltzkni:
-    resolution: {integrity: sha512-7ylw/SFiYHbcCUNCki9Hv+zdMBIieW6AmNNmqjX3Orn8CvlN/yAUxN/hy9JPpuOCOXquz6mVMDYtmWFGndwy2Q==}
+  /@silverhand/eslint-config-react/0.15.0_24uiwxvzusmeqbot4tdiltzkni:
+    resolution: {integrity: sha512-4vWcO7tJVRNl7Xo2jY1OVmyieQKf71DBF8dewZI+iHn5f5mj2v+vi0MN4O1ACNkJc1n3xLZLWmlyMeIKQ3b/NA==}
     peerDependencies:
       stylelint: ^14.8.2
     dependencies:
-      '@silverhand/eslint-config': 0.14.0_45szdkdndimdbcsvsyzg3x44py
+      '@silverhand/eslint-config': 0.15.0_45szdkdndimdbcsvsyzg3x44py
       eslint-config-xo-react: 0.25.0_qz4xqql3u5wwuyk5yn2xotjnt4
       eslint-plugin-react: 7.29.4_eslint@8.9.0
       eslint-plugin-react-hooks: 4.3.0_eslint@8.9.0
@@ -3262,12 +3262,12 @@ packages:
       - typescript
     dev: true
 
-  /@silverhand/eslint-config-react/0.14.0_72oumii2yl2gsxfhdrqknoqdsm:
-    resolution: {integrity: sha512-7ylw/SFiYHbcCUNCki9Hv+zdMBIieW6AmNNmqjX3Orn8CvlN/yAUxN/hy9JPpuOCOXquz6mVMDYtmWFGndwy2Q==}
+  /@silverhand/eslint-config-react/0.15.0_72oumii2yl2gsxfhdrqknoqdsm:
+    resolution: {integrity: sha512-4vWcO7tJVRNl7Xo2jY1OVmyieQKf71DBF8dewZI+iHn5f5mj2v+vi0MN4O1ACNkJc1n3xLZLWmlyMeIKQ3b/NA==}
     peerDependencies:
       stylelint: ^14.8.2
     dependencies:
-      '@silverhand/eslint-config': 0.14.0_olllqumueb3v7rts5ghh64o4um
+      '@silverhand/eslint-config': 0.15.0_olllqumueb3v7rts5ghh64o4um
       eslint-config-xo-react: 0.25.0_qz4xqql3u5wwuyk5yn2xotjnt4
       eslint-plugin-react: 7.29.4_eslint@8.9.0
       eslint-plugin-react-hooks: 4.3.0_eslint@8.9.0
@@ -3282,12 +3282,12 @@ packages:
       - typescript
     dev: true
 
-  /@silverhand/eslint-config-react/0.14.0_7ccgw2hms7sbmtc6ldwgpujtxm:
-    resolution: {integrity: sha512-7ylw/SFiYHbcCUNCki9Hv+zdMBIieW6AmNNmqjX3Orn8CvlN/yAUxN/hy9JPpuOCOXquz6mVMDYtmWFGndwy2Q==}
+  /@silverhand/eslint-config-react/0.15.0_7ccgw2hms7sbmtc6ldwgpujtxm:
+    resolution: {integrity: sha512-4vWcO7tJVRNl7Xo2jY1OVmyieQKf71DBF8dewZI+iHn5f5mj2v+vi0MN4O1ACNkJc1n3xLZLWmlyMeIKQ3b/NA==}
     peerDependencies:
       stylelint: ^14.8.2
     dependencies:
-      '@silverhand/eslint-config': 0.14.0_olllqumueb3v7rts5ghh64o4um
+      '@silverhand/eslint-config': 0.15.0_olllqumueb3v7rts5ghh64o4um
       eslint-config-xo-react: 0.25.0_qz4xqql3u5wwuyk5yn2xotjnt4
       eslint-plugin-react: 7.29.4_eslint@8.9.0
       eslint-plugin-react-hooks: 4.3.0_eslint@8.9.0
@@ -3380,6 +3380,70 @@ packages:
       eslint-config-prettier: 8.4.0_eslint@8.9.0
       eslint-config-xo: 0.40.0_eslint@8.9.0
       eslint-config-xo-typescript: 0.50.0_6os4jlxfdtlgww76rja3unxxri
+      eslint-import-resolver-typescript: 2.5.0_cmtdok55f7srt3k3ux6kqq5jcq
+      eslint-plugin-consistent-default-export-name: 0.0.7
+      eslint-plugin-eslint-comments: 3.2.0_eslint@8.9.0
+      eslint-plugin-import: 2.25.4_hkug4hnbgllydtpdygs6xvzedm
+      eslint-plugin-no-use-extend-native: 0.5.0
+      eslint-plugin-node: 11.1.0_eslint@8.9.0
+      eslint-plugin-prettier: 3.4.1_t5rlqxhdzybjjhn5fth7z27jl4
+      eslint-plugin-promise: 6.0.0_eslint@8.9.0
+      eslint-plugin-sql: 2.1.0_eslint@8.9.0
+      eslint-plugin-unicorn: 39.0.0_eslint@8.9.0
+      pkg-dir: 4.2.0
+      prettier: 2.5.1
+    transitivePeerDependencies:
+      - eslint-import-resolver-webpack
+      - supports-color
+      - typescript
+    dev: true
+
+  /@silverhand/eslint-config/0.15.0_45szdkdndimdbcsvsyzg3x44py:
+    resolution: {integrity: sha512-99L7YY2/91/dTNZqH50+Y28CIZ1+d6cbLVLElsWmtULX5tjWK1BT+/fDiMiEAEkjJ943bkq2rjmm75UuionzXQ==}
+    engines: {node: '>=14.15.0'}
+    peerDependencies:
+      eslint: ^8.1.0
+      prettier: ^2.3.2
+    dependencies:
+      '@silverhand/eslint-plugin-fp': 2.5.0_eslint@8.9.0
+      '@typescript-eslint/eslint-plugin': 5.12.1_vi5pmobbcwscu4omhcfxwlbqwm
+      '@typescript-eslint/parser': 5.12.1_fhzmdq77bspfhxkfuzq4fbrdsy
+      eslint: 8.9.0
+      eslint-config-prettier: 8.4.0_eslint@8.9.0
+      eslint-config-xo: 0.40.0_eslint@8.9.0
+      eslint-config-xo-typescript: 0.50.0_j5lx745m5a5mhkgwniio6hgz24
+      eslint-import-resolver-typescript: 2.5.0_cmtdok55f7srt3k3ux6kqq5jcq
+      eslint-plugin-consistent-default-export-name: 0.0.7
+      eslint-plugin-eslint-comments: 3.2.0_eslint@8.9.0
+      eslint-plugin-import: 2.25.4_hkug4hnbgllydtpdygs6xvzedm
+      eslint-plugin-no-use-extend-native: 0.5.0
+      eslint-plugin-node: 11.1.0_eslint@8.9.0
+      eslint-plugin-prettier: 3.4.1_t5rlqxhdzybjjhn5fth7z27jl4
+      eslint-plugin-promise: 6.0.0_eslint@8.9.0
+      eslint-plugin-sql: 2.1.0_eslint@8.9.0
+      eslint-plugin-unicorn: 39.0.0_eslint@8.9.0
+      pkg-dir: 4.2.0
+      prettier: 2.5.1
+    transitivePeerDependencies:
+      - eslint-import-resolver-webpack
+      - supports-color
+      - typescript
+    dev: true
+
+  /@silverhand/eslint-config/0.15.0_olllqumueb3v7rts5ghh64o4um:
+    resolution: {integrity: sha512-99L7YY2/91/dTNZqH50+Y28CIZ1+d6cbLVLElsWmtULX5tjWK1BT+/fDiMiEAEkjJ943bkq2rjmm75UuionzXQ==}
+    engines: {node: '>=14.15.0'}
+    peerDependencies:
+      eslint: ^8.1.0
+      prettier: ^2.3.2
+    dependencies:
+      '@silverhand/eslint-plugin-fp': 2.5.0_eslint@8.9.0
+      '@typescript-eslint/eslint-plugin': 5.12.1_bsej5di4ktw753ws66fiwndpim
+      '@typescript-eslint/parser': 5.12.1_hhfj2cqslfove3mebc4baoycai
+      eslint: 8.9.0
+      eslint-config-prettier: 8.4.0_eslint@8.9.0
+      eslint-config-xo: 0.40.0_eslint@8.9.0
+      eslint-config-xo-typescript: 0.50.0_2lwzfjxvy7dma5423cgt3mqd64
       eslint-import-resolver-typescript: 2.5.0_cmtdok55f7srt3k3ux6kqq5jcq
       eslint-plugin-consistent-default-export-name: 0.0.7
       eslint-plugin-eslint-comments: 3.2.0_eslint@8.9.0
@@ -3945,7 +4009,7 @@ packages:
       debug: 4.3.4
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.3.5
+      semver: 7.3.7
       tsutils: 3.21.0_typescript@4.5.5
       typescript: 4.5.5
     transitivePeerDependencies:
@@ -3966,7 +4030,7 @@ packages:
       debug: 4.3.4
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.3.5
+      semver: 7.3.7
       tsutils: 3.21.0_typescript@4.6.2
       typescript: 4.6.2
     transitivePeerDependencies:
@@ -3987,7 +4051,7 @@ packages:
       debug: 4.3.4
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.3.5
+      semver: 7.3.7
       tsutils: 3.21.0_typescript@4.7.2
       typescript: 4.7.2
     transitivePeerDependencies:
@@ -10928,7 +10992,7 @@ packages:
       lodash: 4.17.21
       postcss-media-query-parser: 0.2.3
       postcss-resolve-nested-selector: 0.1.1
-      postcss-selector-parser: 6.0.9
+      postcss-selector-parser: 6.0.10
       postcss-value-parser: 4.2.0
       stylelint: 14.8.2
     dev: true
