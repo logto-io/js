@@ -25,7 +25,7 @@ import { buildAccessTokenKey, getDiscoveryEndpoint } from './utils';
 export type { IdTokenClaims, LogtoErrorCode } from '@logto/js';
 export { LogtoError, OidcError, Prompt, LogtoRequestError } from '@logto/js';
 export * from './errors';
-export type { Storage, StorageKey } from './adapter';
+export type { Storage, StorageKey, ClientAdapter } from './adapter';
 export { createRequester } from './utils';
 
 export type LogtoConfig = {
