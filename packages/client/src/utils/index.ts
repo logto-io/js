@@ -1,5 +1,7 @@
 import { discoveryPath } from '@logto/js';
 
+export * from './requester';
+
 export const buildAccessTokenKey = (resource = '', scopes: string[] = []): string =>
   `${scopes.slice().sort().join(' ')}@${resource}`;
 
