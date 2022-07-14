@@ -223,7 +223,7 @@ importers:
       '@parcel/transformer-typescript-types': ^2.6.2
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.6
-      '@silverhand/ts-config': ^0.14.0
+      '@silverhand/ts-config': ^0.16.0
       '@types/jest': ^27.4.0
       eslint: ^8.9.0
       jest: ^27.5.1
@@ -247,7 +247,7 @@ importers:
       '@parcel/packager-ts': 2.6.2_@parcel+core@2.6.2
       '@parcel/transformer-typescript-types': 2.6.2_lkaqhzbnfibkyckap3hu4t4sui
       '@silverhand/eslint-config': 0.14.0_omynrcsa6lreu7imjpprjb3jie
-      '@silverhand/ts-config': 0.14.0_typescript@4.7.2
+      '@silverhand/ts-config': 0.16.2_typescript@4.7.2
       '@types/jest': 27.4.1
       eslint: 8.9.0
       jest: 27.5.1
@@ -3548,15 +3548,6 @@ packages:
     dependencies:
       '@silverhand/ts-config': 0.16.2_typescript@4.6.2
       typescript: 4.6.2
-    dev: true
-
-  /@silverhand/ts-config/0.14.0_typescript@4.7.2:
-    resolution: {integrity: sha512-ktL4EvhTejlU7KD4tlq/NcVNRiQoH/NmguaqfcFu2GbswDfHEEBTaPkbi9c6UDzpQtjLhC27dYpzgpH6KkT6LA==}
-    engines: {node: '>=14.15.0'}
-    peerDependencies:
-      typescript: ^4.3.5
-    dependencies:
-      typescript: 4.7.2
     dev: true
 
   /@silverhand/ts-config/0.16.2_typescript@4.5.5:
