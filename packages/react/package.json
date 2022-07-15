@@ -40,7 +40,7 @@
     "@silverhand/eslint-config": "^0.14.0",
     "@silverhand/eslint-config-react": "^0.16.2",
     "@silverhand/ts-config": "^0.16.2",
-    "@silverhand/ts-config-react": "^0.16.2",
+    "@silverhand/ts-config-react": "^0.17.0",
     "@testing-library/react-hooks": "^8.0.0",
     "@types/jest": "^27.4.1",
     "@types/react": "^17.0.39",
