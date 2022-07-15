@@ -20,7 +20,7 @@
   "devDependencies": {
     "@parcel/core": "^2.6.2",
     "@parcel/transformer-sass": "^2.6.2",
-    "@silverhand/eslint-config": "^0.14.0",
+    "@silverhand/eslint-config": "^0.17.0",
     "@silverhand/eslint-config-react": "^0.16.2",
     "@silverhand/ts-config": "^0.16.2",
     "@silverhand/ts-config-react": "^0.16.2",
