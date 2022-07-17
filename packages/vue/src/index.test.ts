@@ -11,7 +11,7 @@ const handleSignInCallback = jest.fn(async () => Promise.resolve());
 const getAccessToken = jest.fn(() => {
   throw new Error('not authenticated');
 });
-const injectMock = jest.fn<any, string[]>((): any => {
+const injectMock = jest.fn<unknown, string[]>((): unknown => {
   return undefined;
 });
 
@@ -32,7 +32,6 @@ jest.mock('vue', () => {
   return {
     ...jest.requireActual('vue'),
     inject: (key: string) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return injectMock(key);
     },
   };
@@ -43,7 +42,7 @@ const endpoint = 'https://endpoint.com';
 
 const appMock = {
   provide: jest.fn(),
-} as any as App;
+} as unknown as App;
 
 describe('createLogto.install', () => {
   test('should call LogtoClient constructor and provide Logto context data', async () => {

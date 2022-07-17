@@ -1,5 +1,4 @@
 import { LogtoProvider, LogtoConfig } from '@logto/react';
-import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import RequireAuth from './RequireAuth';

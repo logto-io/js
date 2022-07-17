@@ -6,6 +6,7 @@
     "version": "pnpm i --frozen-lockfile=false && git add pnpm-lock.yaml",
     "bootstrap": "lerna bootstrap",
     "build": "lerna run --stream build",
+    "lint": "lerna run --stream lint",
     "test": "lerna run test",
     "lerna": "lerna",
     "prerelease": "lerna run build --include-dependencies --no-private",
