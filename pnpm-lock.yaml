@@ -223,7 +223,7 @@ importers:
       '@parcel/transformer-typescript-types': ^2.6.2
       '@silverhand/eslint-config': ^0.17.0
       '@silverhand/essentials': ^1.1.6
-      '@silverhand/ts-config': ^0.16.0
+      '@silverhand/ts-config': ^0.17.0
       '@types/jest': ^27.4.0
       eslint: ^8.9.0
       jest: ^27.5.1
@@ -247,7 +247,7 @@ importers:
       '@parcel/packager-ts': 2.6.2_@parcel+core@2.6.2
       '@parcel/transformer-typescript-types': 2.6.2_lkaqhzbnfibkyckap3hu4t4sui
       '@silverhand/eslint-config': 0.17.0_omynrcsa6lreu7imjpprjb3jie
-      '@silverhand/ts-config': 0.16.2_typescript@4.7.2
+      '@silverhand/ts-config': 0.17.0_typescript@4.7.2
       '@types/jest': 27.4.1
       eslint: 8.9.0
       jest: 27.5.1
@@ -3486,15 +3486,6 @@ packages:
       typescript: 4.6.2
     dev: true
 
-  /@silverhand/ts-config/0.16.2_typescript@4.7.2:
-    resolution: {integrity: sha512-QyavISIYH9oSXm6m9PBvsXYa/KOWR9fgr2oqyedWyewvswGX0v0YYxRZicquUdVAVqe8E3Y9yOVVkqyjQH2IuA==}
-    engines: {node: '>=14.15.0'}
-    peerDependencies:
-      typescript: ^4.3.5
-    dependencies:
-      typescript: 4.7.2
-    dev: true
-
   /@silverhand/ts-config/0.17.0_typescript@4.5.5:
     resolution: {integrity: sha512-hF/O0txmPHDIGKnBJ4avFJYvqKSGg3Y1jX0GAsPcC9+dVKB3QWGsUBentKcU1X9RiQWpma9dxynSUGwhlbrYSA==}
     engines: {node: '>=14.15.0'}
@@ -6075,7 +6066,7 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.12.1_4gmsiq4b4nr3cnbd3xuvl5c34u
+      '@typescript-eslint/parser': 5.12.1_fhzmdq77bspfhxkfuzq4fbrdsy
       debug: 3.2.7
       eslint-import-resolver-node: 0.3.6
       eslint-import-resolver-typescript: 2.5.0_cmtdok55f7srt3k3ux6kqq5jcq
@@ -6126,7 +6117,7 @@ packages:
       '@typescript-eslint/parser':
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.12.1_4gmsiq4b4nr3cnbd3xuvl5c34u
+      '@typescript-eslint/parser': 5.12.1_fhzmdq77bspfhxkfuzq4fbrdsy
       array-includes: 3.1.4
       array.prototype.flat: 1.2.5
       debug: 2.6.9
