@@ -1,5 +1,5 @@
 import { useLogto, IdTokenClaims } from '@logto/react';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { baseUrl, redirectUrl } from '../../consts';

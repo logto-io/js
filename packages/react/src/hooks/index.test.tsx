@@ -1,6 +1,6 @@
 import LogtoClient from '@logto/browser';
 import { renderHook, act } from '@testing-library/react-hooks';
-import React, { ComponentType } from 'react';
+import { ComponentType } from 'react';
 
 import { useLogto, useHandleSignInCallback } from '.';
 import { LogtoProvider } from '../provider';

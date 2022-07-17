@@ -112,7 +112,7 @@ const App = () => {
 ### Sign out
 
 ```tsx
-import React from 'react';
+
 import { useLogto } from '@logto/react';
 
 const SignOutButton = () => {

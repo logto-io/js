@@ -1,5 +1,5 @@
 import LogtoClient, { LogtoConfig } from '@logto/browser';
-import React, { ReactNode, useMemo, useState } from 'react';
+import { ReactNode, useMemo, useState } from 'react';
 
 import { LogtoContext } from './context';
 
