@@ -21,6 +21,17 @@ export default class LogtoClient {
       }
     });
 
+  handleSignInCallback = (redirectTo = this.config.baseUrl): NextApiHandler =>
+    this.withIronSession(async (request, response) => {
+      const nodeClient = this.createNodeClient(request);
+
+      if (request.url) {
+        await nodeClient.handleSignInCallback(`${this.config.baseUrl}${request.url}`);
+        await this.storage?.save();
+        response.redirect(redirectTo);
+      }
+    });
+
   private createNodeClient(request: NextApiRequest) {
     this.storage = new NextStorage(request);
 
