@@ -1,9 +1,11 @@
 import NodeClient from '@logto/node';
 import { withIronSessionApiRoute } from 'iron-session/next';
-import { NextApiHandler, NextApiRequest } from 'next';
+import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 
 import NextStorage from './storage';
-import { LogtoNextConfig } from './types';
+import { LogtoNextConfig, LogtoUser, NextApiRequestWithLogtoUser } from './types';
+
+export type { LogtoUser } from './types';
 
 export default class LogtoClient {
   private navigateUrl?: string;
@@ -30,6 +32,32 @@ export default class LogtoClient {
         await this.storage?.save();
         response.redirect(redirectTo);
       }
+    });
+
+  handleUser = () =>
+    this.withLogtoApiRoute((request, response) => {
+      response.json(request.user);
+    });
+
+  withLogtoApiRoute = (
+    handler: (
+      request: NextApiRequestWithLogtoUser,
+      response: NextApiResponse
+    ) => unknown | Promise<unknown>
+  ): NextApiHandler =>
+    this.withIronSession(async (request, response) => {
+      const nodeClient = this.createNodeClient(request);
+      const { isAuthenticated } = nodeClient;
+
+      const user: LogtoUser = {
+        isAuthenticated,
+        claims: isAuthenticated ? nodeClient.getIdTokenClaims() : undefined,
+      };
+
+      // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+      Object.defineProperty(request, 'user', { enumerable: true, get: () => user });
+
+      return handler(request as NextApiRequestWithLogtoUser, response);
     });
 
   private createNodeClient(request: NextApiRequest) {
