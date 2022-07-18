@@ -221,7 +221,7 @@ importers:
       '@parcel/core': ^2.6.2
       '@parcel/packager-ts': ^2.6.2
       '@parcel/transformer-typescript-types': ^2.6.2
-      '@silverhand/eslint-config': ^0.14.0
+      '@silverhand/eslint-config': ^0.17.0
       '@silverhand/ts-config': ^0.14.0
       '@silverhand/ts-config-react': ^0.14.0
       '@types/jest': ^27.4.0
@@ -245,7 +245,7 @@ importers:
       '@parcel/core': 2.6.2
       '@parcel/packager-ts': 2.6.2_@parcel+core@2.6.2
       '@parcel/transformer-typescript-types': 2.6.2_lkaqhzbnfibkyckap3hu4t4sui
-      '@silverhand/eslint-config': 0.14.0_omynrcsa6lreu7imjpprjb3jie
+      '@silverhand/eslint-config': 0.17.0_omynrcsa6lreu7imjpprjb3jie
       '@silverhand/ts-config': 0.14.0_typescript@4.7.2
       '@silverhand/ts-config-react': 0.14.0_typescript@4.7.2
       '@types/jest': 27.4.1
@@ -264,7 +264,7 @@ importers:
   packages/next-sample:
     specifiers:
       '@logto/next': ^1.0.0-alpha.2
-      '@silverhand/eslint-config': ^0.14.0
+      '@silverhand/eslint-config': ^0.17.0
       '@silverhand/eslint-config-react': ^0.14.0
       '@silverhand/ts-config': ^0.14.0
       '@silverhand/ts-config-react': ^0.14.0
@@ -289,7 +289,7 @@ importers:
       react-dom: 17.0.2_react@17.0.2
       swr: 1.3.0_react@17.0.2
     devDependencies:
-      '@silverhand/eslint-config': 0.14.0_omynrcsa6lreu7imjpprjb3jie
+      '@silverhand/eslint-config': 0.17.0_omynrcsa6lreu7imjpprjb3jie
       '@silverhand/eslint-config-react': 0.14.0_2systfealmrcovttre56zfzldi
       '@silverhand/ts-config': 0.14.0_typescript@4.7.2
       '@silverhand/ts-config-react': 0.14.0_typescript@4.7.2

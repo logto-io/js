@@ -13,6 +13,12 @@ declare module 'iron-session' {
   }
 }
 
+declare module 'http' {
+  interface IncomingMessage {
+    user: LogtoUser;
+  }
+}
+
 export type LogtoNextConfig = LogtoConfig & {
   cookieSecret: string;
   cookieSecure: boolean;
@@ -22,8 +28,4 @@ export type LogtoNextConfig = LogtoConfig & {
 export type LogtoUser = {
   isAuthenticated: boolean;
   claims?: IdTokenClaims;
-};
-
-export type NextApiRequestWithLogtoUser = NextApiRequest & {
-  user: LogtoUser;
 };

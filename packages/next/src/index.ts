@@ -1,9 +1,9 @@
 import NodeClient from '@logto/node';
 import { withIronSessionApiRoute } from 'iron-session/next';
-import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import { NextApiHandler, NextApiRequest } from 'next';
 
 import NextStorage from './storage';
-import { LogtoNextConfig, LogtoUser, NextApiRequestWithLogtoUser } from './types';
+import { LogtoNextConfig, LogtoUser } from './types';
 
 export type { LogtoUser } from './types';
 
@@ -52,12 +52,7 @@ export default class LogtoClient {
       response.json(request.user);
     });
 
-  withLogtoApiRoute = (
-    handler: (
-      request: NextApiRequestWithLogtoUser,
-      response: NextApiResponse
-    ) => unknown | Promise<unknown>
-  ): NextApiHandler =>
+  withLogtoApiRoute = (handler: NextApiHandler): NextApiHandler =>
     this.withIronSession(async (request, response) => {
       const nodeClient = this.createNodeClient(request);
       const { isAuthenticated } = nodeClient;
@@ -70,7 +65,7 @@ export default class LogtoClient {
       // eslint-disable-next-line @silverhand/fp/no-mutating-methods
       Object.defineProperty(request, 'user', { enumerable: true, get: () => user });
 
-      return handler(request as NextApiRequestWithLogtoUser, response);
+      return handler(request, response);
     });
 
   private createNodeClient(request: NextApiRequest) {
