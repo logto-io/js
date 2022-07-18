@@ -19,6 +19,7 @@ const setItem = jest.fn((key, value) => {
 const getItem = jest.fn();
 const save = jest.fn();
 const signIn = jest.fn();
+const handleSignInCallback = jest.fn();
 
 jest.mock('./storage', () =>
   jest.fn(() => ({
@@ -41,6 +42,7 @@ jest.mock('@logto/node', () =>
       navigate(signInUrl);
       signIn();
     },
+    handleSignInCallback,
   }))
 );
 
@@ -67,6 +69,23 @@ describe('Next', () => {
       });
       expect(save).toHaveBeenCalled();
       expect(signIn).toHaveBeenCalled();
+    });
+  });
+
+  describe('handleSignInCallback', () => {
+    it('should call client.handleSignInCallback and redirect to home', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        handler: client.handleSignInCallback(),
+        url: '/api/sign-in-callback',
+        test: async ({ fetch }) => {
+          const response = await fetch({ method: 'GET', redirect: 'manual' });
+          const headers = response.headers as Map<string, string>;
+          expect(headers.get('location')).toEqual(`${configs.baseUrl}/`);
+        },
+      });
+      expect(handleSignInCallback).toHaveBeenCalled();
+      expect(save).toHaveBeenCalled();
     });
   });
 });
