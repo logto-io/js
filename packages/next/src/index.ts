@@ -7,6 +7,17 @@ import { LogtoNextConfig, LogtoUser } from './types';
 
 export type { LogtoUser } from './types';
 
+// Refresh token can be revoked, so it is authenticated only when we have a unexpired access token
+const checkIsAuthenticatedByAccessToken = async (client: NodeClient): Promise<boolean> => {
+  try {
+    await client.getAccessToken();
+
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 export default class LogtoClient {
   private navigateUrl?: string;
   private storage?: NextStorage;
@@ -55,7 +66,8 @@ export default class LogtoClient {
   withLogtoApiRoute = (handler: NextApiHandler): NextApiHandler =>
     this.withIronSession(async (request, response) => {
       const nodeClient = this.createNodeClient(request);
-      const { isAuthenticated } = nodeClient;
+      const isAuthenticated = await checkIsAuthenticatedByAccessToken(nodeClient);
+      await this.storage?.save();
 
       const user: LogtoUser = {
         isAuthenticated,
@@ -91,6 +103,7 @@ export default class LogtoClient {
       password: this.config.cookieSecret,
       cookieOptions: {
         secure: this.config.cookieSecure,
+        maxAge: 14 * 24 * 60 * 60,
       },
     });
   }
