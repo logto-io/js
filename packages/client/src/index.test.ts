@@ -26,6 +26,7 @@ import {
   failingRequester,
   createAdapters,
 } from './mock';
+import { buildAccessTokenKey } from './utils';
 
 jest.mock('@logto/js', () => ({
   ...jest.requireActual('@logto/js'),
@@ -394,6 +395,68 @@ describe('LogtoClient', () => {
         iat: currentUnixTimeStamp,
         at_hash: 'at_hash_value',
       });
+    });
+  });
+
+  describe('getAccessToken when persistAccessToken is true', () => {
+    it('should load access token', async () => {
+      const logtoClient = createClient(
+        undefined,
+        new MockedStorage({
+          idToken,
+          accessToken: JSON.stringify({
+            [buildAccessTokenKey()]: {
+              token: accessToken,
+              scope: '',
+              expiresAt: Date.now() + 1000,
+            },
+          }),
+        }),
+        true
+      );
+
+      await expect(logtoClient.getAccessToken()).resolves.toEqual(accessToken);
+    });
+
+    it('should not load access token when storage value is invalid', async () => {
+      const logtoClient = createClient(
+        undefined,
+        new MockedStorage({
+          idToken,
+          accessToken: JSON.stringify({
+            [buildAccessTokenKey()]: {
+              token1: accessToken,
+              scope: '',
+              expiresAt: Date.now() + 1000,
+            },
+          }),
+        }),
+        true
+      );
+
+      await expect(logtoClient.getAccessToken()).rejects.toThrow();
+    });
+
+    it('should not save and reload access token during sign in flow', async () => {
+      const storage = new MockedStorage();
+
+      requester.mockClear().mockImplementation(async () => ({
+        accessToken,
+        refreshToken,
+        idToken,
+        scope: 'read register manage',
+        expiresIn: 3600,
+      }));
+      const logtoClient = createClient(undefined, storage, true);
+      await logtoClient.signIn(redirectUri);
+      const code = `code_value`;
+      const callbackUri = `${redirectUri}?code=${code}&state=${mockedState}&codeVerifier=${mockedCodeVerifier}`;
+      await logtoClient.handleSignInCallback(callbackUri);
+
+      storage.removeItem('refreshToken');
+      const anotherClient = createClient(undefined, storage, true);
+
+      await expect(anotherClient.getAccessToken()).resolves.not.toThrow();
     });
   });
 });
