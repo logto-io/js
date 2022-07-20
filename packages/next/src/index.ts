@@ -76,12 +76,18 @@ export default class LogtoClient {
   private createNodeClient(request: NextApiRequest) {
     this.storage = new NextStorage(request);
 
-    return new NodeClient(this.config, {
-      storage: this.storage,
-      navigate: (url) => {
-        this.navigateUrl = url;
+    return new NodeClient(
+      {
+        ...this.config,
+        persistAccessToken: this.config.persistAccessToken ?? true,
       },
-    });
+      {
+        storage: this.storage,
+        navigate: (url) => {
+          this.navigateUrl = url;
+        },
+      }
+    );
   }
 
   private withIronSession(handler: NextApiHandler) {

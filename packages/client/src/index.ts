@@ -16,10 +16,17 @@ import {
 import { Nullable } from '@silverhand/essentials';
 import { createRemoteJWKSet } from 'jose';
 import once from 'lodash.once';
-import { assert, Infer, string, type } from 'superstruct';
+import { assert } from 'superstruct';
 
 import { ClientAdapter } from './adapter';
 import { LogtoClientError } from './errors';
+import {
+  AccessToken,
+  LogtoAccessTokenMapSchema,
+  LogtoConfig,
+  LogtoSignInSessionItem,
+  LogtoSignInSessionItemSchema,
+} from './types';
 import { buildAccessTokenKey, getDiscoveryEndpoint } from './utils';
 
 export type { IdTokenClaims, LogtoErrorCode } from '@logto/js';
@@ -27,29 +34,7 @@ export { LogtoError, OidcError, Prompt, LogtoRequestError } from '@logto/js';
 export * from './errors';
 export type { Storage, StorageKey, ClientAdapter } from './adapter';
 export { createRequester } from './utils';
-
-export type LogtoConfig = {
-  endpoint: string;
-  appId: string;
-  scopes?: string[];
-  resources?: string[];
-  prompt?: Prompt;
-  usingPersistStorage?: boolean;
-};
-
-export type AccessToken = {
-  token: string;
-  scope: string;
-  expiresAt: number; // Unix Timestamp in seconds
-};
-
-export const LogtoSignInSessionItemSchema = type({
-  redirectUri: string(),
-  codeVerifier: string(),
-  state: string(),
-});
-
-export type LogtoSignInSessionItem = Infer<typeof LogtoSignInSessionItemSchema>;
+export * from './types';
 
 export default class LogtoClient {
   protected readonly logtoConfig: LogtoConfig;
@@ -71,6 +56,10 @@ export default class LogtoClient {
     };
     this.adapter = adapter;
     this._idToken = this.adapter.storage.getItem('idToken');
+
+    if (this.logtoConfig.persistAccessToken) {
+      this.loadAccessTokenMap();
+    }
   }
 
   public get isAuthenticated() {
@@ -307,6 +296,7 @@ export default class LogtoClient {
         scope,
         expiresAt: Math.round(Date.now() / 1000) + expiresIn,
       });
+      this.saveAccessTokenMap();
 
       this.refreshToken = refreshToken;
 
@@ -360,5 +350,39 @@ export default class LogtoClient {
     const accessTokenKey = buildAccessTokenKey();
     const expiresAt = Date.now() / 1000 + expiresIn;
     this.accessTokenMap.set(accessTokenKey, { token: accessToken, scope, expiresAt });
+    this.saveAccessTokenMap();
+  }
+
+  private saveAccessTokenMap() {
+    if (!this.logtoConfig.persistAccessToken) {
+      return;
+    }
+
+    const data: Record<string, AccessToken> = {};
+
+    for (const [key, accessToken] of this.accessTokenMap.entries()) {
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      data[key] = accessToken;
+    }
+
+    this.adapter.storage.setItem('accessToken', JSON.stringify(data));
+  }
+
+  private loadAccessTokenMap() {
+    const raw = this.adapter.storage.getItem('accessToken');
+
+    if (!raw) {
+      return;
+    }
+
+    try {
+      const json: unknown = JSON.parse(raw);
+      assert(json, LogtoAccessTokenMapSchema);
+      this.accessTokenMap.clear();
+
+      for (const [key, accessToken] of Object.entries(json)) {
+        this.accessTokenMap.set(key, accessToken);
+      }
+    } catch {}
   }
 }
