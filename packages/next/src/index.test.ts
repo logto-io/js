@@ -23,6 +23,7 @@ const handleSignInCallback = jest.fn();
 const getIdTokenClaims = jest.fn(() => ({
   sub: 'user_id',
 }));
+const signOut = jest.fn();
 
 jest.mock('./storage', () =>
   jest.fn(() => ({
@@ -48,6 +49,10 @@ jest.mock('@logto/node', () =>
     handleSignInCallback,
     isAuthenticated: true,
     getIdTokenClaims,
+    signOut: () => {
+      navigate(configs.baseUrl);
+      signOut();
+    },
   }))
 );
 
@@ -107,6 +112,23 @@ describe('Next', () => {
         },
       });
       expect(getIdTokenClaims).toHaveBeenCalled();
+    });
+  });
+
+  describe('handleSignOut', () => {
+    it('should redirect to Logto sign out url', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        handler: client.handleSignOut(),
+        url: '/api/sign-out',
+        test: async ({ fetch }) => {
+          const response = await fetch({ method: 'GET', redirect: 'manual' });
+          const headers = response.headers as Map<string, string>;
+          expect(headers.get('location')).toEqual(`${configs.baseUrl}/`);
+        },
+      });
+      expect(save).toHaveBeenCalled();
+      expect(signOut).toHaveBeenCalled();
     });
   });
 });
