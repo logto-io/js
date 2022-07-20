@@ -20,6 +20,9 @@ const getItem = jest.fn();
 const save = jest.fn();
 const signIn = jest.fn();
 const handleSignInCallback = jest.fn();
+const getIdTokenClaims = jest.fn(() => ({
+  sub: 'user_id',
+}));
 
 jest.mock('./storage', () =>
   jest.fn(() => ({
@@ -43,6 +46,8 @@ jest.mock('@logto/node', () =>
       signIn();
     },
     handleSignInCallback,
+    isAuthenticated: true,
+    getIdTokenClaims,
   }))
 );
 
@@ -86,6 +91,22 @@ describe('Next', () => {
       });
       expect(handleSignInCallback).toHaveBeenCalled();
       expect(save).toHaveBeenCalled();
+    });
+  });
+
+  describe('withLogtoApiRoute', () => {
+    it('should assign `user` to `request`', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        handler: client.withLogtoApiRoute((request, response) => {
+          expect(request.user).toBeDefined();
+          response.end();
+        }),
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET', redirect: 'manual' });
+        },
+      });
+      expect(getIdTokenClaims).toHaveBeenCalled();
     });
   });
 });
