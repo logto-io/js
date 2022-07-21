@@ -1,10 +1,10 @@
-import { Storage, StorageKey } from '@logto/node';
+import { IncomingMessage } from 'http';
 
-import { NextRequestWithIronSession } from './types';
+import { Storage, StorageKey } from '@logto/node';
 
 export default class NextStorage implements Storage {
   private sessionChanged = false;
-  constructor(private readonly request: NextRequestWithIronSession) {}
+  constructor(private readonly request: IncomingMessage) {}
 
   async setItem(key: StorageKey, value: string) {
     this.request.session[key] = value;

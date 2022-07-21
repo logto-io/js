@@ -57,7 +57,10 @@ const Home = () => {
           <h2>Protected resource:</h2>
           <div>{protectedResource.data}</div>
           <h3>
-            <Link href="/protected">Example: Require sign in and auto redirect</Link>
+            <Link href="/protected">Example1: Require sign in and auto redirect</Link>
+          </h3>
+          <h3>
+            <Link href="/profile-ssr">Example2: Server-render page with getServerSideProps</Link>
           </h3>
         </div>
       )}
