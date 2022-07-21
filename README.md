@@ -16,15 +16,19 @@ Please check out the sub-pages for more details:
 
 - [React SDK](https://github.com/logto-io/js/tree/master/packages/react)
 - [Vue SDK](https://github.com/logto-io/js/tree/master/packages/vue)
+- [Next.js SDK](https://github.com/logto-io/js/tree/master/packages/next)
 
 ## Products
 
-| Name | Description |
-|---|---|
-| js | Logto JavaScript core |
-| browser | Logto browser foundation SDK |
-| react | Logto React SDK built on top of browser foundations |
-| vue | Logto Vue SDK built on top of browser foundations |
+| Name    | Description                                         |
+| ------- | --------------------------------------------------- |
+| js      | Logto JavaScript core                               |
+| client  | Logto JavaScript cross-platform foundation client   |
+| browser | Logto browser foundation SDK                        |
+| node    | Logto node foundation SDK                           |
+| react   | Logto React SDK built on top of browser foundations |
+| vue     | Logto Vue SDK built on top of browser foundations   |
+| next    | Logto Next.js SDK built on top of node foundations  |
 
 ## Resources
 
