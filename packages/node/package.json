@@ -1,6 +1,6 @@
 {
   "name": "@logto/node",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-beta.0",
   "source": "./src/index.ts",
   "main": "./lib/index.js",
   "exports": {
@@ -29,7 +29,7 @@
     "prepack": "pnpm test"
   },
   "dependencies": {
-    "@logto/client": "^1.0.0-alpha.2",
+    "@logto/client": "^1.0.0-beta.0",
     "@silverhand/essentials": "^1.1.6",
     "js-base64": "^3.7.2",
     "node-fetch": "^2.6.7"

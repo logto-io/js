@@ -1,6 +1,6 @@
 {
   "name": "@logto/browser",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-beta.0",
   "source": "./src/index.ts",
   "main": "./lib/index.js",
   "exports": {
@@ -29,7 +29,7 @@
     "prepack": "pnpm test"
   },
   "dependencies": {
-    "@logto/client": "^1.0.0-alpha.2",
+    "@logto/client": "^1.0.0-beta.0",
     "@silverhand/essentials": "^1.1.6",
     "js-base64": "^3.7.2"
   },
@@ -42,11 +42,11 @@
     "@silverhand/ts-config": "^0.17.0",
     "@types/jest": "^27.4.0",
     "eslint": "^8.9.0",
-    "node-fetch": "^2.6.7",
     "jest": "^27.5.1",
     "jest-location-mock": "^1.0.9",
     "jest-matcher-specific-error": "^1.0.0",
     "lint-staged": "^13.0.0",
+    "node-fetch": "^2.6.7",
     "parcel": "^2.6.2",
     "prettier": "^2.3.2",
     "text-encoder": "^0.0.4",
