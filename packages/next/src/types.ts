@@ -28,4 +28,14 @@ export type LogtoNextConfig = LogtoConfig & {
 export type LogtoUser = {
   isAuthenticated: boolean;
   claims?: IdTokenClaims;
+  accessToken?: string;
+};
+
+/**
+ * @getAccessToken: if set to true, will try to get an access token and attach to req.user,
+ * if unable to grant an access token, will set req.user.isAuthenticated to false,
+ * this can make sure the refresh token is not revoked and still valid, so is considered more secure.
+ */
+export type WithLogtoConfig = {
+  getAccessToken?: boolean;
 };
