@@ -1,3 +1,4 @@
+import { NextApiResponse } from 'next';
 import { testApiHandler } from 'next-test-api-route-handler';
 
 import LogtoClient from '.';
@@ -25,6 +26,10 @@ const getIdTokenClaims = jest.fn(() => ({
 }));
 const signOut = jest.fn();
 const getAccessToken = jest.fn(async () => true);
+
+const mockResponse = (_: unknown, response: NextApiResponse) => {
+  response.status(200).end();
+};
 
 jest.mock('./storage', () =>
   jest.fn(() => ({
@@ -72,7 +77,7 @@ describe('Next', () => {
       const client = new LogtoClient(configs);
       await testApiHandler({
         handler: client.handleSignIn(),
-        url: '/api/sign-in',
+        url: '/api/logto/sign-in',
         test: async ({ fetch }) => {
           const response = await fetch({ method: 'GET', redirect: 'manual' });
           const headers = response.headers as Map<string, string>;
@@ -89,7 +94,7 @@ describe('Next', () => {
       const client = new LogtoClient(configs);
       await testApiHandler({
         handler: client.handleSignInCallback(),
-        url: '/api/sign-in-callback',
+        url: '/api/logto/sign-in-callback',
         test: async ({ fetch }) => {
           const response = await fetch({ method: 'GET', redirect: 'manual' });
           const headers = response.headers as Map<string, string>;
@@ -142,7 +147,7 @@ describe('Next', () => {
       const client = new LogtoClient(configs);
       await testApiHandler({
         handler: client.handleSignOut(),
-        url: '/api/sign-out',
+        url: '/api/logto/sign-out',
         test: async ({ fetch }) => {
           const response = await fetch({ method: 'GET', redirect: 'manual' });
           const headers = response.headers as Map<string, string>;
@@ -151,6 +156,72 @@ describe('Next', () => {
       });
       expect(save).toHaveBeenCalled();
       expect(signOut).toHaveBeenCalled();
+    });
+  });
+
+  describe('handleAuthRoutes', () => {
+    it('should call handleSignIn for "sign-in"', async () => {
+      const client = new LogtoClient(configs);
+      jest.spyOn(client, 'handleSignIn').mockImplementation(() => mockResponse);
+      await testApiHandler({
+        handler: client.handleAuthRoutes(),
+        paramsPatcher: (parameters) => {
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          parameters.action = 'sign-in';
+        },
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET', redirect: 'manual' });
+          expect(client.handleSignIn).toHaveBeenCalled();
+        },
+      });
+    });
+
+    it('should call handleSignInCallback for "sign-in-callback"', async () => {
+      const client = new LogtoClient(configs);
+      jest.spyOn(client, 'handleSignInCallback').mockImplementation(() => mockResponse);
+      await testApiHandler({
+        handler: client.handleAuthRoutes(),
+        paramsPatcher: (parameters) => {
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          parameters.action = 'sign-in-callback';
+        },
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET', redirect: 'manual' });
+          expect(client.handleSignInCallback).toHaveBeenCalled();
+        },
+      });
+    });
+
+    it('should call handleSignOut for "sign-out"', async () => {
+      const client = new LogtoClient(configs);
+      jest.spyOn(client, 'handleSignOut').mockImplementation(() => mockResponse);
+      await testApiHandler({
+        handler: client.handleAuthRoutes(),
+        paramsPatcher: (parameters) => {
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          parameters.action = 'sign-out';
+        },
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET', redirect: 'manual' });
+          expect(client.handleSignOut).toHaveBeenCalled();
+        },
+      });
+    });
+
+    it('should call handleUser for "user"', async () => {
+      const client = new LogtoClient(configs);
+      jest.spyOn(client, 'handleUser').mockImplementation(() => mockResponse);
+      await testApiHandler({
+        handler: client.handleAuthRoutes(),
+        paramsPatcher: (parameters) => {
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          parameters.action = 'user';
+        },
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET', redirect: 'manual' });
+          expect(client.handleUser).toHaveBeenCalled();
+        },
+      });
     });
   });
 });

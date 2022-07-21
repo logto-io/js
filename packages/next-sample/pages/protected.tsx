@@ -10,7 +10,7 @@ const Protected = () => {
   useEffect(() => {
     if (error?.message === 'Unauthorized') {
       // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-      void Router.push('/api/sign-in');
+      void Router.push('/api/logto/sign-in');
     }
   }, [error]);
 
