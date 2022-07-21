@@ -5,20 +5,9 @@ import { withIronSessionApiRoute, withIronSessionSsr } from 'iron-session/next';
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextApiHandler } from 'next';
 
 import NextStorage from './storage';
-import { LogtoNextConfig, LogtoUser } from './types';
+import { LogtoNextConfig, LogtoUser, WithLogtoConfig } from './types';
 
 export type { LogtoUser } from './types';
-
-// Refresh token can be revoked, so it is authenticated only when we have a unexpired access token
-const checkIsAuthenticatedByAccessToken = async (client: NodeClient): Promise<boolean> => {
-  try {
-    await client.getAccessToken();
-
-    return true;
-  } catch {
-    return false;
-  }
-};
 
 export default class LogtoClient {
   private navigateUrl?: string;
@@ -60,14 +49,14 @@ export default class LogtoClient {
       }
     }, this.ironSessionConfigs);
 
-  handleUser = () =>
-    withIronSessionApiRoute((request, response) => {
+  handleUser = (config?: WithLogtoConfig) =>
+    this.withLogtoApiRoute((request, response) => {
       response.json(request.user);
-    }, this.ironSessionConfigs);
+    }, config);
 
-  withLogtoApiRoute = (handler: NextApiHandler): NextApiHandler =>
+  withLogtoApiRoute = (handler: NextApiHandler, config: WithLogtoConfig = {}): NextApiHandler =>
     withIronSessionApiRoute(async (request, response) => {
-      const user = await this.getLogtoUserFromRequest(request);
+      const user = await this.getLogtoUserFromRequest(request, config.getAccessToken);
 
       // eslint-disable-next-line @silverhand/fp/no-mutating-methods
       Object.defineProperty(request, 'user', { enumerable: true, get: () => user });
@@ -78,10 +67,11 @@ export default class LogtoClient {
   withLogtoSsr = <P extends Record<string, unknown> = Record<string, unknown>>(
     handler: (
       context: GetServerSidePropsContext
-    ) => GetServerSidePropsResult<P> | Promise<GetServerSidePropsResult<P>>
+    ) => GetServerSidePropsResult<P> | Promise<GetServerSidePropsResult<P>>,
+    config: WithLogtoConfig = {}
   ) =>
     withIronSessionSsr(async (context) => {
-      const user = await this.getLogtoUserFromRequest(context.req);
+      const user = await this.getLogtoUserFromRequest(context.req, config.getAccessToken);
       // eslint-disable-next-line @silverhand/fp/no-mutating-methods
       Object.defineProperty(context.req, 'user', { enumerable: true, get: () => user });
 
@@ -116,16 +106,42 @@ export default class LogtoClient {
     };
   }
 
-  private async getLogtoUserFromRequest(request: IncomingMessage) {
+  private async getLogtoUserFromRequest(request: IncomingMessage, getAccessToken?: boolean) {
     const nodeClient = this.createNodeClient(request);
-    const isAuthenticated = await checkIsAuthenticatedByAccessToken(nodeClient);
-    await this.storage?.save();
+    const { isAuthenticated } = nodeClient;
 
-    const user: LogtoUser = {
-      isAuthenticated,
-      claims: isAuthenticated ? nodeClient.getIdTokenClaims() : undefined,
-    };
+    if (!isAuthenticated) {
+      const user: LogtoUser = {
+        isAuthenticated,
+      };
 
-    return user;
+      return user;
+    }
+
+    if (!getAccessToken) {
+      const user: LogtoUser = {
+        isAuthenticated,
+        claims: nodeClient.getIdTokenClaims(),
+      };
+
+      return user;
+    }
+
+    try {
+      const accessToken = await nodeClient.getAccessToken();
+      await this.storage?.save();
+
+      const user: LogtoUser = {
+        isAuthenticated,
+        claims: nodeClient.getIdTokenClaims(),
+        accessToken,
+      };
+
+      return user;
+    } catch {
+      return {
+        isAuthenticated: false,
+      };
+    }
   }
 }
