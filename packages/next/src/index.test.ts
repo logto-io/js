@@ -24,6 +24,7 @@ const getIdTokenClaims = jest.fn(() => ({
   sub: 'user_id',
 }));
 const signOut = jest.fn();
+const getAccessToken = jest.fn(async () => true);
 
 jest.mock('./storage', () =>
   jest.fn(() => ({
@@ -47,7 +48,7 @@ jest.mock('@logto/node', () =>
       signIn();
     },
     handleSignInCallback,
-    isAuthenticated: true,
+    getAccessToken,
     getIdTokenClaims,
     signOut: () => {
       navigate(configs.baseUrl);
@@ -100,6 +101,22 @@ describe('Next', () => {
   });
 
   describe('withLogtoApiRoute', () => {
+    it('should set isAuthenticated to false when unable to getAccessToken', async () => {
+      getAccessToken.mockRejectedValueOnce(new Error('Unauthorized'));
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        handler: client.withLogtoApiRoute((request, response) => {
+          expect(request.user).toBeDefined();
+          response.json(request.user);
+        }),
+        test: async ({ fetch }) => {
+          const response = await fetch({ method: 'GET', redirect: 'manual' });
+          await expect(response.json()).resolves.toEqual({ isAuthenticated: false });
+        },
+      });
+      expect(getAccessToken).toHaveBeenCalled();
+    });
+
     it('should assign `user` to `request`', async () => {
       const client = new LogtoClient(configs);
       await testApiHandler({
@@ -111,6 +128,7 @@ describe('Next', () => {
           await fetch({ method: 'GET', redirect: 'manual' });
         },
       });
+      expect(getAccessToken).toHaveBeenCalled();
       expect(getIdTokenClaims).toHaveBeenCalled();
     });
   });
