@@ -509,7 +509,7 @@ importers:
       vite: ^3.0.0
       vue: ^3.2.35
       vue-router: ^4.0.14
-      vue-tsc: ^0.38.0
+      vue-tsc: ^0.39.0
     dependencies:
       '@logto/vue': link:../vue
       vue: 3.2.35
@@ -527,7 +527,7 @@ importers:
       prettier: 2.5.1
       typescript: 4.6.2
       vite: 3.0.0
-      vue-tsc: 0.38.0_typescript@4.6.2
+      vue-tsc: 0.39.0_typescript@4.6.2
 
 packages:
 
@@ -1378,6 +1378,7 @@ packages:
       pacote: 13.4.1
       semver: 7.3.7
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -1408,6 +1409,7 @@ packages:
       p-waterfall: 2.1.1
       semver: 7.3.7
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -1548,6 +1550,7 @@ packages:
       whatwg-url: 8.7.0
       yargs-parser: 20.2.4
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -1745,6 +1748,7 @@ packages:
       npm-registry-fetch: 9.0.0
       npmlog: 4.1.2
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -1774,6 +1778,7 @@ packages:
       pify: 5.0.0
       read-package-json: 3.0.1
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -1812,6 +1817,7 @@ packages:
       npmlog: 4.1.2
       tar: 6.1.11
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -1910,6 +1916,7 @@ packages:
       pacote: 13.4.1
       semver: 7.3.7
     transitivePeerDependencies:
+      - bluebird
       - encoding
       - supports-color
     dev: true
@@ -1955,6 +1962,7 @@ packages:
       '@npmcli/run-script': 3.0.2
       npmlog: 4.1.2
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -2056,6 +2064,7 @@ packages:
       slash: 3.0.0
       write-json-file: 4.3.0
     transitivePeerDependencies:
+      - bluebird
       - encoding
       - supports-color
     dev: true
@@ -2303,6 +2312,7 @@ packages:
       treeverse: 2.0.0
       walk-up-path: 1.0.0
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -2338,6 +2348,8 @@ packages:
       promise-retry: 2.0.1
       semver: 7.3.7
       which: 2.0.2
+    transitivePeerDependencies:
+      - bluebird
     dev: true
 
   /@npmcli/installed-package-contents/1.0.7:
@@ -2368,6 +2380,7 @@ packages:
       pacote: 13.4.1
       semver: 7.3.7
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -2419,6 +2432,7 @@ packages:
       node-gyp: 9.0.0
       read-package-json-fast: 2.0.3
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -3526,6 +3540,7 @@ packages:
       stylelint-config-xo-scss: 0.15.0_zhymizk4kfitko2u2d4p3qwyee
     transitivePeerDependencies:
       - eslint
+      - eslint-import-resolver-webpack
       - postcss
       - prettier
       - supports-color
@@ -3545,6 +3560,7 @@ packages:
       stylelint-config-xo-scss: 0.15.0_cazrl3eatzhkw4y7xb6glndqh4
     transitivePeerDependencies:
       - eslint
+      - eslint-import-resolver-webpack
       - postcss
       - prettier
       - supports-color
@@ -3564,6 +3580,7 @@ packages:
       stylelint-config-xo-scss: 0.15.0_an3wuxxoixcpivwd2moqhhly5q
     transitivePeerDependencies:
       - eslint
+      - eslint-import-resolver-webpack
       - postcss
       - prettier
       - supports-color
@@ -3583,6 +3600,7 @@ packages:
       stylelint-config-xo-scss: 0.15.0_zhymizk4kfitko2u2d4p3qwyee
     transitivePeerDependencies:
       - eslint
+      - eslint-import-resolver-webpack
       - postcss
       - prettier
       - supports-color
@@ -3606,7 +3624,7 @@ packages:
       eslint-import-resolver-typescript: 2.5.0_cmtdok55f7srt3k3ux6kqq5jcq
       eslint-plugin-consistent-default-export-name: 0.0.7
       eslint-plugin-eslint-comments: 3.2.0_eslint@8.9.0
-      eslint-plugin-import: 2.25.4_eslint@8.9.0
+      eslint-plugin-import: 2.25.4_hkug4hnbgllydtpdygs6xvzedm
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-node: 11.1.0_eslint@8.9.0
       eslint-plugin-prettier: 4.0.0_t5rlqxhdzybjjhn5fth7z27jl4
@@ -3616,6 +3634,7 @@ packages:
       pkg-dir: 4.2.0
       prettier: 2.5.1
     transitivePeerDependencies:
+      - eslint-import-resolver-webpack
       - supports-color
       - typescript
     dev: true
@@ -3637,7 +3656,7 @@ packages:
       eslint-import-resolver-typescript: 2.5.0_cmtdok55f7srt3k3ux6kqq5jcq
       eslint-plugin-consistent-default-export-name: 0.0.7
       eslint-plugin-eslint-comments: 3.2.0_eslint@8.9.0
-      eslint-plugin-import: 2.25.4_eslint@8.9.0
+      eslint-plugin-import: 2.25.4_hkug4hnbgllydtpdygs6xvzedm
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-node: 11.1.0_eslint@8.9.0
       eslint-plugin-prettier: 4.0.0_t5rlqxhdzybjjhn5fth7z27jl4
@@ -3647,6 +3666,7 @@ packages:
       pkg-dir: 4.2.0
       prettier: 2.5.1
     transitivePeerDependencies:
+      - eslint-import-resolver-webpack
       - supports-color
       - typescript
     dev: true
@@ -3668,7 +3688,7 @@ packages:
       eslint-import-resolver-typescript: 2.5.0_cmtdok55f7srt3k3ux6kqq5jcq
       eslint-plugin-consistent-default-export-name: 0.0.7
       eslint-plugin-eslint-comments: 3.2.0_eslint@8.9.0
-      eslint-plugin-import: 2.25.4_eslint@8.9.0
+      eslint-plugin-import: 2.25.4_hkug4hnbgllydtpdygs6xvzedm
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-node: 11.1.0_eslint@8.9.0
       eslint-plugin-prettier: 4.0.0_t5rlqxhdzybjjhn5fth7z27jl4
@@ -3678,6 +3698,7 @@ packages:
       pkg-dir: 4.2.0
       prettier: 2.5.1
     transitivePeerDependencies:
+      - eslint-import-resolver-webpack
       - supports-color
       - typescript
     dev: true
@@ -4408,34 +4429,48 @@ packages:
       vue: 3.2.35
     dev: true
 
-  /@volar/code-gen/0.38.0:
-    resolution: {integrity: sha512-+3eAi2UPSBCJAetLw5TPvkUJYUB2g7LBnN2crOu1VBEZvfEzHlL2G9esUqMUGgj51BtjIhxCobyZHK+L0P4Dvw==}
+  /@volar/code-gen/0.39.0:
+    resolution: {integrity: sha512-56ycx16FoeDrjVuQ2RKIRmk3paFuIG4eIZLMpxypGKOlhFxS9/nB2eumln2e1jVlnAWeTcFw5V1/eYpDTazHLA==}
     dependencies:
-      '@volar/source-map': 0.38.0
+      '@volar/source-map': 0.39.0
     dev: true
 
-  /@volar/source-map/0.38.0:
-    resolution: {integrity: sha512-Zet8XQr2jfn/d92XEMREIG5ZNN4btCY5L7Jr1Kd6p4jg7NCx/AtngPRnOp9HKkWOmteYdWC58VqWj2zLNHFlxw==}
+  /@volar/source-map/0.39.0:
+    resolution: {integrity: sha512-sV/eDeOjBwDJxrxwP/ifABvlOUzjpUpCbtbAhoc9hD9SrHlaDGrKtnmXdqgH5DNHIfm5aUpY0xojRvFFOubpuw==}
     dev: true
 
-  /@volar/vue-code-gen/0.38.0:
-    resolution: {integrity: sha512-s1eb8kBdTrRTh8UK678+4uI0RS977R+CGeSj7qROftan2cNLbAC7qlgS9oLpPccxgJG5m1Ll5hbpKBGymqWKiQ==}
+  /@volar/typescript-faster/0.39.0:
+    resolution: {integrity: sha512-+NNY456ABrvXD2VsJGsH4BGQTWkSyWcUfdbcREqXD+g2GotW7UtkFMtNgu1ASXBhKl7oRdPuRk5wK9Edw2tW9A==}
     dependencies:
-      '@volar/code-gen': 0.38.0
-      '@volar/source-map': 0.38.0
+      semver: 7.3.7
+    dev: true
+
+  /@volar/vue-code-gen/0.39.0:
+    resolution: {integrity: sha512-0KqocSt5o4TtmUngq+8tmWRfifgyE9eDzb4/1Ih7bl52T1RDdOOKkZ9GzP3zBic3N7lJHiOaLdGMXTK+IzAe7g==}
+    dependencies:
+      '@volar/code-gen': 0.39.0
+      '@volar/source-map': 0.39.0
       '@vue/compiler-core': 3.2.37
       '@vue/compiler-dom': 3.2.37
       '@vue/shared': 3.2.37
     dev: true
 
-  /@volar/vue-typescript/0.38.0:
-    resolution: {integrity: sha512-DQc5USGAA6UHFtDZmhgy320Zuac/CYfVFsyLTbY+tP+uPorIvxeTHEQE1G8h945br5f6IyK5X3LLg5KO2/1iiQ==}
+  /@volar/vue-language-core/0.39.0:
+    resolution: {integrity: sha512-MnXnrIB7PtggLfKcLtg9I5X1i5FMCoTC+jYtR/j5RZU97boPbFi0lYLysCGPUXdP3w5taIXGPgfT8VnbLEkndQ==}
     dependencies:
-      '@volar/code-gen': 0.38.0
-      '@volar/source-map': 0.38.0
-      '@volar/vue-code-gen': 0.38.0
+      '@volar/code-gen': 0.39.0
+      '@volar/source-map': 0.39.0
+      '@volar/vue-code-gen': 0.39.0
       '@vue/compiler-sfc': 3.2.37
       '@vue/reactivity': 3.2.37
+    dev: true
+
+  /@volar/vue-typescript/0.39.0:
+    resolution: {integrity: sha512-RV+oHtkuta/kwskg02Ykp9qvDXpgDNF1EVgeGx42v1b65qMyAd5FgxOZxYYCzVV4DzVa6gH+C5YhuQXo4oEdog==}
+    dependencies:
+      '@volar/code-gen': 0.39.0
+      '@volar/typescript-faster': 0.39.0
+      '@volar/vue-language-core': 0.39.0
     dev: true
 
   /@vue/compiler-core/3.2.35:
@@ -4493,7 +4528,7 @@ packages:
       '@vue/shared': 3.2.37
       estree-walker: 2.0.2
       magic-string: 0.25.9
-      postcss: 8.4.13
+      postcss: 8.4.14
       source-map: 0.6.1
     dev: true
 
@@ -5109,6 +5144,8 @@ packages:
       ssri: 8.0.1
       tar: 6.1.11
       unique-filename: 1.1.1
+    transitivePeerDependencies:
+      - bluebird
     dev: true
 
   /cacache/16.1.0:
@@ -5133,6 +5170,8 @@ packages:
       ssri: 9.0.1
       tar: 6.1.11
       unique-filename: 1.1.1
+    transitivePeerDependencies:
+      - bluebird
     dev: true
 
   /call-bind/1.0.2:
@@ -5688,12 +5727,22 @@ packages:
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
     dependencies:
       ms: 2.0.0
     dev: true
 
   /debug/3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
     dependencies:
       ms: 2.1.3
     dev: true
@@ -6331,6 +6380,8 @@ packages:
     dependencies:
       debug: 3.2.7
       resolve: 1.22.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /eslint-import-resolver-typescript/2.5.0_cmtdok55f7srt3k3ux6kqq5jcq:
@@ -6342,7 +6393,7 @@ packages:
     dependencies:
       debug: 4.3.4
       eslint: 8.9.0
-      eslint-plugin-import: 2.25.4_eslint@8.9.0
+      eslint-plugin-import: 2.25.4_hkug4hnbgllydtpdygs6xvzedm
       glob: 7.2.0
       is-glob: 4.0.3
       resolve: 1.22.0
@@ -6351,12 +6402,31 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-module-utils/2.7.3:
+  /eslint-module-utils/2.7.3_e5wtvfn4rlk3af2y4axy7jmfea:
     resolution: {integrity: sha512-088JEC7O3lDZM9xGe0RerkOMd0EjFl+Yvd1jPWIkMT5u3H9+HC34mWWPnqPrN13gieT9pBOO+Qt07Nb/6TresQ==}
     engines: {node: '>=4'}
+    peerDependencies:
+      '@typescript-eslint/parser': '*'
+      eslint-import-resolver-node: '*'
+      eslint-import-resolver-typescript: '*'
+      eslint-import-resolver-webpack: '*'
+    peerDependenciesMeta:
+      '@typescript-eslint/parser':
+        optional: true
+      eslint-import-resolver-node:
+        optional: true
+      eslint-import-resolver-typescript:
+        optional: true
+      eslint-import-resolver-webpack:
+        optional: true
     dependencies:
+      '@typescript-eslint/parser': 5.12.1_fhzmdq77bspfhxkfuzq4fbrdsy
       debug: 3.2.7
+      eslint-import-resolver-node: 0.3.6
+      eslint-import-resolver-typescript: 2.5.0_cmtdok55f7srt3k3ux6kqq5jcq
       find-up: 2.1.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /eslint-plugin-consistent-default-export-name/0.0.7:
@@ -6391,19 +6461,24 @@ packages:
       ignore: 5.2.0
     dev: true
 
-  /eslint-plugin-import/2.25.4_eslint@8.9.0:
+  /eslint-plugin-import/2.25.4_hkug4hnbgllydtpdygs6xvzedm:
     resolution: {integrity: sha512-/KJBASVFxpu0xg1kIBn9AUa8hQVnszpwgE7Ld0lKAlx7Ie87yzEzCgSkekt+le/YVhiaosO4Y14GDAOc41nfxA==}
     engines: {node: '>=4'}
     peerDependencies:
+      '@typescript-eslint/parser': '*'
       eslint: ^2 || ^3 || ^4 || ^5 || ^6 || ^7.2.0 || ^8
+    peerDependenciesMeta:
+      '@typescript-eslint/parser':
+        optional: true
     dependencies:
+      '@typescript-eslint/parser': 5.12.1_fhzmdq77bspfhxkfuzq4fbrdsy
       array-includes: 3.1.4
       array.prototype.flat: 1.2.5
       debug: 2.6.9
       doctrine: 2.1.0
       eslint: 8.9.0
       eslint-import-resolver-node: 0.3.6
-      eslint-module-utils: 2.7.3
+      eslint-module-utils: 2.7.3_e5wtvfn4rlk3af2y4axy7jmfea
       has: 1.0.3
       is-core-module: 2.8.1
       is-glob: 4.0.3
@@ -6411,6 +6486,10 @@ packages:
       object.values: 1.1.5
       resolve: 1.22.0
       tsconfig-paths: 3.12.0
+    transitivePeerDependencies:
+      - eslint-import-resolver-typescript
+      - eslint-import-resolver-webpack
+      - supports-color
     dev: true
 
   /eslint-plugin-no-use-extend-native/0.5.0:
@@ -8607,6 +8686,7 @@ packages:
       import-local: 3.1.0
       npmlog: 4.1.2
     transitivePeerDependencies:
+      - bluebird
       - encoding
       - supports-color
     dev: true
@@ -8641,6 +8721,7 @@ packages:
       npm-package-arg: 8.1.5
       npm-registry-fetch: 11.0.0
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -8654,6 +8735,7 @@ packages:
       semver: 7.3.7
       ssri: 8.0.1
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -8927,6 +9009,7 @@ packages:
       socks-proxy-agent: 6.1.1
       ssri: 9.0.1
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -8950,6 +9033,7 @@ packages:
       socks-proxy-agent: 5.0.1
       ssri: 8.0.1
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -8974,6 +9058,7 @@ packages:
       socks-proxy-agent: 6.1.1
       ssri: 8.0.1
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -9394,6 +9479,7 @@ packages:
       tar: 6.1.11
       which: 2.0.2
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -9534,6 +9620,7 @@ packages:
       minizlib: 2.1.2
       npm-package-arg: 8.1.5
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -9549,6 +9636,7 @@ packages:
       npm-package-arg: 9.0.2
       proc-log: 2.0.1
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -9565,6 +9653,7 @@ packages:
       minizlib: 2.1.2
       npm-package-arg: 8.1.5
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -9867,6 +9956,7 @@ packages:
       ssri: 9.0.1
       tar: 6.1.11
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -10421,6 +10511,11 @@ packages:
 
   /promise-inflight/1.0.1:
     resolution: {integrity: sha1-mEcocL8igTL8vdhoEputEsPAKeM=}
+    peerDependencies:
+      bluebird: '*'
+    peerDependenciesMeta:
+      bluebird:
+        optional: true
     dev: true
 
   /promise-retry/2.0.1:
@@ -12118,13 +12213,14 @@ packages:
       vue: 3.2.35
     dev: false
 
-  /vue-tsc/0.38.0_typescript@4.6.2:
-    resolution: {integrity: sha512-e4O5z+J5E/4vvNCBtMM4aqevSxJLx+04vV6+tSQwnbI8/zHs23CWqZKQr/Eie8C43mGnRjWVEFy4Keq2NGeEDg==}
+  /vue-tsc/0.39.0_typescript@4.6.2:
+    resolution: {integrity: sha512-Hjm1C8T4ooNb5UBUqe0h7uCvV7Ff5UlWG4YgATVYREodafA4WxZIjE8v8wUG8mtyBDSaXXmg0J592i4jo3olug==}
     hasBin: true
     peerDependencies:
       typescript: '*'
     dependencies:
-      '@volar/vue-typescript': 0.38.0
+      '@volar/vue-language-core': 0.39.0
+      '@volar/vue-typescript': 0.39.0
       typescript: 4.6.2
     dev: true
 
