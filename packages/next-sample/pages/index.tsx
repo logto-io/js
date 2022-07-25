@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import useSWR from 'swr';
 
 const Home = () => {
-  const { data } = useSWR<LogtoUser>('/api/user');
+  const { data } = useSWR<LogtoUser>('/api/logto/user');
   const { data: protectedResource } = useSWR<{ data: string }>('/api/protected-resource');
 
   const userInfo = useMemo(() => {
@@ -42,11 +42,11 @@ const Home = () => {
       </header>
       <nav>
         {data?.isAuthenticated ? (
-          <Link href="/api/sign-out">
+          <Link href="/api/logto/sign-out">
             <a>Sign Out</a>
           </Link>
         ) : (
-          <Link href="/api/sign-in">
+          <Link href="/api/logto/sign-in">
             <a>Sign In</a>
           </Link>
         )}

@@ -14,7 +14,9 @@ export default class LogtoClient {
   private storage?: NextStorage;
   constructor(private readonly config: LogtoNextConfig) {}
 
-  handleSignIn = (redirectUri = `${this.config.baseUrl}/api/sign-in-callback`): NextApiHandler =>
+  handleSignIn = (
+    redirectUri = `${this.config.baseUrl}/api/logto/sign-in-callback`
+  ): NextApiHandler =>
     withIronSessionApiRoute(async (request, response) => {
       const nodeClient = this.createNodeClient(request);
       await nodeClient.signIn(redirectUri);
@@ -53,6 +55,30 @@ export default class LogtoClient {
     this.withLogtoApiRoute((request, response) => {
       response.json(request.user);
     }, config);
+
+  handleAuthRoutes =
+    (configs?: WithLogtoConfig): NextApiHandler =>
+    (request, response) => {
+      const { action } = request.query;
+
+      if (action === 'sign-in') {
+        return this.handleSignIn()(request, response);
+      }
+
+      if (action === 'sign-in-callback') {
+        return this.handleSignInCallback()(request, response);
+      }
+
+      if (action === 'sign-out') {
+        return this.handleSignOut()(request, response);
+      }
+
+      if (action === 'user') {
+        return this.handleUser(configs)(request, response);
+      }
+
+      response.status(404).end();
+    };
 
   withLogtoApiRoute = (handler: NextApiHandler, config: WithLogtoConfig = {}): NextApiHandler =>
     withIronSessionApiRoute(async (request, response) => {
