@@ -1,5 +1,6 @@
 import { NormalizeKeyPaths } from '@silverhand/essentials';
 import get from 'lodash.get';
+import * as s from 'superstruct';
 
 const logtoErrorCodes = Object.freeze({
   id_token: {
@@ -17,6 +18,7 @@ const logtoErrorCodes = Object.freeze({
     not_provide_fetch: 'Should provide a fetch function under Node.js',
   },
   crypto_subtle_unavailable: 'Crypto.subtle is unavailable in insecure contexts (non-HTTPS).',
+  unexpected_response_error: 'Unexpected response error from the server.',
 });
 
 export type LogtoErrorCode = NormalizeKeyPaths<typeof logtoErrorCodes>;
@@ -42,6 +44,11 @@ export class LogtoError extends Error {
     this.data = data;
   }
 }
+
+export const logtoRequestErrorSchema = s.type({
+  code: s.string(),
+  message: s.string(),
+});
 
 export class LogtoRequestError extends Error {
   code: string;

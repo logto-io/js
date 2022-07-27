@@ -1,4 +1,4 @@
-import { LogtoRequestError } from '@logto/js';
+import { LogtoError, LogtoRequestError } from '@logto/js';
 
 import { createRequester } from './requester';
 
@@ -15,10 +15,11 @@ describe('createRequester', () => {
     });
   });
 
-  describe('request error', () => {
+  describe('response error', () => {
+    const code = 'some error code';
+    const message = 'some error message';
+
     test('failing response json with code and message should throw LogtoRequestError with same code and message', async () => {
-      const code = 'some error code';
-      const message = 'some error message';
       const fetchFunction = jest.fn().mockResolvedValue({
         ok: false,
         json: async () => ({ code, message }),
@@ -27,37 +28,49 @@ describe('createRequester', () => {
       await expect(requester('foo')).rejects.toMatchError(new LogtoRequestError(code, message));
     });
 
-    test('failing response json with only code should throw StructError', async () => {
+    test('failing response json with more than code and message should throw LogtoRequestError with same code and message', async () => {
       const fetchFunction = jest.fn().mockResolvedValue({
         ok: false,
-        json: async () => {
-          throw new TypeError('without message');
-        },
+        json: async () => ({ code, message, foo: 'bar' }),
       });
       const requester = createRequester(fetchFunction);
-      await expect(requester('foo')).rejects.toThrowError(TypeError);
+      await expect(requester('foo')).rejects.toMatchError(new LogtoRequestError(code, message));
     });
 
-    test('failing response json with only message should throw StructError', async () => {
+    test('failing response json with only code should throw LogtoError', async () => {
+      const json = { code };
       const fetchFunction = jest.fn().mockResolvedValue({
         ok: false,
-        json: async () => {
-          throw new TypeError('without code');
-        },
+        json: async () => json,
       });
       const requester = createRequester(fetchFunction);
-      await expect(requester('foo')).rejects.toThrowError(TypeError);
+      await expect(requester('foo')).rejects.toMatchError(
+        new LogtoError('unexpected_response_error', json)
+      );
     });
 
-    test('failing response json without code and message should throw StructError', async () => {
+    test('failing response json with only message should throw LogtoError', async () => {
+      const json = { message };
       const fetchFunction = jest.fn().mockResolvedValue({
         ok: false,
-        json: async () => {
-          throw new TypeError('without code and message');
-        },
+        json: async () => json,
       });
       const requester = createRequester(fetchFunction);
-      await expect(requester('foo')).rejects.toThrowError(TypeError);
+      await expect(requester('foo')).rejects.toMatchError(
+        new LogtoError('unexpected_response_error', json)
+      );
+    });
+
+    test('failing response json without code and message should throw LogtoError', async () => {
+      const json = {};
+      const fetchFunction = jest.fn().mockResolvedValue({
+        ok: false,
+        json: async () => json,
+      });
+      const requester = createRequester(fetchFunction);
+      await expect(requester('foo')).rejects.toMatchError(
+        new LogtoError('unexpected_response_error', json)
+      );
     });
 
     test('failing response with non-json text should throw TypeError', async () => {
