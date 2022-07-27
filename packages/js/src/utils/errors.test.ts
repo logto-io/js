@@ -8,7 +8,7 @@ describe('LogtoError', () => {
     const errorDescription = 'error_description_content';
     const logtoError = new LogtoError(code, { error, errorDescription });
     expect(logtoError).toHaveProperty('code', code);
-    expect(logtoError).toHaveProperty('message', 'Missing code');
+    expect(logtoError).toHaveProperty('message', 'Missing code in the callback URI');
     expect(logtoError).toHaveProperty('data', { error, errorDescription });
   });
 
