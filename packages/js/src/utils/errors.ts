@@ -3,15 +3,15 @@ import get from 'lodash.get';
 
 const logtoErrorCodes = Object.freeze({
   id_token: {
-    invalid_iat: 'Invalid issued at time',
-    invalid_token: 'Invalid token',
+    invalid_iat: 'Invalid issued at time in the ID token',
+    invalid_token: 'Invalid ID token',
   },
   callback_uri_verification: {
-    redirect_uri_mismatched: 'Redirect URI mismatched',
-    error_found: 'Error found',
-    missing_state: 'Missing state',
-    state_mismatched: 'State mismatched',
-    missing_code: 'Missing code',
+    redirect_uri_mismatched: 'The callback URI mismatches the redirect URI.',
+    error_found: 'Error found in the callback URI',
+    missing_state: 'Missing state in the callback URI',
+    state_mismatched: 'State mismatched in the callback URI',
+    missing_code: 'Missing code in the callback URI',
   },
   requester: {
     not_provide_fetch: 'Should provide a fetch function under Node.js',
