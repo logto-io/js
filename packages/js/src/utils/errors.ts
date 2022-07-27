@@ -13,9 +13,6 @@ const logtoErrorCodes = Object.freeze({
     state_mismatched: 'State mismatched in the callback URI',
     missing_code: 'Missing code in the callback URI',
   },
-  requester: {
-    not_provide_fetch: 'Should provide a fetch function under Node.js',
-  },
   crypto_subtle_unavailable: 'Crypto.subtle is unavailable in insecure contexts (non-HTTPS).',
 });
 
