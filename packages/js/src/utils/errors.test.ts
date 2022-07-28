@@ -1,5 +1,10 @@
-import { OidcError } from '.';
-import { LogtoError, LogtoErrorCode, LogtoRequestError } from './errors';
+import {
+  LogtoError,
+  LogtoErrorCode,
+  LogtoRequestError,
+  logtoRequestErrorSchema,
+  OidcError,
+} from './errors';
 
 describe('LogtoError', () => {
   test('new LogtoError should contain correct properties', () => {
@@ -24,10 +29,25 @@ describe('LogtoError', () => {
   });
 });
 
+const code = 'some code';
+const message = 'some message';
+
+describe('logtoRequestErrorSchema checks the error response from the server', () => {
+  it('should be false when the error response is empty', () => {
+    expect(logtoRequestErrorSchema.is({})).toBeFalsy();
+  });
+
+  it('should be true when the error response contains the expected properties', () => {
+    expect(logtoRequestErrorSchema.is({ code, message })).toBeTruthy();
+  });
+
+  it('should be true when the error response contains more than the expected properties', () => {
+    expect(logtoRequestErrorSchema.is({ code, message, foo: 'bar' })).toBeTruthy();
+  });
+});
+
 describe('LogtoRequestError', () => {
   test('new LogtoRequestError should contain correct properties', () => {
-    const code = 'some code';
-    const message = 'some message';
     const logtoRequestError = new LogtoRequestError(code, message);
     expect(logtoRequestError).toHaveProperty('code', code);
     expect(logtoRequestError).toHaveProperty('message', message);
