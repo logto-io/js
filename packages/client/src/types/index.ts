@@ -4,6 +4,7 @@ import { Infer, number, record, string, type } from 'superstruct';
 export type LogtoConfig = {
   endpoint: string;
   appId: string;
+  appSecret?: string;
   scopes?: string[];
   resources?: string[];
   prompt?: Prompt;
