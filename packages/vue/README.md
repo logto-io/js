@@ -3,9 +3,9 @@
 [![Build Status](https://github.com/logto-io/js/actions/workflows/main.yml/badge.svg)](https://github.com/logto-io/js/actions/workflows/main.yml)
 [![Codecov](https://img.shields.io/codecov/c/github/logto-io/js)](https://app.codecov.io/gh/logto-io/js?branch=master)
 
-The Logto Vue SDK written in TypeScript. Check out our [integration guide](https://docs.logto.io/integrate-sdk/vue) or [docs](https://docs.logto.io/sdk/vue) for more information.
+The Logto Vue SDK written in TypeScript. Check out our [integration guide](https://docs.logto.io/docs/recipes/integrate-logto/vue) or [docs](https://docs.logto.io/sdk/JavaScript/vue/) for more information.
 
-We also provide [集成指南](https://docs.logto.io/zh-cn/integrate-sdk/vue) and [文档](https://docs.logto.io/zh-cn/sdk/vue) in Simplified Chinese.
+We also provide [集成指南](https://docs.logto.io/zh-cn/docs/recipes/integrate-logto/vue/) and [文档](https://docs.logto.io/zh-cn/sdk/JavaScript/vue/) in Simplified Chinese.
 
 ## Installation
 
@@ -24,86 +24,21 @@ yarn add @logto/vue
 ### Using pnpm
 
 ```bash
-pnpm install @logto/vue
+pnpm add @logto/vue
 ```
 
-### Using CDN
+## Get sample
 
-```bash
-<script src="https://logto.io/js/logto-sdk-vue/0.1.0/logto-sdk-vue.production.js" />
-```
-
-## Get Started
-
-A sample project with the following code snippets can be found at [Vue Sample](https://github.com/logto-io/js/tree/master/packages/vue-sample)
-
-Check out the source code and try it yourself. (We use [pnpm](https://pnpm.io/) for package management)
+A sample Vue project with the integration of @logto/vue SDK can be found at [Vue Sample](https://github.com/logto-io/js/tree/master/packages/vue-sample). Check out the source code and try it with ease.
 
 ```bash
 pnpm i && pnpm start
 ```
 
-### Import Logto Vue plugin
-
-```ts
-import { createLogto, LogtoConfig } from '@logto/vue';
-
-const config: LogtoConfig = {
-  appId: '<your-application-id>',
-  endpoint: '<your-logto-endpoint>'
-};
-
-const app = createApp(App);
-
-app.use(createLogto, config);
-app.mount("#app");
-```
-
-### Setup your sign-in
-
-```ts
-import { useLogto } from "@logto/vue";
-
-const { signIn } = useLogto();
-const onClickSignIn = () => signIn(redirectUrl);
-```
-
-```html
-<button @click="onClickSignIn">Sign In</button>
-```
-
-### Retrieve Auth Status
-
-```ts
-import { useLogto } from '@logto/vue';
-
-const { isAuthenticated } = useLogto();
-```
-
-```html
-<div v-if="!isAuthenticated">
-  <!-- E.g. navigate to the sign in page -->
-</div>
-<div v-else>
-  <!-- Do things when user is authenticated -->
-</div>
-```
-
-### Sign out
-
-```ts
-import { useLogto } from "@logto/vue";
-
-const { signOut } = useLogto();
-const onClickSignOut = () => signOut('http://localhost:1234');
-```
-
-```html
-<button @click="onClickSignOut">Sign Out</button>
-```
+Note: Currently only supports Vue 3.x and its [composition API](https://vuejs.org/api/composition-api-setup.html#composition-api-setup). Please let us know if you would like Logto to support Vue 2.x or options API by filing a [feature request](https://github.com/logto-io/logto/issues/new?assignees=&labels=feature-request&template=feature_request.md&title=feature+request%3A+).
 
 ## Resources
 
 [![Website](https://img.shields.io/badge/website-logto.io-8262F8.svg)](https://logto.io/)
-[![Docs](https://img.shields.io/badge/docs-logto.io-green.svg)](https://docs.logto.io/docs/sdk/swift/)
+[![Docs](https://img.shields.io/badge/docs-logto.io-green.svg)](https://docs.logto.io/sdk/JavaScript/vue/)
 [![Discord](https://img.shields.io/discord/965845662535147551?logo=discord&logoColor=ffffff&color=7389D8&cacheSeconds=600)](https://discord.gg/UEPaF3j5e6)
