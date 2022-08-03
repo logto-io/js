@@ -15,9 +15,27 @@ export { LogtoError, OidcError, Prompt, LogtoRequestError, LogtoClientError } fr
 
 export default class LogtoClient extends BaseClient {
   constructor(config: LogtoConfig, adapter: Pick<ClientAdapter, 'navigate' | 'storage'>) {
+    const { appId, appSecret } = config;
+
     super(config, {
       ...adapter,
-      requester: createRequester(fetch),
+      requester: createRequester(
+        appSecret
+          ? async (...args: Parameters<typeof fetch>) => {
+              const [input, init] = args;
+
+              return fetch(input, {
+                ...init,
+                headers: {
+                  ...init?.headers,
+                  authorization: `basic ${Buffer.from(`${appId}:${appSecret}`, 'utf8').toString(
+                    'base64'
+                  )}`,
+                },
+              });
+            }
+          : fetch
+      ),
       generateCodeChallenge,
       generateCodeVerifier,
       generateState,
