@@ -1,0 +1,3 @@
+{
+  "extends": "@silverhand/ts-config/tsconfig.base"
+}
