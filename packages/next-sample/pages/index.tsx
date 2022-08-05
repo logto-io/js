@@ -1,10 +1,10 @@
-import { LogtoUser } from '@logto/next';
+import { LogtoContext } from '@logto/next';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import useSWR from 'swr';
 
 const Home = () => {
-  const { data } = useSWR<LogtoUser>('/api/logto/user');
+  const { data } = useSWR<LogtoContext>('/api/logto/user');
   const { data: protectedResource } = useSWR<{ data: string }>('/api/protected-resource');
 
   const userInfo = useMemo(() => {

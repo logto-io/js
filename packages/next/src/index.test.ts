@@ -25,7 +25,7 @@ const getIdTokenClaims = jest.fn(() => ({
   sub: 'user_id',
 }));
 const signOut = jest.fn();
-const getAccessToken = jest.fn(async () => true);
+const getContext = jest.fn(async () => true);
 
 const mockResponse = (_: unknown, response: NextApiResponse) => {
   response.status(200).end();
@@ -53,7 +53,7 @@ jest.mock('@logto/node', () =>
       signIn();
     },
     handleSignInCallback,
-    getAccessToken,
+    getContext,
     getIdTokenClaims,
     signOut: () => {
       navigate(configs.baseUrl);
@@ -107,26 +107,7 @@ describe('Next', () => {
   });
 
   describe('withLogtoApiRoute', () => {
-    it('should set isAuthenticated to false when "getAccessToken" is enabled and is unable to getAccessToken', async () => {
-      getAccessToken.mockRejectedValueOnce(new Error('Unauthorized'));
-      const client = new LogtoClient(configs);
-      await testApiHandler({
-        handler: client.withLogtoApiRoute(
-          (request, response) => {
-            expect(request.user).toBeDefined();
-            response.json(request.user);
-          },
-          { getAccessToken: true }
-        ),
-        test: async ({ fetch }) => {
-          const response = await fetch({ method: 'GET', redirect: 'manual' });
-          await expect(response.json()).resolves.toEqual({ isAuthenticated: false });
-        },
-      });
-      expect(getAccessToken).toHaveBeenCalled();
-    });
-
-    it('should assign `user` to `request` and not call getAccessToken by default', async () => {
+    it('should assign `user` to `request`', async () => {
       const client = new LogtoClient(configs);
       await testApiHandler({
         handler: client.withLogtoApiRoute((request, response) => {
@@ -137,8 +118,7 @@ describe('Next', () => {
           await fetch({ method: 'GET', redirect: 'manual' });
         },
       });
-      expect(getIdTokenClaims).toHaveBeenCalled();
-      expect(getAccessToken).not.toHaveBeenCalled();
+      expect(getContext).toHaveBeenCalled();
     });
   });
 

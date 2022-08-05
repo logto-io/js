@@ -1,4 +1,4 @@
-import { IdTokenClaims, LogtoConfig } from '@logto/node';
+import { LogtoConfig } from '@logto/node';
 import { IronSession } from 'iron-session';
 import { NextApiRequest } from 'next';
 
@@ -13,22 +13,10 @@ declare module 'iron-session' {
   }
 }
 
-declare module 'http' {
-  interface IncomingMessage {
-    user: LogtoUser;
-  }
-}
-
 export type LogtoNextConfig = LogtoConfig & {
   cookieSecret: string;
   cookieSecure: boolean;
   baseUrl: string;
-};
-
-export type LogtoUser = {
-  isAuthenticated: boolean;
-  claims?: IdTokenClaims;
-  accessToken?: string;
 };
 
 /**

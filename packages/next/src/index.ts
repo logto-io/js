@@ -5,9 +5,9 @@ import { withIronSessionApiRoute, withIronSessionSsr } from 'iron-session/next';
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextApiHandler } from 'next';
 
 import NextStorage from './storage';
-import { LogtoNextConfig, LogtoUser, WithLogtoConfig } from './types';
+import { LogtoNextConfig, WithLogtoConfig } from './types';
 
-export type { LogtoUser } from './types';
+export type { LogtoContext } from '@logto/node';
 
 export default class LogtoClient {
   private navigateUrl?: string;
@@ -134,40 +134,7 @@ export default class LogtoClient {
 
   private async getLogtoUserFromRequest(request: IncomingMessage, getAccessToken?: boolean) {
     const nodeClient = this.createNodeClient(request);
-    const { isAuthenticated } = nodeClient;
 
-    if (!isAuthenticated) {
-      const user: LogtoUser = {
-        isAuthenticated,
-      };
-
-      return user;
-    }
-
-    if (!getAccessToken) {
-      const user: LogtoUser = {
-        isAuthenticated,
-        claims: nodeClient.getIdTokenClaims(),
-      };
-
-      return user;
-    }
-
-    try {
-      const accessToken = await nodeClient.getAccessToken();
-      await this.storage?.save();
-
-      const user: LogtoUser = {
-        isAuthenticated,
-        claims: nodeClient.getIdTokenClaims(),
-        accessToken,
-      };
-
-      return user;
-    } catch {
-      return {
-        isAuthenticated: false,
-      };
-    }
+    return nodeClient.getContext(getAccessToken);
   }
 }

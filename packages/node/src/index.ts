@@ -1,7 +1,10 @@
 import BaseClient, { LogtoConfig, createRequester, ClientAdapter } from '@logto/client';
 import fetch from 'node-fetch';
 
+import { LogtoContext } from './types';
 import { generateCodeChallenge, generateCodeVerifier, generateState } from './utils/generators';
+
+export type { LogtoContext } from './types';
 
 export type {
   IdTokenClaims,
@@ -41,4 +44,35 @@ export default class LogtoClient extends BaseClient {
       generateState,
     });
   }
+
+  getContext = async (getAccessToken = false): Promise<LogtoContext> => {
+    const { isAuthenticated } = this;
+
+    if (!isAuthenticated) {
+      return {
+        isAuthenticated,
+      };
+    }
+
+    if (!getAccessToken) {
+      return {
+        isAuthenticated,
+        claims: this.getIdTokenClaims(),
+      };
+    }
+
+    try {
+      const accessToken = await this.getAccessToken();
+
+      return {
+        isAuthenticated,
+        claims: this.getIdTokenClaims(),
+        accessToken,
+      };
+    } catch {
+      return {
+        isAuthenticated: false,
+      };
+    }
+  };
 }

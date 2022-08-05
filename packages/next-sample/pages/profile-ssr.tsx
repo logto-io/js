@@ -1,10 +1,10 @@
-import { LogtoUser } from '@logto/next';
+import { LogtoContext } from '@logto/next';
 import { useMemo } from 'react';
 
 import { logtoClient } from '../libraries/logto';
 
 type Props = {
-  user: LogtoUser;
+  user: LogtoContext;
 };
 
 const ProfileSsr = ({ user }: Props) => {

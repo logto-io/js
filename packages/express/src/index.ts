@@ -5,7 +5,9 @@ import { Request, Response, NextFunction, Router } from 'express';
 
 import { LogtoExpressError } from './errors';
 import ExpressStorage from './storage';
-import { LogtoExpressConfig } from './types';
+import { LogtoExpressConfig, WithLogtoConfig } from './types';
+
+export type { LogtoContext } from '@logto/node';
 
 export type Middleware = (
   request: Request,
@@ -65,6 +67,16 @@ export default class LogtoClient {
 
     return router;
   };
+
+  withLogto =
+    (config: WithLogtoConfig = {}): Middleware =>
+    async (request: IncomingMessage, response: Response, next: NextFunction) => {
+      const client = this.createNodeClient(request, response);
+      const user = await client.getContext(config.getAccessToken);
+      // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+      Object.defineProperty(request, 'user', { enumerable: true, get: () => user });
+      next();
+    };
 
   private createNodeClient(request: IncomingMessage, response: Response) {
     this.checkSession(request);
