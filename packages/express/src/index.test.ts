@@ -20,7 +20,7 @@ const getIdTokenClaims = jest.fn(() => ({
   sub: 'user_id',
 }));
 const signOut = jest.fn();
-const getAccessToken = jest.fn(async () => true);
+const getContext = jest.fn(async () => ({ isAuthenticated: true }));
 
 jest.mock('./storage', () =>
   jest.fn(() => ({
@@ -41,7 +41,7 @@ jest.mock('@logto/node', () =>
       signIn();
     },
     handleSignInCallback,
-    getAccessToken,
+    getContext,
     getIdTokenClaims,
     signOut: () => {
       navigate(configs.baseUrl);
@@ -98,6 +98,19 @@ describe('Express', () => {
         },
       });
       expect(signOut).toHaveBeenCalled();
+    });
+  });
+
+  describe('withLogto', () => {
+    it('should assign `user` to `request`', async () => {
+      const client = new LogtoClient(configs);
+      await testMiddleware({
+        middleware: client.withLogto(),
+        test: async ({ request }) => {
+          expect(request.user).toBeDefined();
+        },
+      });
+      expect(getContext).toHaveBeenCalled();
     });
   });
 });
