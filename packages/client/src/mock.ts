@@ -65,10 +65,6 @@ export const mockedSignInUriWithLoginPrompt = generateSignInUri({
   prompt: Prompt.Login,
 });
 
-export const refreshTokenStorageKey = `logto:${appId}:refreshToken`;
-export const idTokenStorageKey = `logto:${appId}:idToken`;
-export const signInSessionStorageKey = `logto:${appId}`;
-
 export const accessToken = 'access_token_value';
 export const refreshToken = 'new_refresh_token_value';
 export const idToken = 'id_token_value';
