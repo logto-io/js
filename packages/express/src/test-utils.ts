@@ -1,4 +1,7 @@
-import { NextFunction, Request, Response } from 'express';
+import cookieParser from 'cookie-parser';
+import express, { NextFunction, Request, Response, Router } from 'express';
+import session from 'express-session';
+import request from 'supertest';
 
 import { Middleware } from '.';
 
@@ -29,4 +32,13 @@ export const testMiddleware = async ({ middleware, url, test }: TestMiddlewarePa
   /* eslint-enable no-restricted-syntax */
   await middleware(request, response, next);
   await test({ request, response, next });
+};
+
+export const testRouter = (router: Router) => {
+  const app = express();
+  app.use(cookieParser());
+  app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 14 * 24 * 60 * 60 } }));
+  app.use(router);
+
+  return request(app);
 };
