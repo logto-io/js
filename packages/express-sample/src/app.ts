@@ -1,10 +1,16 @@
 import http from 'http';
 
+import { handleAuthRoutes, withLogto, LogtoExpressConfig } from '@logto/express';
 import cookieParser from 'cookie-parser';
 import express, { Request, Response, NextFunction } from 'express';
 import session from 'express-session';
 
-import { logtoClient } from './logto';
+const config: LogtoExpressConfig = {
+  appId: 'foo-traditional',
+  appSecret: 'TXxxky90RxGNFeStfP2xv--ZhsPoz9VGRn5PDbEI1iAACGZp6R_IN0iigujq42V5',
+  endpoint: 'https://logto.dev',
+  baseUrl: 'http://localhost:3000',
+};
 
 const requireAuth = async (request: Request, response: Response, next: NextFunction) => {
   if (!request.user.isAuthenticated) {
@@ -17,8 +23,8 @@ const requireAuth = async (request: Request, response: Response, next: NextFunct
 const app = express();
 app.use(cookieParser());
 app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 14 * 24 * 60 * 60 } }));
-app.use(logtoClient.handleAuthRoutes());
-app.use(logtoClient.withLogto());
+app.use(handleAuthRoutes(config));
+app.use(withLogto(config));
 
 app.get('/', (request, response) => {
   response.setHeader('content-type', 'text/html');

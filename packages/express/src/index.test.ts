@@ -1,5 +1,5 @@
-import LogtoClient from '.';
-import { testMiddleware } from './test-utils';
+import { handleAuthRoutes, withLogto } from '.';
+import { testMiddleware, testRouter } from './test-utils';
 import { LogtoExpressConfig } from './types';
 
 const signInUrl = 'http://mock-logto-server.com/sign-in';
@@ -56,56 +56,36 @@ describe('Express', () => {
     jest.clearAllMocks();
   });
 
-  it('creates an instance without crash', () => {
-    expect(() => new LogtoClient(configs)).not.toThrow();
-  });
-
-  describe('handleSignIn', () => {
-    it('should redirect to Logto sign in url and save session', async () => {
-      const client = new LogtoClient(configs);
-      await testMiddleware({
-        middleware: client.handleSignIn(),
-        test: async ({ response }) => {
-          expect(response.redirect).toHaveBeenCalledWith(signInUrl);
-        },
+  describe('handleAuthRoutes', () => {
+    describe('handleSignIn', () => {
+      it('should redirect to Logto sign in url and save session', async () => {
+        const response = await testRouter(handleAuthRoutes(configs)).get('/logto/sign-in');
+        expect(response.header.location).toEqual(signInUrl);
+        expect(signIn).toHaveBeenCalled();
       });
-      expect(signIn).toHaveBeenCalled();
     });
-  });
 
-  describe('handleSignInCallback', () => {
-    it('should call client.handleSignInCallback and redirect to home', async () => {
-      const client = new LogtoClient(configs);
-      await testMiddleware({
-        middleware: client.handleSignInCallback(),
-        url: '/api/logto/sign-in-callback',
-        test: async ({ response }) => {
-          expect(response.redirect).toHaveBeenCalledWith(configs.baseUrl);
-        },
+    describe('handleSignInCallback', () => {
+      it('should call client.handleSignInCallback and redirect to home page', async () => {
+        const response = await testRouter(handleAuthRoutes(configs)).get('/logto/sign-in-callback');
+        expect(response.header.location).toEqual(configs.baseUrl);
+        expect(handleSignInCallback).toHaveBeenCalled();
       });
-      expect(handleSignInCallback).toHaveBeenCalled();
     });
-  });
 
-  describe('handleSignOut', () => {
-    it('should redirect to Logto sign out url', async () => {
-      const client = new LogtoClient(configs);
-      await testMiddleware({
-        middleware: client.handleSignOut(),
-        url: '/api/logto/sign-out',
-        test: async ({ response }) => {
-          expect(response.redirect).toHaveBeenCalledWith(configs.baseUrl);
-        },
+    describe('handleSignOut', () => {
+      it('should redirect to Logto sign out url', async () => {
+        const response = await testRouter(handleAuthRoutes(configs)).get('/logto/sign-out');
+        expect(response.header.location).toEqual(configs.baseUrl);
+        expect(signOut).toHaveBeenCalled();
       });
-      expect(signOut).toHaveBeenCalled();
     });
   });
 
   describe('withLogto', () => {
     it('should assign `user` to `request`', async () => {
-      const client = new LogtoClient(configs);
       await testMiddleware({
-        middleware: client.withLogto(),
+        middleware: withLogto(configs),
         test: async ({ request }) => {
           expect(request.user).toBeDefined();
         },

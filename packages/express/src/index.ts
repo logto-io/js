@@ -5,9 +5,10 @@ import { Request, Response, NextFunction, Router } from 'express';
 
 import { LogtoExpressError } from './errors';
 import ExpressStorage from './storage';
-import { LogtoExpressConfig, WithLogtoConfig } from './types';
+import { LogtoExpressConfig } from './types';
 
 export type { LogtoContext } from '@logto/node';
+export type { LogtoExpressConfig } from './types';
 
 export type Middleware = (
   request: Request,
@@ -15,92 +16,78 @@ export type Middleware = (
   next: NextFunction
 ) => Promise<void>;
 
-export default class LogtoClient {
-  constructor(private readonly config: LogtoExpressConfig) {}
+const createNodeClient = (
+  request: IncomingMessage,
+  response: Response,
+  config: LogtoExpressConfig
+) => {
+  // We assume that `session` is configured in the express app, but need to check it there.
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (!request.session) {
+    throw new LogtoExpressError('session_not_configured');
+  }
 
-  handleSignIn =
-    (redirectUri = `${this.config.baseUrl}/logto/sign-in-callback`): Middleware =>
-    async (request, response) => {
-      const nodeClient = this.createNodeClient(request, response);
-      await nodeClient.signIn(redirectUri);
-    };
+  const storage = new ExpressStorage(request);
 
-  handleSignInCallback =
-    (redirectTo = this.config.baseUrl): Middleware =>
-    async (request, response) => {
-      const nodeClient = this.createNodeClient(request, response);
-
-      if (request.url) {
-        await nodeClient.handleSignInCallback(`${this.config.baseUrl}${request.originalUrl}`);
-        response.redirect(redirectTo);
-      }
-    };
-
-  handleSignOut =
-    (redirectUri = this.config.baseUrl): Middleware =>
-    async (request, response) => {
-      const nodeClient = this.createNodeClient(request, response);
-      await nodeClient.signOut(redirectUri);
-    };
-
-  handleAuthRoutes = (): Router => {
-    // eslint-disable-next-line new-cap
-    const router = Router();
-
-    router.use('/logto/:action', (request, response, next) => {
-      const { action } = request.params;
-
-      if (action === 'sign-in') {
-        return this.handleSignIn()(request, response, next);
-      }
-
-      if (action === 'sign-in-callback') {
-        return this.handleSignInCallback()(request, response, next);
-      }
-
-      if (action === 'sign-out') {
-        return this.handleSignOut()(request, response, next);
-      }
-
-      response.status(404).end();
-    });
-
-    return router;
-  };
-
-  withLogto =
-    (config: WithLogtoConfig = {}): Middleware =>
-    async (request: IncomingMessage, response: Response, next: NextFunction) => {
-      const client = this.createNodeClient(request, response);
-      const user = await client.getContext(config.getAccessToken);
-      // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-      Object.defineProperty(request, 'user', { enumerable: true, get: () => user });
-      next();
-    };
-
-  private createNodeClient(request: IncomingMessage, response: Response) {
-    this.checkSession(request);
-    const storage = new ExpressStorage(request);
-
-    return new NodeClient(
-      {
-        ...this.config,
-        persistAccessToken: this.config.persistAccessToken ?? true,
+  return new NodeClient(
+    {
+      ...config,
+      persistAccessToken: config.persistAccessToken ?? true,
+    },
+    {
+      storage,
+      navigate: (url) => {
+        response.redirect(url);
       },
-      {
-        storage,
-        navigate: (url) => {
-          response.redirect(url);
-        },
-      }
-    );
-  }
-
-  private checkSession(request: IncomingMessage) {
-    // We assume that `session` is configured in the express app, but need to check it there.
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (!request.session) {
-      throw new LogtoExpressError('session_not_configured');
     }
-  }
-}
+  );
+};
+
+export const handleAuthRoutes = (config: LogtoExpressConfig): Router => {
+  // eslint-disable-next-line new-cap
+  const router = Router();
+
+  router.use('/logto/:action', async (request, response) => {
+    const { action } = request.params;
+    const nodeClient = createNodeClient(request, response, config);
+
+    switch (action) {
+      case 'sign-in': {
+        await nodeClient.signIn(`${config.baseUrl}/logto/sign-in-callback`);
+
+        break;
+      }
+
+      case 'sign-in-callback': {
+        if (request.url) {
+          await nodeClient.handleSignInCallback(`${config.baseUrl}${request.originalUrl}`);
+          response.redirect(config.baseUrl);
+        }
+
+        break;
+      }
+
+      case 'sign-out': {
+        await nodeClient.signOut(config.baseUrl);
+
+        break;
+      }
+
+      default: {
+        response.status(404).end();
+      }
+    }
+  });
+
+  return router;
+};
+
+export const withLogto =
+  (config: LogtoExpressConfig): Middleware =>
+  async (request: IncomingMessage, response: Response, next: NextFunction) => {
+    const client = createNodeClient(request, response, config);
+    const user = await client.getContext(config.getAccessToken);
+    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+    Object.defineProperty(request, 'user', { enumerable: true, get: () => user });
+    next();
+  };

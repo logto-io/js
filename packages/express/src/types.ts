@@ -8,8 +8,5 @@ declare module 'http' {
 
 export type LogtoExpressConfig = LogtoConfig & {
   baseUrl: string;
-};
-
-export type WithLogtoConfig = {
   getAccessToken?: boolean;
 };
