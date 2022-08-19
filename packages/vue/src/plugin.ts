@@ -55,13 +55,13 @@ export const createPluginMethods = (context: Context) => {
     }
   };
 
-  const getIdTokenClaims = () => {
+  const getIdTokenClaims = async () => {
     if (!logtoClient.value) {
       return throwContextError();
     }
 
     try {
-      return logtoClient.value.getIdTokenClaims();
+      return await logtoClient.value.getIdTokenClaims();
     } catch (error: unknown) {
       setError(error, 'Unexpected error occurred while getting id token claims.');
     }

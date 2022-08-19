@@ -17,7 +17,7 @@ const onClickSignOut = () => {
 
 watchEffect(async () => {
   if (isAuthenticated.value) {
-    const claims = getIdTokenClaims();
+    const claims = await getIdTokenClaims();
     idTokenClaims.value = claims;
   }
 });

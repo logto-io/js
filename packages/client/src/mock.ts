@@ -16,15 +16,15 @@ export class MockedStorage implements Storage {
     }
   }
 
-  public getItem(key: string) {
+  public async getItem(key: string) {
     return this.storage[key] ?? null;
   }
 
-  public setItem(key: string, value: string): void {
+  public async setItem(key: string, value: string): Promise<void> {
     this.storage[key] = value;
   }
 
-  public removeItem(key: string): void {
+  public async removeItem(key: string): Promise<void> {
     /* eslint-disable @typescript-eslint/no-dynamic-delete */
     // eslint-disable-next-line @silverhand/fp/no-delete
     delete this.storage[key];
@@ -123,12 +123,12 @@ export class LogtoClientSignInSessionAccessor extends LogtoClient {
     return this.logtoConfig;
   }
 
-  public getSignInSessionItem(): Nullable<LogtoSignInSessionItem> {
-    return this.signInSession;
+  public async getSignInSessionItem(): Promise<Nullable<LogtoSignInSessionItem>> {
+    return this.getSignInSession();
   }
 
-  public setSignInSessionItem(item: Nullable<LogtoSignInSessionItem>) {
-    this.signInSession = item;
+  public async setSignInSessionItem(item: Nullable<LogtoSignInSessionItem>): Promise<void> {
+    await this.setSignInSession(item);
   }
 
   public getAccessTokenMap(): Map<string, AccessToken> {

@@ -40,13 +40,10 @@ export default class LogtoClient {
   protected readonly logtoConfig: LogtoConfig;
   protected readonly getOidcConfig = once(this._getOidcConfig);
   protected readonly getJwtVerifyGetKey = once(this._getJwtVerifyGetKey);
-
   protected readonly adapter: ClientAdapter;
-
   protected readonly accessTokenMap = new Map<string, AccessToken>();
 
   private readonly getAccessTokenPromiseMap = new Map<string, Promise<string>>();
-  private _idToken: Nullable<string>;
 
   constructor(logtoConfig: LogtoConfig, adapter: ClientAdapter) {
     this.logtoConfig = {
@@ -55,78 +52,27 @@ export default class LogtoClient {
       scopes: withReservedScopes(logtoConfig.scopes).split(' '),
     };
     this.adapter = adapter;
-    this._idToken = this.adapter.storage.getItem('idToken');
 
     if (this.logtoConfig.persistAccessToken) {
-      this.loadAccessTokenMap();
+      void this.loadAccessTokenMap();
     }
   }
 
-  public get isAuthenticated() {
-    return Boolean(this.idToken);
+  async isAuthenticated() {
+    return Boolean(await this.getIdToken());
   }
 
-  protected get signInSession(): Nullable<LogtoSignInSessionItem> {
-    const jsonItem = this.adapter.storage.getItem('signInSession');
-
-    if (!jsonItem) {
-      return null;
-    }
-
-    try {
-      const item: unknown = JSON.parse(jsonItem);
-      assert(item, LogtoSignInSessionItemSchema);
-
-      return item;
-    } catch (error: unknown) {
-      throw new LogtoClientError('sign_in_session.invalid', error);
-    }
-  }
-
-  protected set signInSession(logtoSignInSessionItem: Nullable<LogtoSignInSessionItem>) {
-    if (!logtoSignInSessionItem) {
-      this.adapter.storage.removeItem('signInSession');
-
-      return;
-    }
-
-    const jsonItem = JSON.stringify(logtoSignInSessionItem);
-    this.adapter.storage.setItem('signInSession', jsonItem);
-  }
-
-  get refreshToken() {
+  async getRefreshToken() {
     return this.adapter.storage.getItem('refreshToken');
   }
 
-  private set refreshToken(refreshToken: Nullable<string>) {
-    if (!refreshToken) {
-      this.adapter.storage.removeItem('refreshToken');
-
-      return;
-    }
-
-    this.adapter.storage.setItem('refreshToken', refreshToken);
-  }
-
-  get idToken() {
-    return this._idToken;
-  }
-
-  private set idToken(idToken: Nullable<string>) {
-    this._idToken = idToken;
-
-    if (!idToken) {
-      this.adapter.storage.removeItem('idToken');
-
-      return;
-    }
-
-    this.adapter.storage.setItem('idToken', idToken);
+  async getIdToken() {
+    return this.adapter.storage.getItem('idToken');
   }
 
   // eslint-disable-next-line complexity
-  public async getAccessToken(resource?: string): Promise<string> {
-    if (!this.idToken) {
+  async getAccessToken(resource?: string): Promise<string> {
+    if (!(await this.getIdToken())) {
       throw new LogtoClientError('not_authenticated');
     }
 
@@ -166,15 +112,17 @@ export default class LogtoClient {
     return token;
   }
 
-  public getIdTokenClaims(): IdTokenClaims {
-    if (!this.idToken) {
+  async getIdTokenClaims(): Promise<IdTokenClaims> {
+    const idToken = await this.getIdToken();
+
+    if (!idToken) {
       throw new LogtoClientError('not_authenticated');
     }
 
-    return decodeIdToken(this.idToken);
+    return decodeIdToken(idToken);
   }
 
-  public async signIn(redirectUri: string) {
+  async signIn(redirectUri: string) {
     const { appId: clientId, prompt, resources, scopes } = this.logtoConfig;
     const { authorizationEndpoint } = await this.getOidcConfig();
     const codeVerifier = this.adapter.generateCodeVerifier();
@@ -192,15 +140,15 @@ export default class LogtoClient {
       prompt,
     });
 
-    this.signInSession = { redirectUri, codeVerifier, state };
-    this.refreshToken = null;
-    this.idToken = null;
+    await this.setSignInSession({ redirectUri, codeVerifier, state });
+    await this.setRefreshToken(null);
+    await this.setIdToken(null);
 
     this.adapter.navigate(signInUri);
   }
 
-  public isSignInRedirected(url: string): boolean {
-    const { signInSession } = this;
+  async isSignInRedirected(url: string): Promise<boolean> {
+    const signInSession = await this.getSignInSession();
 
     if (!signInSession) {
       return false;
@@ -211,9 +159,10 @@ export default class LogtoClient {
     return `${origin}${pathname}` === redirectUri;
   }
 
-  public async handleSignInCallback(callbackUri: string) {
-    const { signInSession, logtoConfig, adapter } = this;
+  async handleSignInCallback(callbackUri: string) {
+    const { logtoConfig, adapter } = this;
     const { requester } = adapter;
+    const signInSession = await this.getSignInSession();
 
     if (!signInSession) {
       throw new LogtoClientError('sign_in_session.not_found');
@@ -236,22 +185,24 @@ export default class LogtoClient {
     );
 
     await this.verifyIdToken(codeTokenResponse.idToken);
-
-    this.saveCodeToken(codeTokenResponse);
-    this.signInSession = null;
+    await this.saveCodeToken(codeTokenResponse);
+    await this.setSignInSession(null);
   }
 
-  public async signOut(postLogoutRedirectUri?: string) {
-    if (!this.idToken) {
+  async signOut(postLogoutRedirectUri?: string) {
+    const idToken = await this.getIdToken();
+
+    if (!idToken) {
       throw new LogtoClientError('not_authenticated');
     }
 
     const { appId: clientId } = this.logtoConfig;
     const { endSessionEndpoint, revocationEndpoint } = await this.getOidcConfig();
+    const refreshToken = await this.getRefreshToken();
 
-    if (this.refreshToken) {
+    if (refreshToken) {
       try {
-        await revoke(revocationEndpoint, clientId, this.refreshToken, this.adapter.requester);
+        await revoke(revocationEndpoint, clientId, refreshToken, this.adapter.requester);
       } catch {
         // Do nothing at this point, as we don't want to break the sign-out flow even if the revocation is failed
       }
@@ -260,18 +211,68 @@ export default class LogtoClient {
     const url = generateSignOutUri({
       endSessionEndpoint,
       postLogoutRedirectUri,
-      idToken: this.idToken,
+      idToken,
     });
 
     this.accessTokenMap.clear();
-    this.refreshToken = null;
-    this.idToken = null;
+    await this.setRefreshToken(null);
+    await this.setIdToken(null);
 
     this.adapter.navigate(url);
   }
 
+  protected async getSignInSession(): Promise<Nullable<LogtoSignInSessionItem>> {
+    const jsonItem = await this.adapter.storage.getItem('signInSession');
+
+    if (!jsonItem) {
+      return null;
+    }
+
+    try {
+      const item: unknown = JSON.parse(jsonItem);
+      assert(item, LogtoSignInSessionItemSchema);
+
+      return item;
+    } catch (error: unknown) {
+      throw new LogtoClientError('sign_in_session.invalid', error);
+    }
+  }
+
+  protected async setSignInSession(logtoSignInSessionItem: Nullable<LogtoSignInSessionItem>) {
+    if (!logtoSignInSessionItem) {
+      await this.adapter.storage.removeItem('signInSession');
+
+      return;
+    }
+
+    const jsonItem = JSON.stringify(logtoSignInSessionItem);
+    await this.adapter.storage.setItem('signInSession', jsonItem);
+  }
+
+  private async setIdToken(idToken: Nullable<string>) {
+    if (!idToken) {
+      await this.adapter.storage.removeItem('idToken');
+
+      return;
+    }
+
+    await this.adapter.storage.setItem('idToken', idToken);
+  }
+
+  private async setRefreshToken(refreshToken: Nullable<string>) {
+    if (!refreshToken) {
+      await this.adapter.storage.removeItem('refreshToken');
+
+      return;
+    }
+
+    await this.adapter.storage.setItem('refreshToken', refreshToken);
+  }
+
   private async getAccessTokenByRefreshToken(resource?: string): Promise<string> {
-    if (!this.refreshToken) {
+    const currentRefreshToken = await this.getRefreshToken();
+
+    if (!currentRefreshToken) {
       throw new LogtoClientError('not_authenticated');
     }
 
@@ -284,7 +285,7 @@ export default class LogtoClient {
           {
             clientId,
             tokenEndpoint,
-            refreshToken: this.refreshToken,
+            refreshToken: currentRefreshToken,
             resource,
             scopes: resource ? ['offline_access'] : undefined, // Force remove openid scope from the request
           },
@@ -296,13 +297,13 @@ export default class LogtoClient {
         scope,
         expiresAt: Math.round(Date.now() / 1000) + expiresIn,
       });
-      this.saveAccessTokenMap();
 
-      this.refreshToken = refreshToken;
+      await this.saveAccessTokenMap();
+      await this.setRefreshToken(refreshToken);
 
       if (idToken) {
         await this.verifyIdToken(idToken);
-        this.idToken = idToken;
+        await this.setIdToken(idToken);
       }
 
       return accessToken;
@@ -336,24 +337,24 @@ export default class LogtoClient {
     }
   }
 
-  private saveCodeToken({
+  private async saveCodeToken({
     refreshToken,
     idToken,
     scope,
     accessToken,
     expiresIn,
   }: CodeTokenResponse) {
-    this.refreshToken = refreshToken ?? null;
-    this.idToken = idToken;
+    await this.setRefreshToken(refreshToken ?? null);
+    await this.setIdToken(idToken);
 
     // NOTE: Will add scope to accessTokenKey when needed. (Linear issue LOG-1589)
     const accessTokenKey = buildAccessTokenKey();
     const expiresAt = Date.now() / 1000 + expiresIn;
     this.accessTokenMap.set(accessTokenKey, { token: accessToken, scope, expiresAt });
-    this.saveAccessTokenMap();
+    await this.saveAccessTokenMap();
   }
 
-  private saveAccessTokenMap() {
+  private async saveAccessTokenMap() {
     if (!this.logtoConfig.persistAccessToken) {
       return;
     }
@@ -365,11 +366,11 @@ export default class LogtoClient {
       data[key] = accessToken;
     }
 
-    this.adapter.storage.setItem('accessToken', JSON.stringify(data));
+    await this.adapter.storage.setItem('accessToken', JSON.stringify(data));
   }
 
-  private loadAccessTokenMap() {
-    const raw = this.adapter.storage.getItem('accessToken');
+  private async loadAccessTokenMap() {
+    const raw = await this.adapter.storage.getItem('accessToken');
 
     if (!raw) {
       return;

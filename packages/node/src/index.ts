@@ -18,12 +18,10 @@ export { LogtoError, OidcError, Prompt, LogtoRequestError, LogtoClientError } fr
 
 export default class LogtoClient extends BaseClient {
   constructor(config: LogtoConfig, adapter: Pick<ClientAdapter, 'navigate' | 'storage'>) {
-    const { appId, appSecret } = config;
-
     super(config, {
       ...adapter,
       requester: createRequester(
-        appSecret
+        config.appSecret
           ? async (...args: Parameters<typeof fetch>) => {
               const [input, init] = args;
 
@@ -31,9 +29,12 @@ export default class LogtoClient extends BaseClient {
                 ...init,
                 headers: {
                   ...init?.headers,
-                  authorization: `basic ${Buffer.from(`${appId}:${appSecret}`, 'utf8').toString(
-                    'base64'
-                  )}`,
+
+                  authorization: `basic ${Buffer.from(
+                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                    `${config.appId}:${config.appSecret}`,
+                    'utf8'
+                  ).toString('base64')}`,
                 },
               });
             }
@@ -46,7 +47,7 @@ export default class LogtoClient extends BaseClient {
   }
 
   getContext = async (getAccessToken = false): Promise<LogtoContext> => {
-    const { isAuthenticated } = this;
+    const isAuthenticated = await this.isAuthenticated();
 
     if (!isAuthenticated) {
       return {
@@ -54,10 +55,12 @@ export default class LogtoClient extends BaseClient {
       };
     }
 
+    const claims = await this.getIdTokenClaims();
+
     if (!getAccessToken) {
       return {
         isAuthenticated,
-        claims: this.getIdTokenClaims(),
+        claims,
       };
     }
 
@@ -66,7 +69,7 @@ export default class LogtoClient extends BaseClient {
 
       return {
         isAuthenticated,
-        claims: this.getIdTokenClaims(),
+        claims: await this.getIdTokenClaims(),
         accessToken,
       };
     } catch {

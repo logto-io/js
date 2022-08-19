@@ -11,13 +11,14 @@ const storage = {
 };
 
 const getAccessToken = jest.fn(async () => true);
-const getIdTokenClaims = jest.fn(() => ({ sub: 'sub' }));
+const getIdTokenClaims = jest.fn(async () => ({ sub: 'sub' }));
+const isAuthenticated = jest.fn(async () => true);
 jest.mock('@logto/client', () => ({
   __esModule: true,
   default: jest.fn(() => ({
     getAccessToken,
     getIdTokenClaims,
-    isAuthenticated: true,
+    isAuthenticated,
   })),
   createRequester: jest.fn(),
 }));

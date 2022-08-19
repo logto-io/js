@@ -11,7 +11,7 @@ export default class NextStorage implements Storage {
     this.sessionChanged = true;
   }
 
-  getItem(key: StorageKey) {
+  async getItem(key: StorageKey) {
     const value = this.request.session[key];
 
     if (value === undefined) {
@@ -21,7 +21,7 @@ export default class NextStorage implements Storage {
     return String(value);
   }
 
-  removeItem(key: StorageKey) {
+  async removeItem(key: StorageKey) {
     this.request.session[key] = undefined;
     this.sessionChanged = true;
   }

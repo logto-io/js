@@ -6,6 +6,7 @@ import { contextInjectionKey, logtoInjectionKey } from './consts';
 import { createContext } from './context';
 import { createPluginMethods } from './plugin';
 
+const isAuthenticated = jest.fn(async () => false);
 const isSignInRedirected = jest.fn(() => false);
 const handleSignInCallback = jest.fn(async () => Promise.resolve());
 const getAccessToken = jest.fn(() => {
@@ -18,7 +19,7 @@ const injectMock = jest.fn<unknown, string[]>((): unknown => {
 jest.mock('@logto/browser', () => {
   return jest.fn().mockImplementation(() => {
     return {
-      isAuthenticated: false,
+      isAuthenticated,
       isSignInRedirected,
       handleSignInCallback,
       getAccessToken,

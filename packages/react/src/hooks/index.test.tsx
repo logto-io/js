@@ -5,6 +5,7 @@ import { ComponentType } from 'react';
 import { useLogto, useHandleSignInCallback } from '.';
 import { LogtoProvider } from '../provider';
 
+const isAuthenticated = jest.fn(() => false);
 const isSignInRedirected = jest.fn(() => false);
 const handleSignInCallback = jest.fn(async () => Promise.resolve());
 const getAccessToken = jest.fn(() => {
@@ -14,6 +15,7 @@ const getAccessToken = jest.fn(() => {
 jest.mock('@logto/browser', () => {
   return jest.fn().mockImplementation(() => {
     return {
+      isAuthenticated,
       isSignInRedirected,
       handleSignInCallback,
       getAccessToken,
