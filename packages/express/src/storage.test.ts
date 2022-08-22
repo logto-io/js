@@ -18,30 +18,30 @@ describe('ExpressStorage', () => {
       const request = makeRequest();
       const storage = new ExpressStorage(request);
       await storage.setItem('idToken', 'value');
-      expect(storage.getItem('idToken')).toBe('value');
+      await expect(storage.getItem('idToken')).resolves.toBe('value');
     });
 
     it('should remove item', async () => {
       const request = makeRequest();
       const storage = new ExpressStorage(request);
       await storage.setItem('idToken', 'value');
-      storage.removeItem('idToken');
-      expect(storage.getItem('idToken')).toBeNull();
+      await storage.removeItem('idToken');
+      await expect(storage.getItem('idToken')).resolves.toBeNull();
     });
 
     it('should set and get item (signInSession)', async () => {
       const request = makeRequest();
       const storage = new ExpressStorage(request);
       await storage.setItem('signInSession', 'value');
-      expect(storage.getItem('signInSession')).toBe('value');
+      await expect(storage.getItem('signInSession')).resolves.toBe('value');
     });
 
     it('should remove item (signInSession)', async () => {
       const request = makeRequest();
       const storage = new ExpressStorage(request);
       await storage.setItem('signInSession', 'value');
-      storage.removeItem('signInSession');
-      expect(storage.getItem('signInSession')).toBeNull();
+      await storage.removeItem('signInSession');
+      await expect(storage.getItem('signInSession')).resolves.toBeNull();
     });
   });
 });

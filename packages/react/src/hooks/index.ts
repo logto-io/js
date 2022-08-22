@@ -8,7 +8,7 @@ type Logto = {
   isLoading: boolean;
   error?: Error;
   getAccessToken: (resource?: string) => Promise<string | undefined>;
-  getIdTokenClaims: () => IdTokenClaims | undefined;
+  getIdTokenClaims: () => Promise<IdTokenClaims | undefined>;
   signIn: (redirectUri: string) => Promise<void>;
   signOut: (postLogoutRedirectUri?: string) => Promise<void>;
 };
@@ -163,13 +163,13 @@ const useLogto = (): Logto => {
     [logtoClient, setLoadingState, handleError]
   );
 
-  const getIdTokenClaims = useCallback(() => {
+  const getIdTokenClaims = useCallback(async () => {
     if (!logtoClient) {
       return throwContextError();
     }
 
     try {
-      return logtoClient.getIdTokenClaims();
+      return await logtoClient.getIdTokenClaims();
     } catch {
       // Do nothing if any exception occurs. Caller will get undefined value.
     }

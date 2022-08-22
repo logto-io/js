@@ -10,10 +10,12 @@ const Home = () => {
   const [idTokenClaims, setIdTokenClaims] = useState<IdTokenClaims>();
 
   useEffect(() => {
-    if (isAuthenticated) {
-      const claims = getIdTokenClaims();
-      setIdTokenClaims(claims);
-    }
+    (async () => {
+      if (isAuthenticated) {
+        const claims = await getIdTokenClaims();
+        setIdTokenClaims(claims);
+      }
+    })();
   }, [getIdTokenClaims, isAuthenticated]);
 
   return (

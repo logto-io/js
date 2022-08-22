@@ -86,19 +86,19 @@ describe('LogtoClient', () => {
   });
 
   describe('signInSession', () => {
-    test('getter should throw LogtoClientError when signInSession does not contain the required property', () => {
-      const signInSessionAccessor = new LogtoClientSignInSessionAccessor(
+    test('getter should throw LogtoClientError when signInSession does not contain the required property', async () => {
+      const signInSession = new LogtoClientSignInSessionAccessor(
         { endpoint, appId },
         createAdapters()
       );
 
-      // @ts-expect-error expected to set object without required property
-      signInSessionAccessor.setSignInSessionItem({
+      // @ts-expect-error expected to set object without required property `state`
+      await signInSession.setSignInSessionItem({
         redirectUri,
         codeVerifier: mockedCodeVerifier,
       });
 
-      expect(() => signInSessionAccessor.getSignInSessionItem()).toMatchError(
+      await expect(async () => signInSession.getSignInSessionItem()).rejects.toMatchError(
         new LogtoClientError(
           'sign_in_session.invalid',
           new Error('At path: state -- Expected a string, but received: undefined')
@@ -106,30 +106,30 @@ describe('LogtoClient', () => {
       );
     });
 
-    it('should be able to set and get the undefined item (for clearing sign-in session)', () => {
-      const signInSessionAccessor = new LogtoClientSignInSessionAccessor(
+    it('should be able to set and get the undefined item (for clearing sign-in session)', async () => {
+      const signInSession = new LogtoClientSignInSessionAccessor(
         { endpoint, appId },
         createAdapters()
       );
 
-      signInSessionAccessor.setSignInSessionItem(null);
-      expect(signInSessionAccessor.getSignInSessionItem()).toBeNull();
+      await signInSession.setSignInSessionItem(null);
+      await expect(signInSession.getSignInSessionItem()).resolves.toBeNull();
     });
 
-    it('should be able to set and get the correct item', () => {
-      const signInSessionAccessor = new LogtoClientSignInSessionAccessor(
+    it('should be able to set and get the correct item', async () => {
+      const signInSession = new LogtoClientSignInSessionAccessor(
         { endpoint, appId },
         createAdapters()
       );
 
-      const logtoSignInSessionItem: LogtoSignInSessionItem = {
+      const signInSessionItem: LogtoSignInSessionItem = {
         redirectUri,
         codeVerifier: mockedCodeVerifier,
         state: mockedState,
       };
 
-      signInSessionAccessor.setSignInSessionItem(logtoSignInSessionItem);
-      expect(signInSessionAccessor.getSignInSessionItem()).toEqual(logtoSignInSessionItem);
+      await signInSession.setSignInSessionItem(signInSessionItem);
+      await expect(signInSession.getSignInSessionItem()).resolves.toEqual(signInSessionItem);
     });
   });
 
@@ -157,9 +157,9 @@ describe('LogtoClient', () => {
   describe('isSignInRedirected', () => {
     it('should return true after calling signIn', async () => {
       const logtoClient = createClient();
-      expect(logtoClient.isSignInRedirected(redirectUri)).toBeFalsy();
+      await expect(logtoClient.isSignInRedirected(redirectUri)).resolves.toBeFalsy();
       await logtoClient.signIn(redirectUri);
-      expect(logtoClient.isSignInRedirected(redirectUri)).toBeTruthy();
+      await expect(logtoClient.isSignInRedirected(redirectUri)).resolves.toBeTruthy();
     });
   });
 
@@ -189,10 +189,10 @@ describe('LogtoClient', () => {
       expect(storage.getItem('signInSession')).not.toBeNull();
       await expect(logtoClient.handleSignInCallback(callbackUri)).resolves.not.toThrow();
       await expect(logtoClient.getAccessToken()).resolves.toEqual(accessToken);
-      expect(storage.getItem('refreshToken')).toEqual(refreshToken);
-      expect(storage.getItem('idToken')).toEqual(idToken);
+      await expect(storage.getItem('refreshToken')).resolves.toEqual(refreshToken);
+      await expect(storage.getItem('idToken')).resolves.toEqual(idToken);
       expect(requester).toHaveBeenCalledWith(tokenEndpoint, expect.anything());
-      expect(storage.getItem('signInSession')).toBeNull();
+      await expect(storage.getItem('signInSession')).resolves.toBeNull();
     });
   });
 
@@ -217,8 +217,8 @@ describe('LogtoClient', () => {
       const logtoClient = createClient(undefined, storage);
       await logtoClient.signOut(postSignOutRedirectUri);
 
-      expect(storage.getItem('idToken')).toBeNull();
-      expect(storage.getItem('refreshToken')).toBeNull();
+      await expect(storage.getItem('idToken')).resolves.toBeNull();
+      await expect(storage.getItem('refreshToken')).resolves.toBeNull();
     });
 
     it('should redirect to post sign-out URI after signing out', async () => {
@@ -243,8 +243,8 @@ describe('LogtoClient', () => {
 
       await expect(logtoClient.signOut()).resolves.not.toThrow();
       expect(failingRequester).toBeCalledTimes(1);
-      expect(storage.getItem('idToken')).toBeNull();
-      expect(storage.getItem('refreshToken')).toBeNull();
+      await expect(storage.getItem('idToken')).resolves.toBeNull();
+      await expect(storage.getItem('refreshToken')).resolves.toBeNull();
       expect(navigate).toHaveBeenCalledWith(`${endSessionEndpoint}?id_token_hint=id_token_value`);
     });
   });
@@ -309,7 +309,9 @@ describe('LogtoClient', () => {
       expect(requester).toHaveBeenCalledWith(tokenEndpoint, expect.anything());
       expect(accessToken_1).toEqual('access_token_value');
       expect(accessToken_2).toEqual('access_token_value');
-      expect(logtoClient.refreshToken).toEqual('new_refresh_token_value');
+
+      const refreshToken = await logtoClient.getRefreshToken();
+      expect(refreshToken).toEqual('new_refresh_token_value');
     });
 
     it('should delete expired access token once', async () => {
@@ -373,7 +375,7 @@ describe('LogtoClient', () => {
     it('should throw if id token is empty', async () => {
       const logtoClient = createClient();
 
-      expect(() => logtoClient.getIdTokenClaims()).toMatchError(
+      await expect(async () => logtoClient.getIdTokenClaims()).rejects.toMatchError(
         new LogtoClientError('not_authenticated')
       );
     });
@@ -385,7 +387,7 @@ describe('LogtoClient', () => {
           idToken: 'id_token_value',
         })
       );
-      const idTokenClaims = logtoClient.getIdTokenClaims();
+      const idTokenClaims = await logtoClient.getIdTokenClaims();
 
       expect(idTokenClaims).toEqual({
         iss: 'issuer_value',
@@ -453,7 +455,7 @@ describe('LogtoClient', () => {
       const callbackUri = `${redirectUri}?code=${code}&state=${mockedState}&codeVerifier=${mockedCodeVerifier}`;
       await logtoClient.handleSignInCallback(callbackUri);
 
-      storage.removeItem('refreshToken');
+      await storage.removeItem('refreshToken');
       const anotherClient = createClient(undefined, storage, true);
 
       await expect(anotherClient.getAccessToken()).resolves.not.toThrow();

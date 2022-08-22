@@ -23,7 +23,7 @@ type Logto = {
   isLoading: Readonly<Ref<boolean>>;
   error: Readonly<Ref<Error | undefined>>;
   getAccessToken: (resource?: string) => Promise<string | undefined>;
-  getIdTokenClaims: () => IdTokenClaims | undefined;
+  getIdTokenClaims: () => Promise<IdTokenClaims | undefined>;
   signIn: (redirectUri: string) => Promise<void>;
   signOut: (postLogoutRedirectUri?: string) => Promise<void>;
 };

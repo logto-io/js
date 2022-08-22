@@ -10,7 +10,7 @@ export class BrowserStorage implements Storage {
     this.storageKey = `${logtoStorageItemKeyPrefix}:${appId}`;
   }
 
-  getItem(key: StorageKey): Nullable<string> {
+  async getItem(key: StorageKey): Promise<Nullable<string>> {
     if (key === 'signInSession') {
       return sessionStorage.getItem(this.storageKey);
     }
@@ -18,7 +18,7 @@ export class BrowserStorage implements Storage {
     return localStorage.getItem(`${this.storageKey}:${key}`);
   }
 
-  setItem(key: StorageKey, value: string): void {
+  async setItem(key: StorageKey, value: string): Promise<void> {
     if (key === 'signInSession') {
       sessionStorage.setItem(this.storageKey, value);
 
@@ -27,7 +27,7 @@ export class BrowserStorage implements Storage {
     localStorage.setItem(`${this.storageKey}:${key}`, value);
   }
 
-  removeItem(key: StorageKey): void {
+  async removeItem(key: StorageKey): Promise<void> {
     if (key === 'signInSession') {
       sessionStorage.removeItem(this.storageKey);
 

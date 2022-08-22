@@ -7,43 +7,43 @@ describe('BrowserStorage', () => {
   });
 
   describe('Basic functions', () => {
-    it('should set and get item', () => {
+    it('should set and get item', async () => {
       const storage = new BrowserStorage('appId');
-      storage.setItem('idToken', 'value');
-      expect(storage.getItem('idToken')).toBe('value');
+      await storage.setItem('idToken', 'value');
+      await expect(storage.getItem('idToken')).resolves.toBe('value');
     });
 
-    it('should remove item', () => {
+    it('should remove item', async () => {
       const storage = new BrowserStorage('appId');
-      storage.setItem('idToken', 'value');
-      storage.removeItem('idToken');
-      expect(storage.getItem('idToken')).toBeNull();
+      await storage.setItem('idToken', 'value');
+      await storage.removeItem('idToken');
+      await expect(storage.getItem('idToken')).resolves.toBeNull();
     });
 
-    it('should set and get item (signInSession)', () => {
+    it('should set and get item (signInSession)', async () => {
       const storage = new BrowserStorage('appId');
-      storage.setItem('signInSession', 'value');
-      expect(storage.getItem('signInSession')).toBe('value');
+      await storage.setItem('signInSession', 'value');
+      await expect(storage.getItem('signInSession')).resolves.toBe('value');
     });
 
-    it('should remove item (signInSession)', () => {
+    it('should remove item (signInSession)', async () => {
       const storage = new BrowserStorage('appId');
-      storage.setItem('signInSession', 'value');
-      storage.removeItem('signInSession');
-      expect(storage.getItem('signInSession')).toBeNull();
+      await storage.setItem('signInSession', 'value');
+      await storage.removeItem('signInSession');
+      await expect(storage.getItem('signInSession')).resolves.toBeNull();
     });
   });
 
   describe('Real storage check', () => {
-    it('should set item to localStorage', () => {
+    it('should set item to localStorage', async () => {
       const storage = new BrowserStorage('appId');
-      storage.setItem('idToken', 'value');
+      await storage.setItem('idToken', 'value');
       expect(localStorage.getItem(`${logtoStorageItemKeyPrefix}:appId:idToken`)).toBe('value');
     });
 
-    it('should set item to sessionStorage', () => {
+    it('should set item to sessionStorage', async () => {
       const storage = new BrowserStorage('appId');
-      storage.setItem('signInSession', 'value');
+      await storage.setItem('signInSession', 'value');
       expect(sessionStorage.getItem(`${logtoStorageItemKeyPrefix}:appId`)).toBe('value');
     });
   });
