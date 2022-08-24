@@ -1,15 +1,25 @@
 /* eslint-disable @silverhand/fp/no-mutation */
 import { baseUrl, redirectUrl } from '../consts';
 
-// eslint-disable-next-line complexity
-const Home = (app, logtoClient) => {
+const Home = async (app, logtoClient) => {
   if (!logtoClient) {
     throw new Error('no logto client found');
   }
 
-  const { isAuthenticated } = logtoClient;
+  // eslint-disable-next-line @silverhand/fp/no-let
+  let isAuthenticated = false;
   const onClickSignIn = () => logtoClient.signIn(redirectUrl);
   const onClickSignOut = () => logtoClient.signOut(baseUrl);
+
+  (async () => {
+    isAuthenticated = await logtoClient.isAuthenticated();
+    renderButton(container, { isAuthenticated, onClickSignIn, onClickSignOut });
+
+    if (isAuthenticated) {
+      const idTokenClaims = await logtoClient.getIdTokenClaims();
+      renderTable(container, { idTokenClaims });
+    }
+  })();
 
   const fragment = document.createDocumentFragment();
 
@@ -19,44 +29,56 @@ const Home = (app, logtoClient) => {
   const h3 = document.createElement('h3');
   h3.innerHTML = 'Logto Browser Sample';
 
-  const button = document.createElement('button');
-  button.innerHTML = isAuthenticated ? 'Sign Out' : 'Sign In';
-  button.addEventListener('click', isAuthenticated ? onClickSignOut : onClickSignIn);
-
-  container.append(h3, button);
-
-  if (isAuthenticated) {
-    // Generate display table for ID token claims
-    const table = document.createElement('table');
-
-    const thead = document.createElement('thead');
-    const tr = document.createElement('tr');
-    const thName = document.createElement('th');
-    const thValue = document.createElement('th');
-    thName.innerHTML = 'Name';
-    thValue.innerHTML = 'Value';
-    tr.append(thName, thValue);
-    thead.append(tr);
-    table.append(thead);
-
-    const tbody = document.createElement('tbody');
-    const entries = Object.entries(logtoClient.getIdTokenClaims());
-    for (const [key, value] of entries) {
-      const tr = document.createElement('tr');
-      const tdName = document.createElement('td');
-      const tdValue = document.createElement('td');
-      tdName.innerHTML = key;
-      tdValue.innerHTML = value;
-      tr.append(tdName, tdValue);
-      tbody.append(tr);
-    }
-
-    table.append(tbody);
-    container.append(table);
-  }
+  container.append(h3);
+  renderButton(container, { isAuthenticated, onClickSignIn, onClickSignOut });
 
   fragment.append(container);
   app.append(fragment);
+};
+
+const renderButton = (container, states) => {
+  const { isAuthenticated, onClickSignIn, onClickSignOut } = states;
+
+  const rendered = document.querySelector('#button');
+  const button = rendered ?? document.createElement('button');
+  button.id = 'button';
+  button.innerHTML = isAuthenticated ? 'Sign Out' : 'Sign In';
+  button.addEventListener('click', isAuthenticated ? onClickSignOut : onClickSignIn);
+
+  if (!rendered) {
+    container.append(button);
+  }
+};
+
+const renderTable = (container, states) => {
+  const { idTokenClaims } = states;
+
+  // Generate display table for ID token claims
+  const table = document.createElement('table');
+
+  const thead = document.createElement('thead');
+  const tr = document.createElement('tr');
+  const thName = document.createElement('th');
+  const thValue = document.createElement('th');
+  thName.innerHTML = 'Name';
+  thValue.innerHTML = 'Value';
+  tr.append(thName, thValue);
+  thead.append(tr);
+  table.append(thead);
+
+  const tbody = document.createElement('tbody');
+  for (const [key, value] of Object.entries(idTokenClaims)) {
+    const tr = document.createElement('tr');
+    const tdName = document.createElement('td');
+    const tdValue = document.createElement('td');
+    tdName.innerHTML = key;
+    tdValue.innerHTML = value;
+    tr.append(tdName, tdValue);
+    tbody.append(tr);
+  }
+
+  table.append(tbody);
+  container.append(table);
 };
 
 export default Home;
