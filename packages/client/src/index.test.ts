@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Prompt } from '@logto/js';
 
 import LogtoClient, { LogtoClientError, LogtoSignInSessionItem } from '.';
@@ -20,6 +21,7 @@ import {
   refreshToken,
   idToken,
   tokenEndpoint,
+  userinfoEndpoint,
   postSignOutRedirectUri,
   revocationEndpoint,
   endSessionEndpoint,
@@ -461,4 +463,44 @@ describe('LogtoClient', () => {
       await expect(anotherClient.getAccessToken()).resolves.not.toThrow();
     });
   });
+
+  describe('fetchUserInfo', () => {
+    it('should throw if access token is empty', async () => {
+      const logtoClient = new LogtoClient(
+        { endpoint, appId },
+        {
+          ...createAdapters(),
+          requester,
+          storage: new MockedStorage(),
+        }
+      );
+
+      await expect(logtoClient.fetchUserInfo()).rejects.toMatchError(
+        new LogtoClientError('not_authenticated')
+      );
+    });
+
+    it('should return user information', async () => {
+      requester
+        .mockClear()
+        .mockImplementationOnce(async () => ({ accessToken: 'access_token_value' }))
+        .mockImplementationOnce(async () => ({ sub: 'subject_value' }));
+
+      const logtoClient = new LogtoClient(
+        { endpoint, appId },
+        {
+          ...createAdapters(),
+          requester,
+          storage: new MockedStorage({ idToken, refreshToken }),
+        }
+      );
+      const userInfo = await logtoClient.fetchUserInfo();
+
+      expect(requester).toHaveBeenCalledWith(userinfoEndpoint, {
+        headers: { Authorization: 'Bearer access_token_value' },
+      });
+      expect(userInfo).toEqual({ sub: 'subject_value' });
+    });
+  });
 });
+/* eslint-enable max-lines */

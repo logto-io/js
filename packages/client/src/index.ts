@@ -1,14 +1,17 @@
+/* eslint-disable max-lines */
 import {
   CodeTokenResponse,
   decodeIdToken,
   fetchOidcConfig,
   fetchTokenByAuthorizationCode,
   fetchTokenByRefreshToken,
+  fetchUserInfo,
   generateSignInUri,
   generateSignOutUri,
   IdTokenClaims,
   Prompt,
   revoke,
+  UserInfoResponse,
   verifyAndParseCodeFromCallbackUri,
   verifyIdToken,
   withReservedScopes,
@@ -29,7 +32,7 @@ import {
 } from './types';
 import { buildAccessTokenKey, getDiscoveryEndpoint } from './utils';
 
-export type { IdTokenClaims, LogtoErrorCode } from '@logto/js';
+export type { IdTokenClaims, LogtoErrorCode, UserInfoResponse } from '@logto/js';
 export { LogtoError, OidcError, Prompt, LogtoRequestError } from '@logto/js';
 export * from './errors';
 export type { Storage, StorageKey, ClientAdapter } from './adapter';
@@ -120,6 +123,17 @@ export default class LogtoClient {
     }
 
     return decodeIdToken(idToken);
+  }
+
+  async fetchUserInfo(): Promise<UserInfoResponse> {
+    const { userinfoEndpoint } = await this.getOidcConfig();
+    const accessToken = await this.getAccessToken();
+
+    if (!accessToken) {
+      throw new LogtoClientError('fetch_user_info_failed');
+    }
+
+    return fetchUserInfo(userinfoEndpoint, accessToken, this.adapter.requester);
   }
 
   async signIn(redirectUri: string) {
@@ -387,3 +401,4 @@ export default class LogtoClient {
     } catch {}
   }
 }
+/* eslint-enable max-lines */
