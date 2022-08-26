@@ -1,4 +1,4 @@
-import { useLogto, IdTokenClaims } from '@logto/react';
+import { useLogto, UserInfoResponse } from '@logto/react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -6,17 +6,17 @@ import { baseUrl, redirectUrl } from '../../consts';
 import * as styles from './index.module.scss';
 
 const Home = () => {
-  const { isAuthenticated, signIn, signOut, getIdTokenClaims } = useLogto();
-  const [idTokenClaims, setIdTokenClaims] = useState<IdTokenClaims>();
+  const { isAuthenticated, signIn, signOut, fetchUserInfo } = useLogto();
+  const [user, setUser] = useState<UserInfoResponse>();
 
   useEffect(() => {
     (async () => {
       if (isAuthenticated) {
-        const claims = await getIdTokenClaims();
-        setIdTokenClaims(claims);
+        const userInfo = await fetchUserInfo();
+        setUser(userInfo);
       }
     })();
-  }, [getIdTokenClaims, isAuthenticated]);
+  }, [setUser, fetchUserInfo, isAuthenticated]);
 
   return (
     <div className={styles.container}>
@@ -41,7 +41,7 @@ const Home = () => {
           Sign Out
         </button>
       )}
-      {isAuthenticated && idTokenClaims && (
+      {isAuthenticated && user && (
         <>
           <table className={styles.table}>
             <thead>
@@ -51,10 +51,10 @@ const Home = () => {
               </tr>
             </thead>
             <tbody>
-              {Object.entries(idTokenClaims).map(([key, value]) => (
+              {Object.entries(user).map(([key, value]) => (
                 <tr key={key}>
                   <td>{key}</td>
-                  <td>{value}</td>
+                  <td>{typeof value === 'string' ? value : JSON.stringify(value)}</td>
                 </tr>
               ))}
             </tbody>

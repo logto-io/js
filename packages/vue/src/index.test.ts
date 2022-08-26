@@ -86,8 +86,16 @@ describe('useLogto', () => {
   });
 
   test('should inject Logto context data', () => {
-    const { isAuthenticated, isLoading, error, signIn, signOut, getAccessToken, getIdTokenClaims } =
-      useLogto();
+    const {
+      isAuthenticated,
+      isLoading,
+      error,
+      signIn,
+      signOut,
+      getAccessToken,
+      getIdTokenClaims,
+      fetchUserInfo,
+    } = useLogto();
 
     expect(isAuthenticated.value).toBe(false);
     expect(isLoading.value).toBe(false);
@@ -96,6 +104,7 @@ describe('useLogto', () => {
     expect(signOut).toBeInstanceOf(Function);
     expect(getAccessToken).toBeInstanceOf(Function);
     expect(getIdTokenClaims).toBeInstanceOf(Function);
+    expect(fetchUserInfo).toBeInstanceOf(Function);
   });
 
   test('should return error when getAccessToken fails', async () => {

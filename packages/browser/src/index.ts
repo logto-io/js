@@ -8,6 +8,7 @@ export type {
   LogtoErrorCode,
   LogtoConfig,
   LogtoClientErrorCode,
+  UserInfoResponse,
 } from '@logto/client';
 export { LogtoError, OidcError, Prompt, LogtoRequestError, LogtoClientError } from '@logto/client';
 

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { useLogto, type IdTokenClaims } from "@logto/vue";
+import { useLogto, type UserInfoResponse } from "@logto/vue";
 import { RouterLink } from "vue-router";
 import { ref, watchEffect } from "vue";
 import { baseUrl, redirectUrl } from "../consts";
 
-const { isAuthenticated, getIdTokenClaims, signIn, signOut } = useLogto();
-const idTokenClaims = ref<IdTokenClaims>();
+const { isAuthenticated, fetchUserInfo, signIn, signOut } = useLogto();
+const user = ref<UserInfoResponse>();
 
 const onClickSignIn = () => {
   void signIn(redirectUrl);
@@ -17,8 +17,8 @@ const onClickSignOut = () => {
 
 watchEffect(async () => {
   if (isAuthenticated.value) {
-    const claims = await getIdTokenClaims();
-    idTokenClaims.value = claims;
+    const userInfo = await fetchUserInfo();
+    user.value = userInfo;
   }
 });
 </script>
@@ -28,7 +28,7 @@ watchEffect(async () => {
     <h3>Logto Vue Sample</h3>
     <button v-if="!isAuthenticated" @click="onClickSignIn">Sign In</button>
     <button v-else @click="onClickSignOut">Sign Out</button>
-    <div v-if="isAuthenticated && idTokenClaims">
+    <div v-if="isAuthenticated && user">
       <table class="table">
         <thead>
           <tr>
@@ -37,9 +37,11 @@ watchEffect(async () => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(value, key) in idTokenClaims" v-bind:key="key">
+          <tr v-for="(value, key) in user" v-bind:key="key">
             <td>{{ key }}</td>
-            <td>{{ value }}</td>
+            <td>
+              {{ typeof value === "string" ? value : JSON.stringify(value) }}
+            </td>
           </tr>
         </tbody>
       </table>

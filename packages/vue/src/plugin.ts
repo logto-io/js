@@ -37,6 +37,22 @@ export const createPluginMethods = (context: Context) => {
     }
   };
 
+  const fetchUserInfo = async () => {
+    if (!logtoClient.value) {
+      return throwContextError();
+    }
+
+    try {
+      setLoading(true);
+
+      return await logtoClient.value.fetchUserInfo();
+    } catch (error: unknown) {
+      setError(error, 'Unexpected error occurred while fetching user info.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const getAccessToken = async (resource?: string) => {
     if (!logtoClient.value) {
       return throwContextError();
@@ -85,6 +101,7 @@ export const createPluginMethods = (context: Context) => {
   return {
     signIn,
     signOut,
+    fetchUserInfo,
     getAccessToken,
     getIdTokenClaims,
     handleSignInCallback,

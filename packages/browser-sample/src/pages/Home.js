@@ -16,8 +16,8 @@ const Home = async (app, logtoClient) => {
     renderButton(container, { isAuthenticated, onClickSignIn, onClickSignOut });
 
     if (isAuthenticated) {
-      const idTokenClaims = await logtoClient.getIdTokenClaims();
-      renderTable(container, { idTokenClaims });
+      const userInfo = await logtoClient.fetchUserInfo();
+      renderTable(container, { userInfo });
     }
   })();
 
@@ -51,7 +51,7 @@ const renderButton = (container, states) => {
 };
 
 const renderTable = (container, states) => {
-  const { idTokenClaims } = states;
+  const { userInfo } = states;
 
   // Generate display table for ID token claims
   const table = document.createElement('table');
@@ -67,12 +67,12 @@ const renderTable = (container, states) => {
   table.append(thead);
 
   const tbody = document.createElement('tbody');
-  for (const [key, value] of Object.entries(idTokenClaims)) {
+  for (const [key, value] of Object.entries(userInfo)) {
     const tr = document.createElement('tr');
     const tdName = document.createElement('td');
     const tdValue = document.createElement('td');
     tdName.innerHTML = key;
-    tdValue.innerHTML = value;
+    tdValue.innerHTML = typeof value === 'string' ? value : JSON.stringify(value);
     tr.append(tdName, tdValue);
     tbody.append(tr);
   }
