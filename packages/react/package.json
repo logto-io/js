@@ -39,7 +39,7 @@
     "@parcel/transformer-typescript-types": "^2.6.2",
     "@silverhand/eslint-config": "^0.17.0",
     "@silverhand/eslint-config-react": "^0.17.0",
-    "@silverhand/ts-config": "^0.17.0",
+    "@silverhand/ts-config": "^1.0.0",
     "@silverhand/ts-config-react": "^0.17.0",
     "@testing-library/react-hooks": "^8.0.0",
     "@types/jest": "^27.4.1",
