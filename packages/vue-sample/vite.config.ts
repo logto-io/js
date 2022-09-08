@@ -19,4 +19,7 @@ export default defineConfig({
       include: [/vue/, /node_modules/],
     },
   },
+  server: {
+    port: 3000,
+  },
 });
