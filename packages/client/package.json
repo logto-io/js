@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@logto/js": "^1.0.0-beta.2",
-    "@silverhand/essentials": "^1.1.6",
+    "@silverhand/essentials": "^1.2.0",
     "camelcase-keys": "^7.0.1",
     "jose": "^4.3.8",
     "lodash.get": "^4.4.2",
@@ -42,23 +42,23 @@
     "@parcel/core": "^2.6.2",
     "@parcel/packager-ts": "^2.6.2",
     "@parcel/transformer-typescript-types": "^2.6.2",
-    "@silverhand/eslint-config": "^0.17.0",
-    "@silverhand/ts-config": "^0.17.0",
+    "@silverhand/eslint-config": "^1.0.0",
+    "@silverhand/ts-config": "^1.0.0",
     "@types/jest": "^27.4.1",
     "@types/lodash.get": "^4.4.6",
     "@types/lodash.once": "^4.1.7",
     "@types/node": "^17.0.19",
-    "eslint": "^8.9.0",
+    "eslint": "^8.23.0",
     "jest": "^27.5.1",
     "jest-matcher-specific-error": "^1.0.0",
     "lint-staged": "^13.0.0",
     "nock": "^13.1.3",
     "parcel": "^2.6.2",
-    "prettier": "^2.3.2",
+    "prettier": "^2.7.1",
     "text-encoder": "^0.0.4",
     "ts-jest": "^27.0.4",
     "type-fest": "^2.10.0",
-    "typescript": "^4.5.5"
+    "typescript": "^4.8.2"
   },
   "eslintConfig": {
     "extends": "@silverhand"

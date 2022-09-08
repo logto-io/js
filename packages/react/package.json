@@ -30,30 +30,30 @@
   },
   "dependencies": {
     "@logto/browser": "^1.0.0-beta.3",
-    "@silverhand/essentials": "^1.1.6"
+    "@silverhand/essentials": "^1.2.0"
   },
   "devDependencies": {
     "@jest/types": "^27.5.1",
     "@parcel/core": "^2.6.2",
     "@parcel/packager-ts": "^2.6.2",
     "@parcel/transformer-typescript-types": "^2.6.2",
-    "@silverhand/eslint-config": "^0.17.0",
-    "@silverhand/eslint-config-react": "^0.17.0",
-    "@silverhand/ts-config": "^0.17.0",
-    "@silverhand/ts-config-react": "^0.17.0",
+    "@silverhand/eslint-config": "^1.0.0",
+    "@silverhand/eslint-config-react": "^1.0.0",
+    "@silverhand/ts-config": "^1.0.0",
+    "@silverhand/ts-config-react": "^1.0.0",
     "@testing-library/react-hooks": "^8.0.0",
     "@types/jest": "^27.4.1",
     "@types/react": "^17.0.39",
-    "eslint": "^8.9.0",
+    "eslint": "^8.23.0",
     "jest": "^27.5.1",
     "lint-staged": "^13.0.0",
     "parcel": "^2.6.2",
     "postcss": "^8.4.6",
-    "prettier": "^2.5.1",
+    "prettier": "^2.7.1",
     "react": "^17.0.2",
-    "stylelint": "^14.8.2",
+    "stylelint": "^14.11.0",
     "ts-jest": "^27.0.4",
-    "typescript": "^4.6.2"
+    "typescript": "^4.8.2"
   },
   "peerDependencies": {
     "react": ">=16.8.0"
