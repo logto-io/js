@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import LogtoClient from '@logto/browser';
 import { App, readonly } from 'vue';
 
@@ -8,7 +9,7 @@ import { createPluginMethods } from './plugin';
 
 const isAuthenticated = jest.fn(async () => false);
 const isSignInRedirected = jest.fn(() => false);
-const handleSignInCallback = jest.fn(async () => Promise.resolve());
+const handleSignInCallback = jest.fn(async () => {});
 const getAccessToken = jest.fn(() => {
   throw new Error('not authenticated');
 });
@@ -23,8 +24,8 @@ jest.mock('@logto/browser', () => {
       isSignInRedirected,
       handleSignInCallback,
       getAccessToken,
-      signIn: jest.fn(async () => Promise.resolve()),
-      signOut: jest.fn(async () => Promise.resolve()),
+      signIn: jest.fn(async () => {}),
+      signOut: jest.fn(async () => {}),
     };
   });
 });
@@ -150,3 +151,4 @@ describe('useHandleSignInCallback', () => {
     expect(handleSignInCallback).toHaveBeenCalledTimes(1);
   });
 });
+/* eslint-enable @typescript-eslint/no-empty-function */
