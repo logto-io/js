@@ -25,7 +25,7 @@ export const createContext = (client: LogtoClient): Context => {
     reactive<LogtoContextProperties>({
       logtoClient: client,
       isAuthenticated: false,
-      loadingCount: 0,
+      loadingCount: 1,
       error: undefined,
     })
   );
@@ -61,6 +61,7 @@ export const createContext = (client: LogtoClient): Context => {
     const isAuthenticated = await client.isAuthenticated();
 
     setIsAuthenticated(isAuthenticated);
+    setLoading(false);
   });
 
   return { ...context, isLoading, setError, setLoading, setIsAuthenticated };

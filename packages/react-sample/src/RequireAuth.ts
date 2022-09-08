@@ -4,13 +4,13 @@ import { useEffect } from 'react';
 import { redirectUrl } from './consts';
 
 const RequireAuth = ({ children }: { children: JSX.Element }) => {
-  const { isAuthenticated, signIn } = useLogto();
+  const { isAuthenticated, isLoading, signIn } = useLogto();
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated && !isLoading) {
       void signIn(redirectUrl);
     }
-  }, [isAuthenticated, signIn]);
+  }, [isAuthenticated, isLoading, signIn]);
 
   return isAuthenticated ? children : null;
 };
