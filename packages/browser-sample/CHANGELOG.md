@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.4](https://github.com/logto-io/js/compare/v1.0.0-beta.3...v1.0.0-beta.4) (2022-09-09)
+
+
+### Bug Fixes
+
+* **browser-sample:** make sign-in work again ([#389](https://github.com/logto-io/js/issues/389)) ([9201291](https://github.com/logto-io/js/commit/9201291cd06e539dec94c4923d83086656d5e7d8))
+
+
+
 ## [1.0.0-beta.3](https://github.com/logto-io/js/compare/v1.0.0-beta.2...v1.0.0-beta.3) (2022-08-22)
 
 **Note:** Version bump only for package @logto/browser-sample

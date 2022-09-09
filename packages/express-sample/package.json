@@ -1,6 +1,6 @@
 {
   "name": "@logto/express-sample",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.4",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -11,7 +11,7 @@
     "lint": "eslint --ext .ts src"
   },
   "dependencies": {
-    "@logto/express": "^1.0.0-beta.3",
+    "@logto/express": "^1.0.0-beta.4",
     "cookie-parser": "^1.4.6",
     "express": "^4.18.1",
     "express-session": "^1.17.3"
