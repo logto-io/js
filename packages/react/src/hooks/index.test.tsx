@@ -7,7 +7,7 @@ import { LogtoProvider } from '../provider';
 
 const isAuthenticated = jest.fn(() => false);
 const isSignInRedirected = jest.fn(() => false);
-const handleSignInCallback = jest.fn(async () => Promise.resolve());
+const handleSignInCallback = jest.fn().mockResolvedValue(undefined);
 const getAccessToken = jest.fn(() => {
   throw new Error('not authenticated');
 });
@@ -19,8 +19,8 @@ jest.mock('@logto/browser', () => {
       isSignInRedirected,
       handleSignInCallback,
       getAccessToken,
-      signIn: jest.fn(async () => Promise.resolve()),
-      signOut: jest.fn(async () => Promise.resolve()),
+      signIn: jest.fn().mockResolvedValue(undefined),
+      signOut: jest.fn().mockResolvedValue(undefined),
     };
   });
 });
