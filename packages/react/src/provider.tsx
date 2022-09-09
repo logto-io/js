@@ -9,7 +9,7 @@ export type LogtoProviderProps = {
 };
 
 export const LogtoProvider = ({ config, children }: LogtoProviderProps) => {
-  const [loadingCount, setLoadingCount] = useState(0);
+  const [loadingCount, setLoadingCount] = useState(1);
   const memorizedLogtoClient = useMemo(() => ({ logtoClient: new LogtoClient(config) }), [config]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState<Error>();
@@ -19,6 +19,7 @@ export const LogtoProvider = ({ config, children }: LogtoProviderProps) => {
       const isAuthenticated = await memorizedLogtoClient.logtoClient.isAuthenticated();
 
       setIsAuthenticated(isAuthenticated);
+      setLoadingCount((count) => Math.max(0, count - 1));
     })();
   }, [memorizedLogtoClient]);
 
