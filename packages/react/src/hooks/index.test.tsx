@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import LogtoClient from '@logto/browser';
 import { renderHook, act } from '@testing-library/react-hooks';
 import { ComponentType } from 'react';
@@ -8,7 +7,7 @@ import { LogtoProvider } from '../provider';
 
 const isAuthenticated = jest.fn(() => false);
 const isSignInRedirected = jest.fn(() => false);
-const handleSignInCallback = jest.fn(async () => 0);
+const handleSignInCallback = jest.fn().mockResolvedValue(undefined);
 const getAccessToken = jest.fn(() => {
   throw new Error('not authenticated');
 });
@@ -20,8 +19,8 @@ jest.mock('@logto/browser', () => {
       isSignInRedirected,
       handleSignInCallback,
       getAccessToken,
-      signIn: jest.fn(async () => {}),
-      signOut: jest.fn(async () => {}),
+      signIn: jest.fn().mockResolvedValue(undefined),
+      signOut: jest.fn().mockResolvedValue(undefined),
     };
   });
 });
@@ -111,4 +110,3 @@ describe('useLogto', () => {
     });
   });
 });
-/* eslint-enable @typescript-eslint/no-empty-function */
