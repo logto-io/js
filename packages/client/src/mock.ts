@@ -37,6 +37,7 @@ export class MockedStorage implements Storage {
 }
 
 export const authorizationEndpoint = `${endpoint}/oidc/auth`;
+export const userinfoEndpoint = `${endpoint}/oidc/me`;
 export const tokenEndpoint = `${endpoint}/oidc/token`;
 export const endSessionEndpoint = `${endpoint}/oidc/session/end`;
 export const revocationEndpoint = `${endpoint}/oidc/token/revocation`;
@@ -79,6 +80,7 @@ export const fetchOidcConfig = jest.fn(async () => {
   return {
     authorizationEndpoint,
     tokenEndpoint,
+    userinfoEndpoint,
     endSessionEndpoint,
     revocationEndpoint,
     jwksUri,
