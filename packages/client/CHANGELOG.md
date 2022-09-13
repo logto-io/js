@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.5](https://github.com/logto-io/js/compare/v1.0.0-beta.4...v1.0.0-beta.5) (2022-09-13)
+
+
+### Features
+
+* **js,client:** enable user endpoint in js core and client sdks ([abd2842](https://github.com/logto-io/js/commit/abd28427f36594d9fa90a9c4aa27b526d9150d5a))
+
+
+
 ## [1.0.0-beta.4](https://github.com/logto-io/js/compare/v1.0.0-beta.3...v1.0.0-beta.4) (2022-09-09)
 
 **Note:** Version bump only for package @logto/client
