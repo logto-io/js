@@ -114,8 +114,6 @@ const useLogto = (): Logto => {
         await logtoClient.signIn(redirectUri);
       } catch (error: unknown) {
         handleError(error, 'Unexpected error occurred while signing in.');
-      } finally {
-        setLoadingState(false);
       }
     },
     [logtoClient, setLoadingState, handleError]

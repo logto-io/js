@@ -14,8 +14,6 @@ export const createPluginMethods = (context: Context) => {
       await logtoClient.value.signIn(redirectUri);
     } catch (error: unknown) {
       setError(error, 'Unexpected error occurred while signing in.');
-    } finally {
-      setLoading(false);
     }
   };
 
