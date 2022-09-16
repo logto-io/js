@@ -1,4 +1,4 @@
-import { UrlSafeBase64 } from '@silverhand/essentials';
+import { urlSafeBase64 } from '@silverhand/essentials';
 import { toUint8Array } from 'js-base64';
 
 import { generateCodeChallenge, generateCodeVerifier, generateState } from './generators';
@@ -12,7 +12,7 @@ describe('generateState', () => {
 
   test('should be url-safe', () => {
     const state = generateState();
-    expect(UrlSafeBase64.isSafe(state)).toBeTruthy();
+    expect(urlSafeBase64.isSafe(state)).toBeTruthy();
   });
 
   test('raw random data length should be length 64', () => {
@@ -30,7 +30,7 @@ describe('generateCodeVerifier', () => {
 
   test('should be url-safe', () => {
     const codeVerifier = generateCodeVerifier();
-    expect(UrlSafeBase64.isSafe(codeVerifier)).toBeTruthy();
+    expect(urlSafeBase64.isSafe(codeVerifier)).toBeTruthy();
   });
 
   test('raw random data length should be length 64', () => {

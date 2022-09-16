@@ -26,7 +26,7 @@ importers:
       '@parcel/packager-ts': ^2.7.0
       '@parcel/transformer-typescript-types': ^2.7.0
       '@silverhand/eslint-config': ^1.0.0
-      '@silverhand/essentials': ^1.2.0
+      '@silverhand/essentials': ^1.2.1
       '@silverhand/ts-config': ^1.0.0
       '@types/jest': ^27.4.0
       eslint: ^8.23.0
@@ -43,7 +43,7 @@ importers:
       typescript: 4.7.4
     dependencies:
       '@logto/client': link:../client
-      '@silverhand/essentials': 1.2.0
+      '@silverhand/essentials': 1.2.1
       js-base64: 3.7.2
     devDependencies:
       '@jest/types': 27.5.1
@@ -106,7 +106,7 @@ importers:
       '@parcel/packager-ts': ^2.7.0
       '@parcel/transformer-typescript-types': ^2.7.0
       '@silverhand/eslint-config': ^1.0.0
-      '@silverhand/essentials': ^1.2.0
+      '@silverhand/essentials': ^1.2.1
       '@silverhand/ts-config': ^1.0.0
       '@types/jest': ^27.4.1
       '@types/lodash.get': ^4.4.6
@@ -130,7 +130,7 @@ importers:
       typescript: 4.7.4
     dependencies:
       '@logto/js': link:../js
-      '@silverhand/essentials': 1.2.0
+      '@silverhand/essentials': 1.2.1
       camelcase-keys: 7.0.2
       jose: 4.5.1
       lodash.get: 4.4.2
@@ -262,7 +262,7 @@ importers:
       '@parcel/packager-ts': ^2.7.0
       '@parcel/transformer-typescript-types': ^2.7.0
       '@silverhand/eslint-config': ^1.0.0
-      '@silverhand/essentials': ^1.2.0
+      '@silverhand/essentials': ^1.2.1
       '@silverhand/ts-config': ^1.0.0
       '@types/jest': ^27.4.1
       '@types/lodash.get': ^4.4.6
@@ -283,7 +283,7 @@ importers:
       type-fest: ^2.10.0
       typescript: 4.7.4
     dependencies:
-      '@silverhand/essentials': 1.2.0
+      '@silverhand/essentials': 1.2.1
       camelcase-keys: 7.0.2
       jose: 4.5.1
       lodash.get: 4.4.2
@@ -412,7 +412,7 @@ importers:
       '@parcel/packager-ts': ^2.7.0
       '@parcel/transformer-typescript-types': ^2.7.0
       '@silverhand/eslint-config': ^1.0.0
-      '@silverhand/essentials': ^1.2.0
+      '@silverhand/essentials': ^1.2.1
       '@silverhand/ts-config': ^1.0.0
       '@types/jest': ^27.4.0
       eslint: ^8.23.0
@@ -428,7 +428,7 @@ importers:
       typescript: 4.7.4
     dependencies:
       '@logto/client': link:../client
-      '@silverhand/essentials': 1.2.0
+      '@silverhand/essentials': 1.2.1
       js-base64: 3.7.2
       node-fetch: 2.6.7
     devDependencies:
@@ -458,7 +458,7 @@ importers:
       '@parcel/transformer-typescript-types': ^2.7.0
       '@silverhand/eslint-config': ^1.0.0
       '@silverhand/eslint-config-react': ^1.0.0
-      '@silverhand/essentials': ^1.2.0
+      '@silverhand/essentials': ^1.2.1
       '@silverhand/ts-config': ^1.0.0
       '@silverhand/ts-config-react': ^1.0.0
       '@testing-library/react-hooks': ^8.0.0
@@ -476,7 +476,7 @@ importers:
       typescript: 4.7.4
     dependencies:
       '@logto/browser': link:../browser
-      '@silverhand/essentials': 1.2.0
+      '@silverhand/essentials': 1.2.1
     devDependencies:
       '@jest/types': 27.5.1
       '@parcel/core': 2.7.0
@@ -3687,8 +3687,8 @@ packages:
       lodash: 4.17.21
     dev: true
 
-  /@silverhand/essentials/1.2.0:
-    resolution: {integrity: sha512-AEkWX0667febPV4wTjGbM8wIKWCnJqlXSLXUTaVRdQJmuc87WGbjP7WTPn6tJ8o9cb5i4LpYTIE3ptz90nRvCg==}
+  /@silverhand/essentials/1.2.1:
+    resolution: {integrity: sha512-4wOM/yYEbcDH6Nwv/PdPjH+kbw8ixqGGVpD+CaWf+ay8+fYtmdNnr5aheqBwLV1ipHAjpXoh9x6Bqm9x68bGfA==}
     engines: {node: '>=14.15.0', pnpm: '>=6'}
     dependencies:
       lodash.orderby: 4.6.0

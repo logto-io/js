@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@logto/js": "^1.0.0-beta.5",
-    "@silverhand/essentials": "^1.2.0",
+    "@silverhand/essentials": "^1.2.1",
     "camelcase-keys": "^7.0.1",
     "jose": "^4.3.8",
     "lodash.get": "^4.4.2",

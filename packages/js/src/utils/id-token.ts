@@ -1,4 +1,4 @@
-import { UrlSafeBase64 } from '@silverhand/essentials';
+import { urlSafeBase64 } from '@silverhand/essentials';
 import { jwtVerify, JWTVerifyGetKey } from 'jose';
 import * as s from 'superstruct';
 
@@ -44,7 +44,7 @@ export const decodeIdToken = (token: string): IdTokenClaims => {
     throw new LogtoError('id_token.invalid_token');
   }
 
-  const json = UrlSafeBase64.decode(encodedPayload);
+  const json = urlSafeBase64.decode(encodedPayload);
   const idTokenClaims: unknown = JSON.parse(json);
   s.assert(idTokenClaims, IdTokenClaimsSchema);
 
