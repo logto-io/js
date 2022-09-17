@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.6](https://github.com/logto-io/js/compare/v1.0.0-beta.5...v1.0.0-beta.6) (2022-09-17)
+
+
+### Features
+
+* **browser,react,vue:** enable userinfo endpoint ([cae6eff](https://github.com/logto-io/js/commit/cae6effd1b75b31627b896e210f6acda46faedeb))
+
+
+
 ## [1.0.0-beta.5](https://github.com/logto-io/js/compare/v1.0.0-beta.4...v1.0.0-beta.5) (2022-09-13)
 
 **Note:** Version bump only for package @logto/vue-sample
