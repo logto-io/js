@@ -29,18 +29,12 @@ const createNodeClient = (
 
   const storage = new ExpressStorage(request);
 
-  return new NodeClient(
-    {
-      ...config,
-      persistAccessToken: config.persistAccessToken ?? true,
+  return new NodeClient(config, {
+    storage,
+    navigate: (url) => {
+      response.redirect(url);
     },
-    {
-      storage,
-      navigate: (url) => {
-        response.redirect(url);
-      },
-    }
-  );
+  });
 };
 
 export const handleAuthRoutes = (config: LogtoExpressConfig): Router => {

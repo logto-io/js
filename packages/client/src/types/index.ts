@@ -8,7 +8,6 @@ export type LogtoConfig = {
   scopes?: string[];
   resources?: string[];
   prompt?: Prompt;
-  persistAccessToken?: boolean;
 };
 
 export const AccessTokenSchema = type({
