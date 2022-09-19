@@ -18,7 +18,11 @@ const IdTokenClaimsSchema = s.type({
   at_hash: s.nullable(s.optional(s.string())),
   name: s.nullable(s.optional(s.string())),
   username: s.nullable(s.optional(s.string())),
-  avatar: s.nullable(s.optional(s.string())),
+  picture: s.nullable(s.optional(s.string())),
+  email: s.nullable(s.optional(s.string())),
+  email_verified: s.nullable(s.optional(s.boolean())),
+  phone_number: s.nullable(s.optional(s.string())),
+  phone_number_verified: s.nullable(s.optional(s.boolean())),
   role_names: s.nullable(s.optional(s.array(s.string()))),
 });
 

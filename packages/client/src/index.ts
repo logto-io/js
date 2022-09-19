@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+import { ReservedScope } from '@logto/core-kit';
 import {
   CodeTokenResponse,
   decodeIdToken,
@@ -14,7 +15,7 @@ import {
   UserInfoResponse,
   verifyAndParseCodeFromCallbackUri,
   verifyIdToken,
-  withReservedScopes,
+  withDefaultScopes,
 } from '@logto/js';
 import { Nullable } from '@silverhand/essentials';
 import { createRemoteJWKSet } from 'jose';
@@ -38,6 +39,7 @@ export * from './errors';
 export type { Storage, StorageKey, ClientAdapter } from './adapter';
 export { createRequester } from './utils';
 export * from './types';
+export { ReservedScope, UserScope } from '@logto/core-kit';
 
 export default class LogtoClient {
   protected readonly logtoConfig: LogtoConfig;
@@ -52,7 +54,7 @@ export default class LogtoClient {
     this.logtoConfig = {
       ...logtoConfig,
       prompt: logtoConfig.prompt ?? Prompt.Consent,
-      scopes: withReservedScopes(logtoConfig.scopes).split(' '),
+      scopes: withDefaultScopes(logtoConfig.scopes).split(' '),
     };
     this.adapter = adapter;
 
@@ -301,7 +303,7 @@ export default class LogtoClient {
             tokenEndpoint,
             refreshToken: currentRefreshToken,
             resource,
-            scopes: resource ? ['offline_access'] : undefined, // Force remove openid scope from the request
+            scopes: resource ? [ReservedScope.OfflineAccess] : undefined, // Force remove openid scope from the request
           },
           this.adapter.requester
         );

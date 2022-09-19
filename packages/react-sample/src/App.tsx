@@ -1,4 +1,4 @@
-import { LogtoProvider, LogtoConfig } from '@logto/react';
+import { LogtoProvider, LogtoConfig, UserScope } from '@logto/react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import RequireAuth from './RequireAuth';
@@ -13,6 +13,7 @@ export const App = () => {
   const config: LogtoConfig = {
     appId,
     endpoint,
+    scopes: [UserScope.Email, UserScope.Phone, UserScope.CustomData, UserScope.Identities],
   };
 
   return (
