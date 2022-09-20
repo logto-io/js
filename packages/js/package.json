@@ -33,8 +33,7 @@
     "@silverhand/essentials": "^1.2.1",
     "camelcase-keys": "^7.0.1",
     "jose": "^4.3.8",
-    "lodash.get": "^4.4.2",
-    "superstruct": "^0.16.0"
+    "lodash.get": "^4.4.2"
   },
   "devDependencies": {
     "@jest/types": "^27.5.1",

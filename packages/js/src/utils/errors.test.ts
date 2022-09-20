@@ -1,8 +1,8 @@
 import {
+  isLogtoRequestError,
   LogtoError,
   LogtoErrorCode,
   LogtoRequestError,
-  logtoRequestErrorSchema,
   OidcError,
 } from './errors';
 
@@ -32,17 +32,17 @@ describe('LogtoError', () => {
 const code = 'some code';
 const message = 'some message';
 
-describe('logtoRequestErrorSchema checks the error response from the server', () => {
+describe('isLogtoRequestError checks the error response from the server', () => {
   it('should be false when the error response is empty', () => {
-    expect(logtoRequestErrorSchema.is({})).toBeFalsy();
+    expect(isLogtoRequestError({})).toBeFalsy();
   });
 
   it('should be true when the error response contains the expected properties', () => {
-    expect(logtoRequestErrorSchema.is({ code, message })).toBeTruthy();
+    expect(isLogtoRequestError({ code, message })).toBeTruthy();
   });
 
   it('should be true when the error response contains more than the expected properties', () => {
-    expect(logtoRequestErrorSchema.is({ code, message, foo: 'bar' })).toBeTruthy();
+    expect(isLogtoRequestError({ code, message, foo: 'bar' })).toBeTruthy();
   });
 });
 

@@ -35,8 +35,7 @@
     "camelcase-keys": "^7.0.1",
     "jose": "^4.3.8",
     "lodash.get": "^4.4.2",
-    "lodash.once": "^4.1.1",
-    "superstruct": "^0.16.0"
+    "lodash.once": "^4.1.1"
   },
   "devDependencies": {
     "@jest/types": "^27.5.1",
