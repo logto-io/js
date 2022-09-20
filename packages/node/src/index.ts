@@ -14,7 +14,16 @@ export type {
   Storage,
   StorageKey,
 } from '@logto/client';
-export { LogtoError, OidcError, Prompt, LogtoRequestError, LogtoClientError } from '@logto/client';
+
+export {
+  LogtoError,
+  OidcError,
+  Prompt,
+  LogtoRequestError,
+  LogtoClientError,
+  ReservedScope,
+  UserScope,
+} from '@logto/client';
 
 export default class LogtoClient extends BaseClient {
   constructor(config: LogtoConfig, adapter: Pick<ClientAdapter, 'navigate' | 'storage'>) {

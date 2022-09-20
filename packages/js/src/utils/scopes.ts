@@ -1,9 +1,12 @@
+import { ReservedScope, UserScope } from '@logto/core-kit';
+
 /**
  * @param originalScopes
- * @return scopes should contain all reserved scopes ( Logto requires `openid` and `offline_access` )
+ * @return scopes should contain all default scopes (`openid`, `offline_access` and `profile`)
  */
-export const withReservedScopes = (originalScopes?: string[]): string => {
-  const uniqueScopes = new Set(['openid', 'offline_access', 'profile', ...(originalScopes ?? [])]);
+export const withDefaultScopes = (originalScopes?: string[]): string => {
+  const reservedScopes = Object.values(ReservedScope);
+  const uniqueScopes = new Set([...reservedScopes, UserScope.Profile, ...(originalScopes ?? [])]);
 
   return Array.from(uniqueScopes).join(' ');
 };

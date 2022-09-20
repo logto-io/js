@@ -1,39 +1,44 @@
-import { withReservedScopes } from './scopes';
+import { ReservedScope, UserScope } from '@logto/core-kit';
 
-const email = 'email';
-const name = 'name';
-const offlineAccess = 'offline_access';
-const openid = 'openid';
-const profile = 'profile';
-const reservedScopes = [openid, offlineAccess, profile];
-const reservedScopesString = reservedScopes.join(' ');
+import { withDefaultScopes } from './scopes';
+
+const offlineAccess = ReservedScope.OfflineAccess;
+const openid = ReservedScope.OpenId;
+const profile = UserScope.Profile;
+const email = UserScope.Email;
+const phone = UserScope.Phone;
+const defaultScopes = [openid, offlineAccess, profile];
+const defaultScopesString = defaultScopes.join(' ');
+const userScopes = Object.values(UserScope);
+const userScopesString = userScopes.join(' ');
+const reservedScopeString = Object.values(ReservedScope).join(' ');
 
 describe('withReservedScopes', () => {
   test('with undefined param', () => {
-    expect(withReservedScopes()).toEqual(reservedScopesString);
+    expect(withDefaultScopes()).toEqual(defaultScopesString);
   });
 
   test('with nothing', () => {
-    expect(withReservedScopes([])).toEqual(reservedScopesString);
+    expect(withDefaultScopes([])).toEqual(defaultScopesString);
   });
 
-  test('with all reserved scopes, openid and offline_access', () => {
-    expect(withReservedScopes([openid, offlineAccess])).toEqual(reservedScopesString);
+  test('with default scope "profile"', () => {
+    expect(withDefaultScopes([profile])).toEqual(defaultScopesString);
   });
 
-  test('with openid (without reserved offline_access)', () => {
-    expect(withReservedScopes([openid])).toEqual(reservedScopesString);
+  test('with all default scopes', () => {
+    expect(withDefaultScopes([openid, offlineAccess, profile])).toEqual(defaultScopesString);
   });
 
-  test('with openid name (without reserved offline_access)', () => {
-    expect(withReservedScopes([name, openid])).toEqual(`${reservedScopesString} ${name}`);
+  test('with "profile" and "email"', () => {
+    expect(withDefaultScopes([profile, email])).toEqual(`${defaultScopesString} ${email}`);
   });
 
-  test('with offline_access email (without reserved openid)', () => {
-    expect(withReservedScopes([email, offlineAccess])).toEqual(`${reservedScopesString} ${email}`);
+  test('with "email" and "phone"', () => {
+    expect(withDefaultScopes([email, phone])).toEqual(`${defaultScopesString} ${email} ${phone}`);
   });
 
-  test('with name email (without all reserved scopes)', () => {
-    expect(withReservedScopes([name, email])).toEqual(`${reservedScopesString} ${name} ${email}`);
+  test('with all user scopes', () => {
+    expect(withDefaultScopes(userScopes)).toEqual(`${reservedScopeString} ${userScopesString}`);
   });
 });

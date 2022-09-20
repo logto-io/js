@@ -13,7 +13,14 @@ export type {
   LogtoClientErrorCode,
 } from '@logto/browser';
 
-export { LogtoError, LogtoClientError, OidcError, Prompt } from '@logto/browser';
+export {
+  LogtoError,
+  LogtoClientError,
+  OidcError,
+  Prompt,
+  ReservedScope,
+  UserScope,
+} from '@logto/browser';
 
 type LogtoVuePlugin = {
   install: (app: App, config: LogtoConfig) => void;

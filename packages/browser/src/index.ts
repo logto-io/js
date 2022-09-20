@@ -10,7 +10,16 @@ export type {
   LogtoClientErrorCode,
   UserInfoResponse,
 } from '@logto/client';
-export { LogtoError, OidcError, Prompt, LogtoRequestError, LogtoClientError } from '@logto/client';
+
+export {
+  LogtoError,
+  OidcError,
+  Prompt,
+  LogtoRequestError,
+  LogtoClientError,
+  ReservedScope,
+  UserScope,
+} from '@logto/client';
 
 const navigate = (url: string) => {
   window.location.assign(url);

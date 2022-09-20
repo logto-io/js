@@ -7,6 +7,8 @@ import { GetServerSidePropsContext, GetServerSidePropsResult, NextApiHandler } f
 import NextStorage from './storage';
 import { LogtoNextConfig, WithLogtoConfig } from './types';
 
+export { ReservedScope, UserScope } from '@logto/node';
+
 export type { LogtoContext } from '@logto/node';
 
 export default class LogtoClient {
