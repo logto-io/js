@@ -1,6 +1,6 @@
 {
   "name": "@logto/client",
-  "version": "1.0.0-beta.6",
+  "version": "1.0.0-beta.7",
   "source": "./src/index.ts",
   "main": "./lib/index.js",
   "exports": {
@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@logto/core-kit": "1.0.0-beta.13",
-    "@logto/js": "^1.0.0-beta.6",
+    "@logto/js": "^1.0.0-beta.7",
     "@silverhand/essentials": "^1.2.1",
     "camelcase-keys": "^7.0.1",
     "jose": "^4.3.8",

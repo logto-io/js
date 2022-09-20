@@ -1,6 +1,6 @@
 {
   "name": "@logto/browser-sample",
-  "version": "1.0.0-beta.6",
+  "version": "1.0.0-beta.7",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -11,7 +11,7 @@
     "stylelint": "stylelint \"src/**/*.scss\""
   },
   "dependencies": {
-    "@logto/browser": "^1.0.0-beta.6"
+    "@logto/browser": "^1.0.0-beta.7"
   },
   "devDependencies": {
     "@parcel/core": "^2.7.0",

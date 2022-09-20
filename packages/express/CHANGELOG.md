@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.7](https://github.com/logto-io/js/compare/v1.0.0-beta.6...v1.0.0-beta.7) (2022-09-20)
+
+
+### Bug Fixes
+
+* remove persist access token ([#406](https://github.com/logto-io/js/issues/406)) ([f2ba84f](https://github.com/logto-io/js/commit/f2ba84f07e8486e2edf6f35e06446738ea0158e7))
+
+
+
 ## [1.0.0-beta.6](https://github.com/logto-io/js/compare/v1.0.0-beta.5...v1.0.0-beta.6) (2022-09-17)
 
 **Note:** Version bump only for package @logto/express
