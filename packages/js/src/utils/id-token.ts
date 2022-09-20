@@ -1,32 +1,86 @@
-import { urlSafeBase64 } from '@silverhand/essentials';
+import { Nullable, urlSafeBase64 } from '@silverhand/essentials';
 import { jwtVerify, JWTVerifyGetKey } from 'jose';
-import * as s from 'superstruct';
 
+import { isArbitraryObject } from './arbitrary-object';
 import { LogtoError } from './errors';
 
 const issuedAtTimeTolerance = 60;
 
+export type IdTokenClaims = {
+  iss: string;
+  sub: string;
+  aud: string;
+  exp: number;
+  iat: number;
+  at_hash?: Nullable<string>;
+  name?: Nullable<string>;
+  username?: Nullable<string>;
+  picture?: Nullable<string>;
+  email?: Nullable<string>;
+  email_verified?: boolean;
+  phone_number?: Nullable<string>;
+  phone_number_verified?: boolean;
+  role_names?: Nullable<string[]>;
+};
+
+/* eslint-disable complexity */
 /**
  * @link [ID Token](https://openid.net/specs/openid-connect-core-1_0.html#IDToken)
  */
-const IdTokenClaimsSchema = s.type({
-  iss: s.string(),
-  sub: s.string(),
-  aud: s.string(),
-  exp: s.number(),
-  iat: s.number(),
-  at_hash: s.nullable(s.optional(s.string())),
-  name: s.nullable(s.optional(s.string())),
-  username: s.nullable(s.optional(s.string())),
-  picture: s.nullable(s.optional(s.string())),
-  email: s.nullable(s.optional(s.string())),
-  email_verified: s.nullable(s.optional(s.boolean())),
-  phone_number: s.nullable(s.optional(s.string())),
-  phone_number_verified: s.nullable(s.optional(s.boolean())),
-  role_names: s.nullable(s.optional(s.array(s.string()))),
-});
+function assertIdTokenClaims(data: unknown): asserts data is IdTokenClaims {
+  if (!isArbitraryObject(data)) {
+    throw new TypeError('IdToken is expected to be an object');
+  }
 
-export type IdTokenClaims = s.Infer<typeof IdTokenClaimsSchema>;
+  for (const key of ['iss', 'sub', 'aud']) {
+    if (typeof data[key] !== 'string') {
+      throw new TypeError(`At path: IdToken.${key}: expected a string`);
+    }
+  }
+
+  for (const key of ['exp', 'iat']) {
+    if (typeof data[key] !== 'number') {
+      throw new TypeError(`At path: IdToken.${key}: expected a number`);
+    }
+  }
+
+  for (const key of ['at_hash', 'name', 'username', 'picture', 'email', 'phone_number']) {
+    if (data[key] === undefined) {
+      continue;
+    }
+
+    if (typeof data[key] !== 'string' && data[key] !== null) {
+      throw new TypeError(`At path: IdToken.${key}: expected null or a string`);
+    }
+  }
+
+  for (const key of ['email_verified', 'phone_number_verified']) {
+    if (data[key] === undefined) {
+      continue;
+    }
+
+    if (typeof data[key] !== 'boolean') {
+      throw new TypeError(`At path: IdToken.${key}: expected a boolean`);
+    }
+  }
+
+  if (
+    data.role_names !== undefined &&
+    data.role_names !== null &&
+    !Array.isArray(data.role_names)
+  ) {
+    throw new TypeError('At path: IdToken.role_names: expected null or an array of strings');
+  }
+
+  if (data.role_names) {
+    for (const [index, value] of data.role_names.entries()) {
+      if (typeof value !== 'string') {
+        throw new TypeError(`At path: IdToken.role_names[${index}]: expected a string`);
+      }
+    }
+  }
+}
+/* eslint-enable complexity */
 
 export const verifyIdToken = async (
   idToken: string,
@@ -50,7 +104,7 @@ export const decodeIdToken = (token: string): IdTokenClaims => {
 
   const json = urlSafeBase64.decode(encodedPayload);
   const idTokenClaims: unknown = JSON.parse(json);
-  s.assert(idTokenClaims, IdTokenClaimsSchema);
+  assertIdTokenClaims(idTokenClaims);
 
   return idTokenClaims;
 };

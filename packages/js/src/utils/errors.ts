@@ -1,6 +1,7 @@
 import { NormalizeKeyPaths } from '@silverhand/essentials';
 import get from 'lodash.get';
-import * as s from 'superstruct';
+
+import { isArbitraryObject } from './arbitrary-object';
 
 const logtoErrorCodes = Object.freeze({
   id_token: {
@@ -42,10 +43,13 @@ export class LogtoError extends Error {
   }
 }
 
-export const logtoRequestErrorSchema = s.type({
-  code: s.string(),
-  message: s.string(),
-});
+export const isLogtoRequestError = (data: unknown): data is { code: string; message: string } => {
+  if (!isArbitraryObject(data)) {
+    return false;
+  }
+
+  return typeof data.code === 'string' && typeof data.message === 'string';
+};
 
 export class LogtoRequestError extends Error {
   code: string;

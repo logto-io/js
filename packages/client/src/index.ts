@@ -20,16 +20,15 @@ import {
 import { Nullable } from '@silverhand/essentials';
 import { createRemoteJWKSet } from 'jose';
 import once from 'lodash.once';
-import { assert } from 'superstruct';
 
 import { ClientAdapter } from './adapter';
 import { LogtoClientError } from './errors';
 import {
   AccessToken,
-  LogtoAccessTokenMapSchema,
+  isLogtoAccessTokenMap,
+  isLogtoSignInSessionItem,
   LogtoConfig,
   LogtoSignInSessionItem,
-  LogtoSignInSessionItemSchema,
 } from './types';
 import { buildAccessTokenKey, getDiscoveryEndpoint } from './utils';
 
@@ -242,14 +241,13 @@ export default class LogtoClient {
       return null;
     }
 
-    try {
-      const item: unknown = JSON.parse(jsonItem);
-      assert(item, LogtoSignInSessionItemSchema);
+    const item: unknown = JSON.parse(jsonItem);
 
-      return item;
-    } catch (error: unknown) {
-      throw new LogtoClientError('sign_in_session.invalid', error);
+    if (!isLogtoSignInSessionItem(item)) {
+      throw new LogtoClientError('sign_in_session.invalid');
     }
+
+    return item;
   }
 
   protected async setSignInSession(logtoSignInSessionItem: Nullable<LogtoSignInSessionItem>) {
@@ -388,7 +386,10 @@ export default class LogtoClient {
 
     try {
       const json: unknown = JSON.parse(raw);
-      assert(json, LogtoAccessTokenMapSchema);
+
+      if (!isLogtoAccessTokenMap(json)) {
+        return;
+      }
       this.accessTokenMap.clear();
 
       for (const [key, accessToken] of Object.entries(json)) {

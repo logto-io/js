@@ -1,5 +1,4 @@
-import { Prompt } from '@logto/js';
-import { Infer, number, record, string, type } from 'superstruct';
+import { isArbitraryObject, Prompt } from '@logto/js';
 
 export type LogtoConfig = {
   endpoint: string;
@@ -10,20 +9,40 @@ export type LogtoConfig = {
   prompt?: Prompt;
 };
 
-export const AccessTokenSchema = type({
-  token: string(),
-  scope: string(),
-  expiresAt: number(),
-});
+export type AccessToken = {
+  token: string;
+  scope: string;
+  expiresAt: number;
+};
 
-export type AccessToken = Infer<typeof AccessTokenSchema>;
+export const isLogtoSignInSessionItem = (data: unknown): data is LogtoSignInSessionItem => {
+  if (!isArbitraryObject(data)) {
+    return false;
+  }
 
-export const LogtoSignInSessionItemSchema = type({
-  redirectUri: string(),
-  codeVerifier: string(),
-  state: string(),
-});
+  return ['redirectUri', 'codeVerifier', 'state'].every((key) => typeof data[key] === 'string');
+};
 
-export const LogtoAccessTokenMapSchema = record(string(), AccessTokenSchema);
+export const isLogtoAccessTokenMap = (data: unknown): data is Record<string, AccessToken> => {
+  if (!isArbitraryObject(data)) {
+    return false;
+  }
 
-export type LogtoSignInSessionItem = Infer<typeof LogtoSignInSessionItemSchema>;
+  return Object.values(data).every((value) => {
+    if (!isArbitraryObject(value)) {
+      return false;
+    }
+
+    return (
+      typeof value.token === 'string' &&
+      typeof value.scope === 'string' &&
+      typeof value.expiresAt === 'number'
+    );
+  });
+};
+
+export type LogtoSignInSessionItem = {
+  redirectUri: string;
+  codeVerifier: string;
+  state: string;
+};

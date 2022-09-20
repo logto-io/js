@@ -2,7 +2,6 @@ import { KeyObject } from 'crypto';
 
 import { createRemoteJWKSet, generateKeyPair, SignJWT } from 'jose';
 import nock from 'nock';
-import { StructError } from 'superstruct';
 
 import { LogtoError } from './errors';
 import { decodeIdToken, verifyIdToken } from './id-token';
@@ -244,7 +243,7 @@ describe('decodeIdToken', () => {
       .setExpirationTime(2000)
       .setIssuedAt(1000)
       .sign(privateKey);
-    expect(() => decodeIdToken(jwt)).toThrowError(StructError);
+    expect(() => decodeIdToken(jwt)).toThrowError(TypeError);
   });
 
   test('decoding valid JWT with non-predefined claims should return all claims', async () => {
@@ -275,7 +274,7 @@ describe('decodeIdToken', () => {
     );
   });
 
-  test('decoding valid JWT without issuer should throw StructError', async () => {
+  test('decoding valid JWT without issuer should throw TypeError', async () => {
     const { privateKey } = await generateKeyPair('RS256');
     const jwt = await new SignJWT({})
       .setProtectedHeader({ alg: 'RS256' })
@@ -284,10 +283,10 @@ describe('decodeIdToken', () => {
       .setExpirationTime('2h')
       .setIssuedAt()
       .sign(privateKey);
-    expect(() => decodeIdToken(jwt)).toThrowError(StructError);
+    expect(() => decodeIdToken(jwt)).toThrowError(TypeError);
   });
 
-  test('decoding valid JWT without subject should throw StructError', async () => {
+  test('decoding valid JWT without subject should throw TypeError', async () => {
     const { privateKey } = await generateKeyPair('RS256');
     const jwt = await new SignJWT({})
       .setProtectedHeader({ alg: 'RS256' })
@@ -296,10 +295,10 @@ describe('decodeIdToken', () => {
       .setExpirationTime('2h')
       .setIssuedAt()
       .sign(privateKey);
-    expect(() => decodeIdToken(jwt)).toThrowError(StructError);
+    expect(() => decodeIdToken(jwt)).toThrowError(TypeError);
   });
 
-  test('decoding valid JWT without audience should throw StructError', async () => {
+  test('decoding valid JWT without audience should throw TypeError', async () => {
     const { privateKey } = await generateKeyPair('RS256');
     const jwt = await new SignJWT({})
       .setProtectedHeader({ alg: 'RS256' })
@@ -308,10 +307,10 @@ describe('decodeIdToken', () => {
       .setExpirationTime('2h')
       .setIssuedAt()
       .sign(privateKey);
-    expect(() => decodeIdToken(jwt)).toThrowError(StructError);
+    expect(() => decodeIdToken(jwt)).toThrowError(TypeError);
   });
 
-  test('decoding valid JWT without expiration time should throw StructError', async () => {
+  test('decoding valid JWT without expiration time should throw TypeError', async () => {
     const { privateKey } = await generateKeyPair('RS256');
     const jwt = await new SignJWT({})
       .setProtectedHeader({ alg: 'RS256' })
@@ -320,10 +319,10 @@ describe('decodeIdToken', () => {
       .setAudience('qux')
       .setIssuedAt()
       .sign(privateKey);
-    expect(() => decodeIdToken(jwt)).toThrowError(StructError);
+    expect(() => decodeIdToken(jwt)).toThrowError(TypeError);
   });
 
-  test('decoding valid JWT without issued at time should throw StructError', async () => {
+  test('decoding valid JWT without issued at time should throw TypeError', async () => {
     const { privateKey } = await generateKeyPair('RS256');
     const jwt = await new SignJWT({})
       .setProtectedHeader({ alg: 'RS256' })
@@ -332,6 +331,6 @@ describe('decodeIdToken', () => {
       .setAudience('qux')
       .setExpirationTime('2h')
       .sign(privateKey);
-    expect(() => decodeIdToken(jwt)).toThrowError(StructError);
+    expect(() => decodeIdToken(jwt)).toThrowError(TypeError);
   });
 });

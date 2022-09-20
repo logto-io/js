@@ -1,4 +1,4 @@
-import { LogtoError, LogtoRequestError, logtoRequestErrorSchema, Requester } from '@logto/js';
+import { LogtoError, LogtoRequestError, isLogtoRequestError, Requester } from '@logto/js';
 
 export const createRequester = (fetchFunction: typeof fetch): Requester => {
   return async <T>(...args: Parameters<typeof fetch>): Promise<T> => {
@@ -7,7 +7,7 @@ export const createRequester = (fetchFunction: typeof fetch): Requester => {
     if (!response.ok) {
       const responseJson = await response.json();
 
-      if (!logtoRequestErrorSchema.is(responseJson)) {
+      if (!isLogtoRequestError(responseJson)) {
         throw new LogtoError('unexpected_response_error', responseJson);
       }
 

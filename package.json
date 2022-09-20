@@ -24,8 +24,5 @@
     "packages": [
       "packages/*"
     ]
-  },
-  "alias": {
-    "superstruct": "superstruct/lib/index.es.js"
   }
 }

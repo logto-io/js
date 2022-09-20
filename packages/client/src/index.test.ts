@@ -101,10 +101,7 @@ describe('LogtoClient', () => {
       });
 
       await expect(async () => signInSession.getSignInSessionItem()).rejects.toMatchError(
-        new LogtoClientError(
-          'sign_in_session.invalid',
-          new Error('At path: state -- Expected a string, but received: undefined')
-        )
+        new LogtoClientError('sign_in_session.invalid')
       );
     });
 
