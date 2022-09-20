@@ -56,9 +56,7 @@ export default class LogtoClient {
     };
     this.adapter = adapter;
 
-    if (this.logtoConfig.persistAccessToken) {
-      void this.loadAccessTokenMap();
-    }
+    void this.loadAccessTokenMap();
   }
 
   async isAuthenticated() {
@@ -369,10 +367,6 @@ export default class LogtoClient {
   }
 
   private async saveAccessTokenMap() {
-    if (!this.logtoConfig.persistAccessToken) {
-      return;
-    }
-
     const data: Record<string, AccessToken> = {};
 
     for (const [key, accessToken] of this.accessTokenMap.entries()) {

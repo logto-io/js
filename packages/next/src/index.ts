@@ -107,18 +107,12 @@ export default class LogtoClient {
   private createNodeClient(request: IncomingMessage) {
     this.storage = new NextStorage(request);
 
-    return new NodeClient(
-      {
-        ...this.config,
-        persistAccessToken: this.config.persistAccessToken ?? true,
+    return new NodeClient(this.config, {
+      storage: this.storage,
+      navigate: (url) => {
+        this.navigateUrl = url;
       },
-      {
-        storage: this.storage,
-        navigate: (url) => {
-          this.navigateUrl = url;
-        },
-      }
-    );
+    });
   }
 
   private get ironSessionConfigs() {

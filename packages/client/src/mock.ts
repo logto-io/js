@@ -104,13 +104,9 @@ export const createAdapters = () => ({
   generateState,
 });
 
-export const createClient = (
-  prompt?: Prompt,
-  storage = new MockedStorage(),
-  persistAccessToken?: boolean
-) =>
+export const createClient = (prompt?: Prompt, storage = new MockedStorage()) =>
   new LogtoClient(
-    { endpoint, appId, prompt, persistAccessToken },
+    { endpoint, appId, prompt },
     {
       ...createAdapters(),
       storage,

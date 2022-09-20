@@ -402,7 +402,7 @@ describe('LogtoClient', () => {
     });
   });
 
-  describe('getAccessToken when persistAccessToken is true', () => {
+  describe('getAccessToken', () => {
     it('should load access token', async () => {
       const logtoClient = createClient(
         undefined,
@@ -415,8 +415,7 @@ describe('LogtoClient', () => {
               expiresAt: Date.now() + 1000,
             },
           }),
-        }),
-        true
+        })
       );
 
       await expect(logtoClient.getAccessToken()).resolves.toEqual(accessToken);
@@ -434,8 +433,7 @@ describe('LogtoClient', () => {
               expiresAt: Date.now() + 1000,
             },
           }),
-        }),
-        true
+        })
       );
 
       await expect(logtoClient.getAccessToken()).rejects.toThrow();
@@ -451,14 +449,14 @@ describe('LogtoClient', () => {
         scope: 'read register manage',
         expiresIn: 3600,
       }));
-      const logtoClient = createClient(undefined, storage, true);
+      const logtoClient = createClient(undefined, storage);
       await logtoClient.signIn(redirectUri);
       const code = `code_value`;
       const callbackUri = `${redirectUri}?code=${code}&state=${mockedState}&codeVerifier=${mockedCodeVerifier}`;
       await logtoClient.handleSignInCallback(callbackUri);
 
       await storage.removeItem('refreshToken');
-      const anotherClient = createClient(undefined, storage, true);
+      const anotherClient = createClient(undefined, storage);
 
       await expect(anotherClient.getAccessToken()).resolves.not.toThrow();
     });
