@@ -7,7 +7,7 @@ import { LogtoExpressError } from './errors';
 import ExpressStorage from './storage';
 import { LogtoExpressConfig } from './types';
 
-export { ReservedScope, UserScope } from '@logto/node';
+export { ReservedScope, UserScope, LogtoBaseError } from '@logto/node';
 
 export type { LogtoContext } from '@logto/node';
 export type { LogtoExpressConfig } from './types';

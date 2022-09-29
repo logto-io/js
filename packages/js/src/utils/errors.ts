@@ -3,6 +3,12 @@ import get from 'lodash.get';
 
 import { isArbitraryObject } from './arbitrary-object';
 
+export abstract class LogtoBaseError<ErrorCode extends string> extends Error {
+  constructor(public code: ErrorCode, message?: string, public data?: unknown) {
+    super(message);
+  }
+}
+
 const logtoErrorCodes = Object.freeze({
   id_token: {
     invalid_iat: 'Invalid issued at time in the ID token',
@@ -32,14 +38,9 @@ const getMessageByErrorCode = (errorCode: LogtoErrorCode): string => {
   return errorCode;
 };
 
-export class LogtoError extends Error {
-  code: LogtoErrorCode;
-  data: unknown;
-
+export class LogtoError extends LogtoBaseError<LogtoErrorCode> {
   constructor(code: LogtoErrorCode, data?: unknown) {
-    super(getMessageByErrorCode(code));
-    this.code = code;
-    this.data = data;
+    super(code, getMessageByErrorCode(code), data);
   }
 }
 

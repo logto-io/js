@@ -16,6 +16,7 @@ export type {
 } from '@logto/client';
 
 export {
+  LogtoBaseError,
   LogtoError,
   OidcError,
   Prompt,

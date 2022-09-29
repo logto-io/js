@@ -1,3 +1,4 @@
+import { LogtoBaseError } from '@logto/js';
 import { NormalizeKeyPaths } from '@silverhand/essentials';
 import get from 'lodash.get';
 
@@ -25,13 +26,8 @@ const getMessageByErrorCode = (errorCode: LogtoClientErrorCode): string => {
   return errorCode;
 };
 
-export class LogtoClientError extends Error {
-  code: LogtoClientErrorCode;
-  data: unknown;
-
+export class LogtoClientError extends LogtoBaseError<LogtoClientErrorCode> {
   constructor(code: LogtoClientErrorCode, data?: unknown) {
-    super(getMessageByErrorCode(code));
-    this.code = code;
-    this.data = data;
+    super(code, getMessageByErrorCode(code), data);
   }
 }
