@@ -24,7 +24,6 @@ const app = express();
 app.use(cookieParser());
 app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 14 * 24 * 60 * 60 } }));
 app.use(handleAuthRoutes(config));
-app.use(withLogto(config));
 
 app.get('/', (request, response) => {
   response.setHeader('content-type', 'text/html');
@@ -37,11 +36,23 @@ app.get('/', (request, response) => {
   );
 });
 
-app.get('/user', (request, response) => {
+app.get('/local-user-claims', withLogto(config), (request, response) => {
   response.json(request.user);
 });
 
-app.get('/protected', requireAuth, (request, response) => {
+app.get(
+  '/remote-full-user',
+  withLogto({
+    ...config,
+    // Fetch user info from remote, this may slowdown the response time, not recommended.
+    fetchUserInfo: true,
+  }),
+  (request, response) => {
+    response.json(request.user);
+  }
+);
+
+app.get('/protected', withLogto(config), requireAuth, (request, response) => {
   response.end('protected resource');
 });
 

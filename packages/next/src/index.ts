@@ -84,7 +84,11 @@ export default class LogtoClient {
 
   withLogtoApiRoute = (handler: NextApiHandler, config: WithLogtoConfig = {}): NextApiHandler =>
     withIronSessionApiRoute(async (request, response) => {
-      const user = await this.getLogtoUserFromRequest(request, config.getAccessToken);
+      const user = await this.getLogtoUserFromRequest(
+        request,
+        config.getAccessToken,
+        config.fetchUserInfo
+      );
 
       // eslint-disable-next-line @silverhand/fp/no-mutating-methods
       Object.defineProperty(request, 'user', { enumerable: true, get: () => user });
@@ -128,9 +132,13 @@ export default class LogtoClient {
     };
   }
 
-  private async getLogtoUserFromRequest(request: IncomingMessage, getAccessToken?: boolean) {
+  private async getLogtoUserFromRequest(
+    request: IncomingMessage,
+    getAccessToken?: boolean,
+    fetchUserInfo?: boolean
+  ) {
     const nodeClient = this.createNodeClient(request);
 
-    return nodeClient.getContext(getAccessToken);
+    return nodeClient.getContext(getAccessToken, fetchUserInfo);
   }
 }

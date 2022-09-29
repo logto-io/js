@@ -1,4 +1,4 @@
-import { IdTokenClaims } from '@logto/client';
+import { IdTokenClaims, UserInfoResponse } from '@logto/client';
 
 declare module 'http' {
   // Honor module definition
@@ -12,4 +12,5 @@ export type LogtoContext = {
   isAuthenticated: boolean;
   claims?: IdTokenClaims;
   accessToken?: string;
+  userInfo?: UserInfoResponse;
 };

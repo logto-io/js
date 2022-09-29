@@ -82,7 +82,7 @@ export const withLogto =
   (config: LogtoExpressConfig): Middleware =>
   async (request: IncomingMessage, response: Response, next: NextFunction) => {
     const client = createNodeClient(request, response, config);
-    const user = await client.getContext(config.getAccessToken);
+    const user = await client.getContext(config.getAccessToken, config.fetchUserInfo);
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods
     Object.defineProperty(request, 'user', { enumerable: true, get: () => user });
     next();

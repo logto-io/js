@@ -1,4 +1,5 @@
 import BaseClient, { LogtoConfig, createRequester, ClientAdapter } from '@logto/client';
+import { conditional } from '@silverhand/essentials';
 import fetch from 'node-fetch';
 
 import { LogtoContext } from './types';
@@ -55,7 +56,8 @@ export default class LogtoClient extends BaseClient {
     });
   }
 
-  getContext = async (getAccessToken = false): Promise<LogtoContext> => {
+  /* eslint-disable complexity */
+  getContext = async (getAccessToken = false, fetchUserInfo = false): Promise<LogtoContext> => {
     const isAuthenticated = await this.isAuthenticated();
 
     if (!isAuthenticated) {
@@ -70,6 +72,7 @@ export default class LogtoClient extends BaseClient {
       return {
         isAuthenticated,
         claims,
+        userInfo: conditional(fetchUserInfo && (await this.fetchUserInfo())),
       };
     }
 
@@ -79,6 +82,7 @@ export default class LogtoClient extends BaseClient {
       return {
         isAuthenticated,
         claims: await this.getIdTokenClaims(),
+        userInfo: conditional(fetchUserInfo && (await this.fetchUserInfo())),
         accessToken,
       };
     } catch {
@@ -87,4 +91,5 @@ export default class LogtoClient extends BaseClient {
       };
     }
   };
+  /* eslint-enable complexity */
 }

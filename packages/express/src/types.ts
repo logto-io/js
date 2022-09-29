@@ -11,4 +11,5 @@ declare module 'http' {
 export type LogtoExpressConfig = LogtoConfig & {
   baseUrl: string;
   getAccessToken?: boolean;
+  fetchUserInfo?: boolean;
 };

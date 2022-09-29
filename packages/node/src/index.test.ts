@@ -11,6 +11,7 @@ const storage = {
 };
 
 const getAccessToken = jest.fn(async () => true);
+const fetchUserInfo = jest.fn(async () => ({ name: 'name' }));
 const getIdTokenClaims = jest.fn(async () => ({ sub: 'sub' }));
 const isAuthenticated = jest.fn(async () => true);
 jest.mock('@logto/client', () => ({
@@ -19,6 +20,7 @@ jest.mock('@logto/client', () => ({
     getAccessToken,
     getIdTokenClaims,
     isAuthenticated,
+    fetchUserInfo,
   })),
   createRequester: jest.fn(),
 }));
@@ -33,6 +35,7 @@ describe('LogtoClient', () => {
   describe('getContext', () => {
     beforeEach(() => {
       getAccessToken.mockClear();
+      fetchUserInfo.mockClear();
     });
 
     it('should set isAuthenticated to false when "getAccessToken" is enabled and is unable to getAccessToken', async () => {
@@ -42,7 +45,16 @@ describe('LogtoClient', () => {
       expect(getAccessToken).toHaveBeenCalled();
     });
 
-    it('should return context and not call getAccessToken by default', async () => {
+    it('should fetch remote user info and return when "fetchUserInfo" is enabled', async () => {
+      const client = new LogtoClient({ endpoint, appId }, { navigate, storage });
+      await expect(client.getContext(false, true)).resolves.toMatchObject({
+        claims: { sub: 'sub' },
+        userInfo: { name: 'name' },
+      });
+      expect(fetchUserInfo).toHaveBeenCalled();
+    });
+
+    it('should return context and not call getAccessToken and fetchUserInfo by default', async () => {
       const client = new LogtoClient({ endpoint, appId }, { navigate, storage });
       await expect(client.getContext()).resolves.toEqual({
         isAuthenticated: true,
@@ -50,6 +62,7 @@ describe('LogtoClient', () => {
       });
       expect(getIdTokenClaims).toHaveBeenCalled();
       expect(getAccessToken).not.toHaveBeenCalled();
+      expect(fetchUserInfo).not.toHaveBeenCalled();
     });
   });
 });
