@@ -1,0 +1,47 @@
+import { redirect, TypedResponse } from '@remix-run/node';
+
+import { getCookieHeaderFromRequest } from '../../framework/get-cookie-header-from-request';
+import { HandleSignOutError } from './HandleSignOutError';
+import type { HandleSignOutUseCase } from './HandleSignOutUseCase';
+
+type HandleSignOutControllerDto = {
+  readonly useCase: HandleSignOutUseCase;
+  readonly redirectUri: string;
+};
+
+export class HandleSignOutController {
+  public static readonly fromDto = (dto: HandleSignOutControllerDto) =>
+    new HandleSignOutController({
+      useCase: dto.useCase,
+      redirectUri: dto.redirectUri,
+    });
+
+  private readonly useCase = this.properties.useCase;
+  private readonly redirectUri = this.properties.redirectUri;
+
+  private constructor(
+    private readonly properties: {
+      useCase: HandleSignOutUseCase;
+      redirectUri: string;
+    }
+  ) {}
+
+  public readonly execute = async (request: Request): Promise<TypedResponse<never>> => {
+    const cookieHeader = getCookieHeaderFromRequest(request);
+
+    if (!cookieHeader) {
+      throw HandleSignOutError.becauseNoCookieHeaderPresent();
+    }
+
+    const result = await this.useCase({
+      cookieHeader,
+      redirectUri: this.redirectUri,
+    });
+
+    return redirect(this.redirectUri, {
+      headers: {
+        'Set-Cookie': result.cookieHeader,
+      },
+    });
+  };
+}
