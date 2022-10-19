@@ -17,6 +17,7 @@ Please check out the sub-pages for more details:
 - [React SDK](https://github.com/logto-io/js/tree/master/packages/react)
 - [Vue SDK](https://github.com/logto-io/js/tree/master/packages/vue)
 - [Next.js SDK](https://github.com/logto-io/js/tree/master/packages/next)
+- [Remix SDK](https://github.com/logto-io/js/tree/master/packages/remix)
 
 ## Products
 
@@ -29,6 +30,7 @@ Please check out the sub-pages for more details:
 | react   | Logto React SDK built on top of browser foundations |
 | vue     | Logto Vue SDK built on top of browser foundations   |
 | next    | Logto Next.js SDK built on top of node foundations  |
+| remix   | Logto Remix SDK built on top of node foundations    |
 
 ## Resources
 
