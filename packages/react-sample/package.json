@@ -1,6 +1,6 @@
 {
   "name": "@logto/react-sample",
-  "version": "1.0.0-beta.8",
+  "version": "1.0.0-beta.9",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -12,7 +12,7 @@
     "stylelint": "stylelint \"src/**/*.scss\""
   },
   "dependencies": {
-    "@logto/react": "^1.0.0-beta.8",
+    "@logto/react": "^1.0.0-beta.9",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^6.2.2"
