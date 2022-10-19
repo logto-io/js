@@ -28,4 +28,5 @@ export type LogtoNextConfig = LogtoConfig & {
  */
 export type WithLogtoConfig = {
   getAccessToken?: boolean;
+  fetchUserInfo?: boolean;
 };

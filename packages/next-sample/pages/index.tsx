@@ -4,17 +4,20 @@ import { useMemo } from 'react';
 import useSWR from 'swr';
 
 const Home = () => {
+  // Use server's id token claims
   const { data } = useSWR<LogtoContext>('/api/logto/user');
+  // Remote full user info
+  const { data: dataWithUserInfo } = useSWR<LogtoContext>('/api/logto/user-info');
   const { data: protectedResource } = useSWR<{ data: string }>('/api/protected-resource');
 
-  const userInfo = useMemo(() => {
+  const claims = useMemo(() => {
     if (!data?.isAuthenticated || !data.claims) {
       return null;
     }
 
     return (
       <div>
-        <h2>User info:</h2>
+        <h2>Claims:</h2>
         <table>
           <thead>
             <tr>
@@ -35,6 +38,34 @@ const Home = () => {
     );
   }, [data]);
 
+  const userInfo = useMemo(() => {
+    if (!dataWithUserInfo?.isAuthenticated || !dataWithUserInfo.userInfo) {
+      return null;
+    }
+
+    return (
+      <div>
+        <h2>User info:</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.entries(dataWithUserInfo.userInfo).map(([key, value]) => (
+              <tr key={key}>
+                <td>{key}</td>
+                <td>{JSON.stringify(value)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }, [dataWithUserInfo]);
+
   return (
     <div>
       <header>
@@ -51,6 +82,7 @@ const Home = () => {
           </Link>
         )}
       </nav>
+      {claims}
       {userInfo}
       {protectedResource && (
         <div>
