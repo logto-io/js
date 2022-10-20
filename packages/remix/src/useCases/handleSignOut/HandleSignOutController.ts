@@ -38,7 +38,7 @@ export class HandleSignOutController {
       redirectUri: this.redirectUri,
     });
 
-    return redirect(this.redirectUri, {
+    return redirect(result.navigateToUrl, {
       headers: {
         'Set-Cookie': result.cookieHeader,
       },
