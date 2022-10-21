@@ -1,4 +1,4 @@
-import { LogtoConfig } from '@logto/node';
+import { GetContextParameters, LogtoConfig } from '@logto/node';
 
 declare module 'http' {
   // Honor module definition
@@ -10,6 +10,4 @@ declare module 'http' {
 
 export type LogtoExpressConfig = LogtoConfig & {
   baseUrl: string;
-  getAccessToken?: boolean;
-  fetchUserInfo?: boolean;
-};
+} & GetContextParameters;

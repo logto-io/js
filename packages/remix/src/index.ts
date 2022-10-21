@@ -1,4 +1,4 @@
-import { LogtoConfig } from '@logto/node';
+import { GetContextParameters, LogtoConfig } from '@logto/node';
 import { SessionStorage } from '@remix-run/node';
 
 import { makeLogtoAdapter } from './infrastructure/logto';
@@ -28,7 +28,7 @@ export const makeLogtoRemix = (
       sessionStorage,
     }),
 
-    getContext: (dto: { includeAccessToken: boolean }) =>
+    getContext: (dto: GetContextParameters) =>
       makeGetContext(dto, {
         createLogtoAdapter,
         sessionStorage,

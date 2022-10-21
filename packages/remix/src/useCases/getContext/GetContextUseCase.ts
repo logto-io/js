@@ -1,10 +1,10 @@
+import { GetContextParameters } from '@logto/node';
 import { SessionStorage } from '@remix-run/node';
 
 import { CreateLogtoAdapter, LogtoContext } from '../../infrastructure/logto';
 
-type GetContextRequest = {
+type GetContextRequest = GetContextParameters & {
   readonly cookieHeader: string | undefined;
-  readonly includeAccessToken: boolean;
 };
 
 type GetContextResponse = {
@@ -20,9 +20,7 @@ export const makeGetContextUseCase =
 
     const logto = createLogtoAdapter(session);
 
-    const response = await logto.getContext({
-      includeAccessToken: request.includeAccessToken,
-    });
+    const response = await logto.getContext(request);
 
     return {
       context: response.context,

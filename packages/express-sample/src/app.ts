@@ -52,6 +52,19 @@ app.get(
   }
 );
 
+app.get(
+  '/fetch-access-token',
+  withLogto({
+    ...config,
+    // Fetch access token from remote, this may slowdown the response time,
+    // you can also add "resource" if needed.
+    getAccessToken: true,
+  }),
+  (request, response) => {
+    response.json(request.user);
+  }
+);
+
 app.get('/protected', withLogto(config), requireAuth, (request, response) => {
   response.end('protected resource');
 });
