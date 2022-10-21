@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.10](https://github.com/logto-io/js/compare/v1.0.0-beta.9...v1.0.0-beta.10) (2022-10-21)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @logto/core-kit to v1.0.0-beta.19 ([ae0be3b](https://github.com/logto-io/js/commit/ae0be3b6c9bc09f4f291dbb1e2a5be6de3d7afb1))
+* **remix:** use the correct sign-out redirect URL which comes down from the Logto instance ([80418c5](https://github.com/logto-io/js/commit/80418c5ff759fc195611a2ffc1245911c501e67f))
+
+
+
 ## [1.0.0-beta.9](https://github.com/logto-io/js/compare/v1.0.0-beta.8...v1.0.0-beta.9) (2022-10-19)
 
 
