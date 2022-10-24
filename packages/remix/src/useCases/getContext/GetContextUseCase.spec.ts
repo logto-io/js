@@ -12,7 +12,6 @@ describe('useCases:getContext:GetContextUseCase', () => {
 
     const response = await execute({
       cookieHeader: 'abcd',
-      includeAccessToken: false,
     });
 
     expect(getContext).toBeCalledTimes(1);

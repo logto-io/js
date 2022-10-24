@@ -1,11 +1,11 @@
 import { IncomingMessage } from 'http';
 
-import NodeClient from '@logto/node';
+import NodeClient, { GetContextParameters } from '@logto/node';
 import { withIronSessionApiRoute, withIronSessionSsr } from 'iron-session/next';
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextApiHandler } from 'next';
 
 import NextStorage from './storage';
-import { LogtoNextConfig, WithLogtoConfig } from './types';
+import { LogtoNextConfig } from './types';
 
 export { ReservedScope, UserScope } from '@logto/node';
 
@@ -53,13 +53,13 @@ export default class LogtoClient {
       }
     }, this.ironSessionConfigs);
 
-  handleUser = (config?: WithLogtoConfig) =>
+  handleUser = (configs?: GetContextParameters) =>
     this.withLogtoApiRoute((request, response) => {
       response.json(request.user);
-    }, config);
+    }, configs);
 
   handleAuthRoutes =
-    (configs?: WithLogtoConfig): NextApiHandler =>
+    (configs?: GetContextParameters): NextApiHandler =>
     (request, response) => {
       const { action } = request.query;
 
@@ -82,13 +82,12 @@ export default class LogtoClient {
       response.status(404).end();
     };
 
-  withLogtoApiRoute = (handler: NextApiHandler, config: WithLogtoConfig = {}): NextApiHandler =>
+  withLogtoApiRoute = (
+    handler: NextApiHandler,
+    config: GetContextParameters = {}
+  ): NextApiHandler =>
     withIronSessionApiRoute(async (request, response) => {
-      const user = await this.getLogtoUserFromRequest(
-        request,
-        config.getAccessToken,
-        config.fetchUserInfo
-      );
+      const user = await this.getLogtoUserFromRequest(request, config);
 
       // eslint-disable-next-line @silverhand/fp/no-mutating-methods
       Object.defineProperty(request, 'user', { enumerable: true, get: () => user });
@@ -100,10 +99,10 @@ export default class LogtoClient {
     handler: (
       context: GetServerSidePropsContext
     ) => GetServerSidePropsResult<P> | Promise<GetServerSidePropsResult<P>>,
-    config: WithLogtoConfig = {}
+    configs: GetContextParameters = {}
   ) =>
     withIronSessionSsr(async (context) => {
-      const user = await this.getLogtoUserFromRequest(context.req, config.getAccessToken);
+      const user = await this.getLogtoUserFromRequest(context.req, configs);
       // eslint-disable-next-line @silverhand/fp/no-mutating-methods
       Object.defineProperty(context.req, 'user', { enumerable: true, get: () => user });
 
@@ -132,13 +131,9 @@ export default class LogtoClient {
     };
   }
 
-  private async getLogtoUserFromRequest(
-    request: IncomingMessage,
-    getAccessToken?: boolean,
-    fetchUserInfo?: boolean
-  ) {
+  private async getLogtoUserFromRequest(request: IncomingMessage, configs: GetContextParameters) {
     const nodeClient = this.createNodeClient(request);
 
-    return nodeClient.getContext(getAccessToken, fetchUserInfo);
+    return nodeClient.getContext(configs);
   }
 }

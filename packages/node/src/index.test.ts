@@ -41,13 +41,21 @@ describe('LogtoClient', () => {
     it('should set isAuthenticated to false when "getAccessToken" is enabled and is unable to getAccessToken', async () => {
       getAccessToken.mockRejectedValueOnce(new Error('Unauthorized'));
       const client = new LogtoClient({ endpoint, appId }, { navigate, storage });
-      await expect(client.getContext(true)).resolves.toEqual({ isAuthenticated: false });
-      expect(getAccessToken).toHaveBeenCalled();
+      await expect(
+        client.getContext({ getAccessToken: true, resource: 'resource' })
+      ).resolves.toEqual({
+        isAuthenticated: false,
+      });
+      expect(getAccessToken).toHaveBeenCalledWith('resource');
     });
 
     it('should fetch remote user info and return when "fetchUserInfo" is enabled', async () => {
       const client = new LogtoClient({ endpoint, appId }, { navigate, storage });
-      await expect(client.getContext(false, true)).resolves.toMatchObject({
+      await expect(
+        client.getContext({
+          fetchUserInfo: true,
+        })
+      ).resolves.toMatchObject({
         claims: { sub: 'sub' },
         userInfo: { name: 'name' },
       });

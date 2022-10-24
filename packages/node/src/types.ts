@@ -14,3 +14,9 @@ export type LogtoContext = {
   accessToken?: string;
   userInfo?: UserInfoResponse;
 };
+
+export type GetContextParameters = {
+  fetchUserInfo?: boolean;
+  getAccessToken?: boolean;
+  resource?: string;
+};

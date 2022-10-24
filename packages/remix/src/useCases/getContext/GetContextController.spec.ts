@@ -11,7 +11,6 @@ describe('useCases:getContext:GetContextController', () => {
 
     const controller = GetContextController.fromDto({
       useCase,
-      includeAccessToken: false,
     });
 
     expect(controller.constructor.name).toBe('GetContextController');
