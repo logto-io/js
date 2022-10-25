@@ -50,8 +50,9 @@ export default ProfileSsr;
 
 export const getServerSideProps = logtoClient.withLogtoSsr(async function ({ req, res }) {
   const { user } = req;
+  const { claims, isAuthenticated } = user;
 
-  if (!user.isAuthenticated) {
+  if (!isAuthenticated) {
     res.setHeader('location', '/api/logto/login');
     // eslint-disable-next-line @silverhand/fp/no-mutation
     res.statusCode = 302;
@@ -59,6 +60,6 @@ export const getServerSideProps = logtoClient.withLogtoSsr(async function ({ req
   }
 
   return {
-    props: { user },
+    props: { user: { isAuthenticated, claims } },
   };
 });
