@@ -38,13 +38,12 @@ export default class LogtoClient extends BaseClient {
               return fetch(input, {
                 ...init,
                 headers: {
-                  ...init?.headers,
-
-                  authorization: `basic ${Buffer.from(
+                  Authorization: `basic ${Buffer.from(
                     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                     `${config.appId}:${config.appSecret}`,
                     'utf8'
                   ).toString('base64')}`,
+                  ...init?.headers,
                 },
               });
             }
