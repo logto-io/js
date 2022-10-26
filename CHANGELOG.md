@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.11](https://github.com/logto-io/js/compare/v1.0.0-beta.10...v1.0.0-beta.11) (2022-10-26)
+
+
+### Features
+
+* **node,next,express:** get access token with resource ([#420](https://github.com/logto-io/js/issues/420)) ([6fb22ea](https://github.com/logto-io/js/commit/6fb22ea51a50c7a8b1b64cb6d2aa665c18b3a0b8))
+
+
+### Bug Fixes
+
+* **deps:** update dependency @logto/core-kit to v1.0.0-beta.20 ([d9750b1](https://github.com/logto-io/js/commit/d9750b16d79172fb4e9a1166c3f0623452570686))
+* **next-sample:** fix undefined in getServerSideProps ([#423](https://github.com/logto-io/js/issues/423)) ([f15e875](https://github.com/logto-io/js/commit/f15e875f34413b3cc1093db590c83af86c0b0374))
+
+
+
 ## [1.0.0-beta.10](https://github.com/logto-io/js/compare/v1.0.0-beta.9...v1.0.0-beta.10) (2022-10-21)
 
 
