@@ -1,5 +1,5 @@
-import { Nullable, urlSafeBase64 } from '@silverhand/essentials';
-import { jwtVerify, JWTVerifyGetKey } from 'jose';
+import { Nullable } from '@silverhand/essentials';
+import { decodeJwt, jwtVerify, JWTVerifyGetKey } from 'jose';
 
 import { isArbitraryObject } from './arbitrary-object';
 import { LogtoError } from './errors';
@@ -96,14 +96,7 @@ export const verifyIdToken = async (
 };
 
 export const decodeIdToken = (token: string): IdTokenClaims => {
-  const { 1: encodedPayload } = token.split('.');
-
-  if (!encodedPayload) {
-    throw new LogtoError('id_token.invalid_token');
-  }
-
-  const json = urlSafeBase64.decode(encodedPayload);
-  const idTokenClaims: unknown = JSON.parse(json);
+  const idTokenClaims = decodeJwt(token);
   assertIdTokenClaims(idTokenClaims);
 
   return idTokenClaims;

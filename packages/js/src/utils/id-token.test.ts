@@ -269,9 +269,7 @@ describe('decodeIdToken', () => {
   });
 
   test('decoding invalid JWT string should throw Error', async () => {
-    expect(() => decodeIdToken('invalid-JWT')).toMatchError(
-      new LogtoError('id_token.invalid_token')
-    );
+    expect(() => decodeIdToken('invalid-JWT')).toThrowError();
   });
 
   test('decoding valid JWT without issuer should throw TypeError', async () => {

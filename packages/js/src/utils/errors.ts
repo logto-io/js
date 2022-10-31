@@ -5,8 +5,7 @@ import { isArbitraryObject } from './arbitrary-object';
 
 const logtoErrorCodes = Object.freeze({
   id_token: {
-    invalid_iat: 'Invalid issued at time in the ID token',
-    invalid_token: 'Invalid ID token',
+    invalid_iat: 'Invalid token iat (issued-at-time)',
   },
   callback_uri_verification: {
     redirect_uri_mismatched: 'The callback URI mismatches the redirect URI.',

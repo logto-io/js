@@ -28,7 +28,7 @@ import {
   failingRequester,
   createAdapters,
 } from './mock';
-import { buildAccessTokenKey } from './utils';
+import { buildAccessTokenKey, decodeResourceFromAccessToken } from './utils';
 
 jest.mock('@logto/js', () => ({
   ...jest.requireActual('@logto/js'),
@@ -45,10 +45,12 @@ jest.mock('@logto/js', () => ({
 }));
 
 const createRemoteJWKSet = jest.fn(async () => '');
+const decodeJwt = jest.fn(() => ({ aud: '' }));
 
 jest.mock('jose', () => ({
   ...jest.requireActual('jose'),
   createRemoteJWKSet: async () => createRemoteJWKSet(),
+  decodeJwt: () => decodeJwt(),
 }));
 
 describe('LogtoClient', () => {
@@ -274,7 +276,7 @@ describe('LogtoClient', () => {
       );
 
       await expect(logtoClient.getAccessToken()).rejects.toMatchError(
-        new LogtoClientError('not_authenticated')
+        new LogtoClientError('refresh_token_not_found')
       );
     });
 
@@ -421,6 +423,25 @@ describe('LogtoClient', () => {
       await expect(logtoClient.getAccessToken()).resolves.toEqual(accessToken);
     });
 
+    it('should load access token with resource indicator', async () => {
+      decodeJwt.mockClear().mockReturnValueOnce({ aud: 'some_resource' });
+      const logtoClient = createClient(
+        undefined,
+        new MockedStorage({
+          idToken,
+          accessToken: JSON.stringify({
+            [buildAccessTokenKey(decodeResourceFromAccessToken(accessToken))]: {
+              token: accessToken,
+              scope: '',
+              expiresAt: Date.now() + 1000,
+            },
+          }),
+        })
+      );
+
+      await expect(logtoClient.getAccessToken('some_resource')).resolves.toEqual(accessToken);
+    });
+
     it('should not load access token when storage value is invalid', async () => {
       const logtoClient = createClient(
         undefined,
@@ -428,7 +449,7 @@ describe('LogtoClient', () => {
           idToken,
           accessToken: JSON.stringify({
             [buildAccessTokenKey()]: {
-              token1: accessToken,
+              token1: accessToken, // Invalid property key
               scope: '',
               expiresAt: Date.now() + 1000,
             },

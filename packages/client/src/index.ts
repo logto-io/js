@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { ReservedScope } from '@logto/core-kit';
 import {
   CodeTokenResponse,
@@ -11,6 +10,7 @@ import {
   generateSignOutUri,
   IdTokenClaims,
   Prompt,
+  RefreshTokenTokenResponse,
   revoke,
   UserInfoResponse,
   verifyAndParseCodeFromCallbackUri,
@@ -30,7 +30,7 @@ import {
   LogtoConfig,
   LogtoSignInSessionItem,
 } from './types';
-import { buildAccessTokenKey, getDiscoveryEndpoint } from './utils';
+import { buildAccessTokenKey, decodeResourceFromAccessToken, getDiscoveryEndpoint } from './utils';
 
 export type { IdTokenClaims, LogtoErrorCode, UserInfoResponse } from '@logto/js';
 export { LogtoError, OidcError, Prompt, LogtoRequestError } from '@logto/js';
@@ -129,7 +129,7 @@ export default class LogtoClient {
     const accessToken = await this.getAccessToken();
 
     if (!accessToken) {
-      throw new LogtoClientError('fetch_user_info_failed');
+      throw new LogtoClientError('access_token_not_found');
     }
 
     return fetchUserInfo(userinfoEndpoint, accessToken, this.adapter.requester);
@@ -197,8 +197,7 @@ export default class LogtoClient {
       requester
     );
 
-    await this.verifyIdToken(codeTokenResponse.idToken);
-    await this.saveCodeToken(codeTokenResponse);
+    await this.saveTokens(codeTokenResponse);
     await this.setSignInSession(null);
   }
 
@@ -283,46 +282,28 @@ export default class LogtoClient {
   }
 
   private async getAccessTokenByRefreshToken(resource?: string): Promise<string> {
-    const currentRefreshToken = await this.getRefreshToken();
+    const refreshToken = await this.getRefreshToken();
 
-    if (!currentRefreshToken) {
-      throw new LogtoClientError('not_authenticated');
+    if (!refreshToken) {
+      throw new LogtoClientError('refresh_token_not_found');
     }
 
-    try {
-      const accessTokenKey = buildAccessTokenKey(resource);
-      const { appId: clientId } = this.logtoConfig;
-      const { tokenEndpoint } = await this.getOidcConfig();
-      const { accessToken, refreshToken, idToken, scope, expiresIn } =
-        await fetchTokenByRefreshToken(
-          {
-            clientId,
-            tokenEndpoint,
-            refreshToken: currentRefreshToken,
-            resource,
-            scopes: resource ? [ReservedScope.OfflineAccess] : undefined, // Force remove openid scope from the request
-          },
-          this.adapter.requester
-        );
+    const { appId: clientId } = this.logtoConfig;
+    const { tokenEndpoint } = await this.getOidcConfig();
+    const refreshTokenTokenResponse = await fetchTokenByRefreshToken(
+      {
+        clientId,
+        tokenEndpoint,
+        refreshToken,
+        resource,
+        scopes: resource ? [ReservedScope.OfflineAccess] : undefined, // Force remove openid scope from the request
+      },
+      this.adapter.requester
+    );
 
-      this.accessTokenMap.set(accessTokenKey, {
-        token: accessToken,
-        scope,
-        expiresAt: Math.round(Date.now() / 1000) + expiresIn,
-      });
+    await this.saveTokens(refreshTokenTokenResponse);
 
-      await this.saveAccessTokenMap();
-      await this.setRefreshToken(refreshToken);
-
-      if (idToken) {
-        await this.verifyIdToken(idToken);
-        await this.setIdToken(idToken);
-      }
-
-      return accessToken;
-    } catch (error: unknown) {
-      throw new LogtoClientError('get_access_token_by_refresh_token_failed', error);
-    }
+    return refreshTokenTokenResponse.accessToken;
   }
 
   private async _getOidcConfig() {
@@ -350,18 +331,23 @@ export default class LogtoClient {
     }
   }
 
-  private async saveCodeToken({
+  private async saveTokens({
     refreshToken,
     idToken,
     scope,
     accessToken,
     expiresIn,
-  }: CodeTokenResponse) {
-    await this.setRefreshToken(refreshToken ?? null);
-    await this.setIdToken(idToken);
+  }: CodeTokenResponse | RefreshTokenTokenResponse) {
+    if (idToken) {
+      await this.verifyIdToken(idToken);
+      await this.setIdToken(idToken);
+    }
 
+    if (refreshToken) {
+      await this.setRefreshToken(refreshToken);
+    }
     // NOTE: Will add scope to accessTokenKey when needed. (Linear issue LOG-1589)
-    const accessTokenKey = buildAccessTokenKey();
+    const accessTokenKey = buildAccessTokenKey(decodeResourceFromAccessToken(accessToken));
     const expiresAt = Date.now() / 1000 + expiresIn;
     this.accessTokenMap.set(accessTokenKey, { token: accessToken, scope, expiresAt });
     await this.saveAccessTokenMap();
@@ -399,4 +385,3 @@ export default class LogtoClient {
     } catch {}
   }
 }
-/* eslint-enable max-lines */
