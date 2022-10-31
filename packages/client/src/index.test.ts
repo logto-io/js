@@ -202,6 +202,7 @@ describe('LogtoClient', () => {
       storage.reset({
         idToken: 'id_token_value',
         refreshToken: 'refresh_token_value',
+        accessToken: 'access_token_map_json_string',
       });
     });
 
@@ -212,12 +213,13 @@ describe('LogtoClient', () => {
       expect(requester).toHaveBeenCalledWith(revocationEndpoint, expect.anything());
     });
 
-    it('should clear id token and refresh token in local storage', async () => {
+    it('should clear id token, refresh token and access token from storage', async () => {
       const logtoClient = createClient(undefined, storage);
       await logtoClient.signOut(postSignOutRedirectUri);
 
       await expect(storage.getItem('idToken')).resolves.toBeNull();
       await expect(storage.getItem('refreshToken')).resolves.toBeNull();
+      await expect(storage.getItem('accessToken')).resolves.toBeNull();
     });
 
     it('should redirect to post sign-out URI after signing out', async () => {
@@ -244,6 +246,7 @@ describe('LogtoClient', () => {
       expect(failingRequester).toBeCalledTimes(1);
       await expect(storage.getItem('idToken')).resolves.toBeNull();
       await expect(storage.getItem('refreshToken')).resolves.toBeNull();
+      await expect(storage.getItem('accessToken')).resolves.toBeNull();
       expect(navigate).toHaveBeenCalledWith(`${endSessionEndpoint}?id_token_hint=id_token_value`);
     });
   });

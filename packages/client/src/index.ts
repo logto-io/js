@@ -230,6 +230,7 @@ export default class LogtoClient {
     this.accessTokenMap.clear();
     await this.setRefreshToken(null);
     await this.setIdToken(null);
+    await this.adapter.storage.removeItem('accessToken');
 
     this.adapter.navigate(url);
   }
