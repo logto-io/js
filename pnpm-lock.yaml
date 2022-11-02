@@ -21,7 +21,7 @@ importers:
   packages/browser:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/client': ^1.0.0-beta.11
+      '@logto/client': ^1.0.0-beta.12
       '@parcel/core': ^2.7.0
       '@parcel/packager-ts': ^2.7.0
       '@parcel/transformer-typescript-types': ^2.7.0
@@ -67,7 +67,7 @@ importers:
 
   packages/browser-sample:
     specifiers:
-      '@logto/browser': ^1.0.0-beta.11
+      '@logto/browser': ^1.0.0-beta.12
       '@parcel/core': ^2.7.0
       '@parcel/transformer-sass': ^2.7.0
       '@silverhand/eslint-config': ^1.0.0
@@ -162,7 +162,7 @@ importers:
   packages/express:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/node': ^1.0.0-beta.11
+      '@logto/node': ^1.0.0-beta.12
       '@parcel/core': ^2.7.0
       '@parcel/packager-ts': ^2.7.0
       '@parcel/transformer-typescript-types': ^2.7.0
@@ -218,7 +218,7 @@ importers:
 
   packages/express-sample:
     specifiers:
-      '@logto/express': ^1.0.0-beta.11
+      '@logto/express': ^1.0.0-beta.12
       '@silverhand/eslint-config': ^1.0.0
       '@silverhand/ts-config': ^1.0.0
       '@types/cookie-parser': ^1.4.3
@@ -313,7 +313,7 @@ importers:
   packages/next:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/node': ^1.0.0-beta.11
+      '@logto/node': ^1.0.0-beta.12
       '@parcel/core': ^2.7.0
       '@parcel/packager-ts': ^2.7.0
       '@parcel/transformer-typescript-types': ^2.7.0
@@ -363,7 +363,7 @@ importers:
 
   packages/next-sample:
     specifiers:
-      '@logto/next': ^1.0.0-beta.11
+      '@logto/next': ^1.0.0-beta.12
       '@silverhand/eslint-config': ^1.0.0
       '@silverhand/eslint-config-react': ^1.0.0
       '@silverhand/ts-config': ^1.0.0
@@ -407,7 +407,7 @@ importers:
   packages/node:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/client': ^1.0.0-beta.11
+      '@logto/client': ^1.0.0-beta.12
       '@parcel/core': ^2.7.0
       '@parcel/packager-ts': ^2.7.0
       '@parcel/transformer-typescript-types': ^2.7.0
@@ -452,7 +452,7 @@ importers:
   packages/react:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/browser': ^1.0.0-beta.11
+      '@logto/browser': ^1.0.0-beta.12
       '@parcel/core': ^2.7.0
       '@parcel/packager-ts': ^2.7.0
       '@parcel/transformer-typescript-types': ^2.7.0
@@ -502,7 +502,7 @@ importers:
 
   packages/react-sample:
     specifiers:
-      '@logto/react': ^1.0.0-beta.11
+      '@logto/react': ^1.0.0-beta.12
       '@parcel/core': ^2.7.0
       '@parcel/transformer-sass': ^2.7.0
       '@silverhand/eslint-config': ^1.0.0
@@ -552,7 +552,7 @@ importers:
       '@commitlint/cli': ^17.1.2
       '@commitlint/config-conventional': ^17.1.0
       '@jest/types': ^27.5.1
-      '@logto/node': ^1.0.0-beta.11
+      '@logto/node': ^1.0.0-beta.12
       '@parcel/core': ^2.7.0
       '@parcel/packager-ts': ^2.7.0
       '@parcel/transformer-typescript-types': ^2.7.0
@@ -607,7 +607,7 @@ importers:
   packages/vue:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/browser': ^1.0.0-beta.11
+      '@logto/browser': ^1.0.0-beta.12
       '@parcel/core': ^2.7.0
       '@parcel/packager-ts': ^2.7.0
       '@parcel/transformer-typescript-types': ^2.7.0
@@ -647,7 +647,7 @@ importers:
 
   packages/vue-sample:
     specifiers:
-      '@logto/vue': ^1.0.0-beta.11
+      '@logto/vue': ^1.0.0-beta.12
       '@rushstack/eslint-patch': ^1.1.0
       '@types/node': ^16.11.27
       '@vitejs/plugin-vue': ^3.0.0

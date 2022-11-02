@@ -1,6 +1,6 @@
 {
   "name": "@logto/remix",
-  "version": "1.0.0-beta.11",
+  "version": "1.0.0-beta.12",
   "source": "./src/index.ts",
   "main": "./lib/index.js",
   "exports": {
@@ -29,7 +29,7 @@
     "prepack": "pnpm test"
   },
   "dependencies": {
-    "@logto/node": "^1.0.0-beta.11"
+    "@logto/node": "^1.0.0-beta.12"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.1.2",
