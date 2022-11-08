@@ -5,9 +5,9 @@
   "main": "./lib/index.js",
   "exports": {
     "require": "./lib/index.js",
-    "import": "./lib/module.js"
+    "import": "./lib/module.mjs"
   },
-  "module": "./lib/module.js",
+  "module": "./lib/module.mjs",
   "types": "./lib/index.d.ts",
   "files": [
     "lib"
