@@ -97,7 +97,7 @@ A typical use case is to fetch the _authentication context_ which contains infor
 
 ```ts
 // app/routes/index.tsx
-import type { LogtoContext } from "@openformation/logto-remix";
+import type { LogtoContext } from "@logto/remix";
 import { LoaderFunction, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
@@ -108,7 +108,7 @@ type LoaderResponse = {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const context = await logto.getContext({ includeAccessToken: false })(
+  const context = await logto.getContext({ getAccessToken: false })(
     request
   );
 
