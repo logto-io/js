@@ -73,13 +73,9 @@ const Home = () => {
       </header>
       <nav>
         {data?.isAuthenticated ? (
-          <Link href="/api/logto/sign-out">
-            <a>Sign Out</a>
-          </Link>
+          <Link href="/api/logto/sign-out">Sign Out</Link>
         ) : (
-          <Link href="/api/logto/sign-in">
-            <a>Sign In</a>
-          </Link>
+          <Link href="/api/logto/sign-in">Sign In</Link>
         )}
       </nav>
       {claims}

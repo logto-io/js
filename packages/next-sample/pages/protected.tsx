@@ -20,9 +20,7 @@ const Protected = () => {
         <h1>Hello Logto.</h1>
       </header>
       <nav>
-        <Link href="/">
-          <a>Go Home</a>
-        </Link>
+        <Link href="/">Go Home</Link>
       </nav>
       {data && (
         <div>
