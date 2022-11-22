@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { ReservedScope } from '@logto/core-kit';
 import {
   CodeTokenResponse,
@@ -47,8 +46,6 @@ export default class LogtoClient {
   protected readonly adapter: ClientAdapter;
   protected readonly accessTokenMap = new Map<string, AccessToken>();
 
-  private readonly getAccessTokenPromiseMap = new Map<string, Promise<string>>();
-
   constructor(logtoConfig: LogtoConfig, adapter: ClientAdapter) {
     this.logtoConfig = {
       ...logtoConfig,
@@ -72,7 +69,6 @@ export default class LogtoClient {
     return this.adapter.storage.getItem('idToken');
   }
 
-  // eslint-disable-next-line complexity
   async getAccessToken(resource?: string): Promise<string> {
     if (!(await this.getIdToken())) {
       throw new LogtoClientError('not_authenticated');
@@ -92,26 +88,8 @@ export default class LogtoClient {
 
     /**
      * Need to fetch a new access token using refresh token.
-     * Reuse the cached promise if exists.
      */
-    const cachedPromise = this.getAccessTokenPromiseMap.get(accessTokenKey);
-
-    if (cachedPromise) {
-      return cachedPromise;
-    }
-
-    /**
-     * Create a new promise and cache in map to avoid race condition.
-     * Since we enable "refresh token rotation" by default,
-     * it will be problematic when calling multiple `getAccessToken()` closely.
-     */
-    const promise = this.getAccessTokenByRefreshToken(resource);
-    this.getAccessTokenPromiseMap.set(accessTokenKey, promise);
-
-    const token = await promise;
-    this.getAccessTokenPromiseMap.delete(accessTokenKey);
-
-    return token;
+    return this.getAccessTokenByRefreshToken(resource);
   }
 
   async getIdTokenClaims(): Promise<IdTokenClaims> {
@@ -399,4 +377,3 @@ export default class LogtoClient {
     } catch {}
   }
 }
-/* eslint-enable max-lines */
