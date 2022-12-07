@@ -279,19 +279,9 @@ describe('LogtoClient', () => {
     });
 
     it('should return access token by valid refresh token', async () => {
-      // eslint-disable-next-line @silverhand/fp/no-let
-      let count = 0;
-
       requester.mockClear().mockImplementation(async () => {
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        count += 1;
-        await new Promise((resolve) => {
-          setTimeout(resolve, 0);
-        });
-
         return {
-          accessToken: count === 1 ? 'access_token_value' : 'nope',
-          refreshToken: count === 1 ? 'new_refresh_token_value' : 'nope',
+          accessToken: 'access_token_value',
           expiresIn: 3600,
         };
       });
@@ -303,17 +293,10 @@ describe('LogtoClient', () => {
           refreshToken: 'refresh_token_value',
         })
       );
-      const [accessToken_1, accessToken_2] = await Promise.all([
-        logtoClient.getAccessToken(),
-        logtoClient.getAccessToken(),
-      ]);
+      const accessToken = await logtoClient.getAccessToken();
 
       expect(requester).toHaveBeenCalledWith(tokenEndpoint, expect.anything());
-      expect(accessToken_1).toEqual('access_token_value');
-      expect(accessToken_2).toEqual('access_token_value');
-
-      const refreshToken = await logtoClient.getRefreshToken();
-      expect(refreshToken).toEqual('new_refresh_token_value');
+      expect(accessToken).toEqual('access_token_value');
     });
 
     it('should delete expired access token once', async () => {
