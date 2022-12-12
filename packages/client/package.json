@@ -22,7 +22,7 @@
     "dev:tsc": "tsc -p tsconfig.build.json -w --preserveWatchOutput",
     "precommit": "lint-staged",
     "check": "tsc --noEmit",
-    "build": "rm -rf lib/ && pnpm check && parcel build",
+    "build": "rm -rf lib/ && pnpm check && parcel build && cp lib/index.d.ts lib/module.d.mts",
     "lint": "eslint --ext .ts src",
     "test": "jest",
     "test:coverage": "jest --silent --env=jsdom && jest --silent --coverage",
@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@logto/core-kit": "1.0.0-beta.20",
-    "@logto/js": "^1.0.0-beta.13",
+    "@logto/js": "1.0.0-beta.13",
     "@silverhand/essentials": "^1.2.1",
     "camelcase-keys": "^7.0.1",
     "jose": "^4.3.8",

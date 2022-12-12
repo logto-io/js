@@ -11,7 +11,7 @@
     "lint": "eslint --ext .vue,.ts src"
   },
   "dependencies": {
-    "@logto/vue": "^1.0.0-beta.13",
+    "@logto/vue": "1.0.0-beta.13",
     "vue": "^3.2.35",
     "vue-router": "^4.0.14"
   },
