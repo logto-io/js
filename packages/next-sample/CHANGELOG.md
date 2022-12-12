@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.14](https://github.com/logto-io/js/compare/v1.0.0-beta.13...v1.0.0-beta.14) (2022-12-12)
+
+
+### Features
+
+* **next-sample:** upgrade to next 13 ([#433](https://github.com/logto-io/js/issues/433)) ([63593d4](https://github.com/logto-io/js/commit/63593d46f872219e7e4a1a3896d3af4a40a5eb15))
+
+
+
 ## [1.0.0-beta.13](https://github.com/logto-io/js/compare/v1.0.0-beta.12...v1.0.0-beta.13) (2022-11-08)
 
 **Note:** Version bump only for package @logto/next-sample

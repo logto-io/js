@@ -21,7 +21,7 @@ importers:
   packages/browser:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/client': 1.0.0-beta.13
+      '@logto/client': ^1.0.0-beta.14
       '@parcel/core': ^2.7.0
       '@parcel/packager-ts': ^2.7.0
       '@parcel/transformer-typescript-types': ^2.7.0
@@ -67,7 +67,7 @@ importers:
 
   packages/browser-sample:
     specifiers:
-      '@logto/browser': 1.0.0-beta.13
+      '@logto/browser': ^1.0.0-beta.14
       '@parcel/core': ^2.7.0
       '@parcel/transformer-sass': ^2.7.0
       '@silverhand/eslint-config': ^1.0.0
@@ -102,7 +102,7 @@ importers:
     specifiers:
       '@jest/types': ^27.5.1
       '@logto/core-kit': 1.0.0-beta.20
-      '@logto/js': 1.0.0-beta.13
+      '@logto/js': ^1.0.0-beta.14
       '@parcel/core': ^2.7.0
       '@parcel/packager-ts': ^2.7.0
       '@parcel/transformer-typescript-types': ^2.7.0
@@ -162,7 +162,7 @@ importers:
   packages/express:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/node': 1.0.0-beta.13
+      '@logto/node': ^1.0.0-beta.14
       '@parcel/core': ^2.7.0
       '@parcel/packager-ts': ^2.7.0
       '@parcel/transformer-typescript-types': ^2.7.0
@@ -218,7 +218,7 @@ importers:
 
   packages/express-sample:
     specifiers:
-      '@logto/express': 1.0.0-beta.13
+      '@logto/express': ^1.0.0-beta.14
       '@silverhand/eslint-config': ^1.0.0
       '@silverhand/ts-config': ^1.0.0
       '@types/cookie-parser': ^1.4.3
@@ -313,7 +313,7 @@ importers:
   packages/next:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/node': 1.0.0-beta.13
+      '@logto/node': ^1.0.0-beta.14
       '@parcel/core': ^2.7.0
       '@parcel/packager-ts': ^2.7.0
       '@parcel/transformer-typescript-types': ^2.7.0
@@ -363,7 +363,7 @@ importers:
 
   packages/next-sample:
     specifiers:
-      '@logto/next': 1.0.0-beta.13
+      '@logto/next': ^1.0.0-beta.14
       '@silverhand/eslint-config': ^1.0.0
       '@silverhand/eslint-config-react': ^1.0.0
       '@silverhand/ts-config': ^1.0.0
@@ -407,7 +407,7 @@ importers:
   packages/node:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/client': 1.0.0-beta.13
+      '@logto/client': ^1.0.0-beta.14
       '@parcel/core': ^2.7.0
       '@parcel/packager-ts': ^2.7.0
       '@parcel/transformer-typescript-types': ^2.7.0
@@ -452,7 +452,7 @@ importers:
   packages/react:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/browser': 1.0.0-beta.13
+      '@logto/browser': ^1.0.0-beta.14
       '@parcel/core': ^2.7.0
       '@parcel/packager-ts': ^2.7.0
       '@parcel/transformer-typescript-types': ^2.7.0
@@ -502,7 +502,7 @@ importers:
 
   packages/react-sample:
     specifiers:
-      '@logto/react': 1.0.0-beta.13
+      '@logto/react': ^1.0.0-beta.14
       '@parcel/core': ^2.7.0
       '@parcel/transformer-sass': ^2.7.0
       '@silverhand/eslint-config': ^1.0.0
@@ -552,7 +552,7 @@ importers:
       '@commitlint/cli': ^17.1.2
       '@commitlint/config-conventional': ^17.1.0
       '@jest/types': ^27.5.1
-      '@logto/node': 1.0.0-beta.13
+      '@logto/node': ^1.0.0-beta.14
       '@parcel/core': ^2.7.0
       '@parcel/packager-ts': ^2.7.0
       '@parcel/transformer-typescript-types': ^2.7.0
@@ -607,7 +607,7 @@ importers:
   packages/vue:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/browser': 1.0.0-beta.13
+      '@logto/browser': ^1.0.0-beta.14
       '@parcel/core': ^2.7.0
       '@parcel/packager-ts': ^2.7.0
       '@parcel/transformer-typescript-types': ^2.7.0
@@ -647,7 +647,7 @@ importers:
 
   packages/vue-sample:
     specifiers:
-      '@logto/vue': 1.0.0-beta.13
+      '@logto/vue': ^1.0.0-beta.14
       '@rushstack/eslint-patch': ^1.1.0
       '@types/node': ^16.11.27
       '@vitejs/plugin-vue': ^3.0.0
@@ -2687,6 +2687,7 @@ packages:
 
   /@next/env/12.2.2:
     resolution: {integrity: sha512-BqDwE4gDl1F608TpnNxZqrCn6g48MBjvmWFEmeX5wEXDXh3IkAOw6ASKUgjT8H4OUePYFqghDFUss5ZhnbOUjw==}
+    dev: true
 
   /@next/env/13.0.4:
     resolution: {integrity: sha512-N5Z3bdxBzoxrC5bwykDFITzdWuwDteOdZ+7nxixY+I1XpRX8/iQYbw2wuXMdqdfBGm2NNUpAqg8YF2e4oAC2UQ==}
@@ -2698,6 +2699,7 @@ packages:
     cpu: [arm]
     os: [android]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-android-arm-eabi/13.0.4:
@@ -2715,6 +2717,7 @@ packages:
     cpu: [arm64]
     os: [android]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-android-arm64/13.0.4:
@@ -2732,6 +2735,7 @@ packages:
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-darwin-arm64/13.0.4:
@@ -2749,6 +2753,7 @@ packages:
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-darwin-x64/13.0.4:
@@ -2766,6 +2771,7 @@ packages:
     cpu: [x64]
     os: [freebsd]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-freebsd-x64/13.0.4:
@@ -2783,6 +2789,7 @@ packages:
     cpu: [arm]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-linux-arm-gnueabihf/13.0.4:
@@ -2800,6 +2807,7 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-linux-arm64-gnu/13.0.4:
@@ -2817,6 +2825,7 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-linux-arm64-musl/13.0.4:
@@ -2834,6 +2843,7 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-linux-x64-gnu/13.0.4:
@@ -2851,6 +2861,7 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-linux-x64-musl/13.0.4:
@@ -2868,6 +2879,7 @@ packages:
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-win32-arm64-msvc/13.0.4:
@@ -2885,6 +2897,7 @@ packages:
     cpu: [ia32]
     os: [win32]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-win32-ia32-msvc/13.0.4:
@@ -2902,6 +2915,7 @@ packages:
     cpu: [x64]
     os: [win32]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-win32-x64-msvc/13.0.4:
@@ -4175,7 +4189,6 @@ packages:
       stylelint-config-xo-scss: 0.15.0_yeqemsxdnlnojmzhfr5wqsgijq
     transitivePeerDependencies:
       - eslint
-      - eslint-import-resolver-webpack
       - postcss
       - prettier
       - supports-color
@@ -4196,7 +4209,6 @@ packages:
       stylelint-config-xo-scss: 0.15.0_dv74vz3kd2jzw73aeftwn7eaye
     transitivePeerDependencies:
       - eslint
-      - eslint-import-resolver-webpack
       - postcss
       - prettier
       - supports-color
@@ -4217,7 +4229,6 @@ packages:
       stylelint-config-xo-scss: 0.15.0_fuey67s7n6jf446omnzhgthpnu
     transitivePeerDependencies:
       - eslint
-      - eslint-import-resolver-webpack
       - postcss
       - prettier
       - supports-color
@@ -4241,7 +4252,7 @@ packages:
       eslint-import-resolver-typescript: 3.5.1_faomjyrlgqmwswvqymymzkxcqi
       eslint-plugin-consistent-default-export-name: 0.0.15
       eslint-plugin-eslint-comments: 3.2.0_eslint@8.23.0
-      eslint-plugin-import: 2.26.0_ikxfxf6lcdzwf3sfhs76tj4x7m
+      eslint-plugin-import: 2.26.0_eslint@8.23.0
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-node: 11.1.0_eslint@8.23.0
       eslint-plugin-prettier: 4.2.1_tgumt6uwl2md3n6uqnggd6wvce
@@ -4251,7 +4262,6 @@ packages:
       eslint-plugin-unused-imports: 2.0.0_zko7vy5ljylfnjbd43q67qnl6a
       prettier: 2.7.1
     transitivePeerDependencies:
-      - eslint-import-resolver-webpack
       - supports-color
       - typescript
     dev: true
@@ -4273,7 +4283,7 @@ packages:
       eslint-import-resolver-typescript: 3.5.1_faomjyrlgqmwswvqymymzkxcqi
       eslint-plugin-consistent-default-export-name: 0.0.15
       eslint-plugin-eslint-comments: 3.2.0_eslint@8.23.0
-      eslint-plugin-import: 2.26.0_ikxfxf6lcdzwf3sfhs76tj4x7m
+      eslint-plugin-import: 2.26.0_eslint@8.23.0
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-node: 11.1.0_eslint@8.23.0
       eslint-plugin-prettier: 4.2.1_tgumt6uwl2md3n6uqnggd6wvce
@@ -4283,7 +4293,6 @@ packages:
       eslint-plugin-unused-imports: 2.0.0_zko7vy5ljylfnjbd43q67qnl6a
       prettier: 2.7.1
     transitivePeerDependencies:
-      - eslint-import-resolver-webpack
       - supports-color
       - typescript
     dev: true
@@ -4528,6 +4537,7 @@ packages:
     resolution: {integrity: sha512-556Az0VX7WR6UdoTn4htt/l3zPQ7bsQWK+HqdG4swV7beUCxo/BqmvbOpUkTIm/9ih86LIf1qsUnywNL3obGHw==}
     dependencies:
       tslib: 2.4.0
+    dev: true
 
   /@swc/jest/0.2.23_@swc+core@1.3.7:
     resolution: {integrity: sha512-ZLj17XjHbPtNsgqjm83qizENw05emLkKGu3WuPUttcy9hkngl0/kcc7fDbcSBpADS0GUtsO+iKPjZFWVAtJSlA==}
@@ -5967,8 +5977,6 @@ packages:
       raw-body: 2.5.1
       type-is: 1.6.18
       unpipe: 1.0.0
-    transitivePeerDependencies:
-      - supports-color
 
   /boolbase/1.0.0:
     resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==}
@@ -6146,6 +6154,7 @@ packages:
 
   /caniuse-lite/1.0.30001367:
     resolution: {integrity: sha512-XDgbeOHfifWV3GEES2B8rtsrADx4Jf+juKX2SICJcaUhjYBO3bR96kvEIHa15VU6ohtOhBZuPGGYGbXMRn0NCw==}
+    dev: true
 
   /caniuse-lite/1.0.30001393:
     resolution: {integrity: sha512-N/od11RX+Gsk+1qY/jbPa0R6zJupEa0lxeBG598EbrtblxVCTJsQwbRBm6+V+rxpc5lHKdsXb9RY83cZIPLseA==}
@@ -6531,8 +6540,8 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
-      JSONStream: 1.3.5
       is-text-path: 1.0.1
+      JSONStream: 1.3.5
       lodash: 4.17.21
       meow: 8.1.2
       split2: 3.2.2
@@ -6749,21 +6758,11 @@ packages:
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
     dependencies:
       ms: 2.0.0
 
   /debug/3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
     dependencies:
       ms: 2.1.3
     dev: true
@@ -7454,8 +7453,6 @@ packages:
     dependencies:
       debug: 3.2.7
       resolve: 1.22.1
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /eslint-import-resolver-typescript/3.5.1_faomjyrlgqmwswvqymymzkxcqi:
@@ -7468,7 +7465,7 @@ packages:
       debug: 4.3.4
       enhanced-resolve: 5.10.0
       eslint: 8.23.0
-      eslint-plugin-import: 2.26.0_ikxfxf6lcdzwf3sfhs76tj4x7m
+      eslint-plugin-import: 2.26.0_eslint@8.23.0
       get-tsconfig: 4.2.0
       globby: 13.1.2
       is-core-module: 2.10.0
@@ -7478,31 +7475,12 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-module-utils/2.7.3_7liths4w263er5tix7tpkwznyq:
+  /eslint-module-utils/2.7.3:
     resolution: {integrity: sha512-088JEC7O3lDZM9xGe0RerkOMd0EjFl+Yvd1jPWIkMT5u3H9+HC34mWWPnqPrN13gieT9pBOO+Qt07Nb/6TresQ==}
     engines: {node: '>=4'}
-    peerDependencies:
-      '@typescript-eslint/parser': '*'
-      eslint-import-resolver-node: '*'
-      eslint-import-resolver-typescript: '*'
-      eslint-import-resolver-webpack: '*'
-    peerDependenciesMeta:
-      '@typescript-eslint/parser':
-        optional: true
-      eslint-import-resolver-node:
-        optional: true
-      eslint-import-resolver-typescript:
-        optional: true
-      eslint-import-resolver-webpack:
-        optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.36.2_sorwav4hsh5vncerguqybud76i
       debug: 3.2.7
-      eslint-import-resolver-node: 0.3.6
-      eslint-import-resolver-typescript: 3.5.1_faomjyrlgqmwswvqymymzkxcqi
       find-up: 2.1.0
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /eslint-plugin-consistent-default-export-name/0.0.15:
@@ -7535,24 +7513,19 @@ packages:
       ignore: 5.2.0
     dev: true
 
-  /eslint-plugin-import/2.26.0_ikxfxf6lcdzwf3sfhs76tj4x7m:
+  /eslint-plugin-import/2.26.0_eslint@8.23.0:
     resolution: {integrity: sha512-hYfi3FXaM8WPLf4S1cikh/r4IxnO6zrhZbEGz2b660EJRbuxgpDS5gkCuYgGWg2xxh2rBuIr4Pvhve/7c31koA==}
     engines: {node: '>=4'}
     peerDependencies:
-      '@typescript-eslint/parser': '*'
       eslint: ^2 || ^3 || ^4 || ^5 || ^6 || ^7.2.0 || ^8
-    peerDependenciesMeta:
-      '@typescript-eslint/parser':
-        optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.36.2_sorwav4hsh5vncerguqybud76i
       array-includes: 3.1.4
       array.prototype.flat: 1.2.5
       debug: 2.6.9
       doctrine: 2.1.0
       eslint: 8.23.0
       eslint-import-resolver-node: 0.3.6
-      eslint-module-utils: 2.7.3_7liths4w263er5tix7tpkwznyq
+      eslint-module-utils: 2.7.3
       has: 1.0.3
       is-core-module: 2.9.0
       is-glob: 4.0.3
@@ -7560,10 +7533,6 @@ packages:
       object.values: 1.1.5
       resolve: 1.22.1
       tsconfig-paths: 3.14.1
-    transitivePeerDependencies:
-      - eslint-import-resolver-typescript
-      - eslint-import-resolver-webpack
-      - supports-color
     dev: true
 
   /eslint-plugin-no-use-extend-native/0.5.0:
@@ -7976,8 +7945,6 @@ packages:
       parseurl: 1.3.3
       safe-buffer: 5.2.1
       uid-safe: 2.1.5
-    transitivePeerDependencies:
-      - supports-color
 
   /express/4.18.1:
     resolution: {integrity: sha512-zZBcOX9TfehHQhtupq57OF8lFZ3UZi08Y97dwFCkD8p9d/d2Y3M+ykKcwaMDEL+4qyUolgBDX6AblpR3fL212Q==}
@@ -8014,8 +7981,6 @@ packages:
       type-is: 1.6.18
       utils-merge: 1.0.1
       vary: 1.1.2
-    transitivePeerDependencies:
-      - supports-color
 
   /external-editor/3.1.0:
     resolution: {integrity: sha512-hMQ4CX1p1izmuLYyZqLMO/qGNw10wSv9QDCPfzXfyFrOaCSSoRfqE1Kf1s5an66J5JZC62NewG+mK49jOCtQew==}
@@ -8111,8 +8076,6 @@ packages:
       parseurl: 1.3.3
       statuses: 2.0.1
       unpipe: 1.0.0
-    transitivePeerDependencies:
-      - supports-color
 
   /find-up/2.1.0:
     resolution: {integrity: sha512-NWzkk0jSJtTt08+FBFMvXoeZnOJD+jTtsRmBYbAIzJdX6l7dLgR7CTubCM5/eDdPUBvLCeVasP1brfVR/9/EZQ==}
@@ -11276,6 +11239,7 @@ packages:
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
+    dev: true
 
   /next/13.0.4_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-4P0MvbjPCI1E/UPL1GrTXtYlgFnbBbY3JQ+AMY8jYE2SwyvCWctEJySoRjveznAHjrl6TIjuAJeB8u1c2StYUQ==}
@@ -12354,6 +12318,7 @@ packages:
       nanoid: 3.3.4
       picocolors: 1.0.0
       source-map-js: 1.0.2
+    dev: true
 
   /postcss/8.4.6:
     resolution: {integrity: sha512-OovjwIzs9Te46vlEx7+uXB0PLijpwjXGKXjVGGPIGubGpq7uh5Xgf6D6FiJ/SzJMBosHDp6a2hiXOS97iBXcaA==}
@@ -13057,8 +13022,6 @@ packages:
       on-finished: 2.4.1
       range-parser: 1.2.1
       statuses: 2.0.1
-    transitivePeerDependencies:
-      - supports-color
 
   /serve-static/1.15.0:
     resolution: {integrity: sha512-XGuRDNjXUijsUL0vl6nSD7cwURuzEgglbOaFuZM9g3kwDXOWVTck0jLzjPzGD+TazWbboZYu52/9/XPdUgne9g==}
@@ -13497,6 +13460,7 @@ packages:
         optional: true
     dependencies:
       react: 17.0.2
+    dev: true
 
   /styled-jsx/5.1.0_react@18.2.0:
     resolution: {integrity: sha512-/iHaRJt9U7T+5tp6TRelLnqBqiaIT0HsO0+vgyj8hK2KUk7aejFqRrumqPUlAqDwAj8IbS/1hk3IhBAAK/FCUQ==}
@@ -14247,6 +14211,7 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
       react: 17.0.2
+    dev: true
 
   /use-sync-external-store/1.2.0_react@18.2.0:
     resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
