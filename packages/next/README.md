@@ -3,9 +3,9 @@
 [![Build Status](https://github.com/logto-io/js/actions/workflows/main.yml/badge.svg)](https://github.com/logto-io/js/actions/workflows/main.yml)
 [![Codecov](https://img.shields.io/codecov/c/github/logto-io/js)](https://app.codecov.io/gh/logto-io/js?branch=master)
 
-The Logto Next.js SDK written in TypeScript. Check out our [integration guide](https://docs.logto.io/docs/recipes/integrate-logto/next) or [docs](https://docs.logto.io/sdk/JavaScript/next/) for more information.
+The Logto Next.js SDK written in TypeScript. Check out our [integration guide](https://docs.logto.io/docs/recipes/integrate-logto/next-js) or [docs](https://docs.logto.io/sdk/JavaScript/next/) for more information.
 
-We also provide [集成指南](https://docs.logto.io/zh-cn/docs/recipes/integrate-logto/next/) and [文档](https://docs.logto.io/zh-cn/sdk/JavaScript/next/) in Simplified Chinese.
+We also provide [集成指南](https://docs.logto.io/zh-cn/docs/recipes/integrate-logto/next-js/) and [文档](https://docs.logto.io/zh-cn/sdk/JavaScript/next/) in Simplified Chinese.
 
 ## Installation
 
@@ -33,7 +33,7 @@ A sample project can be found at [Next.js Sample](https://github.com/logto-io/js
 
 Check out the source code and try it with ease.
 
-```
+```bash
 pnpm i && pnpm start
 ```
 
