@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.15](https://github.com/logto-io/js/compare/v1.0.0-beta.14...v1.0.0-beta.15) (2023-01-12)
+
+
+### Features
+
+* **client:** remove scope for access token grant ([#439](https://github.com/logto-io/js/issues/439)) ([52468fd](https://github.com/logto-io/js/commit/52468fd2bb98c8178efa3d4af63b7dd22b75326d))
+
+
+### Bug Fixes
+
+* links in README ([#438](https://github.com/logto-io/js/issues/438)) ([d3acd9c](https://github.com/logto-io/js/commit/d3acd9c6972a0b5fb25e91ac4ce1f39a8bb7ca80))
+
+
+
 ## [1.0.0-beta.14](https://github.com/logto-io/js/compare/v1.0.0-beta.13...v1.0.0-beta.14) (2022-12-12)
 
 
