@@ -1,4 +1,3 @@
-import { ReservedScope } from '@logto/core-kit';
 import {
   CodeTokenResponse,
   decodeIdToken,
@@ -278,7 +277,6 @@ export default class LogtoClient {
             tokenEndpoint,
             refreshToken: currentRefreshToken,
             resource,
-            scopes: resource ? [ReservedScope.OfflineAccess] : undefined, // Force remove openid scope from the request
           },
           this.adapter.requester
         );
