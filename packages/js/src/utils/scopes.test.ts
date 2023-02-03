@@ -1,5 +1,4 @@
-import { ReservedScope, UserScope } from '@logto/core-kit';
-
+import { ReservedScope, UserScope } from '../consts';
 import { withDefaultScopes } from './scopes';
 
 const offlineAccess = ReservedScope.OfflineAccess;

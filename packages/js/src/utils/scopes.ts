@@ -1,4 +1,4 @@
-import { ReservedScope, UserScope } from '@logto/core-kit';
+import { ReservedScope, UserScope } from '../consts';
 
 /**
  * @param originalScopes
