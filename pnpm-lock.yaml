@@ -33,7 +33,7 @@ importers:
       jest: ^27.5.1
       jest-location-mock: ^1.0.9
       jest-matcher-specific-error: ^1.0.0
-      js-base64: ^3.7.2
+      js-base64: ^3.7.4
       lint-staged: ^13.0.0
       node-fetch: ^2.6.7
       parcel: ^2.8.3
@@ -44,7 +44,7 @@ importers:
     dependencies:
       '@logto/client': link:../client
       '@silverhand/essentials': 1.2.1
-      js-base64: 3.7.2
+      js-base64: 3.7.4
     devDependencies:
       '@jest/types': 27.5.1
       '@parcel/core': 2.8.3
@@ -72,13 +72,11 @@ importers:
       '@parcel/transformer-sass': ^2.8.3
       '@silverhand/eslint-config': ^1.0.0
       '@silverhand/eslint-config-react': ^1.0.0
-      buffer: ^6.0.3
       eslint: ^8.23.0
       lint-staged: ^13.0.0
       parcel: ^2.8.3
       postcss: ^8.4.6
       prettier: ^2.7.1
-      process: ^0.11.10
       stylelint: ^14.11.0
       typescript: 4.7.4
     dependencies:
@@ -88,13 +86,11 @@ importers:
       '@parcel/transformer-sass': 2.8.3_@parcel+core@2.8.3
       '@silverhand/eslint-config': 1.0.0_sx4irterpwablvxe4th3jwwb3e
       '@silverhand/eslint-config-react': 1.0.0_sqazh2ys7lkc6c764v5fcgw3iu
-      buffer: 6.0.3
       eslint: 8.23.0
       lint-staged: 13.0.0
       parcel: 2.8.3_postcss@8.4.6
       postcss: 8.4.6
       prettier: 2.7.1
-      process: 0.11.10
       stylelint: 14.11.0
       typescript: 4.7.4
 
@@ -415,7 +411,7 @@ importers:
       jest: ^27.5.1
       jest-location-mock: ^1.0.9
       jest-matcher-specific-error: ^1.0.0
-      js-base64: ^3.7.2
+      js-base64: ^3.7.4
       lint-staged: ^13.0.0
       node-fetch: ^2.6.7
       parcel: ^2.8.3
@@ -425,7 +421,7 @@ importers:
     dependencies:
       '@logto/client': link:../client
       '@silverhand/essentials': 1.2.1
-      js-base64: 3.7.2
+      js-base64: 3.7.4
       node-fetch: 2.6.7
     devDependencies:
       '@jest/types': 27.5.1
@@ -508,12 +504,14 @@ importers:
       '@types/react': ^17.0.39
       '@types/react-dom': ^17.0.11
       '@types/react-router-dom': ^5.3.3
+      buffer: ^6.0.3
       eslint: ^8.23.0
       lint-staged: ^13.0.0
       parcel: ^2.8.3
       postcss: ^8.4.6
       postcss-modules: ^5.0.0
       prettier: ^2.7.1
+      process: ^0.11.10
       react: ^17.0.2
       react-dom: ^17.0.2
       react-router-dom: ^6.2.2
@@ -534,12 +532,14 @@ importers:
       '@types/react': 17.0.39
       '@types/react-dom': 17.0.11
       '@types/react-router-dom': 5.3.3
+      buffer: 6.0.3
       eslint: 8.23.0
       lint-staged: 13.0.0
       parcel: 2.8.3_postcss@8.4.6
       postcss: 8.4.6
       postcss-modules: 5.0.0_postcss@8.4.6
       prettier: 2.7.1
+      process: 0.11.10
       stylelint: 14.11.0
       typescript: 4.7.4
 
@@ -10285,8 +10285,8 @@ packages:
     resolution: {integrity: sha512-uhjuzZjKGKmi5DVJ/eghN8hJklLhwZRLRAaaG9MkkMAdfRYlHvZ10i4z/4WSN1hSTMffCet+k7iRHvbdGwmZPw==}
     dev: false
 
-  /js-base64/3.7.2:
-    resolution: {integrity: sha512-NnRs6dsyqUXejqk/yv2aiXlAvOs56sLkX6nUdeaNezI5LFFLlsZjOThmwnrcwh5ZZRwZlCMnVAY3CvhIhoVEKQ==}
+  /js-base64/3.7.4:
+    resolution: {integrity: sha512-wpM/wi20Tl+3ifTyi0RdDckS4YTD4Lf953mBRrpG8547T7hInHNPEj8+ck4gB8VDcGyeAWFK++Wb/fU1BeavKQ==}
     dev: false
 
   /js-tokens/4.0.0:
@@ -12531,7 +12531,7 @@ packages:
     dev: true
 
   /process/0.11.10:
-    resolution: {integrity: sha1-czIwDoQBYb2j5podHZGn1LwW8YI=}
+    resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
     engines: {node: '>= 0.6.0'}
     dev: true
 

@@ -380,4 +380,6 @@ export default class LogtoClient {
       }
     } catch {}
   }
+  // FIXME: @charles @sijie
+  // eslint-disable-next-line max-lines
 }
