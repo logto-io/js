@@ -31,12 +31,18 @@ import {
 import { buildAccessTokenKey, getDiscoveryEndpoint } from './utils';
 
 export type { IdTokenClaims, LogtoErrorCode, UserInfoResponse } from '@logto/js';
-export { LogtoError, OidcError, Prompt, LogtoRequestError } from '@logto/js';
+export {
+  LogtoError,
+  OidcError,
+  Prompt,
+  LogtoRequestError,
+  ReservedScope,
+  UserScope,
+} from '@logto/js';
 export * from './errors';
 export type { Storage, StorageKey, ClientAdapter } from './adapter';
 export { createRequester } from './utils';
 export * from './types';
-export { ReservedScope, UserScope } from '@logto/core-kit';
 
 export default class LogtoClient {
   protected readonly logtoConfig: LogtoConfig;

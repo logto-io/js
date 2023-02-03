@@ -1,6 +1,4 @@
-import { ReservedScope, UserScope } from '@logto/core-kit';
-
-import { withDefaultScopes } from './scopes';
+import { ReservedScope, UserScope, withDefaultScopes } from './scopes';
 
 const offlineAccess = ReservedScope.OfflineAccess;
 const openid = ReservedScope.OpenId;

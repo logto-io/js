@@ -1,6 +1,5 @@
-import { UserScope } from '@logto/core-kit';
-
 import { Prompt } from '../consts';
+import { UserScope } from '../utils/index.js';
 import { generateSignInUri } from './sign-in';
 
 const authorizationEndpoint = 'https://logto.dev/oidc/sign-in';
