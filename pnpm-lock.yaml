@@ -225,7 +225,7 @@ importers:
       express-session: ^1.17.3
       lint-staged: ^13.0.0
       postcss: ^8.4.6
-      postcss-modules: ^5.0.0
+      postcss-modules: ^6.0.0
       prettier: ^2.7.1
       ts-node: ^10.9.1
       typescript: 4.9.5
@@ -244,7 +244,7 @@ importers:
       eslint: 8.23.0
       lint-staged: 13.0.0
       postcss: 8.4.14
-      postcss-modules: 5.0.0_postcss@8.4.14
+      postcss-modules: 6.0.0_postcss@8.4.14
       prettier: 2.7.1
       ts-node: 10.9.1_bkkv5x6zmp47xkpkius2jt4ihe
       typescript: 4.9.5
@@ -367,7 +367,7 @@ importers:
       lint-staged: ^13.0.0
       next: ^13.0.4
       postcss: ^8.4.6
-      postcss-modules: ^5.0.0
+      postcss-modules: ^6.0.0
       prettier: ^2.7.1
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -391,7 +391,7 @@ importers:
       eslint: 8.23.0
       lint-staged: 13.0.0
       postcss: 8.4.14
-      postcss-modules: 5.0.0_postcss@8.4.14
+      postcss-modules: 6.0.0_postcss@8.4.14
       prettier: 2.7.1
       stylelint: 14.11.0
       typescript: 4.9.5
@@ -509,7 +509,7 @@ importers:
       lint-staged: ^13.0.0
       parcel: ^2.8.3
       postcss: ^8.4.6
-      postcss-modules: ^5.0.0
+      postcss-modules: ^6.0.0
       prettier: ^2.7.1
       process: ^0.11.10
       react: ^17.0.2
@@ -537,7 +537,7 @@ importers:
       lint-staged: 13.0.0
       parcel: 2.8.3_postcss@8.4.6
       postcss: 8.4.6
-      postcss-modules: 5.0.0_postcss@8.4.6
+      postcss-modules: 6.0.0_postcss@8.4.6
       prettier: 2.7.1
       process: 0.11.10
       stylelint: 14.11.0
@@ -8878,10 +8878,6 @@ packages:
     dev: true
     optional: true
 
-  /icss-replace-symbols/1.1.0:
-    resolution: {integrity: sha512-chIaY3Vh2mh2Q3RGXttaDIzeiPvaVXJ+C4DAh/w3c37SKZ/U6PGMmuicR2EQQp9bKG8zLMCl7I+PtIoOOPp8Gg==}
-    dev: true
-
   /icss-utils/5.1.0_postcss@8.4.14:
     resolution: {integrity: sha512-soFhflCVWLfRNOPU3iv5Z9VUdT44xFRbzjLsEzSr5AQmgqPMTHdU3PMT1Cf1ssx8fLNJDA1juftYl+PUcv3MqA==}
     engines: {node: ^10 || ^12 || >= 14}
@@ -12317,13 +12313,13 @@ packages:
       postcss: 8.4.6
     dev: true
 
-  /postcss-modules/5.0.0_postcss@8.4.14:
-    resolution: {integrity: sha512-rGvpTDOM3//3Ysn3Xtvhzaj8ab984wKCpP02TEF559tLbUjNay3RQDpPxb7BREmfBtJm3/1WbQOZ7fSXwYLZ/w==}
+  /postcss-modules/6.0.0_postcss@8.4.14:
+    resolution: {integrity: sha512-7DGfnlyi/ju82BRzTIjWS5C4Tafmzl3R79YP/PASiocj+aa6yYphHhhKUOEoXQToId5rgyFgJ88+ccOUydjBXQ==}
     peerDependencies:
       postcss: ^8.0.0
     dependencies:
       generic-names: 4.0.0
-      icss-replace-symbols: 1.1.0
+      icss-utils: 5.1.0_postcss@8.4.14
       lodash.camelcase: 4.3.0
       postcss: 8.4.14
       postcss-modules-extract-imports: 3.0.0_postcss@8.4.14
@@ -12333,13 +12329,13 @@ packages:
       string-hash: 1.1.3
     dev: true
 
-  /postcss-modules/5.0.0_postcss@8.4.6:
-    resolution: {integrity: sha512-rGvpTDOM3//3Ysn3Xtvhzaj8ab984wKCpP02TEF559tLbUjNay3RQDpPxb7BREmfBtJm3/1WbQOZ7fSXwYLZ/w==}
+  /postcss-modules/6.0.0_postcss@8.4.6:
+    resolution: {integrity: sha512-7DGfnlyi/ju82BRzTIjWS5C4Tafmzl3R79YP/PASiocj+aa6yYphHhhKUOEoXQToId5rgyFgJ88+ccOUydjBXQ==}
     peerDependencies:
       postcss: ^8.0.0
     dependencies:
       generic-names: 4.0.0
-      icss-replace-symbols: 1.1.0
+      icss-utils: 5.1.0_postcss@8.4.6
       lodash.camelcase: 4.3.0
       postcss: 8.4.6
       postcss-modules-extract-imports: 3.0.0_postcss@8.4.6
