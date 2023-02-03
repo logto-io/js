@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-rc.0](https://github.com/logto-io/js/compare/v1.0.0-beta.15...v1.0.0-rc.0) (2023-02-03)
+
+
+### Bug Fixes
+
+* remove core-kit dependency and update `engines` ([8a24a87](https://github.com/logto-io/js/commit/8a24a870e7b3891f5e205b3e8a9419535baa7b44))
+
+
+
 ## [1.0.0-beta.14](https://github.com/logto-io/js/compare/v1.0.0-beta.13...v1.0.0-beta.14) (2022-12-12)
 
 **Note:** Version bump only for package @logto/js
