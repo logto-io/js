@@ -20,7 +20,6 @@ export type IdTokenClaims = {
   email_verified?: boolean;
   phone_number?: Nullable<string>;
   phone_number_verified?: boolean;
-  role_names?: Nullable<string[]>;
 };
 
 /* eslint-disable complexity */
@@ -61,22 +60,6 @@ function assertIdTokenClaims(data: unknown): asserts data is IdTokenClaims {
 
     if (typeof data[key] !== 'boolean') {
       throw new TypeError(`At path: IdToken.${key}: expected a boolean`);
-    }
-  }
-
-  if (
-    data.role_names !== undefined &&
-    data.role_names !== null &&
-    !Array.isArray(data.role_names)
-  ) {
-    throw new TypeError('At path: IdToken.role_names: expected null or an array of strings');
-  }
-
-  if (data.role_names) {
-    for (const [index, value] of data.role_names.entries()) {
-      if (typeof value !== 'string') {
-        throw new TypeError(`At path: IdToken.role_names[${index}]: expected a string`);
-      }
     }
   }
 }

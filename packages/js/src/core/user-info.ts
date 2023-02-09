@@ -10,7 +10,6 @@ export type UserInfoResponse = {
   name?: string;
   username?: string;
   picture?: string;
-  role_names?: string[];
   email?: string;
   email_verified?: boolean;
   phone_number?: string;
