@@ -213,7 +213,7 @@ describe('verifyIdToken', () => {
 describe('decodeIdToken', () => {
   test('decoding valid JWT should return claims', async () => {
     const { privateKey } = await generateKeyPair('RS256');
-    const jwt = await new SignJWT({ name: '测试用户', avatar: undefined, role_names: ['admin'] })
+    const jwt = await new SignJWT({ name: '测试用户', avatar: undefined })
       .setProtectedHeader({ alg: 'RS256' })
       .setIssuer('foo')
       .setSubject('bar')
@@ -229,13 +229,12 @@ describe('decodeIdToken', () => {
       exp: 2000,
       iat: 1000,
       name: '测试用户',
-      role_names: ['admin'],
     });
   });
 
   test('decoding valid JWT with wrong payload type should throw', async () => {
     const { privateKey } = await generateKeyPair('RS256');
-    const jwt = await new SignJWT({ name: null, avatar: undefined, role_names: [123] })
+    const jwt = await new SignJWT({ name: null, avatar: undefined, at_hash: 123 })
       .setProtectedHeader({ alg: 'RS256' })
       .setIssuer('foo')
       .setSubject('bar')
