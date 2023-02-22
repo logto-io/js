@@ -228,7 +228,7 @@ describe('LogtoClient', () => {
       const encodedRedirectUri = encodeURIComponent(postSignOutRedirectUri);
 
       expect(navigate).toHaveBeenCalledWith(
-        `${endSessionEndpoint}?id_token_hint=id_token_value&post_logout_redirect_uri=${encodedRedirectUri}`
+        `${endSessionEndpoint}?client_id=${appId}&post_logout_redirect_uri=${encodedRedirectUri}`
       );
     });
 
@@ -247,7 +247,7 @@ describe('LogtoClient', () => {
       await expect(storage.getItem('idToken')).resolves.toBeNull();
       await expect(storage.getItem('refreshToken')).resolves.toBeNull();
       await expect(storage.getItem('accessToken')).resolves.toBeNull();
-      expect(navigate).toHaveBeenCalledWith(`${endSessionEndpoint}?id_token_hint=id_token_value`);
+      expect(navigate).toHaveBeenCalledWith(`${endSessionEndpoint}?client_id=${appId}`);
     });
   });
 
