@@ -1,3 +1,5 @@
+import { Nullable } from '@silverhand/essentials';
+
 import { Requester } from '../types';
 
 type Identity = {
@@ -7,15 +9,15 @@ type Identity = {
 
 export type UserInfoResponse = {
   sub: string;
-  name?: string;
-  username?: string;
-  picture?: string;
-  email?: string;
+  name?: Nullable<string>;
+  username?: Nullable<string>;
+  picture?: Nullable<string>;
+  email?: Nullable<string>;
   email_verified?: boolean;
-  phone_number?: string;
+  phone_number?: Nullable<string>;
   phone_number_verified?: boolean;
-  custom_data?: unknown;
-  identities?: Record<string, Identity>;
+  custom_data?: unknown; // Not null in DB.
+  identities?: Record<string, Identity>; // Not null in DB.
 };
 
 export const fetchUserInfo = async (
