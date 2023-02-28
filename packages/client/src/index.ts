@@ -200,7 +200,7 @@ export default class LogtoClient {
     const url = generateSignOutUri({
       endSessionEndpoint,
       postLogoutRedirectUri,
-      idToken,
+      clientId,
     });
 
     this.accessTokenMap.clear();

@@ -2,16 +2,16 @@ import { QueryKey } from '../consts';
 
 type SignOutUriParameters = {
   endSessionEndpoint: string;
-  idToken: string;
+  clientId: string;
   postLogoutRedirectUri?: string;
 };
 
 export const generateSignOutUri = ({
   endSessionEndpoint,
-  idToken,
+  clientId,
   postLogoutRedirectUri,
 }: SignOutUriParameters) => {
-  const urlSearchParameters = new URLSearchParams({ [QueryKey.IdTokenHint]: idToken });
+  const urlSearchParameters = new URLSearchParams({ [QueryKey.ClientId]: clientId });
 
   if (postLogoutRedirectUri) {
     urlSearchParameters.append(QueryKey.PostLogoutRedirectUri, postLogoutRedirectUri);
