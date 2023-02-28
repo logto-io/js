@@ -1,7 +1,7 @@
-import { GetContextParameters } from '@logto/node';
-import { SessionStorage } from '@remix-run/node';
+import type { GetContextParameters } from '@logto/node';
+import type { SessionStorage } from '@remix-run/node';
 
-import { CreateLogtoAdapter, LogtoContext } from '../../infrastructure/logto';
+import type { CreateLogtoAdapter, LogtoContext } from '../../infrastructure/logto';
 
 type GetContextRequest = GetContextParameters & {
   readonly cookieHeader: string | undefined;

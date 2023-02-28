@@ -1,8 +1,9 @@
 import { generateSignInUri, Prompt } from '@logto/js';
-import { Nullable } from '@silverhand/essentials';
+import type { Nullable } from '@silverhand/essentials';
 
-import LogtoClient, { AccessToken, LogtoConfig, LogtoSignInSessionItem } from '.';
-import { Storage } from './adapter';
+import type { AccessToken, LogtoConfig, LogtoSignInSessionItem } from '.';
+import LogtoClient from '.';
+import type { Storage } from './adapter';
 
 export const appId = 'app_id_value';
 export const endpoint = 'https://logto.dev';

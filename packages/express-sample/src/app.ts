@@ -1,8 +1,10 @@
 import http from 'http';
 
-import { handleAuthRoutes, withLogto, LogtoExpressConfig } from '@logto/express';
+import type { LogtoExpressConfig } from '@logto/express';
+import { handleAuthRoutes, withLogto } from '@logto/express';
 import cookieParser from 'cookie-parser';
-import express, { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import session from 'express-session';
 
 const config: LogtoExpressConfig = {

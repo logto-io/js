@@ -1,8 +1,8 @@
-import { NextApiResponse } from 'next';
+import type { NextApiResponse } from 'next';
 import { testApiHandler } from 'next-test-api-route-handler';
 
 import LogtoClient from '.';
-import { LogtoNextConfig } from './types';
+import type { LogtoNextConfig } from './types';
 
 const signInUrl = 'http://mock-logto-server.com/sign-in';
 

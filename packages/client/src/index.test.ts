@@ -1,7 +1,8 @@
 /* eslint-disable max-lines */
 import { Prompt } from '@logto/js';
 
-import LogtoClient, { LogtoClientError, LogtoSignInSessionItem } from '.';
+import type { LogtoSignInSessionItem } from '.';
+import LogtoClient, { LogtoClientError } from '.';
 import {
   appId,
   currentUnixTimeStamp,

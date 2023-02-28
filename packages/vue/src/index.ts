@@ -1,8 +1,11 @@
-import LogtoClient, { IdTokenClaims, LogtoConfig, UserInfoResponse } from '@logto/browser';
-import { App, inject, readonly, Ref, watchEffect } from 'vue';
+import type { IdTokenClaims, LogtoConfig, UserInfoResponse } from '@logto/browser';
+import LogtoClient from '@logto/browser';
+import type { App, Ref } from 'vue';
+import { inject, readonly, watchEffect } from 'vue';
 
 import { logtoInjectionKey, contextInjectionKey } from './consts';
-import { Context, createContext, throwContextError } from './context';
+import type { Context } from './context';
+import { createContext, throwContextError } from './context';
 import { createPluginMethods } from './plugin';
 
 export type {

@@ -1,5 +1,5 @@
-import { Storage, StorageKey } from '@logto/client';
-import { Nullable } from '@silverhand/essentials';
+import type { Storage, StorageKey } from '@logto/client';
+import type { Nullable } from '@silverhand/essentials';
 
 export const logtoStorageItemKeyPrefix = `logto`;
 

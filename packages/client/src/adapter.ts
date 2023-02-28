@@ -1,5 +1,5 @@
-import { Requester } from '@logto/js';
-import { Nullable } from '@silverhand/essentials';
+import type { Requester } from '@logto/js';
+import type { Nullable } from '@silverhand/essentials';
 
 export type StorageKey = 'idToken' | 'refreshToken' | 'accessToken' | 'signInSession';
 

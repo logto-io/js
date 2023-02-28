@@ -1,7 +1,7 @@
-import { GetContextParameters, LogtoContext } from '@logto/node';
+import type { GetContextParameters, LogtoContext } from '@logto/node';
 
-import { CreateLogtoClient } from './create-client';
-import { LogtoStorage } from './create-storage';
+import type { CreateLogtoClient } from './create-client';
+import type { LogtoStorage } from './create-storage';
 
 type GetContextResponse = {
   readonly context: LogtoContext;

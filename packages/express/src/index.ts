@@ -1,11 +1,12 @@
-import { IncomingMessage } from 'http';
+import type { IncomingMessage } from 'http';
 
 import NodeClient from '@logto/node';
-import { Request, Response, NextFunction, Router } from 'express';
+import type { Request, Response, NextFunction } from 'express';
+import { Router } from 'express';
 
 import { LogtoExpressError } from './errors';
 import ExpressStorage from './storage';
-import { LogtoExpressConfig } from './types';
+import type { LogtoExpressConfig } from './types';
 
 export { ReservedScope, UserScope } from '@logto/node';
 

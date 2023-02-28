@@ -1,6 +1,6 @@
 import { handleAuthRoutes, withLogto } from '.';
 import { testMiddleware, testRouter } from './test-utils';
-import { LogtoExpressConfig } from './types';
+import type { LogtoExpressConfig } from './types';
 
 const signInUrl = 'http://mock-logto-server.com/sign-in';
 

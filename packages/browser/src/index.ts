@@ -1,4 +1,5 @@
-import BaseClient, { createRequester, LogtoConfig } from '@logto/client';
+import type { LogtoConfig } from '@logto/client';
+import BaseClient, { createRequester } from '@logto/client';
 
 import { BrowserStorage } from './storage';
 import { generateCodeChallenge, generateCodeVerifier, generateState } from './utils/generators';

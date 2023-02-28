@@ -1,5 +1,5 @@
 import type { LogtoConfig } from '@logto/node';
-import { Session } from '@remix-run/node';
+import type { Session } from '@remix-run/node';
 
 import { makeLogtoClient } from './create-client';
 import { createStorage } from './create-storage';

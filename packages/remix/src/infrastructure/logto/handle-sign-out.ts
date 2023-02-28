@@ -1,4 +1,4 @@
-import { CreateLogtoClient } from './create-client';
+import type { CreateLogtoClient } from './create-client';
 
 type HandleSignOutRequest = {
   readonly redirectUri: string;

@@ -1,4 +1,5 @@
-import { redirect, TypedResponse } from '@remix-run/node';
+import type { TypedResponse } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 
 import { getCookieHeaderFromRequest } from '../../framework/get-cookie-header-from-request';
 import type { HandleSignInUseCase } from './HandleSignInUseCase';

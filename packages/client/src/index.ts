@@ -1,5 +1,5 @@
+import type { CodeTokenResponse, IdTokenClaims, UserInfoResponse } from '@logto/js';
 import {
-  CodeTokenResponse,
   decodeIdToken,
   fetchOidcConfig,
   fetchTokenByAuthorizationCode,
@@ -7,27 +7,20 @@ import {
   fetchUserInfo,
   generateSignInUri,
   generateSignOutUri,
-  IdTokenClaims,
   Prompt,
   revoke,
-  UserInfoResponse,
   verifyAndParseCodeFromCallbackUri,
   verifyIdToken,
   withDefaultScopes,
 } from '@logto/js';
-import { Nullable } from '@silverhand/essentials';
+import type { Nullable } from '@silverhand/essentials';
 import { createRemoteJWKSet } from 'jose';
 import once from 'lodash.once';
 
-import { ClientAdapter } from './adapter';
+import type { ClientAdapter } from './adapter';
 import { LogtoClientError } from './errors';
-import {
-  AccessToken,
-  isLogtoAccessTokenMap,
-  isLogtoSignInSessionItem,
-  LogtoConfig,
-  LogtoSignInSessionItem,
-} from './types';
+import type { AccessToken, LogtoConfig, LogtoSignInSessionItem } from './types';
+import { isLogtoAccessTokenMap, isLogtoSignInSessionItem } from './types';
 import { buildAccessTokenKey, getDiscoveryEndpoint } from './utils';
 
 export type { IdTokenClaims, LogtoErrorCode, UserInfoResponse } from '@logto/js';
@@ -381,5 +374,4 @@ export default class LogtoClient {
     } catch {}
   }
   // FIXME: @charles @sijie
-  // eslint-disable-next-line max-lines
 }

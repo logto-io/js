@@ -1,6 +1,7 @@
 /* eslint-disable unicorn/no-useless-undefined */
 import LogtoClient from '@logto/browser';
-import { App, readonly } from 'vue';
+import type { App } from 'vue';
+import { readonly } from 'vue';
 
 import { useLogto, useHandleSignInCallback, createLogto } from '.';
 import { contextInjectionKey, logtoInjectionKey } from './consts';

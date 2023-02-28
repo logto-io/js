@@ -1,6 +1,6 @@
-import { Nullable } from '@silverhand/essentials';
+import type { Nullable } from '@silverhand/essentials';
 
-import { Requester } from '../types';
+import type { Requester } from '../types';
 
 type Identity = {
   userId: string;

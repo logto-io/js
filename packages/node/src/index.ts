@@ -1,8 +1,9 @@
-import BaseClient, { LogtoConfig, createRequester, ClientAdapter } from '@logto/client';
+import type { LogtoConfig, ClientAdapter } from '@logto/client';
+import BaseClient, { createRequester } from '@logto/client';
 import { conditional } from '@silverhand/essentials';
 import fetch from 'node-fetch';
 
-import { GetContextParameters, LogtoContext } from './types';
+import type { GetContextParameters, LogtoContext } from './types';
 import { generateCodeChallenge, generateCodeVerifier, generateState } from './utils/generators';
 
 export type { LogtoContext, GetContextParameters } from './types';
@@ -55,7 +56,6 @@ export default class LogtoClient extends BaseClient {
     });
   }
 
-  /* eslint-disable complexity */
   getContext = async ({
     getAccessToken,
     resource,
@@ -94,5 +94,4 @@ export default class LogtoClient extends BaseClient {
       };
     }
   };
-  /* eslint-enable complexity */
 }

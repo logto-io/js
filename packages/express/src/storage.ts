@@ -1,6 +1,6 @@
-import { IncomingMessage } from 'http';
+import type { IncomingMessage } from 'http';
 
-import { Storage, StorageKey } from '@logto/node';
+import type { Storage, StorageKey } from '@logto/node';
 
 export default class ExpressStorage implements Storage {
   constructor(private readonly request: IncomingMessage) {}

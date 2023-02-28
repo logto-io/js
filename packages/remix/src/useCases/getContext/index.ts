@@ -1,7 +1,7 @@
-import { GetContextParameters } from '@logto/node';
-import { SessionStorage } from '@remix-run/node';
+import type { GetContextParameters } from '@logto/node';
+import type { SessionStorage } from '@remix-run/node';
 
-import { CreateLogtoAdapter } from '../../infrastructure/logto';
+import type { CreateLogtoAdapter } from '../../infrastructure/logto';
 import { GetContextController } from './GetContextController';
 import { makeGetContextUseCase } from './GetContextUseCase';
 
