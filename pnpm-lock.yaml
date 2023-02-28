@@ -372,14 +372,14 @@ importers:
       react: ^18.2.0
       react-dom: ^18.2.0
       stylelint: ^15.0.0
-      swr: ^1.3.0
+      swr: ^2.0.0
       typescript: 4.9.5
     dependencies:
       '@logto/next': link:../next
       next: 13.0.4_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      swr: 1.3.0_react@18.2.0
+      swr: 2.0.4_react@18.2.0
     devDependencies:
       '@silverhand/eslint-config': 1.0.0_mxw76hjgusp5aukde74arevaqa
       '@silverhand/eslint-config-react': 1.0.0_7b2h4nzqcxk2ikd53h3eilrjfe
@@ -13878,12 +13878,14 @@ packages:
       stable: 0.1.8
     dev: true
 
-  /swr/1.3.0_react@18.2.0:
-    resolution: {integrity: sha512-dkghQrOl2ORX9HYrMDtPa7LTVHJjCTeZoB1dqTbnnEDlSvN8JEKpYIYurDfvbQFUUS8Cg8PceFVZNkW0KNNYPw==}
+  /swr/2.0.4_react@18.2.0:
+    resolution: {integrity: sha512-4GUiTjknRUVuw4MWUHR7mzJ9G/DWL+yZz/TgWDfiA0OZ9tL6qyrTkN2wPeboBpL3OJTkej3pexh3mWCnv8cFkQ==}
+    engines: {pnpm: '7'}
     peerDependencies:
       react: ^16.11.0 || ^17.0.0 || ^18.0.0
     dependencies:
       react: 18.2.0
+      use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
 
   /symbol-tree/3.2.4:
