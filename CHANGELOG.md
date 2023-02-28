@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0](https://github.com/logto-io/js/compare/v1.0.0-rc.0...v1.0.0) (2023-02-28)
+
+
+### Bug Fixes
+
+* **deps:** update dependency swr to v2 ([#436](https://github.com/logto-io/js/issues/436)) ([fd63fba](https://github.com/logto-io/js/commit/fd63fbaba2ff0f3235a2ee3d152dc2b4bc243f03))
+* remove deperecated role names ([#442](https://github.com/logto-io/js/issues/442)) ([ae44b63](https://github.com/logto-io/js/commit/ae44b634a62c1863bfe433377f21b43de387ac5d))
+
+
+
 ## [1.0.0-rc.0](https://github.com/logto-io/js/compare/v1.0.0-beta.15...v1.0.0-rc.0) (2023-02-03)
 
 
