@@ -1,9 +1,10 @@
 import cookieParser from 'cookie-parser';
-import express, { NextFunction, Request, Response, Router } from 'express';
+import type { NextFunction, Request, Response, Router } from 'express';
+import express from 'express';
 import session from 'express-session';
 import request from 'supertest';
 
-import { Middleware } from '.';
+import type { Middleware } from '.';
 
 type TestMiddlewareParameters = {
   middleware: Middleware;

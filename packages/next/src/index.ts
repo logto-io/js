@@ -1,11 +1,12 @@
-import { IncomingMessage } from 'http';
+import type { IncomingMessage } from 'http';
 
-import NodeClient, { GetContextParameters } from '@logto/node';
+import type { GetContextParameters } from '@logto/node';
+import NodeClient from '@logto/node';
 import { withIronSessionApiRoute, withIronSessionSsr } from 'iron-session/next';
-import { GetServerSidePropsContext, GetServerSidePropsResult, NextApiHandler } from 'next';
+import type { GetServerSidePropsContext, GetServerSidePropsResult, NextApiHandler } from 'next';
 
 import NextStorage from './storage';
-import { LogtoNextConfig } from './types';
+import type { LogtoNextConfig } from './types';
 
 export { ReservedScope, UserScope } from '@logto/node';
 

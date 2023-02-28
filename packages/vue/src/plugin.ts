@@ -1,4 +1,5 @@
-import { Context, throwContextError } from './context';
+import type { Context } from './context';
+import { throwContextError } from './context';
 
 export const createPluginMethods = (context: Context) => {
   const { logtoClient, setLoading, setError, setIsAuthenticated } = context;

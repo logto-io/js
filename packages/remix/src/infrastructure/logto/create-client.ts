@@ -1,6 +1,7 @@
-import LogtoClient, { LogtoConfig } from '@logto/node';
+import type { LogtoConfig } from '@logto/node';
+import LogtoClient from '@logto/node';
 
-import { LogtoStorage } from './create-storage';
+import type { LogtoStorage } from './create-storage';
 
 export const makeLogtoClient =
   (config: LogtoConfig, storage: LogtoStorage) =>

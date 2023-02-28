@@ -1,5 +1,5 @@
 import NextStorage from './storage';
-import { NextRequestWithIronSession } from './types';
+import type { NextRequestWithIronSession } from './types';
 
 const makeRequest = (): NextRequestWithIronSession => {
   const request = {

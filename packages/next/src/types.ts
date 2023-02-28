@@ -1,6 +1,6 @@
-import { LogtoConfig } from '@logto/node';
-import { IronSession } from 'iron-session';
-import { NextApiRequest } from 'next';
+import type { LogtoConfig } from '@logto/node';
+import type { IronSession } from 'iron-session';
+import type { NextApiRequest } from 'next';
 
 export type NextRequestWithIronSession = NextApiRequest & { session: IronSession };
 

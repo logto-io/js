@@ -1,4 +1,5 @@
-import { fetchUserInfo, UserInfoResponse } from './user-info';
+import type { UserInfoResponse } from './user-info';
+import { fetchUserInfo } from './user-info';
 
 describe('fetchUserInfo', () => {
   test('should return UserInfoResponse', async () => {

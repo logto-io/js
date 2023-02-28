@@ -1,4 +1,4 @@
-import { GetContextParameters, LogtoConfig } from '@logto/node';
+import type { GetContextParameters, LogtoConfig } from '@logto/node';
 
 declare module 'http' {
   // Honor module definition

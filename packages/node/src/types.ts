@@ -1,4 +1,4 @@
-import { IdTokenClaims, UserInfoResponse } from '@logto/client';
+import type { IdTokenClaims, UserInfoResponse } from '@logto/client';
 
 declare module 'http' {
   // Honor module definition

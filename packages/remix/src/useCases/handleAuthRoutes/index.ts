@@ -1,6 +1,6 @@
-import { LoaderFunction, SessionStorage } from '@remix-run/node';
+import type { LoaderFunction, SessionStorage } from '@remix-run/node';
 
-import { CreateLogtoAdapter } from '../../infrastructure/logto';
+import type { CreateLogtoAdapter } from '../../infrastructure/logto';
 import { makeHandleSignIn } from '../handleSignIn';
 import { makeHandleSignInCallback } from '../handleSignInCallback';
 import { makeHandleSignOut } from '../handleSignOut';

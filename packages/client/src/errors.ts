@@ -1,4 +1,4 @@
-import { NormalizeKeyPaths } from '@silverhand/essentials';
+import type { NormalizeKeyPaths } from '@silverhand/essentials';
 import get from 'lodash.get';
 
 const logtoClientErrorCodes = Object.freeze({

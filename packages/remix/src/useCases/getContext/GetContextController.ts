@@ -1,4 +1,4 @@
-import { GetContextParameters, LogtoContext } from '@logto/node';
+import type { GetContextParameters, LogtoContext } from '@logto/node';
 
 import { getCookieHeaderFromRequest } from '../../framework/get-cookie-header-from-request';
 import type { GetContextUseCase } from './GetContextUseCase';

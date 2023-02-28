@@ -1,9 +1,5 @@
-import {
-  fetchTokenByAuthorizationCode,
-  fetchTokenByRefreshToken,
-  CodeTokenResponse,
-  RefreshTokenTokenResponse,
-} from '.';
+import type { CodeTokenResponse, RefreshTokenTokenResponse } from '.';
+import { fetchTokenByAuthorizationCode, fetchTokenByRefreshToken } from '.';
 
 describe('fetch access token by providing authorization code', () => {
   test('should return tokens', async () => {

@@ -1,6 +1,7 @@
-import { createSession, Session, SessionStorage } from '@remix-run/node';
+import type { Session, SessionStorage } from '@remix-run/node';
+import { createSession } from '@remix-run/node';
 
-import { CreateLogtoAdapter, LogtoContext } from '../infrastructure/logto';
+import type { CreateLogtoAdapter, LogtoContext } from '../infrastructure/logto';
 import { createStorage } from '../infrastructure/logto/create-storage';
 
 const context: LogtoContext = {

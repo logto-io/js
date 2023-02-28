@@ -1,5 +1,6 @@
-import LogtoClient from '@logto/browser';
-import { computed, ComputedRef, reactive, Ref, toRefs, UnwrapRef, watchEffect } from 'vue';
+import type LogtoClient from '@logto/browser';
+import type { ComputedRef, Ref, UnwrapRef } from 'vue';
+import { computed, reactive, toRefs, watchEffect } from 'vue';
 
 type LogtoContextProperties = {
   logtoClient: LogtoClient | undefined;

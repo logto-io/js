@@ -1,4 +1,5 @@
-import { LogtoError, LogtoRequestError, isLogtoRequestError, Requester } from '@logto/js';
+import type { Requester } from '@logto/js';
+import { LogtoError, LogtoRequestError, isLogtoRequestError } from '@logto/js';
 
 export const createRequester = (fetchFunction: typeof fetch): Requester => {
   return async <T>(...args: Parameters<typeof fetch>): Promise<T> => {

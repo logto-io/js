@@ -1,4 +1,5 @@
-import { isArbitraryObject, Prompt } from '@logto/js';
+import type { Prompt } from '@logto/js';
+import { isArbitraryObject } from '@logto/js';
 
 export type LogtoConfig = {
   endpoint: string;
