@@ -1,10 +1,12 @@
+import type { InteractionMode } from '@logto/browser';
+
 import type { Context } from './context';
 import { throwContextError } from './context';
 
 export const createPluginMethods = (context: Context) => {
   const { logtoClient, setLoading, setError, setIsAuthenticated } = context;
 
-  const signIn = async (redirectUri: string) => {
+  const signIn = async (redirectUri: string, interactionMode?: InteractionMode) => {
     if (!logtoClient.value) {
       return throwContextError();
     }
@@ -12,7 +14,7 @@ export const createPluginMethods = (context: Context) => {
     try {
       setLoading(true);
 
-      await logtoClient.value.signIn(redirectUri);
+      await logtoClient.value.signIn(redirectUri, interactionMode);
     } catch (error: unknown) {
       setError(error, 'Unexpected error occurred while signing in.');
     }

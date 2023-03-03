@@ -28,6 +28,7 @@ import {
   endSessionEndpoint,
   failingRequester,
   createAdapters,
+  mockedSignUpUri,
 } from './mock';
 import { buildAccessTokenKey } from './utils';
 
@@ -145,6 +146,12 @@ describe('LogtoClient', () => {
       const logtoClient = createClient();
       await logtoClient.signIn(redirectUri);
       expect(navigate).toHaveBeenCalledWith(mockedSignInUri);
+    });
+
+    it('should redirect to signInUri with interactionMode params after calling signIn with signUp mode', async () => {
+      const logtoClient = createClient();
+      await logtoClient.signIn(redirectUri, 'signUp');
+      expect(navigate).toHaveBeenCalledWith(mockedSignUpUri);
     });
 
     it('should redirect to signInUri just after calling signIn with user specified prompt', async () => {

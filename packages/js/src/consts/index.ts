@@ -27,6 +27,8 @@ export enum QueryKey {
   Scope = 'scope',
   State = 'state',
   Token = 'token',
+  // Need to align with the OIDC extraParams settings in core
+  InteractionMode = 'interaction_mode',
 }
 
 export enum Prompt {

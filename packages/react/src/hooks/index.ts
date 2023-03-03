@@ -1,4 +1,4 @@
-import { IdTokenClaims, UserInfoResponse } from '@logto/browser';
+import { IdTokenClaims, InteractionMode, UserInfoResponse } from '@logto/browser';
 import { useCallback, useContext, useEffect, useRef } from 'react';
 
 import { LogtoContext, throwContextError } from '../context';
@@ -10,7 +10,7 @@ type Logto = {
   fetchUserInfo: () => Promise<UserInfoResponse | undefined>;
   getAccessToken: (resource?: string) => Promise<string | undefined>;
   getIdTokenClaims: () => Promise<IdTokenClaims | undefined>;
-  signIn: (redirectUri: string) => Promise<void>;
+  signIn: (redirectUri: string, interactionMode?: InteractionMode) => Promise<void>;
   signOut: (postLogoutRedirectUri?: string) => Promise<void>;
 };
 
@@ -104,7 +104,7 @@ const useLogto = (): Logto => {
   const isLoading = loadingCount > 0;
 
   const signIn = useCallback(
-    async (redirectUri: string) => {
+    async (redirectUri: string, interactionMode?: InteractionMode) => {
       if (!logtoClient) {
         return throwContextError();
       }
@@ -112,7 +112,7 @@ const useLogto = (): Logto => {
       try {
         setLoadingState(true);
 
-        await logtoClient.signIn(redirectUri);
+        await logtoClient.signIn(redirectUri, interactionMode);
       } catch (error: unknown) {
         handleError(error, 'Unexpected error occurred while signing in.');
       }

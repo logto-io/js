@@ -10,7 +10,7 @@ import type { LogtoExpressConfig } from './types';
 
 export { ReservedScope, UserScope } from '@logto/node';
 
-export type { LogtoContext } from '@logto/node';
+export type { LogtoContext, InteractionMode } from '@logto/node';
 export type { LogtoExpressConfig } from './types';
 
 export type Middleware = (
@@ -51,6 +51,12 @@ export const handleAuthRoutes = (config: LogtoExpressConfig): Router => {
     switch (action) {
       case 'sign-in': {
         await nodeClient.signIn(`${config.baseUrl}/logto/sign-in-callback`);
+
+        break;
+      }
+
+      case 'sign-up': {
+        await nodeClient.signIn(`${config.baseUrl}/logto/sign-in-callback`, 'signUp');
 
         break;
       }

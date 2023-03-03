@@ -15,6 +15,7 @@ export type {
   LogtoClientErrorCode,
   Storage,
   StorageKey,
+  InteractionMode,
 } from '@logto/client';
 
 export {

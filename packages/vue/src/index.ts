@@ -14,6 +14,7 @@ export type {
   UserInfoResponse,
   LogtoErrorCode,
   LogtoClientErrorCode,
+  InteractionMode,
 } from '@logto/browser';
 
 export {

@@ -22,14 +22,24 @@ const Home = () => {
     <div className={styles.container}>
       <h3>Logto React Sample</h3>
       {!isAuthenticated && (
-        <button
-          type="button"
-          onClick={() => {
-            void signIn(redirectUrl);
-          }}
-        >
-          Sign In
-        </button>
+        <>
+          <button
+            type="button"
+            onClick={() => {
+              void signIn(redirectUrl);
+            }}
+          >
+            Sign In
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              void signIn(redirectUrl, 'signUp');
+            }}
+          >
+            Sign Up
+          </button>
+        </>
       )}
       {isAuthenticated && (
         <button
