@@ -171,6 +171,22 @@ describe('Next', () => {
       });
     });
 
+    it('should call handleSignIn for "sign-up"', async () => {
+      const client = new LogtoClient(configs);
+      jest.spyOn(client, 'handleSignIn').mockImplementation(() => mockResponse);
+      await testApiHandler({
+        handler: client.handleAuthRoutes(),
+        paramsPatcher: (parameters) => {
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          parameters.action = 'sign-up';
+        },
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET', redirect: 'manual' });
+          expect(client.handleSignIn).toHaveBeenCalledWith(undefined, 'signUp');
+        },
+      });
+    });
+
     it('should call handleSignInCallback for "sign-in-callback"', async () => {
       const client = new LogtoClient(configs);
       jest.spyOn(client, 'handleSignInCallback').mockImplementation(() => mockResponse);

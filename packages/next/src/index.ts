@@ -69,6 +69,10 @@ export default class LogtoClient {
         return this.handleSignIn()(request, response);
       }
 
+      if (action === 'sign-up') {
+        return this.handleSignIn(undefined, 'signUp')(request, response);
+      }
+
       if (action === 'sign-in-callback') {
         return this.handleSignInCallback()(request, response);
       }
