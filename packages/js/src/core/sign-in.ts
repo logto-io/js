@@ -1,4 +1,5 @@
 import { Prompt, QueryKey } from '../consts';
+import type { InteractionMode } from '../types';
 import { withDefaultScopes } from '../utils';
 
 const codeChallengeMethod = 'S256';
@@ -13,6 +14,7 @@ export type SignInUriParameters = {
   scopes?: string[];
   resources?: string[];
   prompt?: Prompt;
+  interactionMode?: InteractionMode;
 };
 
 export const generateSignInUri = ({
@@ -24,6 +26,7 @@ export const generateSignInUri = ({
   scopes,
   resources,
   prompt,
+  interactionMode,
 }: SignInUriParameters) => {
   const urlSearchParameters = new URLSearchParams({
     [QueryKey.ClientId]: clientId,
@@ -38,6 +41,11 @@ export const generateSignInUri = ({
 
   for (const resource of resources ?? []) {
     urlSearchParameters.append(QueryKey.Resource, resource);
+  }
+
+  // Set interactionMode to signUp for a create account user experience
+  if (interactionMode) {
+    urlSearchParameters.append(QueryKey.InteractionMode, interactionMode);
   }
 
   return `${authorizationEndpoint}?${urlSearchParameters.toString()}`;

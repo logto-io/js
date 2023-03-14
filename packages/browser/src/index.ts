@@ -10,6 +10,7 @@ export type {
   LogtoConfig,
   LogtoClientErrorCode,
   UserInfoResponse,
+  InteractionMode,
 } from '@logto/client';
 
 export {

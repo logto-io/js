@@ -1,6 +1,6 @@
 import type { IncomingMessage } from 'http';
 
-import type { GetContextParameters } from '@logto/node';
+import type { GetContextParameters, InteractionMode } from '@logto/node';
 import NodeClient from '@logto/node';
 import { withIronSessionApiRoute, withIronSessionSsr } from 'iron-session/next';
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextApiHandler } from 'next';
@@ -10,7 +10,7 @@ import type { LogtoNextConfig } from './types';
 
 export { ReservedScope, UserScope } from '@logto/node';
 
-export type { LogtoContext } from '@logto/node';
+export type { LogtoContext, InteractionMode } from '@logto/node';
 
 export default class LogtoClient {
   private navigateUrl?: string;
@@ -18,11 +18,12 @@ export default class LogtoClient {
   constructor(private readonly config: LogtoNextConfig) {}
 
   handleSignIn = (
-    redirectUri = `${this.config.baseUrl}/api/logto/sign-in-callback`
+    redirectUri = `${this.config.baseUrl}/api/logto/sign-in-callback`,
+    interactionMode?: InteractionMode
   ): NextApiHandler =>
     withIronSessionApiRoute(async (request, response) => {
       const nodeClient = this.createNodeClient(request);
-      await nodeClient.signIn(redirectUri);
+      await nodeClient.signIn(redirectUri, interactionMode);
       await this.storage?.save();
 
       if (this.navigateUrl) {
@@ -66,6 +67,10 @@ export default class LogtoClient {
 
       if (action === 'sign-in') {
         return this.handleSignIn()(request, response);
+      }
+
+      if (action === 'sign-up') {
+        return this.handleSignIn(undefined, 'signUp')(request, response);
       }
 
       if (action === 'sign-in-callback') {

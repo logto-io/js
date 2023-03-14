@@ -36,8 +36,8 @@ type Adapter = {
 
 jest.mock('@logto/node', () =>
   jest.fn((_: unknown, { navigate }: Adapter) => ({
-    signIn: () => {
-      navigate(signInUrl);
+    signIn: (_redirectUri?: string, interactionMode?: string) => {
+      navigate(interactionMode ? `${signInUrl}?interactionMode=${interactionMode}` : signInUrl);
       signIn();
     },
     handleSignInCallback,
@@ -61,6 +61,14 @@ describe('Express', () => {
       it('should redirect to Logto sign in url and save session', async () => {
         const response = await testRouter(handleAuthRoutes(configs)).get('/logto/sign-in');
         expect(response.header.location).toEqual(signInUrl);
+        expect(signIn).toHaveBeenCalled();
+      });
+    });
+
+    describe('handleSignUn', () => {
+      it('should redirect to Logto sign in url with signUp interaction mode and save session', async () => {
+        const response = await testRouter(handleAuthRoutes(configs)).get('/logto/sign-up');
+        expect(response.header.location).toEqual(`${signInUrl}?interactionMode=signUp`);
         expect(signIn).toHaveBeenCalled();
       });
     });

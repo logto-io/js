@@ -2,6 +2,10 @@
   padding: 20px;
 }
 
+.button:not(:last-child) {
+  margin-right: 4px;
+}
+
 .table {
   margin: 50px auto;
   table-layout: fixed;

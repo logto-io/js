@@ -1,4 +1,9 @@
-import type { CodeTokenResponse, IdTokenClaims, UserInfoResponse } from '@logto/js';
+import type {
+  CodeTokenResponse,
+  IdTokenClaims,
+  UserInfoResponse,
+  InteractionMode,
+} from '@logto/js';
 import {
   decodeIdToken,
   fetchOidcConfig,
@@ -23,7 +28,7 @@ import type { AccessToken, LogtoConfig, LogtoSignInSessionItem } from './types';
 import { isLogtoAccessTokenMap, isLogtoSignInSessionItem } from './types';
 import { buildAccessTokenKey, getDiscoveryEndpoint } from './utils';
 
-export type { IdTokenClaims, LogtoErrorCode, UserInfoResponse } from '@logto/js';
+export type { IdTokenClaims, LogtoErrorCode, UserInfoResponse, InteractionMode } from '@logto/js';
 export {
   LogtoError,
   OidcError,
@@ -111,7 +116,7 @@ export default class LogtoClient {
     return fetchUserInfo(userinfoEndpoint, accessToken, this.adapter.requester);
   }
 
-  async signIn(redirectUri: string) {
+  async signIn(redirectUri: string, interactionMode?: InteractionMode) {
     const { appId: clientId, prompt, resources, scopes } = this.logtoConfig;
     const { authorizationEndpoint } = await this.getOidcConfig();
     const codeVerifier = this.adapter.generateCodeVerifier();
@@ -127,6 +132,7 @@ export default class LogtoClient {
       scopes,
       resources,
       prompt,
+      interactionMode,
     });
 
     await this.setSignInSession({ redirectUri, codeVerifier, state });

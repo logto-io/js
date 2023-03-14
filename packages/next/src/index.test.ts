@@ -48,8 +48,8 @@ type Adapter = {
 
 jest.mock('@logto/node', () =>
   jest.fn((_: unknown, { navigate }: Adapter) => ({
-    signIn: () => {
-      navigate(signInUrl);
+    signIn: (_redirectUri: string, interactionMode?: string) => {
+      navigate(interactionMode ? `${signInUrl}?interactionMode=${interactionMode}` : signInUrl);
       signIn();
     },
     handleSignInCallback,
@@ -82,6 +82,21 @@ describe('Next', () => {
           const response = await fetch({ method: 'GET', redirect: 'manual' });
           const headers = response.headers as Map<string, string>;
           expect(headers.get('location')).toEqual(signInUrl);
+        },
+      });
+      expect(save).toHaveBeenCalled();
+      expect(signIn).toHaveBeenCalled();
+    });
+
+    it('should redirect to Logto sign in url with interactionMode and save session', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        handler: client.handleSignIn(undefined, 'signUp'),
+        url: '/api/logto/sign-in',
+        test: async ({ fetch }) => {
+          const response = await fetch({ method: 'GET', redirect: 'manual' });
+          const headers = response.headers as Map<string, string>;
+          expect(headers.get('location')).toEqual(`${signInUrl}?interactionMode=signUp`);
         },
       });
       expect(save).toHaveBeenCalled();
@@ -152,6 +167,22 @@ describe('Next', () => {
         test: async ({ fetch }) => {
           await fetch({ method: 'GET', redirect: 'manual' });
           expect(client.handleSignIn).toHaveBeenCalled();
+        },
+      });
+    });
+
+    it('should call handleSignIn for "sign-up"', async () => {
+      const client = new LogtoClient(configs);
+      jest.spyOn(client, 'handleSignIn').mockImplementation(() => mockResponse);
+      await testApiHandler({
+        handler: client.handleAuthRoutes(),
+        paramsPatcher: (parameters) => {
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          parameters.action = 'sign-up';
+        },
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET', redirect: 'manual' });
+          expect(client.handleSignIn).toHaveBeenCalledWith(undefined, 'signUp');
         },
       });
     });
