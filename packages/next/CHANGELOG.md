@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.0](https://github.com/logto-io/js/compare/v1.0.0...v1.1.0) (2023-03-19)
+
+
+### Features
+
+* **js:** add interactionMode props to signIn method ([ea763a5](https://github.com/logto-io/js/commit/ea763a59e41251ffad4089df0d6bb876e9901109))
+
+
+### Bug Fixes
+
+* **js:** add sign-up route handler ([7660524](https://github.com/logto-io/js/commit/7660524c48e086c665e7341892eb56c5f8b9090f))
+
+
+
 ## [1.0.0](https://github.com/logto-io/js/compare/v1.0.0-rc.0...v1.0.0) (2023-02-28)
 
 **Note:** Version bump only for package @logto/next
