@@ -38,7 +38,7 @@
     "@parcel/transformer-typescript-types": "^2.8.3",
     "@silverhand/eslint-config": "^2.0.0",
     "@silverhand/ts-config": "^1.0.0",
-    "@silverhand/ts-config-react": "^2.0.0",
+    "@silverhand/ts-config-react": "^3.0.0",
     "@types/cookie-parser": "^1.4.3",
     "@types/express": "^4.17.13",
     "@types/express-session": "^1.17.5",
