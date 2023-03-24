@@ -37,7 +37,7 @@
     "@parcel/packager-ts": "^2.8.3",
     "@parcel/transformer-typescript-types": "^2.8.3",
     "@silverhand/eslint-config": "^2.0.0",
-    "@silverhand/ts-config": "^1.0.0",
+    "@silverhand/ts-config": "^3.0.0",
     "@types/jest": "^27.4.1",
     "eslint": "^8.23.0",
     "jest": "^27.5.1",
