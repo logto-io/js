@@ -1,6 +1,6 @@
 import type LogtoClient from '@logto/browser';
 import type { ComputedRef, Ref, UnwrapRef } from 'vue';
-import { computed, reactive, toRefs, watchEffect } from 'vue';
+import { computed, reactive, toRefs } from 'vue';
 
 type LogtoContextProperties = {
   logtoClient: LogtoClient | undefined;
@@ -58,12 +58,12 @@ export const createContext = (client: LogtoClient): Context => {
   };
   /* eslint-enable @silverhand/fp/no-mutation */
 
-  watchEffect(async () => {
+  (async () => {
     const isAuthenticated = await client.isAuthenticated();
 
     setIsAuthenticated(isAuthenticated);
     setLoading(false);
-  });
+  })();
 
   return { ...context, isLoading, setError, setLoading, setIsAuthenticated };
 };
