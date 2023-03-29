@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useLogto, type UserInfoResponse } from "@logto/vue";
 import { RouterLink } from "vue-router";
-import { ref, watchEffect } from "vue";
+import { ref } from "vue";
 import { baseUrl, redirectUrl } from "../consts";
 
 const { isAuthenticated, fetchUserInfo, signIn, signOut } = useLogto();
@@ -15,12 +15,12 @@ const onClickSignOut = () => {
   void signOut(baseUrl);
 };
 
-watchEffect(async () => {
-  if (isAuthenticated.value) {
-    const userInfo = await fetchUserInfo();
-    user.value = userInfo;
-  }
-});
+if (isAuthenticated.value) {
+  (async () => {
+    const info = await fetchUserInfo();
+    user.value = info;
+  })();
+}
 </script>
 
 <template>
