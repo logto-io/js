@@ -73,9 +73,21 @@ const Home = () => {
       </header>
       <nav>
         {data?.isAuthenticated ? (
-          <Link href="/api/logto/sign-out">Sign Out</Link>
+          <button
+            onClick={() => {
+              window.location.assign('/api/logto/sign-out');
+            }}
+          >
+            Sign Out
+          </button>
         ) : (
-          <Link href="/api/logto/sign-in">Sign In</Link>
+          <button
+            onClick={() => {
+              window.location.assign('/api/logto/sign-in');
+            }}
+          >
+            Sign In
+          </button>
         )}
       </nav>
       {claims}
