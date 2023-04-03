@@ -20,13 +20,13 @@ import {
 } from '@logto/js';
 import type { Nullable } from '@silverhand/essentials';
 import { createRemoteJWKSet } from 'jose';
-import once from 'lodash.once';
 
 import type { ClientAdapter } from './adapter';
 import { LogtoClientError } from './errors';
 import type { AccessToken, LogtoConfig, LogtoSignInSessionItem } from './types';
 import { isLogtoAccessTokenMap, isLogtoSignInSessionItem } from './types';
 import { buildAccessTokenKey, getDiscoveryEndpoint } from './utils';
+import { once } from './utils/once';
 
 export type { IdTokenClaims, LogtoErrorCode, UserInfoResponse, InteractionMode } from '@logto/js';
 export {
@@ -160,7 +160,7 @@ export default class LogtoClient {
     const signInSession = await this.getSignInSession();
 
     if (!signInSession) {
-      throw new LogtoClientError('sign_in_session.not_found');
+      throw new LogtoClientError('sign_in_session_not_found');
     }
 
     const { redirectUri, state, codeVerifier } = signInSession;
@@ -227,7 +227,7 @@ export default class LogtoClient {
     const item: unknown = JSON.parse(jsonItem);
 
     if (!isLogtoSignInSessionItem(item)) {
-      throw new LogtoClientError('sign_in_session.invalid');
+      throw new LogtoClientError('sign_in_session_invalid');
     }
 
     return item;

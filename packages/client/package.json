@@ -30,11 +30,9 @@
   },
   "dependencies": {
     "@logto/js": "^1.1.0",
-    "@silverhand/essentials": "^1.2.1",
+    "@silverhand/essentials": "^2.6.0",
     "camelcase-keys": "^7.0.1",
-    "jose": "^4.3.8",
-    "lodash.get": "^4.4.2",
-    "lodash.once": "^4.1.1"
+    "jose": "^4.3.8"
   },
   "devDependencies": {
     "@jest/types": "^27.5.1",
@@ -44,8 +42,6 @@
     "@silverhand/eslint-config": "^2.0.0",
     "@silverhand/ts-config": "^1.0.0",
     "@types/jest": "^27.4.1",
-    "@types/lodash.get": "^4.4.6",
-    "@types/lodash.once": "^4.1.7",
     "@types/node": "^18.0.0",
     "eslint": "^8.23.0",
     "jest": "^27.5.1",
