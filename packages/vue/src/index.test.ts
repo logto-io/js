@@ -11,6 +11,7 @@ import { createPluginMethods } from './plugin';
 const isAuthenticated = jest.fn(async () => false);
 const isSignInRedirected = jest.fn(() => false);
 const handleSignInCallback = jest.fn().mockResolvedValue(undefined);
+const mockedFetchUserInfo = jest.fn().mockResolvedValue({ sub: 'foo' });
 const getAccessToken = jest.fn(() => {
   throw new Error('not authenticated');
 });
@@ -25,6 +26,7 @@ jest.mock('@logto/browser', () => {
       isSignInRedirected,
       handleSignInCallback,
       getAccessToken,
+      fetchUserInfo: mockedFetchUserInfo,
       signIn: jest.fn().mockResolvedValue(undefined),
       signOut: jest.fn().mockResolvedValue(undefined),
     };
@@ -48,7 +50,7 @@ const appMock = {
 } as unknown as App;
 
 describe('createLogto.install', () => {
-  test('should call LogtoClient constructor and provide Logto context data', async () => {
+  it('should call LogtoClient constructor and provide Logto context data', async () => {
     createLogto.install(appMock, { appId, endpoint });
 
     expect(LogtoClient).toHaveBeenCalledWith({ endpoint, appId });
@@ -57,13 +59,13 @@ describe('createLogto.install', () => {
 });
 
 describe('Logto plugin not installed', () => {
-  test('should throw error if calling `useLogto` before install', () => {
+  it('should throw error if calling `useLogto` before install', () => {
     expect(() => {
       useLogto();
     }).toThrowError('Must install Logto plugin first.');
   });
 
-  test('should throw error if calling `useHandleSignInCallback` before install', () => {
+  it('should throw error if calling `useHandleSignInCallback` before install', () => {
     expect(() => {
       useHandleSignInCallback();
     }).toThrowError('Must install Logto plugin first.');
@@ -86,7 +88,7 @@ describe('useLogto', () => {
     });
   });
 
-  test('should inject Logto context data', () => {
+  it('should inject Logto context data', () => {
     const {
       isAuthenticated,
       isLoading,
@@ -108,7 +110,7 @@ describe('useLogto', () => {
     expect(fetchUserInfo).toBeInstanceOf(Function);
   });
 
-  test('should return error when getAccessToken fails', async () => {
+  it('should return error when getAccessToken fails', async () => {
     const client = new LogtoClient({ appId, endpoint });
     const context = createContext(client);
     const { getAccessToken } = createPluginMethods(context);
@@ -143,7 +145,7 @@ describe('useHandleSignInCallback', () => {
     });
   });
 
-  test('not in callback url should not call `handleSignInCallback`', async () => {
+  it('should not call `handleSignInCallback` if current url is not callback url', async () => {
     const { signIn } = useLogto();
     useHandleSignInCallback();
 
@@ -151,7 +153,7 @@ describe('useHandleSignInCallback', () => {
     expect(handleSignInCallback).not.toHaveBeenCalled();
   });
 
-  test('in callback url should call `handleSignInCallback`', async () => {
+  it('should call `handleSignInCallback` if current url is callback url', async () => {
     isSignInRedirected.mockImplementationOnce(() => true);
     const { signIn } = useLogto();
     useHandleSignInCallback();
@@ -159,6 +161,14 @@ describe('useHandleSignInCallback', () => {
     await signIn('https://example.com');
 
     expect(handleSignInCallback).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return userinfo after calling `fetchUserInfo`', async () => {
+    const { fetchUserInfo } = useLogto();
+    const userInfo = await fetchUserInfo();
+
+    expect(userInfo).toEqual({ sub: 'foo' });
+    expect(mockedFetchUserInfo).toHaveBeenCalledTimes(1);
   });
 });
 /* eslint-enable unicorn/no-useless-undefined */

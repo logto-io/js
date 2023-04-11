@@ -26,11 +26,11 @@ importers:
   packages/browser:
     dependencies:
       '@logto/client':
-        specifier: ^1.1.0
+        specifier: ^1.1.1
         version: link:../client
       '@silverhand/essentials':
-        specifier: ^2.6.1
-        version: 2.6.1
+        specifier: ^1.2.1
+        version: 1.2.1
       js-base64:
         specifier: ^3.7.4
         version: 3.7.4
@@ -93,7 +93,7 @@ importers:
   packages/browser-sample:
     dependencies:
       '@logto/browser':
-        specifier: ^1.1.0
+        specifier: ^1.1.1
         version: link:../browser
     devDependencies:
       '@parcel/core':
@@ -206,7 +206,7 @@ importers:
   packages/express:
     dependencies:
       '@logto/node':
-        specifier: ^1.1.0
+        specifier: ^1.1.1
         version: link:../node
     devDependencies:
       '@jest/types':
@@ -288,7 +288,7 @@ importers:
   packages/express-sample:
     dependencies:
       '@logto/express':
-        specifier: ^1.1.0
+        specifier: ^1.1.1
         version: link:../express
       cookie-parser:
         specifier: ^1.4.6
@@ -413,7 +413,7 @@ importers:
   packages/next:
     dependencies:
       '@logto/node':
-        specifier: ^1.1.0
+        specifier: ^1.1.1
         version: link:../node
       iron-session:
         specifier: ^6.3.1
@@ -486,7 +486,7 @@ importers:
   packages/next-sample:
     dependencies:
       '@logto/next':
-        specifier: ^1.1.0
+        specifier: ^1.1.1
         version: link:../next
       next:
         specifier: ^13.0.4
@@ -547,7 +547,7 @@ importers:
   packages/node:
     dependencies:
       '@logto/client':
-        specifier: ^1.1.0
+        specifier: ^1.1.1
         version: link:../client
       '@silverhand/essentials':
         specifier: ^2.6.1
@@ -611,7 +611,7 @@ importers:
   packages/react:
     dependencies:
       '@logto/browser':
-        specifier: ^1.1.0
+        specifier: ^1.1.1
         version: link:../browser
       '@silverhand/essentials':
         specifier: ^2.6.1
@@ -684,7 +684,7 @@ importers:
   packages/react-sample:
     dependencies:
       '@logto/react':
-        specifier: ^1.1.0
+        specifier: ^1.1.1
         version: link:../react
       react:
         specifier: ^17.0.2
@@ -757,7 +757,7 @@ importers:
   packages/remix:
     dependencies:
       '@logto/node':
-        specifier: ^1.1.0
+        specifier: ^1.1.1
         version: link:../node
     devDependencies:
       '@commitlint/cli':
@@ -839,7 +839,7 @@ importers:
   packages/vue:
     dependencies:
       '@logto/browser':
-        specifier: ^1.1.0
+        specifier: ^1.1.1
         version: link:../browser
     devDependencies:
       '@jest/types':
@@ -897,7 +897,7 @@ importers:
   packages/vue-sample:
     dependencies:
       '@logto/vue':
-        specifier: ^1.1.0
+        specifier: ^1.1.1
         version: link:../vue
       vue:
         specifier: ^3.2.35
@@ -4730,6 +4730,14 @@ packages:
       import-modules: 2.1.0
       lodash: 4.17.21
     dev: true
+
+  /@silverhand/essentials@1.2.1:
+    resolution: {integrity: sha512-4wOM/yYEbcDH6Nwv/PdPjH+kbw8ixqGGVpD+CaWf+ay8+fYtmdNnr5aheqBwLV1ipHAjpXoh9x6Bqm9x68bGfA==}
+    engines: {node: '>=14.15.0', pnpm: '>=6'}
+    dependencies:
+      lodash.orderby: 4.6.0
+      lodash.pick: 4.4.0
+    dev: false
 
   /@silverhand/essentials@2.6.1:
     resolution: {integrity: sha512-RgRc+YpTAFc5G4OgfTul/m4N0DF86O/zpB2I7RJ+6tJ3HGhEuItjYWDU01zMixG+bT0CMgdCUPDOsGksNYX59Q==}
@@ -11093,6 +11101,14 @@ packages:
   /lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
     dev: true
+
+  /lodash.orderby@4.6.0:
+    resolution: {integrity: sha512-T0rZxKmghOOf5YPnn8EY5iLYeWCpZq8G41FfqoVHH5QDTAFaghJRmAdLiadEDq+ztgM2q5PjA+Z1fOwGrLgmtg==}
+    dev: false
+
+  /lodash.pick@4.4.0:
+    resolution: {integrity: sha512-hXt6Ul/5yWjfklSGvLQl8vM//l3FtyHZeuelpzK6mm99pNvN9yTDruNZPEJZD1oWrqo+izBmB7oUfWgcCX7s4Q==}
+    dev: false
 
   /lodash.set@4.3.2:
     resolution: {integrity: sha1-2HV7HagH3eJIFrDWqEvqGnYjCyM=}

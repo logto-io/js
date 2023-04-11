@@ -271,39 +271,34 @@ export default class LogtoClient {
       throw new LogtoClientError('not_authenticated');
     }
 
-    try {
-      const accessTokenKey = buildAccessTokenKey(resource);
-      const { appId: clientId } = this.logtoConfig;
-      const { tokenEndpoint } = await this.getOidcConfig();
-      const { accessToken, refreshToken, idToken, scope, expiresIn } =
-        await fetchTokenByRefreshToken(
-          {
-            clientId,
-            tokenEndpoint,
-            refreshToken: currentRefreshToken,
-            resource,
-          },
-          this.adapter.requester
-        );
+    const accessTokenKey = buildAccessTokenKey(resource);
+    const { appId: clientId } = this.logtoConfig;
+    const { tokenEndpoint } = await this.getOidcConfig();
+    const { accessToken, refreshToken, idToken, scope, expiresIn } = await fetchTokenByRefreshToken(
+      {
+        clientId,
+        tokenEndpoint,
+        refreshToken: currentRefreshToken,
+        resource,
+      },
+      this.adapter.requester
+    );
 
-      this.accessTokenMap.set(accessTokenKey, {
-        token: accessToken,
-        scope,
-        expiresAt: Math.round(Date.now() / 1000) + expiresIn,
-      });
+    this.accessTokenMap.set(accessTokenKey, {
+      token: accessToken,
+      scope,
+      expiresAt: Math.round(Date.now() / 1000) + expiresIn,
+    });
 
-      await this.saveAccessTokenMap();
-      await this.setRefreshToken(refreshToken);
+    await this.saveAccessTokenMap();
+    await this.setRefreshToken(refreshToken);
 
-      if (idToken) {
-        await this.verifyIdToken(idToken);
-        await this.setIdToken(idToken);
-      }
-
-      return accessToken;
-    } catch (error: unknown) {
-      throw new LogtoClientError('get_access_token_by_refresh_token_failed', error);
+    if (idToken) {
+      await this.verifyIdToken(idToken);
+      await this.setIdToken(idToken);
     }
+
+    return accessToken;
   }
 
   private async _getOidcConfig() {
@@ -324,11 +319,7 @@ export default class LogtoClient {
     const { issuer } = await this.getOidcConfig();
     const jwtVerifyGetKey = await this.getJwtVerifyGetKey();
 
-    try {
-      await verifyIdToken(idToken, appId, issuer, jwtVerifyGetKey);
-    } catch (error: unknown) {
-      throw new LogtoClientError('invalid_id_token', error);
-    }
+    await verifyIdToken(idToken, appId, issuer, jwtVerifyGetKey);
   }
 
   private async saveCodeToken({
@@ -377,7 +368,8 @@ export default class LogtoClient {
       for (const [key, accessToken] of Object.entries(json)) {
         this.accessTokenMap.set(key, accessToken);
       }
-    } catch {}
+    } catch (error: unknown) {
+      console.warn(error);
+    }
   }
-  // FIXME: @charles @sijie
 }
