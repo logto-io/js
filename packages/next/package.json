@@ -3,14 +3,19 @@
   "version": "1.1.0",
   "source": "./src/index.ts",
   "main": "./lib/index.js",
-  "exports": {
-    "require": "./lib/index.js",
-    "import": "./lib/module.mjs"
-  },
   "module": "./lib/module.mjs",
   "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./lib/index.js",
+      "import": "./lib/module.mjs",
+      "types": "./lib/index.d.ts"
+    },
+    "./edge": "./edge/lib/index.js"
+  },
   "files": [
-    "lib"
+    "lib",
+    "edge/lib"
   ],
   "license": "MIT",
   "repository": {
@@ -66,11 +71,20 @@
     "access": "public"
   },
   "targets": {
+    "types": {},
     "main": {
       "context": "node",
+      "source": "./src/index.ts",
+      "distDir": "./lib",
       "engines": {
         "node": ">=18.12.0"
       }
+    },
+    "edge": {
+      "context": "node",
+      "source": "./edge/index.ts",
+      "distDir": "./edge/lib",
+      "isLibrary": true
     }
   }
 }
