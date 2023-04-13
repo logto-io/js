@@ -29,8 +29,8 @@ importers:
         specifier: ^1.1.1
         version: link:../client
       '@silverhand/essentials':
-        specifier: ^1.2.1
-        version: 1.2.1
+        specifier: ^2.6.1
+        version: 2.6.1
       js-base64:
         specifier: ^3.7.4
         version: 3.7.4
@@ -136,8 +136,8 @@ importers:
         specifier: ^1.1.0
         version: link:../js
       '@silverhand/essentials':
-        specifier: ^1.2.1
-        version: 1.2.1
+        specifier: ^2.6.1
+        version: 2.6.1
       camelcase-keys:
         specifier: ^7.0.1
         version: 7.0.2
@@ -355,8 +355,8 @@ importers:
   packages/js:
     dependencies:
       '@silverhand/essentials':
-        specifier: ^1.2.1
-        version: 1.2.1
+        specifier: ^2.6.1
+        version: 2.6.1
       camelcase-keys:
         specifier: ^7.0.1
         version: 7.0.2
@@ -568,8 +568,8 @@ importers:
         specifier: ^1.1.1
         version: link:../client
       '@silverhand/essentials':
-        specifier: ^1.2.1
-        version: 1.2.1
+        specifier: ^2.6.1
+        version: 2.6.1
       js-base64:
         specifier: ^3.7.4
         version: 3.7.4
@@ -4506,14 +4506,6 @@ packages:
       import-modules: 2.1.0
       lodash: 4.17.21
     dev: true
-
-  /@silverhand/essentials@1.2.1:
-    resolution: {integrity: sha512-4wOM/yYEbcDH6Nwv/PdPjH+kbw8ixqGGVpD+CaWf+ay8+fYtmdNnr5aheqBwLV1ipHAjpXoh9x6Bqm9x68bGfA==}
-    engines: {node: '>=14.15.0', pnpm: '>=6'}
-    dependencies:
-      lodash.orderby: 4.6.0
-      lodash.pick: 4.4.0
-    dev: false
 
   /@silverhand/essentials@2.6.1:
     resolution: {integrity: sha512-RgRc+YpTAFc5G4OgfTul/m4N0DF86O/zpB2I7RJ+6tJ3HGhEuItjYWDU01zMixG+bT0CMgdCUPDOsGksNYX59Q==}
@@ -10071,14 +10063,6 @@ packages:
 
   /lodash.once@4.1.1:
     resolution: {integrity: sha1-DdOXEhPHxW34gJd9UEyI+0cal6w=}
-    dev: false
-
-  /lodash.orderby@4.6.0:
-    resolution: {integrity: sha512-T0rZxKmghOOf5YPnn8EY5iLYeWCpZq8G41FfqoVHH5QDTAFaghJRmAdLiadEDq+ztgM2q5PjA+Z1fOwGrLgmtg==}
-    dev: false
-
-  /lodash.pick@4.4.0:
-    resolution: {integrity: sha512-hXt6Ul/5yWjfklSGvLQl8vM//l3FtyHZeuelpzK6mm99pNvN9yTDruNZPEJZD1oWrqo+izBmB7oUfWgcCX7s4Q==}
     dev: false
 
   /lodash.set@4.3.2:

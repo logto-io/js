@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@logto/client": "^1.1.1",
-    "@silverhand/essentials": "^1.2.1",
+    "@silverhand/essentials": "^2.6.1",
     "js-base64": "^3.7.4"
   },
   "devDependencies": {
