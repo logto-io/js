@@ -11,7 +11,7 @@ const config: Config.InitialOptions = {
       },
     ],
   },
-  transformIgnorePatterns: ['node_modules/(?!(.*(nanoid|jose|ky|@logto|@silverhand))/)'],
+  transformIgnorePatterns: ['node_modules/(?!(.*(nanoid|jose|ky|@silverhand))/)'],
 };
 
 export default config;
