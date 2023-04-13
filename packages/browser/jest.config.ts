@@ -1,17 +1,11 @@
 import type { Config } from '@jest/types';
 
+import baseConfig from '../../jest.config';
+
 const config: Config.InitialOptions = {
-  preset: 'ts-jest/presets/js-with-ts',
-  collectCoverageFrom: ['src/**/*.ts'],
-  coverageReporters: ['lcov', 'text-summary'],
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js', 'jest-matcher-specific-error'],
+  ...baseConfig,
   testEnvironment: 'jsdom',
-  transformIgnorePatterns: ['node_modules/(?!(.*(nanoid|jose|ky|@logto|@silverhand))/)'],
-  globals: {
-    'ts-jest': {
-      tsconfig: 'tsconfig.test.json',
-    },
-  },
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js', 'jest-matcher-specific-error'],
 };
 
 export default config;

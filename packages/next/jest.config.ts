@@ -1,9 +1,9 @@
 import type { Config } from '@jest/types';
 
+import baseConfig from '../../jest.config';
+
 const config: Config.InitialOptions = {
-  preset: 'ts-jest',
-  collectCoverageFrom: ['src/**/*.ts'],
-  coverageReporters: ['lcov', 'text-summary'],
+  ...baseConfig,
   setupFilesAfterEnv: ['jest-matcher-specific-error'],
 };
 
