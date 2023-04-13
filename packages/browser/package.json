@@ -40,18 +40,18 @@
     "@parcel/transformer-typescript-types": "^2.8.3",
     "@silverhand/eslint-config": "^2.0.0",
     "@silverhand/ts-config": "^1.0.0",
-    "@types/jest": "^27.4.0",
-    "eslint": "^8.23.0",
+    "@types/jest": "^27.5.1",
+    "eslint": "^8.38.0",
     "jest": "^27.5.1",
     "jest-location-mock": "^1.0.9",
     "jest-matcher-specific-error": "^1.0.0",
     "lint-staged": "^13.0.0",
     "node-fetch": "^2.6.7",
     "parcel": "^2.8.3",
-    "prettier": "^2.7.1",
+    "prettier": "^2.8.7",
     "text-encoder": "^0.0.4",
-    "ts-jest": "^27.0.4",
-    "typescript": "4.9.5"
+    "ts-jest": "^27.1.5",
+    "typescript": "^5.0.0"
   },
   "eslintConfig": {
     "extends": "@silverhand"
