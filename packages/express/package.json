@@ -42,10 +42,10 @@
     "@types/cookie-parser": "^1.4.3",
     "@types/express": "^4.17.13",
     "@types/express-session": "^1.17.5",
-    "@types/jest": "^27.4.0",
+    "@types/jest": "^27.5.1",
     "@types/supertest": "^2.0.12",
     "cookie-parser": "^1.4.6",
-    "eslint": "^8.23.0",
+    "eslint": "^8.38.0",
     "express": "^4.18.1",
     "express-session": "^1.17.3",
     "jest": "^27.5.1",
@@ -53,10 +53,10 @@
     "jest-matcher-specific-error": "^1.0.0",
     "lint-staged": "^13.0.0",
     "parcel": "^2.8.3",
-    "prettier": "^2.7.1",
+    "prettier": "^2.8.7",
     "supertest": "^6.3.3",
-    "ts-jest": "^27.0.4",
-    "typescript": "4.9.5"
+    "ts-jest": "^27.1.5",
+    "typescript": "^5.0.0"
   },
   "peerDependencies": {
     "express": ">=4"
