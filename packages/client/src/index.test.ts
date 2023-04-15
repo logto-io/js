@@ -103,7 +103,7 @@ describe('LogtoClient', () => {
       });
 
       await expect(async () => signInSession.getSignInSessionItem()).rejects.toMatchError(
-        new LogtoClientError('sign_in_session_invalid')
+        new LogtoClientError('sign_in_session.invalid')
       );
     });
 
@@ -174,7 +174,7 @@ describe('LogtoClient', () => {
     it('should throw LogtoClientError when the sign-in session does not exist', async () => {
       const logtoClient = createClient();
       await expect(logtoClient.handleSignInCallback(redirectUri)).rejects.toMatchError(
-        new LogtoClientError('sign_in_session_not_found')
+        new LogtoClientError('sign_in_session.not_found')
       );
     });
 

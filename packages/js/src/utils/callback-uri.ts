@@ -15,7 +15,7 @@ export const verifyAndParseCodeFromCallbackUri = (
   state: string
 ) => {
   if (!callbackUri.startsWith(redirectUri)) {
-    throw new LogtoError('callback_uri_verification_redirect_uri_mismatched');
+    throw new LogtoError('callback_uri_verification.redirect_uri_mismatched');
   }
   const uriParameters = parseUriParameters(callbackUri);
 
@@ -24,7 +24,7 @@ export const verifyAndParseCodeFromCallbackUri = (
 
   if (error) {
     throw new LogtoError(
-      'callback_uri_verification_error_found',
+      'callback_uri_verification.error_found',
       new OidcError(error, errorDescription)
     );
   }
@@ -32,17 +32,17 @@ export const verifyAndParseCodeFromCallbackUri = (
   const stateFromCallbackUri = uriParameters.get(QueryKey.State);
 
   if (!stateFromCallbackUri) {
-    throw new LogtoError('callback_uri_verification_missing_state');
+    throw new LogtoError('callback_uri_verification.missing_state');
   }
 
   if (stateFromCallbackUri !== state) {
-    throw new LogtoError('callback_uri_verification_state_mismatched');
+    throw new LogtoError('callback_uri_verification.state_mismatched');
   }
 
   const code = uriParameters.get(QueryKey.Code);
 
   if (!code) {
-    throw new LogtoError('callback_uri_verification_missing_code');
+    throw new LogtoError('callback_uri_verification.missing_code');
   }
 
   return code;

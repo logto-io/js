@@ -3,7 +3,7 @@ import { isLogtoRequestError, LogtoError, LogtoRequestError, OidcError } from '.
 
 describe('LogtoError', () => {
   test('new LogtoError should contain correct properties', () => {
-    const code: LogtoErrorCode = 'callback_uri_verification_missing_code';
+    const code: LogtoErrorCode = 'callback_uri_verification.missing_code';
     const error = 'error_value';
     const errorDescription = 'error_description_content';
     const logtoError = new LogtoError(code, { error, errorDescription });
@@ -13,7 +13,7 @@ describe('LogtoError', () => {
   });
 
   test('new LogtoError with error code, which is not related to unique message, should contain message equaling to error code', () => {
-    const code: LogtoErrorCode = 'callback_uri_verification_missing_code';
+    const code: LogtoErrorCode = 'callback_uri_verification.missing_code';
     const error = 'error_value';
     const errorDescription = 'error_description_content';
     const logtoError = new LogtoError(code, new OidcError(error, errorDescription));

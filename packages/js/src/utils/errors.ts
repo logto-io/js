@@ -1,14 +1,14 @@
 import { isArbitraryObject } from './arbitrary-object';
 
 const logtoErrorCodes = Object.freeze({
-  id_token_invalid_iat: 'Invalid issued at time in the ID token',
-  id_token_invalid_token: 'Invalid ID token',
-  callback_uri_verification_redirect_uri_mismatched:
+  'id_token.invalid_iat': 'Invalid issued at time in the ID token',
+  'id_token.invalid_token': 'Invalid ID token',
+  'callback_uri_verification.redirect_uri_mismatched':
     'The callback URI mismatches the redirect URI.',
-  callback_uri_verification_error_found: 'Error found in the callback URI',
-  callback_uri_verification_missing_state: 'Missing state in the callback URI',
-  callback_uri_verification_state_mismatched: 'State mismatched in the callback URI',
-  callback_uri_verification_missing_code: 'Missing code in the callback URI',
+  'callback_uri_verification.error_found': 'Error found in the callback URI',
+  'callback_uri_verification.missing_state': 'Missing state in the callback URI',
+  'callback_uri_verification.state_mismatched': 'State mismatched in the callback URI',
+  'callback_uri_verification.missing_code': 'Missing code in the callback URI',
   crypto_subtle_unavailable: 'Crypto.subtle is unavailable in insecure contexts (non-HTTPS).',
   unexpected_response_error: 'Unexpected response error from the server.',
 });

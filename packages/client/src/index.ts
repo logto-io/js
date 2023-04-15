@@ -160,7 +160,7 @@ export default class LogtoClient {
     const signInSession = await this.getSignInSession();
 
     if (!signInSession) {
-      throw new LogtoClientError('sign_in_session_not_found');
+      throw new LogtoClientError('sign_in_session.not_found');
     }
 
     const { redirectUri, state, codeVerifier } = signInSession;
@@ -227,7 +227,7 @@ export default class LogtoClient {
     const item: unknown = JSON.parse(jsonItem);
 
     if (!isLogtoSignInSessionItem(item)) {
-      throw new LogtoClientError('sign_in_session_invalid');
+      throw new LogtoClientError('sign_in_session.invalid');
     }
 
     return item;
