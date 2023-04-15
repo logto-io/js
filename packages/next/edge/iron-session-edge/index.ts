@@ -38,7 +38,7 @@ export function withIronSessionApiRoute(
 }
 
 // Argument type based on the SSR context
-type GetIronSessionSSROptions = (
+type GetIronSessionSsrOptions = (
   request: IncomingMessage,
   response: ServerResponse
 ) => Promise<IronSessionOptions> | IronSessionOptions;
@@ -47,7 +47,7 @@ export function withIronSessionSsr<P extends Record<string, unknown> = Record<st
   handler: (
     context: GetServerSidePropsContext
   ) => GetServerSidePropsResult<P> | Promise<GetServerSidePropsResult<P>>,
-  options: IronSessionOptions | GetIronSessionSSROptions
+  options: IronSessionOptions | GetIronSessionSsrOptions
 ) {
   return async (context: GetServerSidePropsContext) => {
     const sessionOptions =
