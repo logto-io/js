@@ -65,36 +65,28 @@ describe('useLogto', () => {
   });
 
   test('not in callback url should not call `handleSignInCallback`', async () => {
-    const { result } = renderHook(
+    renderHook(
       () => {
         useHandleSignInCallback();
-
-        return useLogto();
       },
       {
         wrapper: createHookWrapper(),
       }
     );
-    await act(async () => result.current.signIn('redirectUri'));
     expect(handleSignInCallback).not.toHaveBeenCalled();
   });
 
   test('in callback url should call `handleSignInCallback`', async () => {
     isSignInRedirected.mockImplementation(() => true);
-    const { result, waitFor } = renderHook(
+    const { waitFor } = renderHook(
       () => {
         useHandleSignInCallback();
-
-        return useLogto();
       },
       {
         wrapper: createHookWrapper(),
       }
     );
-    await act(async () => result.current.signIn('redirectUri'));
-    await waitFor(() => {
-      expect(handleSignInCallback).toHaveBeenCalledTimes(1);
-    });
+    expect(handleSignInCallback).toHaveBeenCalledTimes(1);
   });
 
   test('useLogto hook should return error when getAccessToken fails', async () => {
