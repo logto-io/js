@@ -25,7 +25,7 @@
     "build": "rm -rf lib/ && pnpm check && parcel build && cp lib/index.d.ts lib/module.d.mts",
     "lint": "eslint --ext .ts src",
     "test": "jest",
-    "test:coverage": "jest --silent --env=jsdom && jest --silent --coverage",
+    "test:coverage": "jest --silent --env=jsdom && jest --silent",
     "prepack": "pnpm test"
   },
   "dependencies": {
@@ -41,6 +41,8 @@
     "@parcel/transformer-typescript-types": "^2.8.3",
     "@silverhand/eslint-config": "^2.0.0",
     "@silverhand/ts-config": "^1.0.0",
+    "@swc/core": "^1.3.50",
+    "@swc/jest": "^0.2.24",
     "@types/jest": "^27.5.1",
     "@types/lodash.get": "^4.4.6",
     "@types/node": "^18.0.0",
@@ -52,7 +54,6 @@
     "parcel": "^2.8.3",
     "prettier": "^2.8.7",
     "text-encoder": "^0.0.4",
-    "ts-jest": "^27.1.5",
     "type-fest": "^3.0.0",
     "typescript": "^5.0.0"
   },
