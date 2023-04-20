@@ -9,10 +9,7 @@ const { TextDecoder, TextEncoder } = require('text-encoder');
 /* eslint-enable unicorn/prefer-module */
 
 /* eslint-disable @silverhand/fp/no-mutation */
-global.crypto = {
-  getRandomValues: (buffer) => crypto.randomFillSync(buffer),
-  subtle: crypto.webcrypto.subtle,
-};
+global.crypto.subtle = crypto.webcrypto.subtle;
 global.location = location;
 global.fetch = fetch;
 global.TextDecoder = TextDecoder;

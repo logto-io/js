@@ -2,7 +2,7 @@ import LogtoClient from '@logto/browser';
 import { renderHook, act } from '@testing-library/react-hooks';
 import { ComponentType } from 'react';
 
-import { useLogto, useHandleSignInCallback } from '.';
+import { useHandleSignInCallback, useLogto } from '.';
 import { LogtoProvider } from '../provider';
 
 const isAuthenticated = jest.fn(() => false);
@@ -39,75 +39,79 @@ describe('useLogto', () => {
     expect(result.error).not.toBeUndefined();
   });
 
-  test('useLogto should call LogtoClient constructor', () => {
-    renderHook(() => useLogto(), {
-      wrapper: createHookWrapper(),
+  test('useLogto should call LogtoClient constructor', async () => {
+    await act(async () => {
+      renderHook(() => useLogto(), {
+        wrapper: createHookWrapper(),
+      });
     });
 
     expect(LogtoClient).toHaveBeenCalledWith({ endpoint, appId });
   });
 
   test('useLogto should return LogtoClient property methods', async () => {
-    const { result, waitFor } = renderHook(() => useLogto(), {
-      wrapper: createHookWrapper(),
-    });
+    await act(async () => {
+      const { result, waitFor } = renderHook(() => useLogto(), {
+        wrapper: createHookWrapper(),
+      });
 
-    await waitFor(() => {
-      const { signIn, signOut, fetchUserInfo, getAccessToken, getIdTokenClaims } = result.current;
+      await waitFor(() => {
+        const { signIn, signOut, fetchUserInfo, getAccessToken, getIdTokenClaims } = result.current;
 
-      expect(result.error).toBeUndefined();
-      expect(signIn).not.toBeUndefined();
-      expect(signOut).not.toBeUndefined();
-      expect(fetchUserInfo).not.toBeUndefined();
-      expect(getAccessToken).not.toBeUndefined();
-      expect(getIdTokenClaims).not.toBeUndefined();
+        expect(result.error).toBeUndefined();
+        expect(signIn).not.toBeUndefined();
+        expect(signOut).not.toBeUndefined();
+        expect(fetchUserInfo).not.toBeUndefined();
+        expect(getAccessToken).not.toBeUndefined();
+        expect(getIdTokenClaims).not.toBeUndefined();
+      });
     });
   });
 
   test('not in callback url should not call `handleSignInCallback`', async () => {
-    const { result } = renderHook(
-      () => {
-        useHandleSignInCallback();
-
-        return useLogto();
-      },
-      {
-        wrapper: createHookWrapper(),
-      }
-    );
-    await act(async () => result.current.signIn('redirectUri'));
+    await act(async () => {
+      renderHook(
+        () => {
+          useHandleSignInCallback();
+        },
+        {
+          wrapper: createHookWrapper(),
+        }
+      );
+    });
     expect(handleSignInCallback).not.toHaveBeenCalled();
   });
 
   test('in callback url should call `handleSignInCallback`', async () => {
     isSignInRedirected.mockImplementation(() => true);
-    const { result, waitFor } = renderHook(
-      () => {
-        useHandleSignInCallback();
 
-        return useLogto();
-      },
-      {
-        wrapper: createHookWrapper(),
-      }
-    );
-    await act(async () => result.current.signIn('redirectUri'));
-    await waitFor(() => {
-      expect(handleSignInCallback).toHaveBeenCalledTimes(1);
+    await act(async () => {
+      renderHook(
+        () => {
+          useHandleSignInCallback();
+        },
+        {
+          wrapper: createHookWrapper(),
+        }
+      );
+      isAuthenticated.mockImplementation(() => true);
     });
+    expect(handleSignInCallback).toHaveBeenCalledTimes(1);
   });
 
   test('useLogto hook should return error when getAccessToken fails', async () => {
-    const { result, waitFor } = renderHook(() => useLogto(), {
-      wrapper: createHookWrapper(),
-    });
-
     await act(async () => {
-      await result.current.getAccessToken();
-    });
-    await waitFor(() => {
-      expect(result.current.error).not.toBeUndefined();
-      expect(result.current.error?.message).toBe('not authenticated');
+      const { result, waitFor } = renderHook(() => useLogto(), {
+        wrapper: createHookWrapper(),
+      });
+
+      await act(async () => {
+        await result.current.getAccessToken();
+      });
+      await waitFor(() => {
+        expect(result.current.error).not.toBeUndefined();
+        expect(result.current.error?.message).toBe('not authenticated');
+      });
     });
   });
 });
