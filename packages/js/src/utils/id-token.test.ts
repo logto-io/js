@@ -1,6 +1,4 @@
-import { KeyObject } from 'crypto';
-
-import { createRemoteJWKSet, generateKeyPair, SignJWT } from 'jose';
+import { createRemoteJWKSet, exportJWK, generateKeyPair, SignJWT } from 'jose';
 import nock from 'nock';
 
 import { LogtoError } from './errors';
@@ -8,19 +6,30 @@ import { decodeIdToken, verifyIdToken } from './id-token';
 
 const createDefaultJwks = () => createRemoteJWKSet(new URL('https://logto.dev/oidc/jwks'));
 
+const mockJwkResponse = (key: unknown) => {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (global.window === undefined) {
+    // Mock in Node env
+    nock('https://logto.dev', { allowUnmocked: true })
+      .get('/oidc/jwks')
+      .reply(200, { keys: [key] });
+  } else {
+    // Mock in JSDOM env
+    // @ts-expect-error for testing
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    global.fetch = jest.fn(async () => ({
+      status: 200,
+      json: async () => ({ keys: [key] }),
+    }));
+  }
+};
+
 describe('verifyIdToken', () => {
   test('valid ID Token, signed by RS256 algorithm, should not throw', async () => {
     const alg = 'RS256';
     const { privateKey, publicKey } = await generateKeyPair(alg);
 
-    if (!(publicKey instanceof KeyObject)) {
-      throw new TypeError('key is not instanceof KeyObject, check environment');
-    }
-
-    const key = publicKey.export({ format: 'jwk' });
-    nock('https://logto.dev', { allowUnmocked: true })
-      .get('/oidc/jwks')
-      .reply(200, { keys: [key] });
+    mockJwkResponse(await exportJWK(publicKey));
 
     const idToken = await new SignJWT({})
       .setProtectedHeader({ alg })
@@ -40,14 +49,7 @@ describe('verifyIdToken', () => {
     const alg = 'ES512';
     const { privateKey, publicKey } = await generateKeyPair(alg);
 
-    if (!(publicKey instanceof KeyObject)) {
-      throw new TypeError('key is not instanceof KeyObject, check environment');
-    }
-
-    const key = publicKey.export({ format: 'jwk' });
-    nock('https://logto.dev', { allowUnmocked: true })
-      .get('/oidc/jwks')
-      .reply(200, { keys: [key] });
+    mockJwkResponse(await exportJWK(publicKey));
 
     const idToken = await new SignJWT({})
       .setProtectedHeader({ alg })
@@ -68,14 +70,7 @@ describe('verifyIdToken', () => {
     const { privateKey } = await generateKeyPair(alg);
     const { publicKey } = await generateKeyPair(alg);
 
-    if (!(publicKey instanceof KeyObject)) {
-      throw new TypeError('key is not instanceof KeyObject, check envirionment');
-    }
-
-    const key = publicKey.export({ format: 'jwk' });
-    nock('https://logto.dev', { allowUnmocked: true })
-      .get('/oidc/jwks')
-      .reply(200, { keys: [key] });
+    mockJwkResponse(await exportJWK(publicKey));
 
     const idToken = await new SignJWT({})
       .setProtectedHeader({ alg })
@@ -97,14 +92,7 @@ describe('verifyIdToken', () => {
     const alg = 'RS256';
     const { privateKey, publicKey } = await generateKeyPair(alg);
 
-    if (!(publicKey instanceof KeyObject)) {
-      throw new TypeError('key is not instanceof KeyObject, check environment');
-    }
-
-    const key = publicKey.export({ format: 'jwk' });
-    nock('https://logto.dev', { allowUnmocked: true })
-      .get('/oidc/jwks')
-      .reply(200, { keys: [key] });
+    mockJwkResponse(await exportJWK(publicKey));
 
     const idToken = await new SignJWT({})
       .setProtectedHeader({ alg })
@@ -126,14 +114,7 @@ describe('verifyIdToken', () => {
     const alg = 'RS256';
     const { privateKey, publicKey } = await generateKeyPair(alg);
 
-    if (!(publicKey instanceof KeyObject)) {
-      throw new TypeError('key is not instanceof KeyObject, check environment');
-    }
-
-    const key = publicKey.export({ format: 'jwk' });
-    nock('https://logto.dev', { allowUnmocked: true })
-      .get('/oidc/jwks')
-      .reply(200, { keys: [key] });
+    mockJwkResponse(await exportJWK(publicKey));
 
     const idToken = await new SignJWT({})
       .setProtectedHeader({ alg })
@@ -155,14 +136,7 @@ describe('verifyIdToken', () => {
     const alg = 'RS256';
     const { privateKey, publicKey } = await generateKeyPair(alg);
 
-    if (!(publicKey instanceof KeyObject)) {
-      throw new TypeError('key is not instanceof KeyObject, check environment');
-    }
-
-    const key = publicKey.export({ format: 'jwk' });
-    nock('https://logto.dev', { allowUnmocked: true })
-      .get('/oidc/jwks')
-      .reply(200, { keys: [key] });
+    mockJwkResponse(await exportJWK(publicKey));
 
     const idToken = await new SignJWT({})
       .setProtectedHeader({ alg })
@@ -184,14 +158,7 @@ describe('verifyIdToken', () => {
     const alg = 'RS256';
     const { privateKey, publicKey } = await generateKeyPair(alg);
 
-    if (!(publicKey instanceof KeyObject)) {
-      throw new TypeError('key is not instanceof KeyObject, check environment');
-    }
-
-    const key = publicKey.export({ format: 'jwk' });
-    nock('https://logto.dev', { allowUnmocked: true })
-      .get('/oidc/jwks')
-      .reply(200, { keys: [key] });
+    mockJwkResponse(await exportJWK(publicKey));
 
     const idToken = await new SignJWT({})
       .setProtectedHeader({ alg })

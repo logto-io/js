@@ -185,12 +185,6 @@ export default class LogtoClient {
   }
 
   async signOut(postLogoutRedirectUri?: string) {
-    const idToken = await this.getIdToken();
-
-    if (!idToken) {
-      throw new LogtoClientError('not_authenticated');
-    }
-
     const { appId: clientId } = this.logtoConfig;
     const { endSessionEndpoint, revocationEndpoint } = await this.getOidcConfig();
     const refreshToken = await this.getRefreshToken();

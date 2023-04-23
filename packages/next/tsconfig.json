@@ -1,15 +1,15 @@
 {
-    "extends": "@silverhand/ts-config-react/tsconfig.base",
-    "compilerOptions": {
-        "outDir": "lib",
-        "types": [
-            "jest",
-            "jest-matcher-specific-error"
-        ]
-    },
-    "include": [
-        "src",
-        "jest.config.ts",
-        "edge"
+  "extends": "@silverhand/ts-config-react/tsconfig.base",
+  "compilerOptions": {
+    "outDir": "lib",
+    "types": [
+      "jest",
+      "jest-matcher-specific-error"
     ]
+  },
+  "include": [
+    "src",
+    "jest.config.ts",
+    "edge"
+  ]
 }

@@ -16,8 +16,14 @@
     "@commitlint/cli": "^17.0.1",
     "@commitlint/config-conventional": "^17.0.0",
     "@commitlint/types": "^17.0.0",
+    "@jest/types": "^29.5.0",
+    "@rollup/plugin-node-resolve": "^15.0.2",
+    "@rollup/plugin-typescript": "^11.1.0",
+    "@types/node": "^18.15.11",
     "husky": "^8.0.1",
     "lerna": "^5.0.0",
+    "rollup": "^3.20.2",
+    "rollup-plugin-summary": "^2.0.0",
     "typescript": "^5.0.0"
   },
   "workspaces": {

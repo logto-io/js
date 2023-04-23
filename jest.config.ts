@@ -1,25 +1,17 @@
 import type { Config } from '@jest/types';
 
-import baseConfig from '../../jest.config';
-
 const config: Config.InitialOptions = {
-  ...baseConfig,
+  roots: ['<rootDir>/src'],
+  collectCoverage: Boolean(process.env.CI),
   transform: {
     '^.+\\.(t|j)sx?$': [
       '@swc/jest',
       {
         sourceMaps: true,
-        jsc: {
-          transform: {
-            react: {
-              runtime: 'automatic',
-            },
-          },
-        },
       },
     ],
   },
-  testEnvironment: 'jsdom',
+  transformIgnorePatterns: ['node_modules/(?!(.*(nanoid|jose|ky|@silverhand))/)'],
 };
 
 export default config;
