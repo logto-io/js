@@ -2,16 +2,20 @@
   "name": "@logto/next",
   "version": "1.1.1",
   "source": "./src/index.ts",
-  "main": "./lib/index.js",
-  "module": "./lib/module.mjs",
-  "types": "./lib/index.d.ts",
+  "main": "./lib/src/index.js",
+  "module": "./lib/src/index.mjs",
+  "types": "./lib/src/index.d.ts",
   "exports": {
     ".": {
-      "require": "./lib/index.js",
-      "import": "./lib/module.mjs",
-      "types": "./lib/index.d.ts"
+      "require": "./lib/src/index.js",
+      "import": "./lib/src/index.mjs",
+      "types": "./lib/src/index.d.ts"
     },
-    "./edge": "./edge/lib/index.js"
+    "./edge": {
+      "require": "./lib/edge/index.js",
+      "import": "./lib/edge/index.mjs",
+      "types": "./lib/edge/index.d.ts"
+    }
   },
   "files": [
     "lib",
@@ -66,22 +70,5 @@
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "publishConfig": {
     "access": "public"
-  },
-  "targets": {
-    "types": {},
-    "main": {
-      "context": "node",
-      "source": "./src/index.ts",
-      "distDir": "./lib",
-      "engines": {
-        "node": ">=18.12.0"
-      }
-    },
-    "edge": {
-      "context": "node",
-      "source": "./edge/index.ts",
-      "distDir": "./edge/lib",
-      "isLibrary": true
-    }
   }
 }
