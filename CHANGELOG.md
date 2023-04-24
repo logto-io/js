@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [1.1.2](https://github.com/logto-io/js/compare/v1.1.1...v1.1.2) (2023-04-24)
+
+
+### Bug Fixes
+
+* browser tests ([0d1ca67](https://github.com/logto-io/js/commit/0d1ca674402966bbc994c5463e0c002091f72ac5))
+* **react:** only call handleSignInCallback when not loading ([df6efe1](https://github.com/logto-io/js/commit/df6efe1fd007c3aa67a98bae4b19a7cc47c22cdb))
+* remove id token check for sign out ([#474](https://github.com/logto-io/js/issues/474)) ([fc73418](https://github.com/logto-io/js/commit/fc73418f0a48ff3f5e760f706cf625883b15849e))
+* test case ([3a01748](https://github.com/logto-io/js/commit/3a017482e63389809a05468b5dcecc7294eea92b))
+
+
+
 ### [1.1.1](https://github.com/logto-io/js/compare/v1.1.0...v1.1.1) (2023-04-11)
 
 

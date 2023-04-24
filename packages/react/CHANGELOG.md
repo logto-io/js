@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [1.1.2](https://github.com/logto-io/js/compare/v1.1.1...v1.1.2) (2023-04-24)
+
+
+### Bug Fixes
+
+* **react:** only call handleSignInCallback when not loading ([df6efe1](https://github.com/logto-io/js/commit/df6efe1fd007c3aa67a98bae4b19a7cc47c22cdb))
+* test case ([3a01748](https://github.com/logto-io/js/commit/3a017482e63389809a05468b5dcecc7294eea92b))
+
+
+
 ### [1.1.1](https://github.com/logto-io/js/compare/v1.1.0...v1.1.1) (2023-04-11)
 
 **Note:** Version bump only for package @logto/react
