@@ -18,8 +18,7 @@
     }
   },
   "files": [
-    "lib",
-    "edge/lib"
+    "lib"
   ],
   "license": "MIT",
   "repository": {
