@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [1.1.2](https://github.com/logto-io/js/compare/v1.1.1...v1.1.2) (2023-04-24)
+
+
+### Bug Fixes
+
+* remove id token check for sign out ([#474](https://github.com/logto-io/js/issues/474)) ([fc73418](https://github.com/logto-io/js/commit/fc73418f0a48ff3f5e760f706cf625883b15849e))
+
+
+
 ### [1.1.1](https://github.com/logto-io/js/compare/v1.1.0...v1.1.1) (2023-04-11)
 
 **Note:** Version bump only for package @logto/client

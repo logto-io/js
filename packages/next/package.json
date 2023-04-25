@@ -1,6 +1,6 @@
 {
   "name": "@logto/next",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "source": "./src/index.ts",
   "main": "./lib/src/index.js",
   "module": "./lib/src/index.mjs",
@@ -37,7 +37,7 @@
     "prepack": "pnpm test"
   },
   "dependencies": {
-    "@logto/node": "^1.1.1",
+    "@logto/node": "^1.1.2",
     "iron-session": "^6.3.1"
   },
   "devDependencies": {

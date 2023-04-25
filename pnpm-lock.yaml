@@ -44,7 +44,7 @@ importers:
   packages/browser:
     dependencies:
       '@logto/client':
-        specifier: ^1.1.1
+        specifier: ^1.1.2
         version: link:../client
       '@silverhand/essentials':
         specifier: ^2.6.1
@@ -86,9 +86,6 @@ importers:
       lint-staged:
         specifier: ^13.0.0
         version: 13.0.0
-      node-fetch:
-        specifier: ^2.6.7
-        version: 2.6.7
       prettier:
         specifier: ^2.8.7
         version: 2.8.7
@@ -102,7 +99,7 @@ importers:
   packages/browser-sample:
     dependencies:
       '@logto/browser':
-        specifier: ^1.1.1
+        specifier: ^1.1.2
         version: link:../browser
     devDependencies:
       '@parcel/core':
@@ -142,7 +139,7 @@ importers:
   packages/client:
     dependencies:
       '@logto/js':
-        specifier: ^1.1.0
+        specifier: ^1.1.2
         version: link:../js
       '@silverhand/essentials':
         specifier: ^2.6.1
@@ -206,7 +203,7 @@ importers:
   packages/express:
     dependencies:
       '@logto/node':
-        specifier: ^1.1.1
+        specifier: ^1.1.2
         version: link:../node
     devDependencies:
       '@jest/types':
@@ -279,7 +276,7 @@ importers:
   packages/express-sample:
     dependencies:
       '@logto/express':
-        specifier: ^1.1.1
+        specifier: ^1.1.2
         version: link:../express
       cookie-parser:
         specifier: ^1.4.6
@@ -401,7 +398,7 @@ importers:
   packages/next:
     dependencies:
       '@logto/node':
-        specifier: ^1.1.1
+        specifier: ^1.1.2
         version: link:../node
       iron-session:
         specifier: ^6.3.1
@@ -465,7 +462,7 @@ importers:
   packages/next-sample:
     dependencies:
       '@logto/next':
-        specifier: ^1.1.1
+        specifier: ^1.1.2
         version: link:../next
       next:
         specifier: ^13.0.4
@@ -526,7 +523,7 @@ importers:
   packages/node:
     dependencies:
       '@logto/client':
-        specifier: ^1.1.1
+        specifier: ^1.1.2
         version: link:../client
       '@silverhand/essentials':
         specifier: ^2.6.1
@@ -584,7 +581,7 @@ importers:
   packages/react:
     dependencies:
       '@logto/browser':
-        specifier: ^1.1.1
+        specifier: ^1.1.2
         version: link:../browser
       '@silverhand/essentials':
         specifier: ^2.6.1
@@ -648,7 +645,7 @@ importers:
   packages/react-sample:
     dependencies:
       '@logto/react':
-        specifier: ^1.1.1
+        specifier: ^1.1.2
         version: link:../react
       react:
         specifier: ^17.0.2
@@ -721,7 +718,7 @@ importers:
   packages/remix:
     dependencies:
       '@logto/node':
-        specifier: ^1.1.1
+        specifier: ^1.1.2
         version: link:../node
     devDependencies:
       '@commitlint/cli':
@@ -791,7 +788,7 @@ importers:
   packages/vue:
     dependencies:
       '@logto/browser':
-        specifier: ^1.1.1
+        specifier: ^1.1.2
         version: link:../browser
     devDependencies:
       '@jest/types':
@@ -840,7 +837,7 @@ importers:
   packages/vue-sample:
     dependencies:
       '@logto/vue':
-        specifier: ^1.1.1
+        specifier: ^1.1.2
         version: link:../vue
       vue:
         specifier: ^3.2.35

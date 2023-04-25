@@ -3,7 +3,6 @@
 /* eslint-disable unicorn/prefer-module */
 const crypto = require('crypto');
 
-const fetch = require('node-fetch');
 const { TextDecoder, TextEncoder } = require('text-encoder');
 /* eslint-enable unicorn/prefer-module */
 
@@ -14,7 +13,6 @@ if (global.window !== undefined) {
   global.crypto.subtle = crypto.webcrypto.subtle;
 }
 
-global.fetch = fetch;
 global.TextDecoder = TextDecoder;
 global.TextEncoder = TextEncoder;
 /* eslint-enable @silverhand/fp/no-mutation */
