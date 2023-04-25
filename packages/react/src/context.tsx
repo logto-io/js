@@ -1,4 +1,4 @@
-import LogtoClient from '@logto/browser';
+import type LogtoClient from '@logto/browser';
 import { createContext } from 'react';
 
 export type LogtoContextProps = {

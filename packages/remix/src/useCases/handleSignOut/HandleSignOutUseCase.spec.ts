@@ -1,5 +1,6 @@
-import { createLogtoAdapter, sessionStorage, handleSignOut } from '../../framework/mocks';
-import { makeHandleSignOutUseCase } from './HandleSignOutUseCase';
+import { createLogtoAdapter, sessionStorage, handleSignOut } from '../../framework/mocks.js';
+
+import { makeHandleSignOutUseCase } from './HandleSignOutUseCase.js';
 
 describe('useCases:handleSignOut:makeHandleSignOutUseCase', () => {
   afterEach(() => jest.resetAllMocks());

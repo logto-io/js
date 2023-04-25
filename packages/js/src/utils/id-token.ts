@@ -3,8 +3,8 @@ import { urlSafeBase64 } from '@silverhand/essentials';
 import type { JWTVerifyGetKey } from 'jose';
 import { jwtVerify } from 'jose';
 
-import { isArbitraryObject } from './arbitrary-object';
-import { LogtoError } from './errors';
+import { isArbitraryObject } from './arbitrary-object.js';
+import { LogtoError } from './errors.js';
 
 const issuedAtTimeTolerance = 60;
 

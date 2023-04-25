@@ -1,7 +1,8 @@
 import type { GetContextParameters, LogtoContext } from '@logto/node';
 
-import { getCookieHeaderFromRequest } from '../../framework/get-cookie-header-from-request';
-import type { GetContextUseCase } from './GetContextUseCase';
+import { getCookieHeaderFromRequest } from '../../framework/get-cookie-header-from-request.js';
+
+import type { GetContextUseCase } from './GetContextUseCase.js';
 
 type GetContextControllerDto = GetContextParameters & {
   readonly useCase: GetContextUseCase;

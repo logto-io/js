@@ -4,7 +4,7 @@ import express from 'express';
 import session from 'express-session';
 import request from 'supertest';
 
-import type { Middleware } from '.';
+import type { Middleware } from './index.js';
 
 type TestMiddlewareParameters = {
   middleware: Middleware;

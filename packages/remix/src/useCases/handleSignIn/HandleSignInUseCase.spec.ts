@@ -1,5 +1,6 @@
-import { createLogtoAdapter, sessionStorage, handleSignIn } from '../../framework/mocks';
-import { makeHandleSignInUseCase } from './HandleSignInUseCase';
+import { createLogtoAdapter, sessionStorage, handleSignIn } from '../../framework/mocks.js';
+
+import { makeHandleSignInUseCase } from './HandleSignInUseCase.js';
 
 describe('useCases:handleSignIn:HandleSignInUseCase', () => {
   afterEach(() => jest.resetAllMocks());

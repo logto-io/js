@@ -1,4 +1,4 @@
-import baseConfigs from '../../rollup.config.mjs';
+import baseConfigs from '../../rollup.config.js';
 
 const configs = {
   ...baseConfigs,

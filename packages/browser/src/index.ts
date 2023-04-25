@@ -1,8 +1,8 @@
 import type { LogtoConfig } from '@logto/client';
 import BaseClient, { createRequester } from '@logto/client';
 
-import { BrowserStorage } from './storage';
-import { generateCodeChallenge, generateCodeVerifier, generateState } from './utils/generators';
+import { BrowserStorage } from './storage.js';
+import { generateCodeChallenge, generateCodeVerifier, generateState } from './utils/generators.js';
 
 export type {
   IdTokenClaims,

@@ -1,6 +1,6 @@
 import type { SessionStorage } from '@remix-run/node';
 
-import type { CreateLogtoAdapter } from '../../infrastructure/logto';
+import type { CreateLogtoAdapter } from '../../infrastructure/logto/index.js';
 
 type SignInCallbackRequest = {
   readonly cookieHeader: string;

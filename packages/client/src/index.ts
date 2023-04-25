@@ -21,12 +21,12 @@ import {
 import type { Nullable } from '@silverhand/essentials';
 import { createRemoteJWKSet } from 'jose';
 
-import type { ClientAdapter } from './adapter';
-import { LogtoClientError } from './errors';
-import type { AccessToken, LogtoConfig, LogtoSignInSessionItem } from './types';
-import { isLogtoAccessTokenMap, isLogtoSignInSessionItem } from './types';
-import { buildAccessTokenKey, getDiscoveryEndpoint } from './utils';
-import { once } from './utils/once';
+import type { ClientAdapter } from './adapter.js';
+import { LogtoClientError } from './errors.js';
+import type { AccessToken, LogtoConfig, LogtoSignInSessionItem } from './types/index.js';
+import { isLogtoAccessTokenMap, isLogtoSignInSessionItem } from './types/index.js';
+import { buildAccessTokenKey, getDiscoveryEndpoint } from './utils/index.js';
+import { once } from './utils/once.js';
 
 export type { IdTokenClaims, LogtoErrorCode, UserInfoResponse, InteractionMode } from '@logto/js';
 export {
@@ -37,14 +37,14 @@ export {
   ReservedScope,
   UserScope,
 } from '@logto/js';
-export * from './errors';
-export type { Storage, StorageKey, ClientAdapter } from './adapter';
-export { createRequester } from './utils';
-export * from './types';
+export * from './errors.js';
+export type { Storage, StorageKey, ClientAdapter } from './adapter.js';
+export { createRequester } from './utils/index.js';
+export * from './types/index.js';
 
 export default class LogtoClient {
   protected readonly logtoConfig: LogtoConfig;
-  protected readonly getOidcConfig = once(this._getOidcConfig);
+  protected readonly getOidcConfig: typeof this._getOidcConfig = once(this._getOidcConfig);
   protected readonly getJwtVerifyGetKey = once(this._getJwtVerifyGetKey);
   protected readonly adapter: ClientAdapter;
   protected readonly accessTokenMap = new Map<string, AccessToken>();

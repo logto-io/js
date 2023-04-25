@@ -1,7 +1,7 @@
 import { urlSafeBase64 } from '@silverhand/essentials';
 import { toUint8Array } from 'js-base64';
 
-import { generateCodeChallenge, generateCodeVerifier, generateState } from './generators';
+import { generateCodeChallenge, generateCodeVerifier, generateState } from './generators.js';
 
 describe('generateState', () => {
   test('should be random value', () => {

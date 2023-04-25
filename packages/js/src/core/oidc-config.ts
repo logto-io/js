@@ -1,7 +1,7 @@
 import type { KeysToCamelCase } from '@silverhand/essentials';
 import camelcaseKeys from 'camelcase-keys';
 
-import type { Requester } from '../types';
+import type { Requester } from '../types/index.js';
 
 type OidcConfigSnakeCaseResponse = {
   authorization_endpoint: string;

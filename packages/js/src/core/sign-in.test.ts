@@ -1,5 +1,6 @@
-import { Prompt, UserScope } from '../consts';
-import { generateSignInUri } from './sign-in';
+import { Prompt, UserScope } from '../consts/index.js';
+
+import { generateSignInUri } from './sign-in.js';
 
 const authorizationEndpoint = 'https://logto.dev/oidc/sign-in';
 const clientId = 'clientId';

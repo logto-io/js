@@ -1,5 +1,6 @@
-import { ReservedScope, UserScope } from '../consts';
-import { withDefaultScopes } from './scopes';
+import { ReservedScope, UserScope } from '../consts/index.js';
+
+import { withDefaultScopes } from './scopes.js';
 
 const offlineAccess = ReservedScope.OfflineAccess;
 const openid = ReservedScope.OpenId;

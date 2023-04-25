@@ -1,6 +1,7 @@
-import { createLogtoAdapter, sessionStorage } from '../../framework/mocks';
-import { HandleSignInController } from './HandleSignInController';
-import { makeHandleSignInUseCase } from './HandleSignInUseCase';
+import { createLogtoAdapter, sessionStorage } from '../../framework/mocks.js';
+
+import { HandleSignInController } from './HandleSignInController.js';
+import { makeHandleSignInUseCase } from './HandleSignInUseCase.js';
 
 describe('useCases:handleSignIn:HandleSignInController', () => {
   it('can be created', () => {

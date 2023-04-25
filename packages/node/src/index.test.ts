@@ -1,4 +1,4 @@
-import LogtoClient from '.';
+import LogtoClient from './index.js';
 
 const appId = 'app_id_value';
 const endpoint = 'https://logto.dev';

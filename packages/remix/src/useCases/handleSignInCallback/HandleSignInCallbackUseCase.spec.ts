@@ -1,5 +1,6 @@
-import { createLogtoAdapter, sessionStorage, handleSignInCallback } from '../../framework/mocks';
-import { makeHandleSignInCallbackUseCase } from './HandleSignInCallbackUseCase';
+import { createLogtoAdapter, sessionStorage, handleSignInCallback } from '../../framework/mocks.js';
+
+import { makeHandleSignInCallbackUseCase } from './HandleSignInCallbackUseCase.js';
 
 describe('useCases:handleSignInCallback:HandleSignInCallbackUseCase', () => {
   afterEach(() => jest.resetAllMocks());

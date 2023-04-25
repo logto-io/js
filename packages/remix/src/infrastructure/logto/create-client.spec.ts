@@ -1,8 +1,8 @@
 import { createSession } from '@remix-run/node';
 
-import { makeLogtoClient } from './create-client';
-import type { LogtoConfig } from './create-client';
-import { createStorage } from './create-storage';
+import { makeLogtoClient } from './create-client.js';
+import type { LogtoConfig } from './create-client.js';
+import { createStorage } from './create-storage.js';
 
 const config: LogtoConfig = {
   appId: 'app_id_value',

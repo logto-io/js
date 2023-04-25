@@ -1,6 +1,7 @@
-import { createLogtoAdapter, sessionStorage } from '../../framework/mocks';
-import { HandleSignInCallbackController } from './HandleSignInCallbackController';
-import { makeHandleSignInCallbackUseCase } from './HandleSignInCallbackUseCase';
+import { createLogtoAdapter, sessionStorage } from '../../framework/mocks.js';
+
+import { HandleSignInCallbackController } from './HandleSignInCallbackController.js';
+import { makeHandleSignInCallbackUseCase } from './HandleSignInCallbackUseCase.js';
 
 describe('useCases:handleSignInCallback:HandleSignInCallbackController', () => {
   it('can be created', () => {

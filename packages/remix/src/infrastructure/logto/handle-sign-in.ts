@@ -1,7 +1,7 @@
 import type { Session } from '@remix-run/node';
 
-import type { CreateLogtoClient } from './create-client';
-import type { LogtoStorage } from './create-storage';
+import type { CreateLogtoClient } from './create-client.js';
+import type { LogtoStorage } from './create-storage.js';
 
 type HandleSignInRequest = {
   readonly redirectUri: string;

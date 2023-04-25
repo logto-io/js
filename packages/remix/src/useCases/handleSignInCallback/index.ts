@@ -1,8 +1,9 @@
 import type { SessionStorage } from '@remix-run/node';
 
-import type { CreateLogtoAdapter } from '../../infrastructure/logto';
-import { HandleSignInCallbackController } from './HandleSignInCallbackController';
-import { makeHandleSignInCallbackUseCase } from './HandleSignInCallbackUseCase';
+import type { CreateLogtoAdapter } from '../../infrastructure/logto/index.js';
+
+import { HandleSignInCallbackController } from './HandleSignInCallbackController.js';
+import { makeHandleSignInCallbackUseCase } from './HandleSignInCallbackUseCase.js';
 
 type HandleSignInCallbackDto = {
   readonly redirectBackTo: string;

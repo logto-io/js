@@ -3,10 +3,10 @@ import LogtoClient from '@logto/browser';
 import type { App } from 'vue';
 import { readonly } from 'vue';
 
-import { useLogto, useHandleSignInCallback, createLogto } from '.';
-import { contextInjectionKey, logtoInjectionKey } from './consts';
-import { createContext } from './context';
-import { createPluginMethods } from './plugin';
+import { contextInjectionKey, logtoInjectionKey } from './consts.js';
+import { createContext } from './context.js';
+import { useLogto, useHandleSignInCallback, createLogto } from './index.js';
+import { createPluginMethods } from './plugin.js';
 
 const isAuthenticated = jest.fn(async () => false);
 const isSignInRedirected = jest.fn(() => false);

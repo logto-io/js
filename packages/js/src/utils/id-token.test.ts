@@ -1,8 +1,8 @@
 import { createRemoteJWKSet, exportJWK, generateKeyPair, SignJWT } from 'jose';
 import nock from 'nock';
 
-import { LogtoError } from './errors';
-import { decodeIdToken, verifyIdToken } from './id-token';
+import { LogtoError } from './errors.js';
+import { decodeIdToken, verifyIdToken } from './id-token.js';
 
 const createDefaultJwks = () => createRemoteJWKSet(new URL('https://logto.dev/oidc/jwks'));
 

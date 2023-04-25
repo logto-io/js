@@ -1,8 +1,9 @@
 import type { SessionStorage } from '@remix-run/node';
 
-import type { CreateLogtoAdapter } from '../../infrastructure/logto';
-import { HandleSignOutController } from './HandleSignOutController';
-import { makeHandleSignOutUseCase } from './HandleSignOutUseCase';
+import type { CreateLogtoAdapter } from '../../infrastructure/logto/index.js';
+
+import { HandleSignOutController } from './HandleSignOutController.js';
+import { makeHandleSignOutUseCase } from './HandleSignOutUseCase.js';
 
 type HandleSignOutDto = {
   readonly redirectBackTo: string;

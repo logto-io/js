@@ -3,10 +3,10 @@ import LogtoClient from '@logto/browser';
 import type { App, Ref } from 'vue';
 import { inject, readonly, watchEffect } from 'vue';
 
-import { logtoInjectionKey, contextInjectionKey } from './consts';
-import type { Context } from './context';
-import { createContext, throwContextError } from './context';
-import { createPluginMethods } from './plugin';
+import { logtoInjectionKey, contextInjectionKey } from './consts.js';
+import type { Context } from './context.js';
+import { createContext, throwContextError } from './context.js';
+import { createPluginMethods } from './plugin.js';
 
 export type {
   LogtoConfig,

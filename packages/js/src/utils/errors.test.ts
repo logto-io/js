@@ -1,5 +1,5 @@
-import type { LogtoErrorCode } from './errors';
-import { isLogtoRequestError, LogtoError, LogtoRequestError, OidcError } from './errors';
+import type { LogtoErrorCode } from './errors.js';
+import { isLogtoRequestError, LogtoError, LogtoRequestError, OidcError } from './errors.js';
 
 describe('LogtoError', () => {
   test('new LogtoError should contain correct properties', () => {

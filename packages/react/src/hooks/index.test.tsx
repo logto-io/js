@@ -1,10 +1,11 @@
 import LogtoClient from '@logto/browser';
 import { renderHook, act } from '@testing-library/react-hooks';
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
-import { useHandleSignInCallback, useLogto } from '.';
-import { LogtoContext, LogtoContextProps } from '../context';
-import { LogtoProvider } from '../provider';
+import { LogtoContext, type LogtoContextProps } from '../context.js';
+import { LogtoProvider } from '../provider.js';
+
+import { useHandleSignInCallback, useLogto } from './index.js';
 
 const isAuthenticated = jest.fn(() => false);
 const isSignInRedirected = jest.fn(() => false);

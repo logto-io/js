@@ -1,17 +1,17 @@
-import type { IncomingMessage } from 'http';
+import type { IncomingMessage } from 'node:http';
 
 import NodeClient from '@logto/node';
 import type { Request, Response, NextFunction } from 'express';
 import { Router } from 'express';
 
-import { LogtoExpressError } from './errors';
-import ExpressStorage from './storage';
-import type { LogtoExpressConfig } from './types';
+import { LogtoExpressError } from './errors.js';
+import ExpressStorage from './storage.js';
+import type { LogtoExpressConfig } from './types.js';
 
 export { ReservedScope, UserScope } from '@logto/node';
 
 export type { LogtoContext, InteractionMode } from '@logto/node';
-export type { LogtoExpressConfig } from './types';
+export type { LogtoExpressConfig } from './types.js';
 
 export type Middleware = (
   request: Request,

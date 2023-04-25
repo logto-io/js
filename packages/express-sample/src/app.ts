@@ -1,4 +1,4 @@
-import http from 'http';
+import http from 'node:http';
 
 import type { LogtoExpressConfig } from '@logto/express';
 import { handleAuthRoutes, withLogto } from '@logto/express';

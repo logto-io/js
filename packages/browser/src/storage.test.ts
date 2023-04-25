@@ -1,4 +1,4 @@
-import { BrowserStorage, logtoStorageItemKeyPrefix } from './storage';
+import { BrowserStorage, logtoStorageItemKeyPrefix } from './storage.js';
 
 describe('BrowserStorage', () => {
   beforeEach(() => {

@@ -1,5 +1,11 @@
-import { createLogtoAdapter, sessionStorage, getContext, getSession } from '../../framework/mocks';
-import { makeGetContextUseCase } from './GetContextUseCase';
+import {
+  createLogtoAdapter,
+  sessionStorage,
+  getContext,
+  getSession,
+} from '../../framework/mocks.js';
+
+import { makeGetContextUseCase } from './GetContextUseCase.js';
 
 describe('useCases:getContext:GetContextUseCase', () => {
   afterEach(() => jest.resetAllMocks());
