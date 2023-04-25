@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@logto/browser": "^1.1.2",
-    "@silverhand/essentials": "^2.6.1"
+    "@silverhand/essentials": "^2.6.2"
   },
   "devDependencies": {
     "@jest/types": "^29.5.0",

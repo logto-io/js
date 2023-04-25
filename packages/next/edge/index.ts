@@ -1,5 +1,6 @@
 import BaseClient from '../src/client';
-import type { LogtoNextConfig } from '../src/types';
+import type { LogtoNextConfig } from '../src/types.js';
+
 import { withIronSessionApiRoute, withIronSessionSsr } from './iron-session-edge';
 
 export { ReservedScope, UserScope } from '@logto/node';

@@ -1,4 +1,4 @@
-import type { IncomingMessage } from 'node:http';
+import type { IncomingMessage } from 'http';
 
 import type { Storage, StorageKey } from '@logto/node';
 
