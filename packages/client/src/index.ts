@@ -20,13 +20,13 @@ import {
 } from '@logto/js';
 import type { Nullable } from '@silverhand/essentials';
 import { createRemoteJWKSet } from 'jose';
-import once from 'lodash.once';
 
 import type { ClientAdapter } from './adapter';
 import { LogtoClientError } from './errors';
 import type { AccessToken, LogtoConfig, LogtoSignInSessionItem } from './types';
 import { isLogtoAccessTokenMap, isLogtoSignInSessionItem } from './types';
 import { buildAccessTokenKey, getDiscoveryEndpoint } from './utils';
+import { once } from './utils/once';
 
 export type { IdTokenClaims, LogtoErrorCode, UserInfoResponse, InteractionMode } from '@logto/js';
 export {

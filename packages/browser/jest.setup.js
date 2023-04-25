@@ -7,7 +7,12 @@ const { TextDecoder, TextEncoder } = require('text-encoder');
 /* eslint-enable unicorn/prefer-module */
 
 /* eslint-disable @silverhand/fp/no-mutation */
-global.crypto.subtle = crypto.webcrypto.subtle;
+// Mock WebCrypto in JSDOM
+if (global.window !== undefined) {
+  global.CryptoKey = crypto.webcrypto.CryptoKey;
+  global.crypto.subtle = crypto.webcrypto.subtle;
+}
+
 global.TextDecoder = TextDecoder;
 global.TextEncoder = TextEncoder;
 /* eslint-enable @silverhand/fp/no-mutation */
