@@ -1,7 +1,7 @@
 {
   "name": "@logto/remix",
-  "version": "1.1.2",
-    "type": "module",
+  "version": "2.0.0",
+  "type": "module",
   "main": "./lib/index.cjs",
   "module": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -31,7 +31,7 @@
     "prepack": "pnpm test"
   },
   "dependencies": {
-    "@logto/node": "^1.1.2"
+    "@logto/node": "^2.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.1.2",
