@@ -1,7 +1,7 @@
-import { IdTokenClaims, InteractionMode, UserInfoResponse } from '@logto/browser';
+import { type IdTokenClaims, type InteractionMode, type UserInfoResponse } from '@logto/browser';
 import { useCallback, useContext, useEffect, useRef } from 'react';
 
-import { LogtoContext, throwContextError } from '../context';
+import { LogtoContext, throwContextError } from '../context.js';
 
 type Logto = {
   isAuthenticated: boolean;

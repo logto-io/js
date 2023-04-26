@@ -1,10 +1,11 @@
 import type { LoaderFunction, SessionStorage } from '@remix-run/node';
 
-import type { CreateLogtoAdapter } from '../../infrastructure/logto';
-import { makeHandleSignIn } from '../handleSignIn';
-import { makeHandleSignInCallback } from '../handleSignInCallback';
-import { makeHandleSignOut } from '../handleSignOut';
-import { HandleAuthRoutesError } from './HandleAuthRoutesError';
+import type { CreateLogtoAdapter } from '../../infrastructure/logto/index.js';
+import { makeHandleSignIn } from '../handleSignIn/index.js';
+import { makeHandleSignInCallback } from '../handleSignInCallback/index.js';
+import { makeHandleSignOut } from '../handleSignOut/index.js';
+
+import { HandleAuthRoutesError } from './HandleAuthRoutesError.js';
 
 type AuthRouteConfig = {
   readonly path: string;

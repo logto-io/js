@@ -1,4 +1,4 @@
-import { buildAccessTokenKey, getDiscoveryEndpoint } from '.';
+import { buildAccessTokenKey, getDiscoveryEndpoint } from './index.js';
 
 describe('client utilities', () => {
   test('get discovery endpoint', () => {

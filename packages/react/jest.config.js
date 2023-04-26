@@ -1,8 +1,7 @@
-import type { Config } from '@jest/types';
+import baseConfig from '../../jest.config.js';
 
-import baseConfig from '../../jest.config';
-
-const config: Config.InitialOptions = {
+/** @type {import('jest').Config} */
+const config = {
   ...baseConfig,
   transform: {
     '^.+\\.(t|j)sx?$': [

@@ -1,6 +1,7 @@
-import { createLogtoAdapter, sessionStorage } from '../../framework/mocks';
-import { HandleSignOutController } from './HandleSignOutController';
-import { makeHandleSignOutUseCase } from './HandleSignOutUseCase';
+import { createLogtoAdapter, sessionStorage } from '../../framework/mocks.js';
+
+import { HandleSignOutController } from './HandleSignOutController.js';
+import { makeHandleSignOutUseCase } from './HandleSignOutUseCase.js';
 
 describe('useCases:handleSignOut:HandleSignOutController', () => {
   it('can be created', () => {

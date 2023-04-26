@@ -8,8 +8,15 @@ import { summary } from 'rollup-plugin-summary';
 const configs = {
   input: ['src/index.ts'],
   output: [
-    { format: 'cjs', dir: 'lib', preserveModules: true, exports: 'named', interop: 'auto' },
-    { dir: 'lib', preserveModules: true, entryFileNames: '[name].mjs' },
+    {
+      format: 'cjs',
+      dir: 'lib',
+      preserveModules: true,
+      exports: 'named',
+      entryFileNames: '[name].cjs',
+      interop: 'auto',
+    },
+    { dir: 'lib', preserveModules: true },
   ],
   plugins: [typescript({ tsconfig: 'tsconfig.build.json' }), nodeResolve(), summary()],
   external: [/node_modules/, /@logto/],

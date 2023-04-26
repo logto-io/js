@@ -1,4 +1,4 @@
-import { revoke } from './revoke';
+import { revoke } from './revoke.js';
 
 describe('revoke', () => {
   test('requester should called with correct parameters', async () => {

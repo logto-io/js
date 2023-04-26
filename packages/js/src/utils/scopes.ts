@@ -1,4 +1,4 @@
-import { ReservedScope, UserScope } from '../consts';
+import { ReservedScope, UserScope } from '../consts/index.js';
 
 /**
  * @param originalScopes

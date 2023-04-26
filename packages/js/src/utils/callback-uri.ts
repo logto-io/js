@@ -1,7 +1,8 @@
 import { conditional } from '@silverhand/essentials';
 
-import { QueryKey } from '../consts';
-import { LogtoError, OidcError } from './errors';
+import { QueryKey } from '../consts/index.js';
+
+import { LogtoError, OidcError } from './errors.js';
 
 export const parseUriParameters = (uri: string) => {
   const [, queryString = ''] = uri.split('?');

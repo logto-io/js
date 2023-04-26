@@ -1,8 +1,8 @@
 /* eslint-disable max-lines */
 import { Prompt } from '@logto/js';
 
-import type { LogtoSignInSessionItem } from '.';
-import LogtoClient, { LogtoClientError } from '.';
+import type { LogtoSignInSessionItem } from './index.js';
+import LogtoClient, { LogtoClientError } from './index.js';
 import {
   appId,
   currentUnixTimeStamp,
@@ -29,8 +29,8 @@ import {
   failingRequester,
   createAdapters,
   mockedSignUpUri,
-} from './mock';
-import { buildAccessTokenKey } from './utils';
+} from './mock.js';
+import { buildAccessTokenKey } from './utils/index.js';
 
 jest.mock('@logto/js', () => ({
   ...jest.requireActual('@logto/js'),

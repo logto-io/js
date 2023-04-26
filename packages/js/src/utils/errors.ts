@@ -1,4 +1,4 @@
-import { isArbitraryObject } from './arbitrary-object';
+import { isArbitraryObject } from './arbitrary-object.js';
 
 const logtoErrorCodes = Object.freeze({
   'id_token.invalid_iat': 'Invalid issued at time in the ID token',

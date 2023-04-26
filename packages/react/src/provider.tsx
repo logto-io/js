@@ -1,7 +1,7 @@
-import LogtoClient, { LogtoConfig } from '@logto/browser';
-import { ReactNode, useEffect, useMemo, useState } from 'react';
+import LogtoClient, { type LogtoConfig } from '@logto/browser';
+import { type ReactNode, useEffect, useMemo, useState } from 'react';
 
-import { LogtoContext } from './context';
+import { LogtoContext } from './context.js';
 
 export type LogtoProviderProps = {
   config: LogtoConfig;

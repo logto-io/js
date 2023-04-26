@@ -3,10 +3,10 @@ import BaseClient, { createRequester } from '@logto/client';
 import { conditional } from '@silverhand/essentials';
 import fetch from 'node-fetch';
 
-import type { GetContextParameters, LogtoContext } from './types';
-import { generateCodeChallenge, generateCodeVerifier, generateState } from './utils/generators';
+import type { GetContextParameters, LogtoContext } from './types.js';
+import { generateCodeChallenge, generateCodeVerifier, generateState } from './utils/generators.js';
 
-export type { LogtoContext, GetContextParameters } from './types';
+export type { LogtoContext, GetContextParameters } from './types.js';
 
 export type {
   IdTokenClaims,

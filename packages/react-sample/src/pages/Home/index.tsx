@@ -1,8 +1,9 @@
-import { useLogto, UserInfoResponse } from '@logto/react';
+import { useLogto, type UserInfoResponse } from '@logto/react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { baseUrl, redirectUrl } from '../../consts';
+
 import * as styles from './index.module.scss';
 
 const Home = () => {

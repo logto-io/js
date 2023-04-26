@@ -1,9 +1,10 @@
 import type { TypedResponse } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 
-import { getCookieHeaderFromRequest } from '../../framework/get-cookie-header-from-request';
-import { HandleSignOutError } from './HandleSignOutError';
-import type { HandleSignOutUseCase } from './HandleSignOutUseCase';
+import { getCookieHeaderFromRequest } from '../../framework/get-cookie-header-from-request.js';
+
+import { HandleSignOutError } from './HandleSignOutError.js';
+import type { HandleSignOutUseCase } from './HandleSignOutUseCase.js';
 
 type HandleSignOutControllerDto = {
   readonly useCase: HandleSignOutUseCase;

@@ -1,4 +1,4 @@
-import { generateSignOutUri } from './sign-out';
+import { generateSignOutUri } from './sign-out.js';
 
 describe('Generate sign-out URI', () => {
   const endSessionEndpoint = 'http://logto.dev/oidc/session/end';

@@ -1,10 +1,9 @@
 // Need to disable following rules to mock text-decode/text-encoder and crypto for jsdom
 // https://github.com/jsdom/jsdom/issues/1612
-/* eslint-disable unicorn/prefer-module */
-const crypto = require('crypto');
 
-const { TextDecoder, TextEncoder } = require('text-encoder');
-/* eslint-enable unicorn/prefer-module */
+import crypto from 'node:crypto';
+
+import { TextDecoder, TextEncoder } from 'text-encoder';
 
 /* eslint-disable @silverhand/fp/no-mutation */
 // Mock WebCrypto in JSDOM

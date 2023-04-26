@@ -1,4 +1,4 @@
-import { LogtoContext } from '@logto/next';
+import { type LogtoContext } from '@logto/next';
 import { useMemo } from 'react';
 
 import { logtoClient } from '../libraries/logto';

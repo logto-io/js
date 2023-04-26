@@ -1,6 +1,7 @@
-import { createLogtoAdapter, sessionStorage } from '../../framework/mocks';
-import { GetContextController } from './GetContextController';
-import { makeGetContextUseCase } from './GetContextUseCase';
+import { createLogtoAdapter, sessionStorage } from '../../framework/mocks.js';
+
+import { GetContextController } from './GetContextController.js';
+import { makeGetContextUseCase } from './GetContextUseCase.js';
 
 describe('useCases:getContext:GetContextController', () => {
   it('can be created', () => {

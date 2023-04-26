@@ -1,5 +1,5 @@
-import { verifyAndParseCodeFromCallbackUri } from './callback-uri';
-import { LogtoError, OidcError } from './errors';
+import { verifyAndParseCodeFromCallbackUri } from './callback-uri.js';
+import { LogtoError, OidcError } from './errors.js';
 
 const code = 'some_code';
 const state = 'some_state';

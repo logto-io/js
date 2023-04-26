@@ -1,6 +1,6 @@
 import { LogtoError, LogtoRequestError } from '@logto/js';
 
-import { createRequester } from './requester';
+import { createRequester } from './requester.js';
 
 describe('createRequester', () => {
   describe('successful response', () => {

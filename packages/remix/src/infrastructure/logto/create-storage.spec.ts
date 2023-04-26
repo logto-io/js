@@ -1,6 +1,6 @@
 import { createSession } from '@remix-run/node';
 
-import { createStorage } from './create-storage';
+import { createStorage } from './create-storage.js';
 
 describe('infrastructure:logto:createStorage', () => {
   it('can create a LogtoStorage instance', async () => {

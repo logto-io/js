@@ -1,6 +1,6 @@
-import type { IncomingMessage } from 'http';
+import type { IncomingMessage } from 'node:http';
 
-import ExpressStorage from './storage';
+import ExpressStorage from './storage.js';
 
 const makeRequest = (): IncomingMessage => {
   const request = {

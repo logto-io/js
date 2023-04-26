@@ -1,6 +1,7 @@
 {
   "name": "root",
   "private": true,
+  "type": "module",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "version": "pnpm i --frozen-lockfile=false && git add pnpm-lock.yaml",

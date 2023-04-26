@@ -1,9 +1,10 @@
 import type { TypedResponse } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 
-import { getCookieHeaderFromRequest } from '../../framework/get-cookie-header-from-request';
-import { HandleSignInCallbackError } from './HandleSignInCallbackError';
-import type { HandleSignInCallbackUseCase } from './HandleSignInCallbackUseCase';
+import { getCookieHeaderFromRequest } from '../../framework/get-cookie-header-from-request.js';
+
+import { HandleSignInCallbackError } from './HandleSignInCallbackError.js';
+import type { HandleSignInCallbackUseCase } from './HandleSignInCallbackUseCase.js';
 
 type HandleSignInCallbackControllerDto = {
   readonly useCase: HandleSignInCallbackUseCase;

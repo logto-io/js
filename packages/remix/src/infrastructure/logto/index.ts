@@ -1,12 +1,12 @@
 import type { LogtoConfig } from '@logto/node';
 import type { Session } from '@remix-run/node';
 
-import { makeLogtoClient } from './create-client';
-import { createStorage } from './create-storage';
-import { makeGetContext } from './get-context';
-import { makeHandleSignIn } from './handle-sign-in';
-import { makeHandleSignInCallback } from './handle-sign-in-callback';
-import { makeHandleSignOut } from './handle-sign-out';
+import { makeLogtoClient } from './create-client.js';
+import { createStorage } from './create-storage.js';
+import { makeGetContext } from './get-context.js';
+import { makeHandleSignInCallback } from './handle-sign-in-callback.js';
+import { makeHandleSignIn } from './handle-sign-in.js';
+import { makeHandleSignOut } from './handle-sign-out.js';
 
 type MakeLogtoAdapterConfiguration = LogtoConfig;
 

@@ -1,7 +1,7 @@
 import type { InteractionMode } from '@logto/browser';
 
-import type { Context } from './context';
-import { throwContextError } from './context';
+import type { Context } from './context.js';
+import { throwContextError } from './context.js';
 
 export const createPluginMethods = (context: Context) => {
   const { logtoClient, setLoading, setError, setIsAuthenticated } = context;

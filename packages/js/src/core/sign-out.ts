@@ -1,4 +1,4 @@
-import { QueryKey } from '../consts';
+import { QueryKey } from '../consts/index.js';
 
 type SignOutUriParameters = {
   endSessionEndpoint: string;

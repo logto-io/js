@@ -1,9 +1,9 @@
 import type { GetContextParameters, LogtoConfig } from '@logto/node';
 import type { SessionStorage } from '@remix-run/node';
 
-import { makeLogtoAdapter } from './infrastructure/logto';
-import { makeGetContext } from './useCases/getContext';
-import { makeHandleAuthRoutes } from './useCases/handleAuthRoutes';
+import { makeLogtoAdapter } from './infrastructure/logto/index.js';
+import { makeGetContext } from './useCases/getContext/index.js';
+import { makeHandleAuthRoutes } from './useCases/handleAuthRoutes/index.js';
 
 type Config = Readonly<LogtoConfig> & {
   readonly baseUrl: string;

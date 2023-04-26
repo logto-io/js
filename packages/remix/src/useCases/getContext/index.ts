@@ -1,9 +1,10 @@
 import type { GetContextParameters } from '@logto/node';
 import type { SessionStorage } from '@remix-run/node';
 
-import type { CreateLogtoAdapter } from '../../infrastructure/logto';
-import { GetContextController } from './GetContextController';
-import { makeGetContextUseCase } from './GetContextUseCase';
+import type { CreateLogtoAdapter } from '../../infrastructure/logto/index.js';
+
+import { GetContextController } from './GetContextController.js';
+import { makeGetContextUseCase } from './GetContextUseCase.js';
 
 type HandleGetContextDeps = {
   readonly createLogtoAdapter: CreateLogtoAdapter;

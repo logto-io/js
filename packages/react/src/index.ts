@@ -1,4 +1,4 @@
-export type { LogtoContextProps } from './context';
+export type { LogtoContextProps } from './context.js';
 
 export type {
   LogtoConfig,
@@ -18,6 +18,6 @@ export {
   UserScope,
 } from '@logto/browser';
 
-export * from './provider';
+export * from './provider.js';
 
-export { useLogto, useHandleSignInCallback } from './hooks';
+export { useLogto, useHandleSignInCallback } from './hooks/index.js';

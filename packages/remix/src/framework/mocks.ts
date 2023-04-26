@@ -1,8 +1,8 @@
 import type { Session, SessionStorage } from '@remix-run/node';
 import { createSession } from '@remix-run/node';
 
-import type { CreateLogtoAdapter, LogtoContext } from '../infrastructure/logto';
-import { createStorage } from '../infrastructure/logto/create-storage';
+import { createStorage } from '../infrastructure/logto/create-storage.js';
+import type { CreateLogtoAdapter, LogtoContext } from '../infrastructure/logto/index.js';
 
 const context: LogtoContext = {
   isAuthenticated: true,
