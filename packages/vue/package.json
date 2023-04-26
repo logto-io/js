@@ -28,7 +28,7 @@
     "lint": "eslint --ext .ts src",
     "test": "jest",
     "test:coverage": "jest --silent --coverage",
-    "prepack": "pnpm test"
+    "prepack": "pnpm test && pnpm build"
   },
   "dependencies": {
     "@logto/browser": "^2.0.0"
