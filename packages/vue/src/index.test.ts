@@ -1,7 +1,6 @@
 /* eslint-disable unicorn/no-useless-undefined */
 import LogtoClient from '@logto/browser';
-import type { App } from 'vue';
-import { readonly } from 'vue';
+import { type App, ref, readonly, computed } from 'vue';
 
 import { contextInjectionKey, logtoInjectionKey } from './consts.js';
 import { createContext } from './context.js';
@@ -150,6 +149,43 @@ describe('useHandleSignInCallback', () => {
     useHandleSignInCallback();
 
     await signIn('https://example.com');
+    expect(handleSignInCallback).not.toHaveBeenCalled();
+  });
+
+  it('should not call `handleSignInCallback` when it is loading', async () => {
+    const client = new LogtoClient({ appId, endpoint });
+    const context = createContext(client);
+    const { loadingCount, isLoading: _isLoading, ...restContext } = context;
+    const { isAuthenticated, error } = restContext;
+    const mockLoadingCount = ref(100);
+    const mockIsLoading = computed(() => mockLoadingCount.value > 0);
+    const mockContext = {
+      ...restContext,
+      isLoading: mockIsLoading,
+      loadingCount: mockLoadingCount,
+    };
+
+    injectMock.mockImplementation((key: string) => {
+      if (key === contextInjectionKey) {
+        return mockContext;
+      }
+
+      if (key === logtoInjectionKey) {
+        return {
+          isAuthenticated: readonly(isAuthenticated),
+          isLoading: readonly(mockIsLoading),
+          error: readonly(error),
+          ...createPluginMethods(mockContext),
+        };
+      }
+    });
+    isSignInRedirected.mockImplementationOnce(() => true);
+
+    const { isLoading } = useLogto();
+    expect(isLoading.value).toBe(true);
+
+    useHandleSignInCallback();
+
     expect(handleSignInCallback).not.toHaveBeenCalled();
   });
 
