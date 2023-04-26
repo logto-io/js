@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.0.1
+
+### Patch Changes
+
+- 1fb30a1: fix `prepack` script
+
 ## 2.0.0
 
 ### Major Changes
