@@ -36,7 +36,6 @@
   "devDependencies": {
     "@commitlint/cli": "^17.1.2",
     "@commitlint/config-conventional": "^17.1.0",
-    "@jest/types": "^29.5.0",
     "@remix-run/node": "^1.7.2",
     "@silverhand/eslint-config": "^3.0.1",
     "@silverhand/ts-config": "^3.0.0",

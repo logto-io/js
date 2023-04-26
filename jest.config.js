@@ -1,6 +1,5 @@
-import type { Config } from '@jest/types';
-
-const config: Config.InitialOptions = {
+/** @type {import('@jest/types').Config} */
+const config = {
   roots: ['<rootDir>/src'],
   collectCoverage: Boolean(process.env.CI),
   transform: {
@@ -12,6 +11,9 @@ const config: Config.InitialOptions = {
     ],
   },
   transformIgnorePatterns: ['node_modules/(?!(.*(nanoid|jose|ky|@silverhand))/)'],
+  moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1',
+  },
 };
 
 export default config;

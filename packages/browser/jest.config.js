@@ -1,9 +1,9 @@
-import type { Config } from '@jest/types';
-
 import baseConfig from '../../jest.config.js';
 
-const config: Config.InitialOptions = {
+/** @type {import('jest').Config} */
+const config = {
   ...baseConfig,
+  testEnvironment: './FixJsdomEnvironment.js',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js', 'jest-matcher-specific-error'],
 };
 
