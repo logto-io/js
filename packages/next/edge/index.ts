@@ -71,7 +71,7 @@ export default class LogtoClient extends BaseClient {
       const nodeClient = this.createNodeClient(session);
 
       if (request.url) {
-        await nodeClient.handleSignInCallback(`${this.config.baseUrl}${request.url}`);
+        await nodeClient.handleSignInCallback(request.url);
         await this.storage?.save();
       }
 
