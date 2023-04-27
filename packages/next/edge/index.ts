@@ -6,8 +6,6 @@ import { type NextRequest } from 'next/server';
 import BaseClient from '../src/client';
 import type { LogtoNextConfig } from '../src/types.js';
 
-export { ReservedScope, UserScope } from '@logto/node';
-
 export type { LogtoContext, InteractionMode } from '@logto/node';
 
 export default class LogtoClient extends BaseClient {
