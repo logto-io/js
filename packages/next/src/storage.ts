@@ -1,18 +1,17 @@
-import type { IncomingMessage } from 'http';
-
 import type { Storage, StorageKey } from '@logto/node';
+import { type IronSession } from 'iron-session';
 
 export default class NextStorage implements Storage {
   private sessionChanged = false;
-  constructor(private readonly request: IncomingMessage) {}
+  constructor(private readonly session: IronSession) {}
 
   async setItem(key: StorageKey, value: string) {
-    this.request.session[key] = value;
+    this.session[key] = value;
     this.sessionChanged = true;
   }
 
   async getItem(key: StorageKey) {
-    const value = this.request.session[key];
+    const value = this.session[key];
 
     if (value === undefined) {
       return null;
@@ -22,7 +21,7 @@ export default class NextStorage implements Storage {
   }
 
   async removeItem(key: StorageKey) {
-    this.request.session[key] = undefined;
+    this.session[key] = undefined;
     this.sessionChanged = true;
   }
 
@@ -31,7 +30,7 @@ export default class NextStorage implements Storage {
       return;
     }
 
-    await this.request.session.save();
+    await this.session.save();
     this.sessionChanged = false;
   }
 }
