@@ -8,7 +8,6 @@ import type { LogtoNextConfig } from '../src/types.js';
 
 export type { LogtoContext, InteractionMode } from '@logto/node';
 
-// Used for edge runtime, currently only NextJS.
 export default class LogtoClient extends BaseClient {
   constructor(config: LogtoNextConfig) {
     super(config, {

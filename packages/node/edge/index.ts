@@ -5,6 +5,7 @@ import BaseClient from '../src/client.js';
 
 import { generateCodeChallenge, generateCodeVerifier, generateState } from './generators.js';
 
+// Used for edge runtime, currently only NextJS.
 export default class LogtoClient extends BaseClient {
   constructor(config: LogtoConfig, adapter: Pick<ClientAdapter, 'navigate' | 'storage'>) {
     super(config, {
