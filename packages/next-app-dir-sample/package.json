@@ -1,25 +1,21 @@
 {
-  "name": "@logto/react-sample",
+  "name": "@logto/next-app-dir-sample",
   "version": "2.0.0",
   "license": "MIT",
   "private": true,
   "scripts": {
-    "precommit": "lint-staged",
-    "start": "parcel src/index.html -p 3000",
-    "check": "tsc --noEmit",
-    "build": "pnpm check && rm -rf dist && parcel build src/index.html --no-autoinstall",
-    "lint": "eslint --ext .ts --ext .tsx src",
-    "stylelint": "stylelint \"src/**/*.scss\""
+    "build": "next build",
+    "dev": "next dev",
+    "start": "next start"
   },
   "dependencies": {
-    "@logto/react": "^2.0.0",
+    "@logto/next": "^2.0.0",
+    "next": "^13.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.2.2"
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
-    "@parcel/core": "^2.8.3",
-    "@parcel/transformer-sass": "^2.8.3",
     "@silverhand/eslint-config": "^3.0.1",
     "@silverhand/eslint-config-react": "^3.0.1",
     "@silverhand/ts-config": "^3.0.0",
@@ -27,19 +23,13 @@
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "@types/react-router-dom": "^5.3.3",
-    "buffer": "^6.0.3",
     "eslint": "^8.38.0",
     "lint-staged": "^13.0.0",
-    "parcel": "^2.8.3",
     "postcss": "^8.4.6",
     "postcss-modules": "^6.0.0",
     "prettier": "^2.8.7",
-    "process": "^0.11.10",
     "stylelint": "^15.0.0",
     "typescript": "^5.0.0"
-  },
-  "eslintConfig": {
-    "extends": "@silverhand/react"
   },
   "stylelint": {
     "extends": "@silverhand/eslint-config-react/.stylelintrc"
