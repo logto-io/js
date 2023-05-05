@@ -427,7 +427,7 @@ importers:
         version: 13.0.0
       next:
         specifier: ^13.0.4
-        version: 13.0.4(@babel/core@7.17.5)(react-dom@17.0.2)(react@17.0.2)
+        version: 13.0.4(@babel/core@7.17.5)(react-dom@17.0.2)(react@18.2.0)
       next-test-api-route-handler:
         specifier: ^3.1.6
         version: 3.1.6(next@13.0.4)
@@ -435,11 +435,11 @@ importers:
         specifier: ^2.8.7
         version: 2.8.7
       react:
-        specifier: ^17.0.2
-        version: 17.0.2
+        specifier: ^18.2.0
+        version: 18.2.0
       react-dom:
         specifier: ^17.0.2
-        version: 17.0.2(react@17.0.2)
+        version: 17.0.2(react@18.2.0)
       typescript:
         specifier: ^5.0.0
         version: 5.0.2
@@ -451,7 +451,7 @@ importers:
         version: link:../next
       next:
         specifier: ^13.0.4
-        version: 13.0.4(@babel/core@7.17.5)(react-dom@17.0.2)(react@17.0.2)
+        version: 13.0.4(@babel/core@7.17.5)(react-dom@17.0.2)(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -589,7 +589,7 @@ importers:
         version: 0.2.24(@swc/core@1.3.50)
       '@testing-library/react-hooks':
         specifier: ^8.0.0
-        version: 8.0.0(@types/react@17.0.39)(react@17.0.2)
+        version: 8.0.0(@types/react@17.0.39)(react@18.2.0)
       '@types/jest':
         specifier: ^29.5.0
         version: 29.5.0
@@ -612,8 +612,8 @@ importers:
         specifier: ^2.8.7
         version: 2.8.7
       react:
-        specifier: ^17.0.2
-        version: 17.0.2
+        specifier: ^18.2.0
+        version: 18.2.0
       stylelint:
         specifier: ^15.0.0
         version: 15.0.0
@@ -627,14 +627,14 @@ importers:
         specifier: ^2.0.0
         version: link:../react
       react:
-        specifier: ^17.0.2
-        version: 17.0.2
+        specifier: ^18.2.0
+        version: 18.2.0
       react-dom:
         specifier: ^17.0.2
-        version: 17.0.2(react@17.0.2)
+        version: 17.0.2(react@18.2.0)
       react-router-dom:
         specifier: ^6.2.2
-        version: 6.2.2(react-dom@17.0.2)(react@17.0.2)
+        version: 6.2.2(react-dom@17.0.2)(react@18.2.0)
     devDependencies:
       '@parcel/core':
         specifier: ^2.8.3
@@ -708,7 +708,7 @@ importers:
         version: 17.1.0
       '@remix-run/node':
         specifier: ^1.7.2
-        version: 1.7.2(react-dom@17.0.2)(react@17.0.2)
+        version: 1.7.2(react-dom@17.0.2)(react@18.2.0)
       '@silverhand/eslint-config':
         specifier: ^3.0.1
         version: 3.0.1(eslint@8.38.0)(prettier@2.8.7)(typescript@5.0.2)
@@ -752,11 +752,11 @@ importers:
         specifier: ^2.8.7
         version: 2.8.7
       react:
-        specifier: ^17.0.2
-        version: 17.0.2
+        specifier: ^18.2.0
+        version: 18.2.0
       react-dom:
         specifier: ^17.0.2
-        version: 17.0.2(react@17.0.2)
+        version: 17.0.2(react@18.2.0)
       typescript:
         specifier: ^5.0.0
         version: 5.0.2
@@ -3187,11 +3187,11 @@ packages:
       tslib: 2.5.0
     dev: true
 
-  /@remix-run/node@1.7.2(react-dom@17.0.2)(react@17.0.2):
+  /@remix-run/node@1.7.2(react-dom@17.0.2)(react@18.2.0):
     resolution: {integrity: sha512-cLm5IuVPV7E0VK8LzrFAurG8dq8/HRc0WIE6Urj8bhbv0tCTJvFRfcCbCmDRRHmR72VmPkRahJov5f1Ab9jjQw==}
     engines: {node: '>=14'}
     dependencies:
-      '@remix-run/server-runtime': 1.7.2(react-dom@17.0.2)(react@17.0.2)
+      '@remix-run/server-runtime': 1.7.2(react-dom@17.0.2)(react@18.2.0)
       '@remix-run/web-fetch': 4.3.0
       '@remix-run/web-file': 3.0.2
       '@remix-run/web-stream': 1.0.3
@@ -3205,7 +3205,7 @@ packages:
       - react-dom
     dev: true
 
-  /@remix-run/server-runtime@1.7.2(react-dom@17.0.2)(react@17.0.2):
+  /@remix-run/server-runtime@1.7.2(react-dom@17.0.2)(react@18.2.0):
     resolution: {integrity: sha512-YqdYHjqAukh5wbfix6ZqibUX5wYLm4SyyhibPiTthAV6SXHbTMu952jqf6Fa+asJRSf+QlNVwsizxH0zUGPAtw==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -3215,9 +3215,9 @@ packages:
       '@types/cookie': 0.4.1
       '@web3-storage/multipart-parser': 1.0.0
       cookie: 0.4.2
-      react: 17.0.2
-      react-dom: 17.0.2(react@17.0.2)
-      react-router-dom: 6.3.0(react-dom@17.0.2)(react@17.0.2)
+      react: 18.2.0
+      react-dom: 17.0.2(react@18.2.0)
+      react-router-dom: 6.3.0(react-dom@17.0.2)(react@18.2.0)
       set-cookie-parser: 2.5.1
       source-map: 0.7.3
     dev: true
@@ -3777,7 +3777,7 @@ packages:
     dev: true
     optional: true
 
-  /@testing-library/react-hooks@8.0.0(@types/react@17.0.39)(react@17.0.2):
+  /@testing-library/react-hooks@8.0.0(@types/react@17.0.39)(react@18.2.0):
     resolution: {integrity: sha512-uZqcgtcUUtw7Z9N32W13qQhVAD+Xki2hxbTR461MKax8T6Jr8nsUvZB+vcBTkzY2nFvsUet434CsgF0ncW2yFw==}
     engines: {node: '>=12'}
     peerDependencies:
@@ -3795,8 +3795,8 @@ packages:
     dependencies:
       '@babel/runtime': 7.17.2
       '@types/react': 17.0.39
-      react: 17.0.2
-      react-error-boundary: 3.1.4(react@17.0.2)
+      react: 18.2.0
+      react-error-boundary: 3.1.4(react@18.2.0)
     dev: true
 
   /@tootallnate/once@2.0.0:
@@ -7480,7 +7480,7 @@ packages:
       '@types/node': 17.0.45
       cookie: 0.5.0
       iron-webcrypto: 0.2.8
-      next: 13.0.4(@babel/core@7.17.5)(react-dom@17.0.2)(react@17.0.2)
+      next: 13.0.4(@babel/core@7.17.5)(react-dom@17.0.2)(react@18.2.0)
     dev: false
 
   /iron-webcrypto@0.2.8:
@@ -9116,13 +9116,13 @@ packages:
       next: '>=9'
     dependencies:
       cookie: 0.5.0
-      next: 13.0.4(@babel/core@7.17.5)(react-dom@17.0.2)(react@17.0.2)
+      next: 13.0.4(@babel/core@7.17.5)(react-dom@17.0.2)(react@18.2.0)
       node-fetch: 2.6.7
     transitivePeerDependencies:
       - encoding
     dev: true
 
-  /next@13.0.4(@babel/core@7.17.5)(react-dom@17.0.2)(react@17.0.2):
+  /next@13.0.4(@babel/core@7.17.5)(react-dom@17.0.2)(react@18.2.0):
     resolution: {integrity: sha512-4P0MvbjPCI1E/UPL1GrTXtYlgFnbBbY3JQ+AMY8jYE2SwyvCWctEJySoRjveznAHjrl6TIjuAJeB8u1c2StYUQ==}
     engines: {node: '>=14.6.0'}
     hasBin: true
@@ -9144,10 +9144,10 @@ packages:
       '@swc/helpers': 0.4.11
       caniuse-lite: 1.0.30001450
       postcss: 8.4.14
-      react: 17.0.2
-      react-dom: 17.0.2(react@17.0.2)
-      styled-jsx: 5.1.0(@babel/core@7.17.5)(react@17.0.2)
-      use-sync-external-store: 1.2.0(react@17.0.2)
+      react: 18.2.0
+      react-dom: 17.0.2(react@18.2.0)
+      styled-jsx: 5.1.0(@babel/core@7.17.5)(react@18.2.0)
+      use-sync-external-store: 1.2.0(react@18.2.0)
     optionalDependencies:
       '@next/swc-android-arm-eabi': 13.0.4
       '@next/swc-android-arm64': 13.0.4
@@ -10056,14 +10056,14 @@ packages:
       iconv-lite: 0.4.24
       unpipe: 1.0.0
 
-  /react-dom@17.0.2(react@17.0.2):
+  /react-dom@17.0.2(react@18.2.0):
     resolution: {integrity: sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==}
     peerDependencies:
       react: 17.0.2
     dependencies:
       loose-envify: 1.4.0
       object-assign: 4.1.1
-      react: 17.0.2
+      react: 18.2.0
       scheduler: 0.20.2
 
   /react-dom@18.2.0(react@18.2.0):
@@ -10076,14 +10076,14 @@ packages:
       scheduler: 0.23.0
     dev: false
 
-  /react-error-boundary@3.1.4(react@17.0.2):
+  /react-error-boundary@3.1.4(react@18.2.0):
     resolution: {integrity: sha512-uM9uPzZJTF6wRQORmSrvOIgt4lJ9MC1sNgEOj2XGsDTRE4kmpWxg7ENK9EWNKJRMAOY9z0MuF4yIfl6gp4sotA==}
     engines: {node: '>=10', npm: '>=6'}
     peerDependencies:
       react: '>=16.13.1'
     dependencies:
       '@babel/runtime': 7.17.2
-      react: 17.0.2
+      react: 18.2.0
     dev: true
 
   /react-error-overlay@6.0.9:
@@ -10107,61 +10107,53 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /react-router-dom@6.2.2(react-dom@17.0.2)(react@17.0.2):
+  /react-router-dom@6.2.2(react-dom@17.0.2)(react@18.2.0):
     resolution: {integrity: sha512-AtYEsAST7bDD4dLSQHDnk/qxWLJdad5t1HFa1qJyUrCeGgEuCSw0VB/27ARbF9Fi/W5598ujvJOm3ujUCVzuYQ==}
     peerDependencies:
       react: '>=16.8'
       react-dom: '>=16.8'
     dependencies:
       history: 5.3.0
-      react: 17.0.2
-      react-dom: 17.0.2(react@17.0.2)
-      react-router: 6.2.2(react@17.0.2)
+      react: 18.2.0
+      react-dom: 17.0.2(react@18.2.0)
+      react-router: 6.2.2(react@18.2.0)
     dev: false
 
-  /react-router-dom@6.3.0(react-dom@17.0.2)(react@17.0.2):
+  /react-router-dom@6.3.0(react-dom@17.0.2)(react@18.2.0):
     resolution: {integrity: sha512-uaJj7LKytRxZNQV8+RbzJWnJ8K2nPsOOEuX7aQstlMZKQT0164C+X2w6bnkqU3sjtLvpd5ojrezAyfZ1+0sStw==}
     peerDependencies:
       react: '>=16.8'
       react-dom: '>=16.8'
     dependencies:
       history: 5.3.0
-      react: 17.0.2
-      react-dom: 17.0.2(react@17.0.2)
-      react-router: 6.3.0(react@17.0.2)
+      react: 18.2.0
+      react-dom: 17.0.2(react@18.2.0)
+      react-router: 6.3.0(react@18.2.0)
     dev: true
 
-  /react-router@6.2.2(react@17.0.2):
+  /react-router@6.2.2(react@18.2.0):
     resolution: {integrity: sha512-/MbxyLzd7Q7amp4gDOGaYvXwhEojkJD5BtExkuKmj39VEE0m3l/zipf6h2WIB2jyAO0lI6NGETh4RDcktRm4AQ==}
     peerDependencies:
       react: '>=16.8'
     dependencies:
       history: 5.3.0
-      react: 17.0.2
+      react: 18.2.0
     dev: false
 
-  /react-router@6.3.0(react@17.0.2):
+  /react-router@6.3.0(react@18.2.0):
     resolution: {integrity: sha512-7Wh1DzVQ+tlFjkeo+ujvjSqSJmkt1+8JO+T5xklPlgrh70y7ogx75ODRW0ThWhY7S+6yEDks8TYrtQe/aoboBQ==}
     peerDependencies:
       react: '>=16.8'
     dependencies:
       history: 5.3.0
-      react: 17.0.2
+      react: 18.2.0
     dev: true
-
-  /react@17.0.2:
-    resolution: {integrity: sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==}
-    engines: {node: '>=0.10.0'}
-    dependencies:
-      loose-envify: 1.4.0
-      object-assign: 4.1.1
 
   /react@18.2.0:
     resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
     engines: {node: '>=0.10.0'}
     dependencies:
       loose-envify: 1.4.0
-    dev: false
 
   /read-pkg-up@7.0.1:
     resolution: {integrity: sha512-zK0TB7Xd6JpCLmlLmufqykGE+/TlOePD6qKClNW7hHDKFh/J7/7gCWGR7joEQEW1bKq3a3yUZSObOoWLFQ4ohg==}
@@ -10817,7 +10809,7 @@ packages:
     resolution: {integrity: sha512-Dj1Okke1C3uKKwQcetra4jSuk0DqbzbYtXipzFlFMZtowbF1x7BKJwB9AayVMyFARvU8EDrZdcax4At/452cAg==}
     dev: true
 
-  /styled-jsx@5.1.0(@babel/core@7.17.5)(react@17.0.2):
+  /styled-jsx@5.1.0(@babel/core@7.17.5)(react@18.2.0):
     resolution: {integrity: sha512-/iHaRJt9U7T+5tp6TRelLnqBqiaIT0HsO0+vgyj8hK2KUk7aejFqRrumqPUlAqDwAj8IbS/1hk3IhBAAK/FCUQ==}
     engines: {node: '>= 12.0.0'}
     peerDependencies:
@@ -10832,7 +10824,7 @@ packages:
     dependencies:
       '@babel/core': 7.17.5
       client-only: 0.0.1
-      react: 17.0.2
+      react: 18.2.0
 
   /stylelint-config-xo-scss@0.15.0(postcss@8.4.13)(stylelint@15.0.0):
     resolution: {integrity: sha512-X9WD8cDofWFWy3uaKdwwm+DjEvgI/+h7AtlaPagkhNAeOWH/GFQoeciBvNvyJ8tB1p00SoIzCn2IIOIKXCbxYA==}
@@ -11404,20 +11396,12 @@ packages:
       requires-port: 1.0.0
     dev: true
 
-  /use-sync-external-store@1.2.0(react@17.0.2):
-    resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      react: 17.0.2
-
   /use-sync-external-store@1.2.0(react@18.2.0):
     resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
       react: 18.2.0
-    dev: false
 
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
