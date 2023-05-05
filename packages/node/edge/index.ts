@@ -5,6 +5,7 @@ import BaseClient from '../src/client.js';
 
 import { generateCodeChallenge, generateCodeVerifier, generateState } from './generators.js';
 
+// Used for edge runtime, currently only NextJS.
 export default class LogtoClient extends BaseClient {
   constructor(config: LogtoConfig, adapter: Pick<ClientAdapter, 'navigate' | 'storage'>) {
     super(config, {
@@ -17,7 +18,7 @@ export default class LogtoClient extends BaseClient {
               return fetch(input, {
                 ...init,
                 headers: {
-                  Authorization: `basic ${Buffer.from(
+                  Authorization: `Basic ${Buffer.from(
                     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                     `${config.appId}:${config.appSecret}`,
                     'utf8'
