@@ -1,32 +1,11 @@
 import type { LogtoConfig, ClientAdapter } from '@logto/client';
 import { createRequester } from '@logto/client';
-import fetch from 'node-fetch';
 
-import BaseClient from './client.js';
-import { generateCodeChallenge, generateCodeVerifier, generateState } from './utils/generators.js';
+import BaseClient from '../src/client.js';
 
-export type { LogtoContext, GetContextParameters } from './types.js';
+import { generateCodeChallenge, generateCodeVerifier, generateState } from './generators.js';
 
-export type {
-  IdTokenClaims,
-  LogtoErrorCode,
-  LogtoConfig,
-  LogtoClientErrorCode,
-  Storage,
-  StorageKey,
-  InteractionMode,
-} from '@logto/client';
-
-export {
-  LogtoError,
-  OidcError,
-  Prompt,
-  LogtoRequestError,
-  LogtoClientError,
-  ReservedScope,
-  UserScope,
-} from '@logto/client';
-
+// Used for edge runtime, currently only NextJS.
 export default class LogtoClient extends BaseClient {
   constructor(config: LogtoConfig, adapter: Pick<ClientAdapter, 'navigate' | 'storage'>) {
     super(config, {

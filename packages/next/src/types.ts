@@ -1,6 +1,6 @@
 import type { LogtoConfig } from '@logto/node';
+import type NodeClient from '@logto/node';
 import type { IronSession } from 'iron-session';
-import type { withIronSessionApiRoute, withIronSessionSsr } from 'iron-session/next';
 import type { NextApiRequest } from 'next';
 
 export type NextRequestWithIronSession = NextApiRequest & { session: IronSession };
@@ -23,6 +23,5 @@ export type LogtoNextConfig = LogtoConfig & {
 };
 
 export type Adapters = {
-  withIronSessionApiRoute: typeof withIronSessionApiRoute;
-  withIronSessionSsr: typeof withIronSessionSsr;
+  NodeClient: typeof NodeClient;
 };

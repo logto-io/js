@@ -1,7 +1,11 @@
+import { type NextRequest } from 'next/server';
+
 import { logtoClient } from '../../libraries/logto-edge';
 
-export default logtoClient.withLogtoApiRoute((request, response) => {
-  if (!request.user.isAuthenticated) {
+const handler = async (request: NextRequest) => {
+  const context = await logtoClient.getLogtoContext(request);
+
+  if (!context.isAuthenticated) {
     return new Response(
       JSON.stringify({
         message: 'Unauthorized',
@@ -26,7 +30,9 @@ export default logtoClient.withLogtoApiRoute((request, response) => {
       },
     }
   );
-});
+};
+
+export default handler;
 
 export const config = {
   runtime: 'experimental-edge',
