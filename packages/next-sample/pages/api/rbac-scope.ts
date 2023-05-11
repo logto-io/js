@@ -8,15 +8,18 @@ export default logtoClient.withLogtoApiRoute(
       return;
     }
 
-    // Get an access token with the target resource
-    // console.log(request.user.accessToken);
+    if (!request.user.scopes?.includes('read:users')) {
+      response.status(403).json({ message: 'Access denied, requires read:user scope.' });
+
+      return;
+    }
 
     response.json({
-      data: 'this_is_protected_resource',
+      data: 'this_is_resource_protected_by_rbac_scope',
     });
   },
   {
-    // (Optional) getAccessToken: true,
-    // (Optional) resource: 'https://the-resource.domain/'
+    getAccessToken: true,
+    resource: 'http://localhost:3005',
   }
 );

@@ -9,6 +9,9 @@ const Home = () => {
   // Remote full user info
   const { data: dataWithUserInfo } = useSWR<LogtoContext>('/api/logto/user-info');
   const { data: protectedResource } = useSWR<{ data: string }>('/api/protected-resource');
+  const { data: rbacResponse, error: rbacResponseError } = useSWR<{ data: string }, Error>(
+    '/api/rbac-scope'
+  );
 
   const claims = useMemo(() => {
     if (!data?.isAuthenticated || !data.claims) {
@@ -104,6 +107,11 @@ const Home = () => {
           </h3>
         </div>
       )}
+      <div>
+        <h2>Protected by RBAC scope:</h2>
+        <div>{rbacResponse?.data}</div>
+        <div>{rbacResponseError && 'Access denied.'}</div>
+      </div>
     </div>
   );
 };

@@ -51,12 +51,14 @@ export default class LogtoNodeBaseClient extends BaseClient {
 
     try {
       const accessToken = await this.getAccessToken(resource);
+      const accessTokenClaims = await this.getAccessTokenClaims(resource);
 
       return {
         isAuthenticated,
         claims: await this.getIdTokenClaims(),
         userInfo: conditional(fetchUserInfo && (await this.fetchUserInfo())),
         accessToken,
+        scopes: accessTokenClaims.scope?.split(' '),
       };
     } catch {
       return {

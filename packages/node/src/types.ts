@@ -13,6 +13,7 @@ export type LogtoContext = {
   claims?: IdTokenClaims;
   accessToken?: string;
   userInfo?: UserInfoResponse;
+  scopes?: string[];
 };
 
 export type GetContextParameters = {

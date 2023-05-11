@@ -1,10 +1,10 @@
-import type {
-  CodeTokenResponse,
-  IdTokenClaims,
-  UserInfoResponse,
-  InteractionMode,
-} from '@logto/js';
 import {
+  type CodeTokenResponse,
+  type IdTokenClaims,
+  type UserInfoResponse,
+  type InteractionMode,
+  type AccessTokenClaims,
+  decodeAccessToken,
   decodeIdToken,
   fetchOidcConfig,
   fetchTokenByAuthorizationCode,
@@ -103,6 +103,12 @@ export default class LogtoClient {
     }
 
     return decodeIdToken(idToken);
+  }
+
+  async getAccessTokenClaims(resource?: string): Promise<AccessTokenClaims> {
+    const accessToken = await this.getAccessToken(resource);
+
+    return decodeAccessToken(accessToken);
   }
 
   async fetchUserInfo(): Promise<UserInfoResponse> {
