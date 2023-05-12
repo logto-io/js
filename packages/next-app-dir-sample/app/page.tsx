@@ -1,8 +1,10 @@
+import { getRbacProtectedResource } from './api/logto/rbac-protected-resource/get-rbac-protected-resource';
 import { getUser } from './api/logto/user/get-user';
 import Nav from './nav';
 
 const Page = async () => {
   const user = await getUser();
+  const rbacProtectedResource = await getRbacProtectedResource();
 
   return (
     <div>
@@ -29,6 +31,12 @@ const Page = async () => {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+      {rbacProtectedResource && (
+        <div>
+          <h2>RBAC protected resource</h2>
+          <div>{rbacProtectedResource}</div>
         </div>
       )}
     </div>
