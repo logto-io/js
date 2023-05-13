@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.1.0
+
+### Minor Changes
+
+- a839b08: Add RBAC support for NextJS SDK
+
 ## 2.0.1
 
 ### Patch Changes
