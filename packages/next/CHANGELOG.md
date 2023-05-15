@@ -1,5 +1,17 @@
 # Change Log
 
+## 2.1.0
+
+### Minor Changes
+
+- 0a533f6: Full edge runtime support
+
+### Patch Changes
+
+- Updated dependencies [0a533f6]
+- Updated dependencies [a839b08]
+  - @logto/node@2.1.0
+
 ## 2.0.0
 
 ### Major Changes

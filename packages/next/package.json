@@ -1,6 +1,6 @@
 {
   "name": "@logto/next",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "type": "module",
   "main": "./lib/src/index.cjs",
   "module": "./lib/src/index.js",
@@ -37,7 +37,7 @@
     "prepack": "pnpm test && pnpm build"
   },
   "dependencies": {
-    "@logto/node": "^2.0.0",
+    "@logto/node": "^2.1.0",
     "iron-session": "^6.3.1"
   },
   "devDependencies": {

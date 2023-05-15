@@ -1,6 +1,6 @@
 {
   "name": "@logto/node",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "type": "module",
   "main": "./lib/src/index.cjs",
   "module": "./lib/src/index.js",
@@ -37,7 +37,7 @@
     "prepack": "pnpm test && pnpm build"
   },
   "dependencies": {
-    "@logto/client": "^2.0.0",
+    "@logto/client": "^2.1.0",
     "@silverhand/essentials": "^2.6.2",
     "js-base64": "^3.7.4",
     "node-fetch": "^2.6.7"
