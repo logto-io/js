@@ -31,7 +31,7 @@
     "prepack": "pnpm test && pnpm build"
   },
   "dependencies": {
-    "@logto/browser": "^2.0.0"
+    "@logto/browser": "workspace:^2.0.0"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "^3.0.1",
