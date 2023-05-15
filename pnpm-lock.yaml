@@ -44,7 +44,7 @@ importers:
   packages/browser:
     dependencies:
       '@logto/client':
-        specifier: ^2.0.0
+        specifier: workspace:^2.0.0
         version: link:../client
       '@silverhand/essentials':
         specifier: ^2.6.2
@@ -96,7 +96,7 @@ importers:
   packages/browser-sample:
     dependencies:
       '@logto/browser':
-        specifier: ^2.0.0
+        specifier: workspace:^2.0.0
         version: link:../browser
     devDependencies:
       '@parcel/core':
@@ -136,7 +136,7 @@ importers:
   packages/client:
     dependencies:
       '@logto/js':
-        specifier: ^2.1.0
+        specifier: workspace:^2.1.0
         version: link:../js
       '@silverhand/essentials':
         specifier: ^2.6.2
@@ -197,7 +197,7 @@ importers:
   packages/express:
     dependencies:
       '@logto/node':
-        specifier: ^2.0.0
+        specifier: workspace:^2.0.0
         version: link:../node
     devDependencies:
       '@silverhand/eslint-config':
@@ -267,7 +267,7 @@ importers:
   packages/express-sample:
     dependencies:
       '@logto/express':
-        specifier: ^2.0.0
+        specifier: workspace:^2.0.0
         version: link:../express
       cookie-parser:
         specifier: ^1.4.6
@@ -386,7 +386,7 @@ importers:
   packages/next:
     dependencies:
       '@logto/node':
-        specifier: ^2.1.0
+        specifier: workspace:^2.1.0
         version: link:../node
       iron-session:
         specifier: ^6.3.1
@@ -447,7 +447,7 @@ importers:
   packages/next-app-dir-sample:
     dependencies:
       '@logto/next':
-        specifier: ^2.1.0
+        specifier: workspace:^2.1.0
         version: link:../next
       next:
         specifier: ^13.3.1
@@ -508,7 +508,7 @@ importers:
   packages/next-sample:
     dependencies:
       '@logto/next':
-        specifier: ^2.1.0
+        specifier: workspace:^2.1.0
         version: link:../next
       next:
         specifier: ^13.3.1
@@ -569,7 +569,7 @@ importers:
   packages/node:
     dependencies:
       '@logto/client':
-        specifier: ^2.1.0
+        specifier: workspace:^2.1.0
         version: link:../client
       '@silverhand/essentials':
         specifier: ^2.6.2
@@ -624,7 +624,7 @@ importers:
   packages/react:
     dependencies:
       '@logto/browser':
-        specifier: ^2.0.0
+        specifier: workspace:^2.0.0
         version: link:../browser
       '@silverhand/essentials':
         specifier: ^2.6.2
@@ -685,7 +685,7 @@ importers:
   packages/react-sample:
     dependencies:
       '@logto/react':
-        specifier: ^2.0.0
+        specifier: workspace:^2.0.0
         version: link:../react
       react:
         specifier: ^18.2.0
@@ -758,7 +758,7 @@ importers:
   packages/remix:
     dependencies:
       '@logto/node':
-        specifier: ^2.0.0
+        specifier: workspace:^2.0.0
         version: link:../node
     devDependencies:
       '@commitlint/cli':
@@ -825,7 +825,7 @@ importers:
   packages/vue:
     dependencies:
       '@logto/browser':
-        specifier: ^2.0.0
+        specifier: workspace:^2.0.0
         version: link:../browser
     devDependencies:
       '@silverhand/eslint-config':
@@ -871,7 +871,7 @@ importers:
   packages/vue-sample:
     dependencies:
       '@logto/vue':
-        specifier: ^2.0.0
+        specifier: workspace:^2.0.0
         version: link:../vue
       vue:
         specifier: ^3.2.35

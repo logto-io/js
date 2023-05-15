@@ -38,7 +38,7 @@
     "postpack": "node test.cjs"
   },
   "dependencies": {
-    "@logto/client": "^2.1.0",
+    "@logto/client": "workspace:^2.1.0",
     "@silverhand/essentials": "^2.6.2",
     "js-base64": "^3.7.4",
     "node-fetch": "^2.6.7"

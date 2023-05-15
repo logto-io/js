@@ -38,7 +38,7 @@
     "postpack": "node test.cjs"
   },
   "dependencies": {
-    "@logto/node": "^2.1.0",
+    "@logto/node": "workspace:^2.1.0",
     "iron-session": "^6.3.1"
   },
   "devDependencies": {
