@@ -32,9 +32,10 @@
     "check": "tsc --noEmit",
     "build": "rm -rf lib/ && tsc -p tsconfig.build.json --noEmit && rollup -c",
     "lint": "eslint --ext .ts src",
-    "test": "node test.cjs && jest",
+    "test": "jest",
     "test:coverage": "node test.cjs && jest --silent --coverage",
-    "prepack": "pnpm test && pnpm build"
+    "prepack": "pnpm build && pnpm test",
+    "postpack": "node test.cjs"
   },
   "dependencies": {
     "@logto/node": "^2.1.0",
