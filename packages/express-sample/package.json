@@ -6,9 +6,8 @@
   "type": "module",
   "scripts": {
     "precommit": "lint-staged",
-    "start": "ts-node src/app.ts",
-    "check": "tsc --noEmit",
-    "build": "pnpm check",
+    "start": "npm run build && node lib/app.js",
+    "build": "rm -rf lib/ && tsc",
     "lint": "eslint --ext .ts src"
   },
   "dependencies": {
@@ -29,7 +28,6 @@
     "postcss": "^8.4.6",
     "postcss-modules": "^6.0.0",
     "prettier": "^2.8.7",
-    "ts-node": "^10.9.1",
     "typescript": "^5.0.0"
   },
   "eslintConfig": {

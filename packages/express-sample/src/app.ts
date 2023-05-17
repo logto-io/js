@@ -24,7 +24,14 @@ const requireAuth = async (request: Request, response: Response, next: NextFunct
 
 const app = express();
 app.use(cookieParser());
-app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 14 * 24 * 60 * 60 } }));
+app.use(
+  session({
+    secret: 'keyboard cat',
+    cookie: { maxAge: 14 * 24 * 60 * 60 * 1000 },
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 app.use(handleAuthRoutes(config));
 
 app.get('/', (request, response) => {
@@ -33,7 +40,7 @@ app.get('/', (request, response) => {
     `<h1>Hello Logto</h1>
       <div><a href="/logto/sign-in">Sign In</a></div>
       <div><a href="/logto/sign-out">Sign Out</a></div>
-      <div><a href="/user">Profile</a></div>
+      <div><a href="/local-user-claims">Profile</a></div>
       <div><a href="/protected">Protected Resource</a></div>`
   );
 });
