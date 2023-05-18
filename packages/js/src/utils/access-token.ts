@@ -3,7 +3,6 @@
 import { urlSafeBase64 } from '@silverhand/essentials';
 
 import { isArbitraryObject } from './arbitrary-object.js';
-import { LogtoError } from './errors.js';
 
 // Claims may vary, based on the custom OIDC config
 export type AccessTokenClaims = {
@@ -47,7 +46,8 @@ export const decodeAccessToken = (accessToken: string): AccessTokenClaims => {
   const { 1: encodedPayload } = accessToken.split('.');
 
   if (!encodedPayload) {
-    throw new LogtoError('access_token.invalid_token');
+    // Non-JWT format token string
+    return {};
   }
 
   const json = urlSafeBase64.decode(encodedPayload);

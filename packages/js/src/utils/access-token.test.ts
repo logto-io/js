@@ -1,7 +1,6 @@
 import { generateKeyPair, SignJWT } from 'jose';
 
 import { decodeAccessToken } from './access-token.js';
-import { LogtoError } from './errors.js';
 
 describe('decodeAccessToken', () => {
   test('decoding valid JWT should return claims', async () => {
@@ -60,9 +59,8 @@ describe('decodeAccessToken', () => {
     });
   });
 
-  test('decoding invalid JWT string should throw Error', async () => {
-    expect(() => decodeAccessToken('invalid-JWT')).toMatchError(
-      new LogtoError('access_token.invalid_token')
-    );
+  test('decoding invalid JWT string should return empty claims', async () => {
+    const claims = decodeAccessToken('invalid-JWT');
+    expect(claims).toEqual({});
   });
 });

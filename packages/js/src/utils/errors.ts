@@ -11,7 +11,6 @@ const logtoErrorCodes = Object.freeze({
   'callback_uri_verification.missing_code': 'Missing code in the callback URI',
   crypto_subtle_unavailable: 'Crypto.subtle is unavailable in insecure contexts (non-HTTPS).',
   unexpected_response_error: 'Unexpected response error from the server.',
-  'access_token.invalid_token': 'Invalid access token',
 });
 
 export type LogtoErrorCode = keyof typeof logtoErrorCodes;
