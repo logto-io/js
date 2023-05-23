@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.0.1
+
+### Patch Changes
+
+- 77480ae: Skip token decode for opaque access token
+- Updated dependencies [77480ae]
+  - @logto/node@2.1.1
+
 ## 2.0.0
 
 ### Major Changes

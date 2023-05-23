@@ -197,7 +197,7 @@ importers:
   packages/express:
     dependencies:
       '@logto/node':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.1
         version: link:../node
     devDependencies:
       '@silverhand/eslint-config':
@@ -383,7 +383,7 @@ importers:
   packages/next:
     dependencies:
       '@logto/node':
-        specifier: workspace:^2.1.0
+        specifier: workspace:^2.1.1
         version: link:../node
       iron-session:
         specifier: ^6.3.1

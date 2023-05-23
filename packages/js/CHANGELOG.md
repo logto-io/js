@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.1.1
+
+### Patch Changes
+
+- 77480ae: Skip token decode for opaque access token
+
 ## 2.1.0
 
 ### Minor Changes

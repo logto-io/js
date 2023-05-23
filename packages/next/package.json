@@ -1,6 +1,6 @@
 {
   "name": "@logto/next",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "type": "module",
   "main": "./lib/src/index.cjs",
   "module": "./lib/src/index.js",
@@ -38,7 +38,7 @@
     "postpack": "node test.cjs"
   },
   "dependencies": {
-    "@logto/node": "workspace:^2.1.0",
+    "@logto/node": "workspace:^2.1.1",
     "iron-session": "^6.3.1"
   },
   "devDependencies": {
