@@ -1,3 +1,6 @@
 {
-  "extends": "@silverhand/ts-config/tsconfig.base"
+  "extends": "@silverhand/ts-config/tsconfig.base",
+  "compilerOptions": {
+    "outDir": "lib",
+  }
 }
