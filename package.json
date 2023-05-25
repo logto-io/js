@@ -5,7 +5,9 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "changeset": "changeset",
-    "prepare": "if test \"$NODE_ENV\" != \"production\" ; then husky install ; fi"
+    "prepare": "if test \"$NODE_ENV\" != \"production\" ; then husky install ; fi",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.1",

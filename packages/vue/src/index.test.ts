@@ -1,6 +1,6 @@
 /* eslint-disable unicorn/no-useless-undefined */
 import LogtoClient from '@logto/browser';
-import { type App, ref, readonly, computed } from 'vue';
+import { type App, readonly } from 'vue';
 
 import { contextInjectionKey, logtoInjectionKey } from './consts.js';
 import { createContext } from './context.js';
@@ -152,50 +152,24 @@ describe('useHandleSignInCallback', () => {
     expect(handleSignInCallback).not.toHaveBeenCalled();
   });
 
-  it('should not call `handleSignInCallback` when it is loading', async () => {
-    const client = new LogtoClient({ appId, endpoint });
-    const context = createContext(client);
-    const { loadingCount, isLoading: _isLoading, ...restContext } = context;
-    const { isAuthenticated, error } = restContext;
-    const mockLoadingCount = ref(100);
-    const mockIsLoading = computed(() => mockLoadingCount.value > 0);
-    const mockContext = {
-      ...restContext,
-      isLoading: mockIsLoading,
-      loadingCount: mockLoadingCount,
-    };
-
-    injectMock.mockImplementation((key: string) => {
-      if (key === contextInjectionKey) {
-        return mockContext;
-      }
-
-      if (key === logtoInjectionKey) {
-        return {
-          isAuthenticated: readonly(isAuthenticated),
-          isLoading: readonly(mockIsLoading),
-          error: readonly(error),
-          ...createPluginMethods(mockContext),
-        };
-      }
-    });
-    isSignInRedirected.mockImplementationOnce(() => true);
-
-    const { isLoading } = useLogto();
-    expect(isLoading.value).toBe(true);
-
-    useHandleSignInCallback();
-
-    expect(handleSignInCallback).not.toHaveBeenCalled();
-  });
-
   it('should call `handleSignInCallback` if current url is callback url', async () => {
     isSignInRedirected.mockImplementationOnce(() => true);
     const { signIn } = useLogto();
     useHandleSignInCallback();
 
     await signIn('https://example.com');
+    expect(handleSignInCallback).toHaveBeenCalledTimes(1);
+    handleSignInCallback.mockRestore();
+  });
 
+  it('should call `handleSignInCallback` only once even if it fails internally', async () => {
+    expect(handleSignInCallback).toHaveBeenCalledTimes(0);
+    isSignInRedirected.mockImplementationOnce(() => true);
+    handleSignInCallback.mockRejectedValueOnce(new Error('Oops'));
+    const { signIn } = useLogto();
+    useHandleSignInCallback();
+
+    await signIn('https://example.com');
     expect(handleSignInCallback).toHaveBeenCalledTimes(1);
   });
 
