@@ -28,7 +28,7 @@
     "lint": "eslint --ext .ts src",
     "test": "jest",
     "test:coverage": "node test.cjs && jest --silent --coverage",
-    "prepack": "pnpm test && pnpm build",
+    "prepack": "pnpm build && pnpm test",
     "postpack": "node test.cjs"
   },
   "dependencies": {
