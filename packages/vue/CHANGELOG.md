@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.0.1
+
+### Patch Changes
+
+- 922d385: Fixed a potential infinite loop in React and Vue SDKs in some edge cases
+
 ## 2.0.0
 
 ### Major Changes
