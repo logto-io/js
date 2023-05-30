@@ -28,6 +28,9 @@ jobs:
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v3
 
+      - name: Build
+        run: pnpm build
+
       - name: Configure Git user
         run: |
           git config --global user.email bot@silverhand.io
