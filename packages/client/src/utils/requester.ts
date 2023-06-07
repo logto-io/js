@@ -1,6 +1,6 @@
 import type { Requester } from '@logto/js';
 import { LogtoError, LogtoRequestError, isLogtoRequestError } from '@logto/js';
-
+// @ts-expect-error Temporary blocking of fetch function does not exist at @types/node
 export const createRequester = (fetchFunction: typeof fetch): Requester => {
   return async <T>(...args: Parameters<typeof fetch>): Promise<T> => {
     const response = await fetchFunction(...args);
