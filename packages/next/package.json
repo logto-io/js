@@ -5,6 +5,16 @@
   "main": "./lib/src/index.cjs",
   "module": "./lib/src/index.js",
   "types": "./lib/src/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./lib/src/index.d.ts"
+      ],
+      "edge": [
+        "./lib/edge/index.d.ts"
+      ]
+    }
+  },
   "exports": {
     ".": {
       "require": "./lib/src/index.cjs",
