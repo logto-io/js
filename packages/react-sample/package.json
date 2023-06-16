@@ -18,8 +18,8 @@
     "react-router-dom": "^6.2.2"
   },
   "devDependencies": {
-    "@parcel/core": "^2.8.3",
-    "@parcel/transformer-sass": "^2.8.3",
+    "@parcel/core": "^2.9.2",
+    "@parcel/transformer-sass": "^2.9.2",
     "@silverhand/eslint-config": "^3.0.1",
     "@silverhand/eslint-config-react": "^3.0.1",
     "@silverhand/ts-config": "^3.0.0",
@@ -30,7 +30,7 @@
     "buffer": "^6.0.3",
     "eslint": "^8.38.0",
     "lint-staged": "^13.0.0",
-    "parcel": "^2.8.3",
+    "parcel": "^2.9.2",
     "postcss": "^8.4.6",
     "postcss-modules": "^6.0.0",
     "prettier": "^2.8.7",
