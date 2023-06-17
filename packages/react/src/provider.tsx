@@ -5,12 +5,25 @@ import { LogtoContext } from './context.js';
 
 export type LogtoProviderProps = {
   config: LogtoConfig;
+  /**
+   * Whether to enable cache for well-known data. Use sessionStorage by default.
+   * @default false
+   */
+  // eslint-disable-next-line react/boolean-prop-naming
+  unstable_enableCache?: boolean;
   children?: ReactNode;
 };
 
-export const LogtoProvider = ({ config, children }: LogtoProviderProps) => {
+export const LogtoProvider = ({
+  config,
+  children,
+  unstable_enableCache = false,
+}: LogtoProviderProps) => {
   const [loadingCount, setLoadingCount] = useState(1);
-  const memorizedLogtoClient = useMemo(() => ({ logtoClient: new LogtoClient(config) }), [config]);
+  const memorizedLogtoClient = useMemo(
+    () => ({ logtoClient: new LogtoClient(config, unstable_enableCache) }),
+    [config, unstable_enableCache]
+  );
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState<Error>();
 

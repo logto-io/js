@@ -5,7 +5,7 @@ import { type ClientAdapterInstance } from './adapter/index.js';
 import { CacheKey } from './adapter/types.js';
 
 // Edited from jose's internal util `isJWKSLike`
-export function isJwkSetLike(jwkSet: unknown): jwkSet is JSONWebKeySet {
+function isJwkSetLike(jwkSet: unknown): jwkSet is JSONWebKeySet {
   return Boolean(
     jwkSet &&
       typeof jwkSet === 'object' &&
@@ -28,7 +28,7 @@ export class CachedRemoteJwkSet {
 
   async getKey(...args: Parameters<JWTVerifyGetKey>) {
     if (!this.jwkSet) {
-      this.jwkSet = await this.load();
+      this.jwkSet = await this.#load();
     }
 
     try {
@@ -37,7 +37,7 @@ export class CachedRemoteJwkSet {
       // Jose does not export the error definition
       // Found in https://github.com/panva/jose/blob/d5b3cb672736112b1e1e31ac4d5e9cd641675206/src/util/errors.ts#L347
       if (error instanceof Error && 'code' in error && error.code === 'ERR_JWKS_NO_MATCHING_KEY') {
-        this.jwkSet = await this.load();
+        this.jwkSet = await this.#load();
         return this.#getLocalKey(...args);
       }
 
@@ -45,7 +45,7 @@ export class CachedRemoteJwkSet {
     }
   }
 
-  async load(): Promise<JSONWebKeySet> {
+  async #load(): Promise<JSONWebKeySet> {
     return this.adapter.getWithCache(CacheKey.Jwks, async () => {
       const controller = new AbortController();
       const response = await fetch(this.url, { signal: controller.signal, redirect: 'manual' });

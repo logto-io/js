@@ -1,5 +1,5 @@
 import { generateSignInUri, Prompt } from '@logto/js';
-import type { Nullable } from '@silverhand/essentials';
+import { conditional, type Nullable } from '@silverhand/essentials';
 
 import type { Storage } from './adapter/index.js';
 import type { AccessToken, LogtoConfig, LogtoSignInSessionItem } from './index.js';
@@ -84,21 +84,24 @@ export const idToken = 'id_token_value';
 
 export const currentUnixTimeStamp = Date.now() / 1000;
 
-export const fetchOidcConfig = jest.fn(async () => {
-  await new Promise((resolve) => {
-    setTimeout(resolve, 0);
+export const mockFetchOidcConfig = (delay = 0) =>
+  jest.fn(async () => {
+    await new Promise((resolve) => {
+      setTimeout(resolve, delay);
+    });
+
+    return {
+      authorizationEndpoint,
+      tokenEndpoint,
+      userinfoEndpoint,
+      endSessionEndpoint,
+      revocationEndpoint,
+      jwksUri,
+      issuer,
+    };
   });
 
-  return {
-    authorizationEndpoint,
-    tokenEndpoint,
-    userinfoEndpoint,
-    endSessionEndpoint,
-    revocationEndpoint,
-    jwksUri,
-    issuer,
-  };
-});
+export const fetchOidcConfig = mockFetchOidcConfig();
 
 export const requester = jest.fn();
 export const failingRequester = jest.fn().mockRejectedValue(new Error('Failed!'));
@@ -107,28 +110,38 @@ export const generateCodeChallenge = jest.fn(async () => mockCodeChallenge);
 export const generateCodeVerifier = jest.fn(() => mockedCodeVerifier);
 export const generateState = jest.fn(() => mockedState);
 
-export const createAdapters = () => ({
-  requester,
-  storage: new MockedStorage(),
-  navigate,
-  generateCodeChallenge,
-  generateCodeVerifier,
-  generateState,
-});
+export const createAdapters = (withCache = false) =>
+  ({
+    requester,
+    storage: new MockedStorage(),
+    unstable_cache: conditional(withCache && new MockedStorage()),
+    navigate,
+    generateCodeChallenge,
+    generateCodeVerifier,
+    generateState,
+  } satisfies Partial<Record<keyof LogtoClient['adapter'], unknown>>);
 
-export const createClient = (prompt?: Prompt, storage = new MockedStorage()) =>
-  new LogtoClient(
+export const createClient = (prompt?: Prompt, storage = new MockedStorage(), withCache = false) =>
+  new LogtoClientWithAccessors(
     { endpoint, appId, prompt },
     {
-      ...createAdapters(),
+      ...createAdapters(withCache),
       storage,
     }
   );
 
 /**
- * Make LogtoClient.signInSession accessible for test
+ * Make protected fields accessible for test
  */
-export class LogtoClientSignInSessionAccessor extends LogtoClient {
+export class LogtoClientWithAccessors extends LogtoClient {
+  public async runGetOidcConfig() {
+    return this.getOidcConfig();
+  }
+
+  public async runGetJwtVerifyGetKey() {
+    return this.getJwtVerifyGetKey();
+  }
+
   public getLogtoConfig(): Nullable<LogtoConfig> {
     return this.logtoConfig;
   }

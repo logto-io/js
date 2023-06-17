@@ -23,6 +23,6 @@ export class CacheStorage implements Storage<CacheKey> {
   }
 
   async removeItem(key: CacheKey): Promise<void> {
-    sessionStorage.removeItem(`${this.getKey(key)}:${key}`);
+    sessionStorage.removeItem(`${this.getKey(key)}`);
   }
 }

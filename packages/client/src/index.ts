@@ -46,7 +46,8 @@ export {
   UserScope,
 } from '@logto/js';
 export * from './errors.js';
-export type { Storage, StorageKey, ClientAdapter, PersistKey, CacheKey } from './adapter/index.js';
+export type { Storage, StorageKey, ClientAdapter } from './adapter/index.js';
+export { PersistKey, CacheKey } from './adapter/index.js';
 export { createRequester } from './utils/index.js';
 export * from './types/index.js';
 

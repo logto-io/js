@@ -68,6 +68,7 @@ export class ClientAdapterInstance implements ClientAdapter {
    */
   async getWithCache<T>(key: CacheKey, getter: () => Promise<T>): Promise<T> {
     const cached = await this.getCachedObject<T>(key);
+
     if (cached) {
       return cached;
     }
