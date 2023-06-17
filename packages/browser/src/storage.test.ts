@@ -1,4 +1,4 @@
-import { BrowserStorage, logtoStorageItemKeyPrefix } from './storage.js';
+import { BrowserStorage } from './storage.js';
 
 describe('BrowserStorage', () => {
   beforeEach(() => {
@@ -38,13 +38,13 @@ describe('BrowserStorage', () => {
     it('should set item to localStorage', async () => {
       const storage = new BrowserStorage('appId');
       await storage.setItem('idToken', 'value');
-      expect(localStorage.getItem(`${logtoStorageItemKeyPrefix}:appId:idToken`)).toBe('value');
+      expect(localStorage.getItem(`logto:appId:idToken`)).toBe('value');
     });
 
     it('should set item to sessionStorage', async () => {
       const storage = new BrowserStorage('appId');
       await storage.setItem('signInSession', 'value');
-      expect(sessionStorage.getItem(`${logtoStorageItemKeyPrefix}:appId`)).toBe('value');
+      expect(sessionStorage.getItem(`logto:appId`)).toBe('value');
     });
   });
 });

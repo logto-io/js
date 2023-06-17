@@ -1,6 +1,7 @@
 import type { LogtoConfig } from '@logto/client';
 import BaseClient, { createRequester } from '@logto/client';
 
+import { CacheStorage } from './cache.js';
 import { BrowserStorage } from './storage.js';
 import { generateCodeChallenge, generateCodeVerifier, generateState } from './utils/generators.js';
 
@@ -34,6 +35,7 @@ export default class LogtoClient extends BaseClient {
       requester,
       navigate,
       storage: new BrowserStorage(config.appId),
+      unstable_cache: new CacheStorage(config.appId),
       generateCodeChallenge,
       generateCodeVerifier,
       generateState,

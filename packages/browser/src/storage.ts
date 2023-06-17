@@ -1,38 +1,42 @@
 import type { Storage, StorageKey } from '@logto/client';
 import type { Nullable } from '@silverhand/essentials';
 
-export const logtoStorageItemKeyPrefix = `logto`;
+const keyPrefix = `logto`;
 
-export class BrowserStorage implements Storage {
-  private readonly storageKey: string;
+export class BrowserStorage implements Storage<StorageKey> {
+  constructor(public readonly appId: string) {}
 
-  constructor(appId: string) {
-    this.storageKey = `${logtoStorageItemKeyPrefix}:${appId}`;
+  getKey(item?: string) {
+    if (item === undefined) {
+      return `${keyPrefix}:${this.appId}`;
+    }
+
+    return `${keyPrefix}:${this.appId}:${item}`;
   }
 
   async getItem(key: StorageKey): Promise<Nullable<string>> {
     if (key === 'signInSession') {
-      return sessionStorage.getItem(this.storageKey);
+      return sessionStorage.getItem(this.getKey());
     }
 
-    return localStorage.getItem(`${this.storageKey}:${key}`);
+    return localStorage.getItem(this.getKey(key));
   }
 
   async setItem(key: StorageKey, value: string): Promise<void> {
     if (key === 'signInSession') {
-      sessionStorage.setItem(this.storageKey, value);
+      sessionStorage.setItem(this.getKey(key), value);
 
       return;
     }
-    localStorage.setItem(`${this.storageKey}:${key}`, value);
+    localStorage.setItem(this.getKey(key), value);
   }
 
   async removeItem(key: StorageKey): Promise<void> {
     if (key === 'signInSession') {
-      sessionStorage.removeItem(this.storageKey);
+      sessionStorage.removeItem(this.getKey(key));
 
       return;
     }
-    localStorage.removeItem(`${this.storageKey}:${key}`);
+    localStorage.removeItem(`${this.getKey(key)}:${key}`);
   }
 }

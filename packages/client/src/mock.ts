@@ -1,14 +1,14 @@
 import { generateSignInUri, Prompt } from '@logto/js';
 import type { Nullable } from '@silverhand/essentials';
 
-import type { Storage } from './adapter.js';
+import type { Storage } from './adapter/index.js';
 import type { AccessToken, LogtoConfig, LogtoSignInSessionItem } from './index.js';
 import LogtoClient from './index.js';
 
 export const appId = 'app_id_value';
 export const endpoint = 'https://logto.dev';
 
-export class MockedStorage implements Storage {
+export class MockedStorage implements Storage<string> {
   private storage: Record<string, string> = {};
 
   constructor(values?: Record<string, string>) {
