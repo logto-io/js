@@ -44,7 +44,7 @@ describe('BrowserStorage', () => {
     it('should set item to sessionStorage', async () => {
       const storage = new BrowserStorage('appId');
       await storage.setItem('signInSession', 'value');
-      expect(sessionStorage.getItem(`logto:appId`)).toBe('value');
+      expect(sessionStorage.getItem(`logto:appId:signInSession`)).toBe('value');
     });
   });
 });

@@ -16,7 +16,8 @@ export class BrowserStorage implements Storage<StorageKey> {
 
   async getItem(key: StorageKey): Promise<Nullable<string>> {
     if (key === 'signInSession') {
-      return sessionStorage.getItem(this.getKey());
+      // The latter `getItem()` is for backward compatibility. Can be removed when major bump.
+      return sessionStorage.getItem(this.getKey(key)) ?? sessionStorage.getItem(this.getKey());
     }
 
     return localStorage.getItem(this.getKey(key));
@@ -25,7 +26,6 @@ export class BrowserStorage implements Storage<StorageKey> {
   async setItem(key: StorageKey, value: string): Promise<void> {
     if (key === 'signInSession') {
       sessionStorage.setItem(this.getKey(key), value);
-
       return;
     }
     localStorage.setItem(this.getKey(key), value);
@@ -34,9 +34,8 @@ export class BrowserStorage implements Storage<StorageKey> {
   async removeItem(key: StorageKey): Promise<void> {
     if (key === 'signInSession') {
       sessionStorage.removeItem(this.getKey(key));
-
       return;
     }
-    localStorage.removeItem(`${this.getKey(key)}:${key}`);
+    localStorage.removeItem(this.getKey(key));
   }
 }

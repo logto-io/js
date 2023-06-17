@@ -242,7 +242,7 @@ export default class LogtoClient {
   }
 
   protected async setSignInSession(value: Nullable<LogtoSignInSessionItem>) {
-    return this.adapter.setStorageItem(PersistKey.SignInSession, JSON.stringify(value));
+    return this.adapter.setStorageItem(PersistKey.SignInSession, value && JSON.stringify(value));
   }
 
   private async setIdToken(value: Nullable<string>) {

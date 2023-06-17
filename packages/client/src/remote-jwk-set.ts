@@ -18,7 +18,13 @@ export function isJwkSetLike(jwkSet: unknown): jwkSet is JSONWebKeySet {
 export class CachedRemoteJwkSet {
   protected jwkSet?: JSONWebKeySet;
 
-  constructor(public readonly url: URL, private readonly adapter: ClientAdapterInstance) {}
+  constructor(public readonly url: URL, private readonly adapter: ClientAdapterInstance) {
+    if (!adapter.unstable_cache) {
+      throw new Error(
+        "No cache found in the client adapter. Use `createRemoteJWKSet()` from 'jose' instead."
+      );
+    }
+  }
 
   async getKey(...args: Parameters<JWTVerifyGetKey>) {
     if (!this.jwkSet) {
