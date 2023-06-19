@@ -9,7 +9,7 @@ import {
   endpoint,
   fetchOidcConfig,
   navigate,
-  LogtoClientSignInSessionAccessor,
+  LogtoClientWithAccessors,
   mockedCodeVerifier,
   mockedState,
   MockedStorage,
@@ -60,7 +60,7 @@ describe('LogtoClient', () => {
     });
 
     it('should append reserved scopes', () => {
-      const logtoClient = new LogtoClientSignInSessionAccessor(
+      const logtoClient = new LogtoClientWithAccessors(
         { endpoint, appId, scopes: ['foo'] },
         createAdapters()
       );
@@ -73,15 +73,12 @@ describe('LogtoClient', () => {
     });
 
     it('should use the default prompt value "consent" if we does not provide the custom prompt', () => {
-      const logtoClient = new LogtoClientSignInSessionAccessor(
-        { endpoint, appId },
-        createAdapters()
-      );
+      const logtoClient = new LogtoClientWithAccessors({ endpoint, appId }, createAdapters());
       expect(logtoClient.getLogtoConfig()).toHaveProperty('prompt', Prompt.Consent);
     });
 
     it('should use the custom prompt value "login"', () => {
-      const logtoClient = new LogtoClientSignInSessionAccessor(
+      const logtoClient = new LogtoClientWithAccessors(
         { endpoint, appId, prompt: Prompt.Login },
         createAdapters()
       );
@@ -91,10 +88,7 @@ describe('LogtoClient', () => {
 
   describe('signInSession', () => {
     test('getter should throw LogtoClientError when signInSession does not contain the required property', async () => {
-      const signInSession = new LogtoClientSignInSessionAccessor(
-        { endpoint, appId },
-        createAdapters()
-      );
+      const signInSession = new LogtoClientWithAccessors({ endpoint, appId }, createAdapters());
 
       // @ts-expect-error expected to set object without required property `state`
       await signInSession.setSignInSessionItem({
@@ -108,20 +102,14 @@ describe('LogtoClient', () => {
     });
 
     it('should be able to set and get the undefined item (for clearing sign-in session)', async () => {
-      const signInSession = new LogtoClientSignInSessionAccessor(
-        { endpoint, appId },
-        createAdapters()
-      );
+      const signInSession = new LogtoClientWithAccessors({ endpoint, appId }, createAdapters());
 
       await signInSession.setSignInSessionItem(null);
       await expect(signInSession.getSignInSessionItem()).resolves.toBeNull();
     });
 
     it('should be able to set and get the correct item', async () => {
-      const signInSession = new LogtoClientSignInSessionAccessor(
-        { endpoint, appId },
-        createAdapters()
-      );
+      const signInSession = new LogtoClientWithAccessors({ endpoint, appId }, createAdapters());
 
       const signInSessionItem: LogtoSignInSessionItem = {
         redirectUri,
@@ -314,7 +302,7 @@ describe('LogtoClient', () => {
         expiresIn: 3600,
       }));
 
-      const logtoClient = new LogtoClientSignInSessionAccessor(
+      const logtoClient = new LogtoClientWithAccessors(
         { endpoint, appId },
         {
           ...createAdapters(),

@@ -1,7 +1,7 @@
 import type { Storage, StorageKey } from '@logto/node';
 import { type IronSession } from 'iron-session';
 
-export default class NextStorage implements Storage {
+export default class NextStorage implements Storage<StorageKey> {
   private sessionChanged = false;
   constructor(private readonly session: IronSession) {}
 

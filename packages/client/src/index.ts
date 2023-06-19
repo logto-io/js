@@ -17,15 +17,23 @@ import {
   verifyAndParseCodeFromCallbackUri,
   verifyIdToken,
   withDefaultScopes,
+  type OidcConfigResponse,
 } from '@logto/js';
-import type { Nullable } from '@silverhand/essentials';
-import { createRemoteJWKSet } from 'jose';
+import { type Nullable } from '@silverhand/essentials';
+import { type JWTVerifyGetKey, createRemoteJWKSet } from 'jose';
 
-import type { ClientAdapter } from './adapter.js';
+import {
+  CacheKey,
+  ClientAdapterInstance,
+  type ClientAdapter,
+  PersistKey,
+} from './adapter/index.js';
 import { LogtoClientError } from './errors.js';
+import { CachedRemoteJwkSet } from './remote-jwk-set.js';
 import type { AccessToken, LogtoConfig, LogtoSignInSessionItem } from './types/index.js';
 import { isLogtoAccessTokenMap, isLogtoSignInSessionItem } from './types/index.js';
 import { buildAccessTokenKey, getDiscoveryEndpoint } from './utils/index.js';
+import { memoize } from './utils/memoize.js';
 import { once } from './utils/once.js';
 
 export type { IdTokenClaims, LogtoErrorCode, UserInfoResponse, InteractionMode } from '@logto/js';
@@ -38,15 +46,16 @@ export {
   UserScope,
 } from '@logto/js';
 export * from './errors.js';
-export type { Storage, StorageKey, ClientAdapter } from './adapter.js';
+export type { Storage, StorageKey, ClientAdapter } from './adapter/index.js';
+export { PersistKey, CacheKey } from './adapter/index.js';
 export { createRequester } from './utils/index.js';
 export * from './types/index.js';
 
 export default class LogtoClient {
   protected readonly logtoConfig: LogtoConfig;
-  protected readonly getOidcConfig: typeof this._getOidcConfig = once(this._getOidcConfig);
-  protected readonly getJwtVerifyGetKey = once(this._getJwtVerifyGetKey);
-  protected readonly adapter: ClientAdapter;
+  protected readonly getOidcConfig = memoize(this.#getOidcConfig);
+  protected readonly getJwtVerifyGetKey = once(this.#getJwtVerifyGetKey);
+  protected readonly adapter: ClientAdapterInstance;
   protected readonly accessTokenMap = new Map<string, AccessToken>();
 
   constructor(logtoConfig: LogtoConfig, adapter: ClientAdapter) {
@@ -55,7 +64,7 @@ export default class LogtoClient {
       prompt: logtoConfig.prompt ?? Prompt.Consent,
       scopes: withDefaultScopes(logtoConfig.scopes).split(' '),
     };
-    this.adapter = adapter;
+    this.adapter = new ClientAdapterInstance(adapter);
 
     void this.loadAccessTokenMap();
   }
@@ -233,35 +242,16 @@ export default class LogtoClient {
     return item;
   }
 
-  protected async setSignInSession(logtoSignInSessionItem: Nullable<LogtoSignInSessionItem>) {
-    if (!logtoSignInSessionItem) {
-      await this.adapter.storage.removeItem('signInSession');
-
-      return;
-    }
-
-    const jsonItem = JSON.stringify(logtoSignInSessionItem);
-    await this.adapter.storage.setItem('signInSession', jsonItem);
+  protected async setSignInSession(value: Nullable<LogtoSignInSessionItem>) {
+    return this.adapter.setStorageItem(PersistKey.SignInSession, value && JSON.stringify(value));
   }
 
-  private async setIdToken(idToken: Nullable<string>) {
-    if (!idToken) {
-      await this.adapter.storage.removeItem('idToken');
-
-      return;
-    }
-
-    await this.adapter.storage.setItem('idToken', idToken);
+  private async setIdToken(value: Nullable<string>) {
+    return this.adapter.setStorageItem(PersistKey.IdToken, value);
   }
 
-  private async setRefreshToken(refreshToken: Nullable<string>) {
-    if (!refreshToken) {
-      await this.adapter.storage.removeItem('refreshToken');
-
-      return;
-    }
-
-    await this.adapter.storage.setItem('refreshToken', refreshToken);
+  private async setRefreshToken(value: Nullable<string>) {
+    return this.adapter.setStorageItem(PersistKey.RefreshToken, value);
   }
 
   private async getAccessTokenByRefreshToken(resource?: string): Promise<string> {
@@ -299,19 +289,6 @@ export default class LogtoClient {
     }
 
     return accessToken;
-  }
-
-  private async _getOidcConfig() {
-    const { endpoint } = this.logtoConfig;
-    const discoveryEndpoint = getDiscoveryEndpoint(endpoint);
-
-    return fetchOidcConfig(discoveryEndpoint, this.adapter.requester);
-  }
-
-  private async _getJwtVerifyGetKey() {
-    const { jwksUri } = await this.getOidcConfig();
-
-    return createRemoteJWKSet(new URL(jwksUri));
   }
 
   private async verifyIdToken(idToken: string) {
@@ -371,5 +348,25 @@ export default class LogtoClient {
     } catch (error: unknown) {
       console.warn(error);
     }
+  }
+
+  async #getOidcConfig(): Promise<OidcConfigResponse> {
+    return this.adapter.getWithCache(CacheKey.OpenidConfig, async () => {
+      return fetchOidcConfig(
+        getDiscoveryEndpoint(this.logtoConfig.endpoint),
+        this.adapter.requester
+      );
+    });
+  }
+
+  async #getJwtVerifyGetKey(): Promise<JWTVerifyGetKey> {
+    const { jwksUri } = await this.getOidcConfig();
+
+    if (!this.adapter.unstable_cache) {
+      return createRemoteJWKSet(new URL(jwksUri));
+    }
+
+    const cachedJwkSet = new CachedRemoteJwkSet(new URL(jwksUri), this.adapter);
+    return async (...args) => cachedJwkSet.getKey(...args);
   }
 }

@@ -1,7 +1,7 @@
 import type { Storage, StorageKey } from '@logto/node';
 import type { Session } from '@remix-run/node';
 
-class LogtoStorage implements Storage {
+class LogtoStorage implements Storage<StorageKey> {
   public static readonly fromSession = (session: Session) => {
     return new LogtoStorage({ session });
   };

@@ -51,7 +51,7 @@ describe('useLogto', () => {
       });
     });
 
-    expect(LogtoClient).toHaveBeenCalledWith({ endpoint, appId });
+    expect(LogtoClient).toHaveBeenCalledWith({ endpoint, appId }, false);
   });
 
   it('should return LogtoClient property methods', async () => {
