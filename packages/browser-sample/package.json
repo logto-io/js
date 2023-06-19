@@ -15,13 +15,13 @@
     "@logto/browser": "workspace:^2.0.0"
   },
   "devDependencies": {
-    "@parcel/core": "^2.8.3",
-    "@parcel/transformer-sass": "^2.8.3",
+    "@parcel/core": "^2.9.2",
+    "@parcel/transformer-sass": "^2.9.2",
     "@silverhand/eslint-config": "^3.0.1",
     "@silverhand/eslint-config-react": "^3.0.1",
     "eslint": "^8.38.0",
     "lint-staged": "^13.0.0",
-    "parcel": "^2.8.3",
+    "parcel": "^2.9.2",
     "postcss": "^8.4.6",
     "prettier": "^2.8.7",
     "stylelint": "^15.0.0",
