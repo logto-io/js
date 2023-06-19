@@ -1,6 +1,6 @@
 {
   "name": "@logto/react-sample",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -12,7 +12,7 @@
     "stylelint": "stylelint \"src/**/*.scss\""
   },
   "dependencies": {
-    "@logto/react": "workspace:^2.0.0",
+    "@logto/react": "workspace:^2.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.2.2"

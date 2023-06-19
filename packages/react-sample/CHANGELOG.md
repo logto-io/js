@@ -1,5 +1,17 @@
 # Change Log
 
+## 2.0.1
+
+### Patch Changes
+
+- 90ef48f: add well-known cache support (unstable)
+
+  - client: support `unstable_cache` in `ClientAdapter`
+  - browser, react: add `unstable_enableCache` option to enable a `sessionStorage` cache for well-known data
+
+- Updated dependencies [90ef48f]
+  - @logto/react@2.1.0
+
 ## 2.0.0
 
 ### Major Changes
