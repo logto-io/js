@@ -2,21 +2,16 @@ import LogtoClient from '@logto/browser';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { type ReactNode } from 'react';
 
-import { LogtoContext, type LogtoContextProps } from '../context.js';
 import { LogtoProvider } from '../provider.js';
 
 import { useHandleSignInCallback, useLogto } from './index.js';
 
-const isAuthenticated = jest.fn(() => false);
-const isSignInRedirected = jest.fn(() => false);
+const isAuthenticated = jest.fn(async () => false);
+const isSignInRedirected = jest.fn(async () => false);
 const handleSignInCallback = jest.fn().mockResolvedValue(undefined);
 const getAccessToken = jest.fn(() => {
   throw new Error('not authenticated');
 });
-
-const notImplemented = () => {
-  throw new Error('Not implemented');
-};
 
 jest.mock('@logto/browser', () => {
   return jest.fn().mockImplementation(() => {
@@ -40,6 +35,10 @@ const createHookWrapper =
     <LogtoProvider config={{ endpoint, appId }}>{children}</LogtoProvider>;
 
 describe('useLogto', () => {
+  afterEach(() => {
+    handleSignInCallback.mockRestore();
+  });
+
   it('should throw without using context provider', () => {
     expect(() => renderHook(useLogto)).toThrow();
   });
@@ -73,33 +72,26 @@ describe('useLogto', () => {
   });
 
   it('should not call `handleSignInCallback` when it is not in callback url', async () => {
-    await act(async () => {
-      renderHook(useHandleSignInCallback, {
-        wrapper: createHookWrapper(),
-      });
+    const { result } = renderHook(useHandleSignInCallback, {
+      wrapper: createHookWrapper(),
     });
+
+    await waitFor(() => {
+      // LogtoClient is initialized
+      expect(result.current.isLoading).toBe(false);
+      expect(result.current.isAuthenticated).toBe(false);
+    });
+
     expect(handleSignInCallback).not.toHaveBeenCalled();
   });
 
   it('should not call `handleSignInCallback` when it is authenticated', async () => {
-    const mockClient = new LogtoClient({ endpoint, appId });
-    const mockContext: LogtoContextProps = {
-      logtoClient: mockClient,
-      isAuthenticated: true, // Mock this to true by default
-      loadingCount: 1,
-      setIsAuthenticated: notImplemented,
-      setLoadingCount: notImplemented,
-      setError: notImplemented,
-    };
-
-    isSignInRedirected.mockReturnValueOnce(true);
-    isAuthenticated.mockReturnValueOnce(true);
+    isSignInRedirected.mockResolvedValueOnce(true);
+    isAuthenticated.mockResolvedValueOnce(true);
 
     await act(async () => {
       renderHook(useHandleSignInCallback, {
-        wrapper: ({ children }: { children?: ReactNode }) => (
-          <LogtoContext.Provider value={mockContext}>{children}</LogtoContext.Provider>
-        ),
+        wrapper: createHookWrapper(),
       });
     });
 
@@ -107,7 +99,7 @@ describe('useLogto', () => {
   });
 
   it('should call `handleSignInCallback` when navigated back to predefined callback url', async () => {
-    isSignInRedirected.mockReturnValueOnce(true);
+    isSignInRedirected.mockResolvedValueOnce(true);
 
     const { result } = renderHook(useHandleSignInCallback, {
       wrapper: createHookWrapper(),
@@ -116,17 +108,17 @@ describe('useLogto', () => {
       expect(result.current.isAuthenticated).toBe(true);
     });
     expect(handleSignInCallback).toHaveBeenCalledTimes(1);
-    handleSignInCallback.mockRestore();
   });
 
   it('should call `handleSignInCallback` only once even if it fails internally', async () => {
-    isSignInRedirected.mockReturnValueOnce(true);
+    isSignInRedirected.mockResolvedValueOnce(true);
     handleSignInCallback.mockRejectedValueOnce(new Error('Oops'));
 
     const { result } = renderHook(useHandleSignInCallback, {
       wrapper: createHookWrapper(),
     });
     await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
       expect(result.current.isAuthenticated).toBe(false);
     });
     expect(handleSignInCallback).toHaveBeenCalledTimes(1);

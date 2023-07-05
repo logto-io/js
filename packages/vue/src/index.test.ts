@@ -8,7 +8,7 @@ import { useLogto, useHandleSignInCallback, createLogto } from './index.js';
 import { createPluginMethods } from './plugin.js';
 
 const isAuthenticated = jest.fn(async () => false);
-const isSignInRedirected = jest.fn(() => false);
+const isSignInRedirected = jest.fn(async () => false);
 const handleSignInCallback = jest.fn().mockResolvedValue(undefined);
 const mockedFetchUserInfo = jest.fn().mockResolvedValue({ sub: 'foo' });
 const getAccessToken = jest.fn(() => {
@@ -153,7 +153,7 @@ describe('useHandleSignInCallback', () => {
   });
 
   it('should call `handleSignInCallback` if current url is callback url', async () => {
-    isSignInRedirected.mockImplementationOnce(() => true);
+    isSignInRedirected.mockResolvedValueOnce(true);
     const { signIn } = useLogto();
     useHandleSignInCallback();
 
@@ -164,7 +164,7 @@ describe('useHandleSignInCallback', () => {
 
   it('should call `handleSignInCallback` only once even if it fails internally', async () => {
     expect(handleSignInCallback).toHaveBeenCalledTimes(0);
-    isSignInRedirected.mockImplementationOnce(() => true);
+    isSignInRedirected.mockResolvedValueOnce(true);
     handleSignInCallback.mockRejectedValueOnce(new Error('Oops'));
     const { signIn } = useLogto();
     useHandleSignInCallback();
