@@ -211,8 +211,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(typescript@5.0.2)
       '@silverhand/ts-config-react':
-        specifier: ^3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: ^4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@swc/core':
         specifier: ^1.3.50
         version: 1.3.50
@@ -400,8 +400,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(typescript@5.0.2)
       '@silverhand/ts-config-react':
-        specifier: ^3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: ^4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@swc/core':
         specifier: ^1.3.50
         version: 1.3.50
@@ -473,8 +473,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(typescript@5.0.2)
       '@silverhand/ts-config-react':
-        specifier: ^3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: ^4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/react':
         specifier: ^18.2.0
         version: 18.2.0
@@ -534,8 +534,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(typescript@5.0.2)
       '@silverhand/ts-config-react':
-        specifier: ^3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: ^4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/react':
         specifier: ^18.2.0
         version: 18.2.0
@@ -641,8 +641,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(typescript@5.0.2)
       '@silverhand/ts-config-react':
-        specifier: ^3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: ^4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@swc/core':
         specifier: ^1.3.50
         version: 1.3.50
@@ -714,8 +714,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(typescript@5.0.2)
       '@silverhand/ts-config-react':
-        specifier: ^3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: ^4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/react':
         specifier: ^18.2.0
         version: 18.2.0
@@ -778,8 +778,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(typescript@5.0.2)
       '@silverhand/ts-config-react':
-        specifier: ^3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: ^4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@swc/core':
         specifier: ^1.3.50
         version: 1.3.50
@@ -3683,18 +3683,27 @@ packages:
     engines: {node: ^16.13.0 || ^18.12.0 || ^19.2.0, pnpm: ^8.0.0}
     dev: false
 
-  /@silverhand/ts-config-react@3.0.0(typescript@5.0.2):
-    resolution: {integrity: sha512-zQL7kB6ropASS9/p7/g9PEsOIPAwjI20EVER8hShfV1jDURK9zXGDlbAhZbxLNS1n3z2AyPE+0ELEMZ7aIntRA==}
+  /@silverhand/ts-config-react@4.0.0(typescript@5.0.2):
+    resolution: {integrity: sha512-IkZka1iuIBgw0AUbsknghw1vOIs4zOgUxR8jL38Kuk63hmSj687N4BWBb8KhVMhqaG4U/DYkbSEZuwsyHBe68g==}
     engines: {node: ^18.12.0}
     peerDependencies:
       typescript: ^5.0.0
     dependencies:
-      '@silverhand/ts-config': 3.0.0(typescript@5.0.2)
+      '@silverhand/ts-config': 4.0.0(typescript@5.0.2)
       typescript: 5.0.2
     dev: true
 
   /@silverhand/ts-config@3.0.0(typescript@5.0.2):
     resolution: {integrity: sha512-rt4jbxx3JyJ97i/tpMXOSMSk76Ahgt4HycXtlLgbISAlfX1he/VK82Wh4vmUAUu21sV7W9JcK+T2krvV5ILpIA==}
+    engines: {node: ^18.12.0}
+    peerDependencies:
+      typescript: ^5.0.0
+    dependencies:
+      typescript: 5.0.2
+    dev: true
+
+  /@silverhand/ts-config@4.0.0(typescript@5.0.2):
+    resolution: {integrity: sha512-YIKUDF04QAoMNSfOExWpx6wk2hMhsY9kx0JzZbzOOJQzvcIUWcLYnyS5GaxaKzjSsZvmNETlKHyCpTwIZNfCZg==}
     engines: {node: ^18.12.0}
     peerDependencies:
       typescript: ^5.0.0
