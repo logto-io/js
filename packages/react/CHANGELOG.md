@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.1.1
+
+### Patch Changes
+
+- fbdcb0b: Fix potential infinite loop when handling sign-in callback in React and Vue SDKs
+
 ## 2.1.0
 
 ### Minor Changes
