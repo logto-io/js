@@ -1,5 +1,4 @@
 import {
-  type CodeTokenResponse,
   type IdTokenClaims,
   type UserInfoResponse,
   type InteractionMode,
@@ -170,8 +169,7 @@ export default class LogtoClient {
   }
 
   async handleSignInCallback(callbackUri: string) {
-    const { logtoConfig, adapter } = this;
-    const { requester } = adapter;
+    const { requester } = this.adapter;
     const signInSession = await this.getSignInSession();
 
     if (!signInSession) {
@@ -181,21 +179,37 @@ export default class LogtoClient {
     const { redirectUri, state, codeVerifier } = signInSession;
     const code = verifyAndParseCodeFromCallbackUri(callbackUri, redirectUri, state);
 
-    const { appId: clientId } = logtoConfig;
+    // NOTE: Will add scope to accessTokenKey when needed. (Linear issue LOG-1589)
+    const accessTokenKey = buildAccessTokenKey();
+    const { appId: clientId } = this.logtoConfig;
     const { tokenEndpoint } = await this.getOidcConfig();
-    const codeTokenResponse = await fetchTokenByAuthorizationCode(
-      {
-        clientId,
-        tokenEndpoint,
-        redirectUri,
-        codeVerifier,
-        code,
-      },
-      requester
-    );
+    const requestedAt = Math.round(Date.now() / 1000);
+    const { idToken, refreshToken, accessToken, scope, expiresIn } =
+      await fetchTokenByAuthorizationCode(
+        {
+          clientId,
+          tokenEndpoint,
+          redirectUri,
+          codeVerifier,
+          code,
+        },
+        requester
+      );
 
-    await this.verifyIdToken(codeTokenResponse.idToken);
-    await this.saveCodeToken(codeTokenResponse);
+    await this.verifyIdToken(idToken);
+    await this.setRefreshToken(refreshToken ?? null);
+    await this.setIdToken(idToken);
+
+    this.accessTokenMap.set(accessTokenKey, {
+      token: accessToken,
+      scope,
+      /** The `expiresAt` variable provides an approximate estimation of the actual `exp` property
+       * in the token claims. It is utilized by the client to determine if the cached access token
+       * has expired and when a new access token should be requested.
+       */
+      expiresAt: requestedAt + expiresIn,
+    });
+    await this.saveAccessTokenMap();
     await this.setSignInSession(null);
   }
 
@@ -264,6 +278,7 @@ export default class LogtoClient {
     const accessTokenKey = buildAccessTokenKey(resource);
     const { appId: clientId } = this.logtoConfig;
     const { tokenEndpoint } = await this.getOidcConfig();
+    const requestedAt = Math.round(Date.now() / 1000);
     const { accessToken, refreshToken, idToken, scope, expiresIn } = await fetchTokenByRefreshToken(
       {
         clientId,
@@ -277,7 +292,11 @@ export default class LogtoClient {
     this.accessTokenMap.set(accessTokenKey, {
       token: accessToken,
       scope,
-      expiresAt: Math.round(Date.now() / 1000) + expiresIn,
+      /** The `expiresAt` variable provides an approximate estimation of the actual `exp` property
+       * in the token claims. It is utilized by the client to determine if the cached access token
+       * has expired and when a new access token should be requested.
+       */
+      expiresAt: requestedAt + expiresIn,
     });
 
     await this.saveAccessTokenMap();
@@ -297,23 +316,6 @@ export default class LogtoClient {
     const jwtVerifyGetKey = await this.getJwtVerifyGetKey();
 
     await verifyIdToken(idToken, appId, issuer, jwtVerifyGetKey);
-  }
-
-  private async saveCodeToken({
-    refreshToken,
-    idToken,
-    scope,
-    accessToken,
-    expiresIn,
-  }: CodeTokenResponse) {
-    await this.setRefreshToken(refreshToken ?? null);
-    await this.setIdToken(idToken);
-
-    // NOTE: Will add scope to accessTokenKey when needed. (Linear issue LOG-1589)
-    const accessTokenKey = buildAccessTokenKey();
-    const expiresAt = Date.now() / 1000 + expiresIn;
-    this.accessTokenMap.set(accessTokenKey, { token: accessToken, scope, expiresAt });
-    await this.saveAccessTokenMap();
   }
 
   private async saveAccessTokenMap() {
