@@ -82,11 +82,19 @@ const useHandleSignInCallback = (callback?: () => void) => {
   );
 
   useEffect(() => {
-    const currentPageUrl = window.location.href;
-
-    if (!isAuthenticated && logtoClient?.isSignInRedirected(currentPageUrl)) {
-      void handleSignInCallback(currentPageUrl);
+    if (!logtoClient) {
+      return;
     }
+
+    (async () => {
+      const currentPageUrl = window.location.href;
+      const isAuthenticated = await logtoClient.isAuthenticated();
+      const isRedirected = await logtoClient.isSignInRedirected(currentPageUrl);
+
+      if (!isAuthenticated && isRedirected) {
+        void handleSignInCallback(currentPageUrl);
+      }
+    })();
   }, [handleSignInCallback, isAuthenticated, logtoClient]);
 
   return {

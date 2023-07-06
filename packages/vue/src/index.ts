@@ -134,10 +134,16 @@ export const useHandleSignInCallback = (callback?: () => void) => {
   const { isAuthenticated, isLoading, logtoClient, error } = context;
   const { handleSignInCallback } = createPluginMethods(context);
 
-  watchEffect(() => {
-    const currentPageUrl = window.location.href;
+  watchEffect(async () => {
+    if (!logtoClient.value) {
+      return;
+    }
 
-    if (!isAuthenticated.value && logtoClient.value?.isSignInRedirected(currentPageUrl)) {
+    const currentPageUrl = window.location.href;
+    const isAuthenticated = await logtoClient.value.isAuthenticated();
+    const isRedirected = await logtoClient.value.isSignInRedirected(currentPageUrl);
+
+    if (!isAuthenticated && isRedirected) {
       void handleSignInCallback(currentPageUrl, callback);
     }
   });
