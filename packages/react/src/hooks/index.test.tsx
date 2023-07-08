@@ -31,8 +31,9 @@ const appId = 'foo';
 
 const createHookWrapper =
   () =>
-  ({ children }: { children?: ReactNode }) =>
-    <LogtoProvider config={{ endpoint, appId }}>{children}</LogtoProvider>;
+  ({ children }: { children?: ReactNode }) => (
+    <LogtoProvider config={{ endpoint, appId }}>{children}</LogtoProvider>
+  );
 
 describe('useLogto', () => {
   afterEach(() => {

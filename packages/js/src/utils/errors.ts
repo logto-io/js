@@ -44,5 +44,8 @@ export class LogtoRequestError extends Error {
 }
 
 export class OidcError {
-  constructor(public error: string, public errorDescription?: string) {}
+  constructor(
+    public error: string,
+    public errorDescription?: string
+  ) {}
 }
