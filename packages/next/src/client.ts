@@ -7,7 +7,10 @@ import type { Adapters, LogtoNextConfig } from './types';
 export default class LogtoNextBaseClient {
   protected navigateUrl?: string;
   protected storage?: NextStorage;
-  constructor(protected readonly config: LogtoNextConfig, protected readonly adapters: Adapters) {}
+  constructor(
+    protected readonly config: LogtoNextConfig,
+    protected readonly adapters: Adapters
+  ) {}
 
   protected createNodeClient(session: IronSession) {
     this.storage = new NextStorage(session);

@@ -119,7 +119,7 @@ export const createAdapters = (withCache = false) =>
     generateCodeChallenge,
     generateCodeVerifier,
     generateState,
-  } satisfies Partial<Record<keyof LogtoClient['adapter'], unknown>>);
+  }) satisfies Partial<Record<keyof LogtoClient['adapter'], unknown>>;
 
 export const createClient = (prompt?: Prompt, storage = new MockedStorage(), withCache = false) =>
   new LogtoClientWithAccessors(
