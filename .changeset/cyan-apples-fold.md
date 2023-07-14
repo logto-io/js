@@ -2,4 +2,4 @@
 "@logto/client": patch
 ---
 
-Add backward time shift to local storage cached `expiresAt`, to ensure it is always smaller than the actual `exp` timestamp in access token claims
+Use `requestedAt` + `expiresIn` to calculate an approximately `expiredAt` timestamp, in order to ensure it is always smaller than the actual `exp` timestamp in access token claims.
