@@ -50,7 +50,7 @@
     "nock": "^13.3.0",
     "prettier": "^3.0.0",
     "text-encoder": "^0.0.4",
-    "type-fest": "^3.0.0",
+    "type-fest": "^4.0.0",
     "typescript": "^5.0.0"
   },
   "eslintConfig": {
