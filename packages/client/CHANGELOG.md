@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.2.1
+
+### Patch Changes
+
+- 5ed5b92: Use `requestedAt` + `expiresIn` to calculate an approximately `expiredAt` timestamp, in order to ensure it is always smaller than the actual `exp` timestamp in access token claims.
+
 ## 2.2.0
 
 ### Minor Changes
