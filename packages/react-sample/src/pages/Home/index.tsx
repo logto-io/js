@@ -17,7 +17,7 @@ const Home = () => {
         setUser(userInfo);
       }
     })();
-  }, [setUser, fetchUserInfo, isAuthenticated]);
+  }, [fetchUserInfo, isAuthenticated]);
 
   return (
     <div className={styles.container}>
