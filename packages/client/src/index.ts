@@ -183,7 +183,7 @@ export default class LogtoClient {
    * Start the sign-in flow with the specified redirect URI. The URI must be
    * registered in the Logto Console.
    *
-   * The user will be redirected that URI after the sign-in flow is completed,
+   * The user will be redirected to that URI after the sign-in flow is completed,
    * and the client will be able to get the authorization code from the URI.
    * To fetch the tokens from the authorization code, use {@link handleSignInCallback}
    * after the user is redirected in the callback URI.
@@ -192,11 +192,10 @@ export default class LogtoClient {
    * @param interactionMode The interaction mode to be used for the authorization request. Note it's not
    * a part of the OIDC standard, but a Logto-specific extension. Defaults to `signIn`.
    *
-   * @see {@link https://docs.logto.io/docs/recipes/integrate-logto/vanilla-js/#sign-in | Sign in}
-   * for more information.
+   * @see {@link https://docs.logto.io/docs/recipes/integrate-logto/vanilla-js/#sign-in | Sign in} for more information.
    * @see {@link InteractionMode}
    */
-  async signIn(redirectUri: string, interactionMode?: InteractionMode) {
+  async signIn(redirectUri: string, interactionMode?: InteractionMode): Promise<unknown> {
     const { appId: clientId, prompt, resources, scopes } = this.logtoConfig;
     const { authorizationEndpoint } = await this.getOidcConfig();
     const codeVerifier = this.adapter.generateCodeVerifier();
@@ -215,10 +214,14 @@ export default class LogtoClient {
       interactionMode,
     });
 
-    await this.setSignInSession({ redirectUri, codeVerifier, state });
-    await this.setRefreshToken(null);
-    await this.setIdToken(null);
+    await Promise.all([
+      this.setSignInSession({ redirectUri, codeVerifier, state }),
+      this.setRefreshToken(null),
+      this.setIdToken(null),
+    ]);
     await this.adapter.navigate(signInUri);
+
+    return true;
   }
 
   /**
@@ -304,7 +307,7 @@ export default class LogtoClient {
    * If the `postLogoutRedirectUri` is not specified, the user will be redirected
    * to a default page.
    */
-  async signOut(postLogoutRedirectUri?: string) {
+  async signOut(postLogoutRedirectUri?: string): Promise<unknown> {
     const { appId: clientId } = this.logtoConfig;
     const { endSessionEndpoint, revocationEndpoint } = await this.getOidcConfig();
     const refreshToken = await this.getRefreshToken();
@@ -324,10 +327,15 @@ export default class LogtoClient {
     });
 
     this.accessTokenMap.clear();
-    await this.setRefreshToken(null);
-    await this.setIdToken(null);
-    await this.adapter.storage.removeItem('accessToken');
+
+    await Promise.all([
+      this.setRefreshToken(null),
+      this.setIdToken(null),
+      this.adapter.storage.removeItem('accessToken'),
+    ]);
     await this.adapter.navigate(url);
+
+    return true;
   }
 
   protected async getSignInSession(): Promise<Nullable<LogtoSignInSessionItem>> {

@@ -6,6 +6,9 @@ import { CacheStorage } from './cache.js';
 import { BrowserStorage } from './storage.js';
 import { generateCodeChallenge, generateCodeVerifier, generateState } from './utils/generators.js';
 
+export { createRequester, default as BaseClient } from '@logto/client';
+export { generateCodeChallenge, generateCodeVerifier, generateState } from './utils/generators.js';
+
 export type {
   IdTokenClaims,
   LogtoErrorCode,
@@ -13,6 +16,7 @@ export type {
   LogtoClientErrorCode,
   UserInfoResponse,
   InteractionMode,
+  ClientAdapter,
 } from '@logto/client';
 
 export {
