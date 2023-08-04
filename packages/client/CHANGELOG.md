@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.2.2
+
+### Patch Changes
+
+- eb94b36: add comment annotations for better dev experience
+- Updated dependencies [eb94b36]
+  - @logto/js@2.1.2
+
 ## 2.2.1
 
 ### Patch Changes
