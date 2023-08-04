@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.1.2
+
+### Patch Changes
+
+- eb94b36: add comment annotations for better dev experience
+
 ## 2.1.1
 
 ### Patch Changes

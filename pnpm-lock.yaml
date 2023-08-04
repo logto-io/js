@@ -51,7 +51,7 @@ importers:
   packages/browser:
     dependencies:
       '@logto/client':
-        specifier: workspace:^2.2.0
+        specifier: workspace:^2.2.2
         version: link:../client
       '@silverhand/essentials':
         specifier: ^2.6.2
@@ -143,7 +143,7 @@ importers:
   packages/capacitor:
     dependencies:
       '@logto/browser':
-        specifier: workspace:^2.1.0
+        specifier: workspace:^2.1.1
         version: link:../browser
     devDependencies:
       '@capacitor/app':
@@ -198,7 +198,7 @@ importers:
   packages/client:
     dependencies:
       '@logto/js':
-        specifier: workspace:^2.1.0
+        specifier: workspace:^2.1.2
         version: link:../js
       '@silverhand/essentials':
         specifier: ^2.6.2
@@ -9507,6 +9507,7 @@ packages:
   /node-gyp-build-optional-packages@5.0.7:
     resolution: {integrity: sha512-YlCCc6Wffkx0kHkmam79GKvDQ6x+QZkMjFGrIMxgFNILFvGSbCp2fCBC55pGTT9gVaz8Na5CLmxt/urtzRv36w==}
     hasBin: true
+    requiresBuild: true
     dev: true
     optional: true
 

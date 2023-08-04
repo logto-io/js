@@ -1,6 +1,6 @@
 {
   "name": "@logto/browser",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "type": "module",
   "main": "./lib/index.cjs",
   "module": "./lib/index.js",
@@ -31,7 +31,7 @@
     "prepack": "pnpm build && pnpm test"
   },
   "dependencies": {
-    "@logto/client": "workspace:^2.2.0",
+    "@logto/client": "workspace:^2.2.2",
     "@silverhand/essentials": "^2.6.2",
     "js-base64": "^3.7.4"
   },
