@@ -31,8 +31,18 @@ export enum QueryKey {
   InteractionMode = 'interaction_mode',
 }
 
+/** The prompt parameter to be used for the authorization request. */
 export enum Prompt {
+  /**
+   * The Authorization Server MUST prompt the End-User for consent
+   * before returning information to the Client.
+   */
   Consent = 'consent',
+  /**
+   * The Authorization Server MUST prompt the End-User for re-authentication,
+   * forcing the user to log in again. Note the there'll be no Refresh Token
+   * returned in this case.
+   */
   Login = 'login',
 }
 

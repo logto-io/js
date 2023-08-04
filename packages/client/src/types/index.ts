@@ -1,18 +1,54 @@
 import type { Prompt } from '@logto/js';
 import { isArbitraryObject } from '@logto/js';
 
+/** The configuration object for the Logto client. */
 export type LogtoConfig = {
+  /**
+   * The endpoint for the Logto server, you can get it from the integration guide
+   * or the team settings page of the Logto Console.
+   *
+   * @example https://foo.logto.app
+   */
   endpoint: string;
+  /**
+   * The client ID of your application, you can get it from the integration guide
+   * or the application details page of the Logto Console.
+   */
   appId: string;
+  /**
+   * The client secret of your application, you can get it from the application
+   * details page of the Logto Console.
+   */
   appSecret?: string;
+  /**
+   * The scopes (permissions) that your application needs to access.
+   * Scopes that will be added by default: `openid`, `offline_access` and `profile`.
+   *
+   * If resources are specified, scopes will be applied to every resource.
+   *
+   * @see {@link https://docs.logto.io/docs/recipes/integrate-logto/vanilla-js/#fetch-user-information | Fetch user information}
+   * for more information of available scopes for user information.
+   */
   scopes?: string[];
+  /**
+   * The API resources that your application needs to access. You can specify
+   * multiple resources by providing an array of strings.
+   *
+   * @see {@link https://docs.logto.io/docs/recipes/rbac/ | RBAC} to learn more about how to use role-based access control (RBAC) to protect API resources.
+   */
   resources?: string[];
+  /**
+   * The prompt parameter to be used for the authorization request.
+   */
   prompt?: Prompt;
 };
 
 export type AccessToken = {
+  /** The access token string. */
   token: string;
+  /** The scopes that the access token is granted for. */
   scope: string;
+  /** The timestamp of the access token expiration. */
   expiresAt: number;
 };
 

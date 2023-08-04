@@ -50,6 +50,13 @@ export { PersistKey, CacheKey } from './adapter/index.js';
 export { createRequester } from './utils/index.js';
 export * from './types/index.js';
 
+/**
+ * The Logto base client class that provides the essential methods for
+ * interacting with the Logto server.
+ *
+ * It also provides an adapter object that allows the customizations of the
+ * client behavior for different environments.
+ */
 export default class LogtoClient {
   protected readonly logtoConfig: LogtoConfig;
   protected readonly getOidcConfig = memoize(this.#getOidcConfig);
@@ -68,18 +75,40 @@ export default class LogtoClient {
     void this.loadAccessTokenMap();
   }
 
+  /**
+   * Check if the user is authenticated by checking if the ID token exists.
+   */
   async isAuthenticated() {
     return Boolean(await this.getIdToken());
   }
 
+  /**
+   * Get the Refresh Token from the storage.
+   */
   async getRefreshToken() {
     return this.adapter.storage.getItem('refreshToken');
   }
 
+  /**
+   * Get the ID Token from the storage. If you want to get the ID Token claims,
+   * use {@link getIdTokenClaims} instead.
+   */
   async getIdToken() {
     return this.adapter.storage.getItem('idToken');
   }
 
+  /**
+   * Get the Access Token from the storage. If the Access Token has expired, it
+   * will try to fetch a new one using the Refresh Token.
+   *
+   * If you want to get the Access Token claims, use {@link getAccessTokenClaims} instead.
+   *
+   * @param resource The resource that the Access Token is granted for. If not
+   * specified, the Access Token will be used for OpenID Connect or the default
+   * resource, as specified in the Logto Console.
+   * @returns The Access Token string.
+   * @throws LogtoClientError if the user is not authenticated.
+   */
   async getAccessToken(resource?: string): Promise<string> {
     if (!(await this.getIdToken())) {
       throw new LogtoClientError('not_authenticated');
@@ -103,6 +132,9 @@ export default class LogtoClient {
     return this.getAccessTokenByRefreshToken(resource);
   }
 
+  /**
+   * Get the ID Token claims.
+   */
   async getIdTokenClaims(): Promise<IdTokenClaims> {
     const idToken = await this.getIdToken();
 
@@ -113,12 +145,29 @@ export default class LogtoClient {
     return decodeIdToken(idToken);
   }
 
+  /**
+   * Get the Access Token claims for the specified resource.
+   *
+   * @param resource The resource that the Access Token is granted for. If not
+   * specified, the Access Token will be used for OpenID Connect or the default
+   * resource, as specified in the Logto Console.
+   */
   async getAccessTokenClaims(resource?: string): Promise<AccessTokenClaims> {
     const accessToken = await this.getAccessToken(resource);
 
     return decodeAccessToken(accessToken);
   }
 
+  /**
+   * Get the user information from the Userinfo Endpoint.
+   *
+   * Note the Userinfo Endpoint will return more claims than the ID Token. See
+   * {@link https://docs.logto.io/docs/recipes/integrate-logto/vanilla-js/#fetch-user-information | Fetch user information}
+   * for more information.
+   *
+   * @returns The user information.
+   * @throws LogtoClientError if the user is not authenticated.
+   */
   async fetchUserInfo(): Promise<UserInfoResponse> {
     const { userinfoEndpoint } = await this.getOidcConfig();
     const accessToken = await this.getAccessToken();
@@ -130,6 +179,23 @@ export default class LogtoClient {
     return fetchUserInfo(userinfoEndpoint, accessToken, this.adapter.requester);
   }
 
+  /**
+   * Start the sign-in flow with the specified redirect URI. The URI must be
+   * registered in the Logto Console.
+   *
+   * The user will be redirected that URI after the sign-in flow is completed,
+   * and the client will be able to get the authorization code from the URI.
+   * To fetch the tokens from the authorization code, use {@link handleSignInCallback}
+   * after the user is redirected in the callback URI.
+   *
+   * @param redirectUri The redirect URI that the user will be redirected to after the sign-in flow is completed.
+   * @param interactionMode The interaction mode to be used for the authorization request. Note it's not
+   * a part of the OIDC standard, but a Logto-specific extension. Defaults to `signIn`.
+   *
+   * @see {@link https://docs.logto.io/docs/recipes/integrate-logto/vanilla-js/#sign-in | Sign in}
+   * for more information.
+   * @see {@link InteractionMode}
+   */
   async signIn(redirectUri: string, interactionMode?: InteractionMode) {
     const { appId: clientId, prompt, resources, scopes } = this.logtoConfig;
     const { authorizationEndpoint } = await this.getOidcConfig();
@@ -152,10 +218,17 @@ export default class LogtoClient {
     await this.setSignInSession({ redirectUri, codeVerifier, state });
     await this.setRefreshToken(null);
     await this.setIdToken(null);
-
-    this.adapter.navigate(signInUri);
+    await this.adapter.navigate(signInUri);
   }
 
+  /**
+   * Check if the user is redirected from the sign-in page by checking if the
+   * current URL matches the redirect URI in the sign-in session.
+   *
+   * If there's no sign-in session, it will return `false`.
+   *
+   * @param url The current URL.
+   */
   async isSignInRedirected(url: string): Promise<boolean> {
     const signInSession = await this.getSignInSession();
 
@@ -168,6 +241,14 @@ export default class LogtoClient {
     return `${origin}${pathname}` === redirectUri;
   }
 
+  /**
+   * Handle the sign-in callback by parsing the authorization code from the
+   * callback URI and exchanging it for the tokens.
+   *
+   * @param callbackUri The callback URI that the user is redirected to after the sign-in flow is completed.
+   * This URI must match the redirect URI specified in {@link signIn}.
+   * @throws LogtoClientError if the sign-in session is not found.
+   */
   async handleSignInCallback(callbackUri: string) {
     const { requester } = this.adapter;
     const signInSession = await this.getSignInSession();
@@ -213,6 +294,16 @@ export default class LogtoClient {
     await this.setSignInSession(null);
   }
 
+  /**
+   * Start the sign-out flow with the specified redirect URI. The URI must be
+   * registered in the Logto Console.
+   *
+   * It will also revoke all the tokens and clean up the storage.
+   *
+   * The user will be redirected that URI after the sign-out flow is completed.
+   * If the `postLogoutRedirectUri` is not specified, the user will be redirected
+   * to a default page.
+   */
   async signOut(postLogoutRedirectUri?: string) {
     const { appId: clientId } = this.logtoConfig;
     const { endSessionEndpoint, revocationEndpoint } = await this.getOidcConfig();
@@ -236,8 +327,7 @@ export default class LogtoClient {
     await this.setRefreshToken(null);
     await this.setIdToken(null);
     await this.adapter.storage.removeItem('accessToken');
-
-    this.adapter.navigate(url);
+    await this.adapter.navigate(url);
   }
 
   protected async getSignInSession(): Promise<Nullable<LogtoSignInSessionItem>> {
