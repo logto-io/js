@@ -10,19 +10,19 @@ The Logto JavaScript Capacitor SDK written in TypeScript.
 ### Using npm
 
 ```bash
-npm install @logto/capacitor
+npm install @logto/capacitor @capacitor/app @capacitor/browser @capacitor/preferences
 ```
 
 ### Using yarn
 
 ```bash
-yarn add @logto/capacitor
+yarn add @logto/capacitor @capacitor/app @capacitor/browser @capacitor/preferences
 ```
 
 ### Using pnpm
 
 ```bash
-pnpm add @logto/capacitor
+pnpm add @logto/capacitor @capacitor/app @capacitor/browser @capacitor/preferences
 ```
 
 ## What is this and how does it work?
