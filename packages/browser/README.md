@@ -1,9 +1,9 @@
-# Logto JS (Core) SDK
-[![Version](https://img.shields.io/npm/v/@logto/js)](https://www.npmjs.com/package/@logto/js)
+# Logto JS Browser SDK
+[![Version](https://img.shields.io/npm/v/@logto/browser)](https://www.npmjs.com/package/@logto/browser)
 [![Build Status](https://github.com/logto-io/js/actions/workflows/main.yml/badge.svg)](https://github.com/logto-io/js/actions/workflows/main.yml)
 [![Codecov](https://img.shields.io/codecov/c/github/logto-io/js)](https://app.codecov.io/gh/logto-io/js?branch=master)
 
-The Logto JavaScript Core SDK written in TypeScript. Check out our [docs](https://docs.logto.io/JavaScript/browser/) for more information.
+The Logto JavaScript Browser SDK written in TypeScript. Check out our [docs](https://docs.logto.io/JavaScript/browser/) for more information.
 
 We also provide [文档](https://docs.logto.io/zh-cn/sdk/JavaScript/browser/) in Simplified Chinese.
 
