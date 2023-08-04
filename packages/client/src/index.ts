@@ -195,7 +195,7 @@ export default class LogtoClient {
    * @see {@link https://docs.logto.io/docs/recipes/integrate-logto/vanilla-js/#sign-in | Sign in} for more information.
    * @see {@link InteractionMode}
    */
-  async signIn(redirectUri: string, interactionMode?: InteractionMode): Promise<unknown> {
+  async signIn(redirectUri: string, interactionMode?: InteractionMode): Promise<void> {
     const { appId: clientId, prompt, resources, scopes } = this.logtoConfig;
     const { authorizationEndpoint } = await this.getOidcConfig();
     const codeVerifier = this.adapter.generateCodeVerifier();
@@ -220,8 +220,6 @@ export default class LogtoClient {
       this.setIdToken(null),
     ]);
     await this.adapter.navigate(signInUri);
-
-    return true;
   }
 
   /**
@@ -307,7 +305,7 @@ export default class LogtoClient {
    * If the `postLogoutRedirectUri` is not specified, the user will be redirected
    * to a default page.
    */
-  async signOut(postLogoutRedirectUri?: string): Promise<unknown> {
+  async signOut(postLogoutRedirectUri?: string): Promise<void> {
     const { appId: clientId } = this.logtoConfig;
     const { endSessionEndpoint, revocationEndpoint } = await this.getOidcConfig();
     const refreshToken = await this.getRefreshToken();
@@ -334,8 +332,6 @@ export default class LogtoClient {
       this.adapter.storage.removeItem('accessToken'),
     ]);
     await this.adapter.navigate(url);
-
-    return true;
   }
 
   protected async getSignInSession(): Promise<Nullable<LogtoSignInSessionItem>> {
