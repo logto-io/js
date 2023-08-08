@@ -10,4 +10,5 @@ declare module 'http' {
 
 export type LogtoExpressConfig = LogtoConfig & {
   baseUrl: string;
+  authRoutesPrefix?: string;
 } & GetContextParameters;
