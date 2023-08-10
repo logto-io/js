@@ -63,6 +63,14 @@ describe('Express', () => {
         expect(response.header.location).toEqual(signInUrl);
         expect(signIn).toHaveBeenCalled();
       });
+
+      it('should support custom auth routes prefix', async () => {
+        const response = await testRouter(
+          handleAuthRoutes({ ...configs, authRoutesPrefix: 'custom' })
+        ).get('/custom/sign-in');
+        expect(response.header.location).toEqual(signInUrl);
+        expect(signIn).toHaveBeenCalled();
+      });
     });
 
     describe('handleSignUn', () => {

@@ -43,20 +43,21 @@ const createNodeClient = (
 export const handleAuthRoutes = (config: LogtoExpressConfig): Router => {
   // eslint-disable-next-line new-cap
   const router = Router();
+  const prefix = config.authRoutesPrefix ?? 'logto';
 
-  router.use('/logto/:action', async (request, response) => {
+  router.use(`/${prefix}/:action`, async (request, response) => {
     const { action } = request.params;
     const nodeClient = createNodeClient(request, response, config);
 
     switch (action) {
       case 'sign-in': {
-        await nodeClient.signIn(`${config.baseUrl}/logto/sign-in-callback`);
+        await nodeClient.signIn(`${config.baseUrl}/${prefix}/sign-in-callback`);
 
         break;
       }
 
       case 'sign-up': {
-        await nodeClient.signIn(`${config.baseUrl}/logto/sign-in-callback`, 'signUp');
+        await nodeClient.signIn(`${config.baseUrl}/${prefix}/sign-in-callback`, 'signUp');
 
         break;
       }
