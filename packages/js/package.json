@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@silverhand/essentials": "^2.6.2",
-    "camelcase-keys": "^7.0.1",
+    "camelcase-keys": "^9.0.0",
     "jose": "^4.13.2"
   },
   "devDependencies": {
