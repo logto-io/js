@@ -942,6 +942,9 @@ importers:
       '@rushstack/eslint-patch':
         specifier: ^1.1.0
         version: 1.1.3
+      '@tsconfig/node18':
+        specifier: ^18.2.1
+        version: 18.2.1
       '@types/node':
         specifier: ^18.0.0
         version: 18.8.5
@@ -955,8 +958,8 @@ importers:
         specifier: ^11.0.3
         version: 11.0.3(eslint-plugin-vue@9.10.0)(eslint@8.44.0)(typescript@5.0.2)
       '@vue/tsconfig':
-        specifier: ^0.1.3
-        version: 0.1.3(@types/node@18.8.5)
+        specifier: ^0.4.0
+        version: 0.4.0
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
@@ -4170,6 +4173,10 @@ packages:
     resolution: {integrity: sha512-eZxlbI8GZscaGS7kkc/trHTT5xgrjH3/1n2JDwusC9iahPKWMRvRjJSAN5mCXviuTGQ/lHnhvv8Q1YTpnfz9gA==}
     dev: true
 
+  /@tsconfig/node18@18.2.1:
+    resolution: {integrity: sha512-RDDZFuofwkcKpl8Vpj5wFbY+H53xOtqK7ckEL1sXsbPwvKwDdjQf3LkHbtt9sxIHn9nWIEwkmCwBRZ6z5TKU2A==}
+    dev: true
+
   /@tsconfig/recommended@1.0.1:
     resolution: {integrity: sha512-2xN+iGTbPBEzGSnVp/Hd64vKJCJWxsi9gfs88x4PPMyEjHJoA3o5BY9r5OLPHIZU2pAQxkSAsJFqn6itClP8mQ==}
     dev: true
@@ -4870,15 +4877,8 @@ packages:
     resolution: {integrity: sha512-BHGyyGN3Q97EZx0taMQ+OLNuZcW3d37ZEVmEAyeoA9ERdGvm9Irc/0Fua8SNyOtV1w6BS4q25wbMzJujO9HIfQ==}
     dev: true
 
-  /@vue/tsconfig@0.1.3(@types/node@18.8.5):
-    resolution: {integrity: sha512-kQVsh8yyWPvHpb8gIc9l/HIDiiVUy1amynLNpCy8p+FoCiZXCo6fQos5/097MmnNZc9AtseDsCrfkhqCrJ8Olg==}
-    peerDependencies:
-      '@types/node': '*'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-    dependencies:
-      '@types/node': 18.8.5
+  /@vue/tsconfig@0.4.0:
+    resolution: {integrity: sha512-CPuIReonid9+zOG/CGTT05FXrPYATEqoDGNrEaqS4hwcw5BUNM2FguC0mOwJD4Jr16UpRVl9N0pY3P+srIbqmg==}
     dev: true
 
   /@web3-storage/multipart-parser@1.0.0:
