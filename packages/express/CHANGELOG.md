@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.1.0
+
+### Minor Changes
+
+- 27f6a53: Support custom auth routes prefix
+
 ## 2.0.2
 
 ### Patch Changes
