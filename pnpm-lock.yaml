@@ -250,8 +250,8 @@ importers:
         specifier: ^0.0.4
         version: 0.0.4
       type-fest:
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: ^4.0.0
+        version: 4.0.0
       typescript:
         specifier: ^5.0.0
         version: 5.0.2
@@ -436,8 +436,8 @@ importers:
         specifier: ^0.0.4
         version: 0.0.4
       type-fest:
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: ^4.0.0
+        version: 4.0.0
       typescript:
         specifier: ^5.0.0
         version: 5.0.2
@@ -11554,9 +11554,9 @@ packages:
     resolution: {integrity: sha512-yGSza74xk0UG8k+pLh5oeoYirvIiWo5t0/o3zHHAO2tRDiZcxWP7fywNlXhqb6/r6sWvwi+RsyQMWhVLe4BVuA==}
     engines: {node: '>=10'}
 
-  /type-fest@3.0.0:
-    resolution: {integrity: sha512-MINvUN5ug9u+0hJDzSZNSnuKXI8M4F5Yvb6SQZ2CYqe7SgKXKOosEcU5R7tRgo85I6eAVBbkVF7TCvB4AUK2xQ==}
-    engines: {node: '>=14.16'}
+  /type-fest@4.0.0:
+    resolution: {integrity: sha512-d/oYtUnPM9zar2fqqGLYPzgcY0qUlYK0evgNVti93xpzfjGkMgZHu9Lvgrkn0rqGXTgsFRxFamzjGoD9Uo+dgw==}
+    engines: {node: '>=16'}
     dev: true
 
   /type-is@1.6.18:
