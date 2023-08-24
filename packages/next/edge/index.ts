@@ -71,7 +71,14 @@ export default class LogtoClient extends BaseClient {
       const nodeClient = this.createNodeClient(session);
 
       if (request.url) {
-        await nodeClient.handleSignInCallback(request.url);
+        // When app is running behind reverse proxy which is common for edge runtime,
+        // the `request.url`'s domain may not be expected, replace to the configured baseUrl
+        const requestUrl = new URL(request.url);
+        const callbackUrl = new URL(
+          `${requestUrl.pathname}${requestUrl.search}${requestUrl.hash}`,
+          this.config.baseUrl
+        );
+        await nodeClient.handleSignInCallback(callbackUrl.toString());
         await this.storage?.save();
       }
 

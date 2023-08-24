@@ -3,5 +3,5 @@ import { logtoClient } from '../../../libraries/logto-edge';
 export default logtoClient.handleUser({ fetchUserInfo: true });
 
 export const config = {
-  runtime: 'experimental-edge',
+  runtime: 'edge',
 };
