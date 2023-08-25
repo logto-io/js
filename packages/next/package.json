@@ -1,6 +1,6 @@
 {
   "name": "@logto/next",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "type": "module",
   "main": "./lib/src/index.cjs",
   "module": "./lib/src/index.js",
