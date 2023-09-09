@@ -1,8 +1,5 @@
-import type { GetContextParameters } from '@logto/node';
-import { type IronSession } from 'iron-session';
-
 import NextStorage from './storage';
-import type { Adapters, LogtoNextConfig } from './types';
+import type { Adapters, LogtoNextConfig, Session } from './types';
 
 export default class LogtoNextBaseClient {
   protected navigateUrl?: string;
@@ -12,7 +9,7 @@ export default class LogtoNextBaseClient {
     protected readonly adapters: Adapters
   ) {}
 
-  protected createNodeClient(session: IronSession) {
+  protected createNodeClient(session: Session) {
     this.storage = new NextStorage(session);
 
     return new this.adapters.NodeClient(this.config, {
@@ -21,22 +18,5 @@ export default class LogtoNextBaseClient {
         this.navigateUrl = url;
       },
     });
-  }
-
-  protected get ironSessionConfigs() {
-    return {
-      cookieName: `logto:${this.config.appId}`,
-      password: this.config.cookieSecret,
-      cookieOptions: {
-        secure: this.config.cookieSecure,
-        maxAge: 14 * 24 * 60 * 60,
-      },
-    };
-  }
-
-  protected async getLogtoUserFromRequest(session: IronSession, configs: GetContextParameters) {
-    const nodeClient = this.createNodeClient(session);
-
-    return nodeClient.getContext(configs);
   }
 }

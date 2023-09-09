@@ -1,20 +1,16 @@
-import type { LogtoConfig } from '@logto/node';
+import type { LogtoConfig, PersistKey } from '@logto/node';
 import type NodeClient from '@logto/node';
-import type { IronSession } from 'iron-session';
-import type { NextApiRequest } from 'next';
 
-export type NextRequestWithIronSession = NextApiRequest & { session: IronSession };
+export type SessionData = {
+  [PersistKey.AccessToken]?: string;
+  [PersistKey.IdToken]?: string;
+  [PersistKey.SignInSession]?: string;
+  [PersistKey.RefreshToken]?: string;
+};
 
-declare module 'iron-session' {
-  // Honor module definition
-  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-  interface IronSessionData {
-    accessToken?: string;
-    idToken?: string;
-    signInSession?: string;
-    refreshToken?: string;
-  }
-}
+export type Session = SessionData & {
+  save: () => Promise<void>;
+};
 
 export type LogtoNextConfig = LogtoConfig & {
   cookieSecret: string;

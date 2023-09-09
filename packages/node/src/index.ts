@@ -25,6 +25,7 @@ export {
   LogtoClientError,
   ReservedScope,
   UserScope,
+  PersistKey,
 } from '@logto/client';
 
 export default class LogtoClient extends BaseClient {

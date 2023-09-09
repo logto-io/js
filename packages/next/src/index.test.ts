@@ -36,6 +36,7 @@ jest.mock('./storage', () =>
     setItem,
     getItem,
     removeItem: jest.fn(),
+    destroy: jest.fn(),
     save: () => {
       save();
     },
