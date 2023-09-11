@@ -48,8 +48,8 @@
     "postpack": "node test.cjs"
   },
   "dependencies": {
-    "@logto/node": "workspace:^2.1.1",
-    "iron-session": "^6.3.1"
+    "@edge-runtime/cookies": "^3.4.1",
+    "@logto/node": "workspace:^2.1.1"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "^4.0.1",

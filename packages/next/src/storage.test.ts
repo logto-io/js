@@ -1,3 +1,5 @@
+import { PersistKey } from '@logto/node';
+
 import NextStorage from './storage.js';
 
 const makeSession = () => ({
@@ -10,31 +12,39 @@ describe('NextStorage', () => {
     it('should set and get item', async () => {
       const session = makeSession();
       const storage = new NextStorage(session);
-      await storage.setItem('idToken', 'value');
-      await expect(storage.getItem('idToken')).resolves.toBe('value');
+      await storage.setItem(PersistKey.IdToken, 'value');
+      await expect(storage.getItem(PersistKey.IdToken)).resolves.toBe('value');
     });
 
     it('should remove item', async () => {
       const session = makeSession();
       const storage = new NextStorage(session);
-      await storage.setItem('idToken', 'value');
-      await storage.removeItem('idToken');
-      await expect(storage.getItem('idToken')).resolves.toBeNull();
+      await storage.setItem(PersistKey.IdToken, 'value');
+      await storage.removeItem(PersistKey.IdToken);
+      await expect(storage.getItem(PersistKey.IdToken)).resolves.toBeNull();
     });
 
     it('should set and get item (signInSession)', async () => {
       const session = makeSession();
       const storage = new NextStorage(session);
-      await storage.setItem('signInSession', 'value');
-      await expect(storage.getItem('signInSession')).resolves.toBe('value');
+      await storage.setItem(PersistKey.SignInSession, 'value');
+      await expect(storage.getItem(PersistKey.SignInSession)).resolves.toBe('value');
     });
 
     it('should remove item (signInSession)', async () => {
       const session = makeSession();
       const storage = new NextStorage(session);
-      await storage.setItem('signInSession', 'value');
-      await storage.removeItem('signInSession');
-      await expect(storage.getItem('signInSession')).resolves.toBeNull();
+      await storage.setItem(PersistKey.SignInSession, 'value');
+      await storage.removeItem(PersistKey.SignInSession);
+      await expect(storage.getItem(PersistKey.SignInSession)).resolves.toBeNull();
+    });
+
+    it('should destroy', async () => {
+      const session = makeSession();
+      const storage = new NextStorage(session);
+      await storage.setItem(PersistKey.SignInSession, 'value');
+      await storage.destroy();
+      await expect(storage.getItem(PersistKey.SignInSession)).resolves.toBeNull();
     });
   });
 });

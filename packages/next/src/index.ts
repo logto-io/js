@@ -1,12 +1,16 @@
+import * as crypto from 'crypto';
+import { type IncomingMessage, type ServerResponse } from 'http';
+
 import NodeClient, { type GetContextParameters, type InteractionMode } from '@logto/node';
-import { withIronSessionApiRoute, withIronSessionSsr } from 'iron-session/next';
 import {
   type GetServerSidePropsResult,
   type GetServerSidePropsContext,
   type NextApiHandler,
 } from 'next';
+import { type NextApiRequestCookies } from 'next/dist/server/api-utils/index.js';
 
 import LogtoNextBaseClient from './client.js';
+import { createSession } from './session.js';
 import type { LogtoNextConfig } from './types.js';
 
 export { ReservedScope, UserScope } from '@logto/node';
@@ -20,43 +24,46 @@ export default class LogtoClient extends LogtoNextBaseClient {
     });
   }
 
-  handleSignIn = (
-    redirectUri = `${this.config.baseUrl}/api/logto/sign-in-callback`,
-    interactionMode?: InteractionMode
-  ): NextApiHandler =>
-    withIronSessionApiRoute(async (request, response) => {
-      const nodeClient = this.createNodeClient(request.session);
+  handleSignIn =
+    (
+      redirectUri = `${this.config.baseUrl}/api/logto/sign-in-callback`,
+      interactionMode?: InteractionMode
+    ): NextApiHandler =>
+    async (request, response) => {
+      const nodeClient = await this.createNodeClientFromNextApi(request, response);
       await nodeClient.signIn(redirectUri, interactionMode);
       await this.storage?.save();
 
       if (this.navigateUrl) {
         response.redirect(this.navigateUrl);
       }
-    }, this.ironSessionConfigs);
+    };
 
-  handleSignInCallback = (redirectTo = this.config.baseUrl): NextApiHandler =>
-    withIronSessionApiRoute(async (request, response) => {
-      const nodeClient = this.createNodeClient(request.session);
+  handleSignInCallback =
+    (redirectTo = this.config.baseUrl): NextApiHandler =>
+    async (request, response) => {
+      const nodeClient = await this.createNodeClientFromNextApi(request, response);
 
       if (request.url) {
         await nodeClient.handleSignInCallback(`${this.config.baseUrl}${request.url}`);
         await this.storage?.save();
         response.redirect(redirectTo);
       }
-    }, this.ironSessionConfigs);
+    };
 
-  handleSignOut = (redirectUri = this.config.baseUrl): NextApiHandler =>
-    withIronSessionApiRoute(async (request, response) => {
-      const nodeClient = this.createNodeClient(request.session);
+  handleSignOut =
+    (redirectUri = this.config.baseUrl): NextApiHandler =>
+    async (request, response) => {
+      const nodeClient = await this.createNodeClientFromNextApi(request, response);
       await nodeClient.signOut(redirectUri);
 
-      request.session.destroy();
+      await this.storage?.destroy();
       await this.storage?.save();
 
       if (this.navigateUrl) {
         response.redirect(this.navigateUrl);
       }
-    }, this.ironSessionConfigs);
+    };
 
   handleUser = (configs?: GetContextParameters) =>
     this.withLogtoApiRoute((request, response) => {
@@ -91,30 +98,61 @@ export default class LogtoClient extends LogtoNextBaseClient {
       response.status(404).end();
     };
 
-  withLogtoApiRoute = (
-    handler: NextApiHandler,
-    config: GetContextParameters = {}
-  ): NextApiHandler =>
-    withIronSessionApiRoute(async (request, response) => {
-      const user = await this.getLogtoUserFromRequest(request.session, config);
+  withLogtoApiRoute =
+    (handler: NextApiHandler, config: GetContextParameters = {}): NextApiHandler =>
+    async (request, response) => {
+      const nodeClient = await this.createNodeClientFromNextApi(request, response);
+      const user = await nodeClient.getContext(config);
 
       // eslint-disable-next-line @silverhand/fp/no-mutating-methods
       Object.defineProperty(request, 'user', { enumerable: true, get: () => user });
 
       return handler(request, response);
-    }, this.ironSessionConfigs);
+    };
 
-  withLogtoSsr = <P extends Record<string, unknown> = Record<string, unknown>>(
-    handler: (
-      context: GetServerSidePropsContext
-    ) => GetServerSidePropsResult<P> | Promise<GetServerSidePropsResult<P>>,
-    configs: GetContextParameters = {}
-  ) =>
-    withIronSessionSsr(async (context) => {
-      const user = await this.getLogtoUserFromRequest(context.req.session, configs);
+  withLogtoSsr =
+    <P extends Record<string, unknown> = Record<string, unknown>>(
+      handler: (
+        context: GetServerSidePropsContext
+      ) => GetServerSidePropsResult<P> | Promise<GetServerSidePropsResult<P>>,
+      configs: GetContextParameters = {}
+    ) =>
+    async (context: GetServerSidePropsContext) => {
+      const nodeClient = await this.createNodeClientFromNextApi(context.req, context.res);
+      const user = await nodeClient.getContext(configs);
+
       // eslint-disable-next-line @silverhand/fp/no-mutating-methods
       Object.defineProperty(context.req, 'user', { enumerable: true, get: () => user });
 
       return handler(context);
-    }, this.ironSessionConfigs);
+    };
+
+  private async createNodeClientFromNextApi(
+    request: IncomingMessage & {
+      cookies: NextApiRequestCookies;
+    },
+    response: ServerResponse
+  ): Promise<NodeClient> {
+    const cookieName = `logto:${this.config.appId}`;
+
+    return super.createNodeClient(
+      await createSession(
+        {
+          secret: this.config.cookieSecret,
+          crypto,
+        },
+        request.cookies[cookieName] ?? '',
+        (value) => {
+          const secure = this.config.cookieSecure;
+          const maxAge = 14 * 3600 * 24;
+          response.setHeader(
+            'Set-Cookie',
+            `${cookieName}=${value}; Path=/; Max-Age=${maxAge}; ${
+              secure ? 'Secure; SameSite=None' : ''
+            }`
+          );
+        }
+      )
+    );
+  }
 }

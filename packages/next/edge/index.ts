@@ -1,9 +1,10 @@
+import { RequestCookies, ResponseCookies } from '@edge-runtime/cookies';
 import { type GetContextParameters, type InteractionMode } from '@logto/node';
 import NodeClient from '@logto/node/edge';
-import { getIronSession } from 'iron-session/edge';
 import { type NextRequest } from 'next/server';
 
 import BaseClient from '../src/client';
+import { createSession } from '../src/session';
 import type { LogtoNextConfig } from '../src/types.js';
 
 export type { LogtoContext, InteractionMode } from '@logto/node';
@@ -20,15 +21,15 @@ export default class LogtoClient extends BaseClient {
       redirectUri = `${this.config.baseUrl}/api/logto/sign-in-callback`,
       interactionMode?: InteractionMode
     ) =>
-    async (request: NextRequest) => {
-      const response = new Response(null, {
-        status: 307,
-      });
-      const session = await getIronSession(request, response, this.ironSessionConfigs);
-
-      const nodeClient = this.createNodeClient(session);
+    async (request: Request) => {
+      const { nodeClient, headers } = await this.createNodeClientFromEdgeRequest(request);
       await nodeClient.signIn(redirectUri, interactionMode);
       await this.storage?.save();
+
+      const response = new Response(null, {
+        headers,
+        status: 307,
+      });
 
       if (this.navigateUrl) {
         response.headers.append('Location', this.navigateUrl);
@@ -40,15 +41,15 @@ export default class LogtoClient extends BaseClient {
   handleSignOut =
     (redirectUri = this.config.baseUrl) =>
     async (request: NextRequest) => {
+      const { nodeClient, headers } = await this.createNodeClientFromEdgeRequest(request);
+      await nodeClient.signOut(redirectUri);
+      await this.storage?.destroy();
+      await this.storage?.save();
+
       const response = new Response(null, {
+        headers,
         status: 307,
       });
-      const session = await getIronSession(request, response, this.ironSessionConfigs);
-
-      const nodeClient = this.createNodeClient(session);
-      await nodeClient.signOut(redirectUri);
-      session.destroy();
-      await this.storage?.save();
 
       if (this.navigateUrl) {
         response.headers.append('Location', this.navigateUrl);
@@ -60,15 +61,7 @@ export default class LogtoClient extends BaseClient {
   handleSignInCallback =
     (redirectTo = this.config.baseUrl) =>
     async (request: NextRequest) => {
-      const response = new Response(null, {
-        status: 307,
-        headers: {
-          Location: redirectTo,
-        },
-      });
-      const session = await getIronSession(request, response, this.ironSessionConfigs);
-
-      const nodeClient = this.createNodeClient(session);
+      const { nodeClient, headers } = await this.createNodeClientFromEdgeRequest(request);
 
       if (request.url) {
         // When app is running behind reverse proxy which is common for edge runtime,
@@ -82,6 +75,11 @@ export default class LogtoClient extends BaseClient {
         await this.storage?.save();
       }
 
+      const response = new Response(null, {
+        status: 307,
+        headers,
+      });
+      response.headers.append('Location', redirectTo);
       return response;
     };
 
@@ -96,9 +94,34 @@ export default class LogtoClient extends BaseClient {
   };
 
   getLogtoContext = async (request: NextRequest, config: GetContextParameters = {}) => {
-    const session = await getIronSession(request, new Response(), this.ironSessionConfigs);
-    const context = await this.getLogtoUserFromRequest(session, config);
+    const { nodeClient } = await this.createNodeClientFromEdgeRequest(request);
+    const context = await nodeClient.getContext();
 
     return context;
   };
+
+  private async createNodeClientFromEdgeRequest(request: Request) {
+    const cookieName = `logto:${this.config.appId}`;
+    const cookies = new RequestCookies(request.headers);
+    const headers = new Headers();
+    const responseCookies = new ResponseCookies(headers);
+
+    const nodeClient = super.createNodeClient(
+      await createSession(
+        {
+          secret: this.config.cookieSecret,
+          crypto,
+        },
+        cookies.get(cookieName)?.value ?? '',
+        (value) => {
+          responseCookies.set(cookieName, value, {
+            maxAge: 14 * 3600 * 24,
+            secure: this.config.cookieSecure,
+          });
+        }
+      )
+    );
+
+    return { nodeClient, headers };
+  }
 }
