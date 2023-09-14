@@ -246,8 +246,9 @@ export default class LogtoClient {
    * Handle the sign-in callback by parsing the authorization code from the
    * callback URI and exchanging it for the tokens.
    *
-   * @param callbackUri The callback URI that the user is redirected to after the sign-in flow is completed.
-   * This URI must match the redirect URI specified in {@link signIn}.
+   * @param callbackUri The callback URI, including the search params, that the user is redirected to after the sign-in flow is completed.
+   * The origin and pathname of this URI must match the origin and pathname of the redirect URI specified in {@link signIn}.
+   * In many cases you'll probably end up passing `window.location.href` as the argument to this function.
    * @throws LogtoClientError if the sign-in session is not found.
    */
   async handleSignInCallback(callbackUri: string) {
