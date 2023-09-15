@@ -28,12 +28,12 @@ The monorepo for SDKs and working samples written in JavaScript (Well, mostly in
 
 | Name                                          | Description                                                              |
 | --------------------------------------------- | ------------------------------------------------------------------------ |
-| [browser-sample](./browser-sample/)           | A sample of using Logto browser SDK.                                     |
-| [express-sample](./express-sample/)           | A sample of using Logto Express SDK.                                     |
-| [next-app-dir-sample](./next-app-dir-sample/) | A sample of using Logto Next.js SDK for Next.js app directory structure. |
-| [next-sample](./next-sample/)                 | A sample of using Logto Next.js SDK.                                     |
-| [react-sample](./react-sample/)               | A sample of using Logto React SDK.                                       |
-| [vue-sample](./vue-sample/)                   | A sample of using Logto Vue SDK.                                         |
+| [browser-sample](./packages/browser-sample/)           | A sample of using Logto browser SDK.                                     |
+| [express-sample](./packages/express-sample/)           | A sample of using Logto Express SDK.                                     |
+| [next-app-dir-sample](./packages/next-app-dir-sample/) | A sample of using Logto Next.js SDK for Next.js app directory structure. |
+| [next-sample](./packages/next-sample/)                 | A sample of using Logto Next.js SDK.                                     |
+| [react-sample](./packages/react-sample/)               | A sample of using Logto React SDK.                                       |
+| [vue-sample](./packages/vue-sample/)                   | A sample of using Logto Vue SDK.                                         |
 
 ## Resources
 
