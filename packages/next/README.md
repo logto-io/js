@@ -5,8 +5,6 @@
 
 The Logto Next.js SDK written in TypeScript. Check out our [integration guide](https://docs.logto.io/docs/recipes/integrate-logto/next-js) or [docs](https://docs.logto.io/sdk/JavaScript/next/) for more information.
 
-We also provide [集成指南](https://docs.logto.io/zh-cn/docs/recipes/integrate-logto/next-js/) and [文档](https://docs.logto.io/zh-cn/sdk/JavaScript/next/) in Simplified Chinese.
-
 ## Installation
 
 ### Using npm
