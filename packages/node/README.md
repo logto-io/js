@@ -6,8 +6,6 @@
 
 The Logto Node.js SDK written in TypeScript. Check out our [docs](https://docs.logto.io/sdk/JavaScript/node/) for more information.
 
-We also provide [文档](https://docs.logto.io/zh-cn/sdk/JavaScript/node/) in Simplified Chinese.
-
 ## Installation
 
 ### Using npm

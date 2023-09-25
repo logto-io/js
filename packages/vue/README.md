@@ -5,8 +5,6 @@
 
 The Logto Vue SDK written in TypeScript. Check out our [integration guide](https://docs.logto.io/docs/recipes/integrate-logto/vue) or [docs](https://docs.logto.io/sdk/JavaScript/vue/) for more information.
 
-We also provide [集成指南](https://docs.logto.io/zh-cn/docs/recipes/integrate-logto/vue/) and [文档](https://docs.logto.io/zh-cn/sdk/JavaScript/vue/) in Simplified Chinese.
-
 ## Installation
 
 ### Using npm

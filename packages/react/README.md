@@ -5,8 +5,6 @@
 
 The Logto React SDK written in TypeScript. Check out our [integration guide](https://docs.logto.io/docs/recipes/integrate-logto/react) or [docs](https://docs.logto.io/sdk/JavaScript/react/) for more information.
 
-We also provide [集成指南](https://docs.logto.io/zh-cn/docs/recipes/integrate-logto/react/) and [文档](https://docs.logto.io/zh-cn/sdk/JavaScript/react/) in Simplified Chinese.
-
 ## Installation
 
 ### Using npm
