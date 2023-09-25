@@ -5,8 +5,6 @@
 
 The Logto JavaScript Client SDK written in TypeScript. Check out our [docs](https://docs.logto.io/sdk/JavaScript/client/) for more information.
 
-We also provide [文档](https://docs.logto.io/zh-cn/sdk/JavaScript/sdk/client/) in Simplified Chinese.
-
 ## Installation
 
 ### Using npm
