@@ -395,7 +395,10 @@ export default class LogtoClient {
     });
 
     await this.saveAccessTokenMap();
-    await this.setRefreshToken(refreshToken);
+
+    if (refreshToken) {
+      await this.setRefreshToken(refreshToken);
+    }
 
     if (idToken) {
       await this.verifyIdToken(idToken);

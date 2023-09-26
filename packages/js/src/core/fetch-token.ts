@@ -33,7 +33,7 @@ export type CodeTokenResponse = KeysToCamelCase<SnakeCaseCodeTokenResponse>;
 
 type SnakeCaseRefreshTokenTokenResponse = {
   access_token: string;
-  refresh_token: string;
+  refresh_token?: string;
   id_token?: string;
   scope: string;
   expires_in: number;
