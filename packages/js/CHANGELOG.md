@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.1.3
+
+### Patch Changes
+
+- 05b9d3e: update "RefreshTokenTokenResponse" type in core JS SDK and set "refresh_token" field as optional
+
 ## 2.1.2
 
 ### Patch Changes

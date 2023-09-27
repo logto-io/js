@@ -1,5 +1,20 @@
 # Change Log
 
+## 2.2.3
+
+### Patch Changes
+
+- 05b9d3e: update "RefreshTokenTokenResponse" type in core JS SDK and set "refresh_token" field as optional
+- f9ff6f4: Align the js SDK error type exports.
+
+  - @logto/react: add `LogtoRequestError` export
+  - @logto/vue: add `LogtoRequestError` export
+  - @logto/express: add logto errors export
+  - @logto/next: add logto errors export
+
+- Updated dependencies [05b9d3e]
+  - @logto/js@2.1.3
+
 ## 2.2.2
 
 ### Patch Changes
