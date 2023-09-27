@@ -1,6 +1,6 @@
 {
   "name": "@logto/vue",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "type": "module",
   "main": "./lib/index.cjs",
   "module": "./lib/index.js",
@@ -31,7 +31,7 @@
     "prepack": "pnpm build && pnpm test"
   },
   "dependencies": {
-    "@logto/browser": "workspace:^2.0.0"
+    "@logto/browser": "workspace:^2.1.2"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "^4.0.1",

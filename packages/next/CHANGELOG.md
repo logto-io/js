@@ -1,5 +1,19 @@
 # Change Log
 
+## 2.1.4
+
+### Patch Changes
+
+- f9ff6f4: Align the js SDK error type exports.
+
+  - @logto/react: add `LogtoRequestError` export
+  - @logto/vue: add `LogtoRequestError` export
+  - @logto/express: add logto errors export
+  - @logto/next: add logto errors export
+
+- Updated dependencies [f9ff6f4]
+  - @logto/node@2.1.2
+
 ## 2.1.3
 
 ### Patch Changes

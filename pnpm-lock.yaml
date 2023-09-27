@@ -51,7 +51,7 @@ importers:
   packages/browser:
     dependencies:
       '@logto/client':
-        specifier: workspace:^2.2.2
+        specifier: workspace:^2.2.3
         version: link:../client
       '@silverhand/essentials':
         specifier: ^2.6.2
@@ -198,7 +198,7 @@ importers:
   packages/client:
     dependencies:
       '@logto/js':
-        specifier: workspace:^2.1.2
+        specifier: workspace:^2.1.3
         version: link:../js
       '@silverhand/essentials':
         specifier: ^2.6.2
@@ -259,7 +259,7 @@ importers:
   packages/express:
     dependencies:
       '@logto/node':
-        specifier: workspace:^2.1.1
+        specifier: workspace:^2.1.2
         version: link:../node
     devDependencies:
       '@silverhand/eslint-config':
@@ -448,7 +448,7 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       '@logto/node':
-        specifier: workspace:^2.1.1
+        specifier: workspace:^2.1.2
         version: link:../node
     devDependencies:
       '@silverhand/eslint-config':
@@ -628,7 +628,7 @@ importers:
   packages/node:
     dependencies:
       '@logto/client':
-        specifier: workspace:^2.1.0
+        specifier: workspace:^2.2.3
         version: link:../client
       '@silverhand/essentials':
         specifier: ^2.6.2
@@ -683,7 +683,7 @@ importers:
   packages/react:
     dependencies:
       '@logto/browser':
-        specifier: workspace:^2.1.0
+        specifier: workspace:^2.1.2
         version: link:../browser
       '@silverhand/essentials':
         specifier: ^2.6.2
@@ -884,7 +884,7 @@ importers:
   packages/vue:
     dependencies:
       '@logto/browser':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.1.2
         version: link:../browser
     devDependencies:
       '@silverhand/eslint-config':
