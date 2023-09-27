@@ -21,10 +21,9 @@ export type {
 
 export {
   LogtoError,
-  OidcError,
-  Prompt,
   LogtoRequestError,
   LogtoClientError,
+  Prompt,
   ReservedScope,
   UserScope,
 } from '@logto/client';

@@ -8,9 +8,15 @@ import { LogtoExpressError } from './errors.js';
 import ExpressStorage from './storage.js';
 import type { LogtoExpressConfig } from './types.js';
 
-export { ReservedScope, UserScope } from '@logto/node';
+export {
+  ReservedScope,
+  UserScope,
+  LogtoError,
+  LogtoClientError,
+  LogtoRequestError,
+} from '@logto/node';
 
-export type { LogtoContext, InteractionMode } from '@logto/node';
+export type { LogtoContext, InteractionMode, LogtoErrorCode } from '@logto/node';
 export type { LogtoExpressConfig } from './types.js';
 
 export type Middleware = (

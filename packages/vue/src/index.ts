@@ -20,7 +20,7 @@ export type {
 export {
   LogtoError,
   LogtoClientError,
-  OidcError,
+  LogtoRequestError,
   Prompt,
   ReservedScope,
   UserScope,
