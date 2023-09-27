@@ -21,6 +21,7 @@ export {
   LogtoError,
   LogtoClientError,
   LogtoRequestError,
+  OidcError,
   Prompt,
   ReservedScope,
   UserScope,

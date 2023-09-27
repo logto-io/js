@@ -36,7 +36,14 @@ import { memoize } from './utils/memoize.js';
 import { once } from './utils/once.js';
 
 export type { IdTokenClaims, LogtoErrorCode, UserInfoResponse, InteractionMode } from '@logto/js';
-export { LogtoError, LogtoRequestError, Prompt, ReservedScope, UserScope } from '@logto/js';
+export {
+  LogtoError,
+  LogtoRequestError,
+  OidcError,
+  Prompt,
+  ReservedScope,
+  UserScope,
+} from '@logto/js';
 export * from './errors.js';
 export type { Storage, StorageKey, ClientAdapter } from './adapter/index.js';
 export { PersistKey, CacheKey } from './adapter/index.js';
