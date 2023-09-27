@@ -17,10 +17,10 @@ export type {
 
 export {
   LogtoError,
-  OidcError,
-  Prompt,
   LogtoRequestError,
   LogtoClientError,
+  OidcError,
+  Prompt,
   ReservedScope,
   UserScope,
 } from '@logto/client';
