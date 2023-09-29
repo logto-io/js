@@ -104,15 +104,18 @@ type SessionConfigs = {
 export const createSession = async (
   { secret, crypto }: SessionConfigs,
   cookie: string,
-  setCookie: (value: string) => void
+  setCookie?: (value: string) => void
 ): Promise<Session> => {
   const data = await unwrapSession(cookie, secret, crypto);
+
+  const getValues = async () => wrapSession(session, secret, crypto);
 
   const session: Session = {
     ...data,
     save: async () => {
-      setCookie(await wrapSession(session, secret, crypto));
+      setCookie?.(await getValues());
     },
+    getValues,
   };
 
   return session;

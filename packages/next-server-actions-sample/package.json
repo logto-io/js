@@ -1,35 +1,33 @@
 {
-  "name": "@logto/next-app-dir-sample",
+  "name": "next-server-actions-sample",
   "version": "2.1.0",
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "next build",
     "dev": "next dev",
+    "build": "next build",
     "start": "next start"
   },
   "dependencies": {
-    "@logto/next": "workspace:^2.1.0",
+    "@logto/next": "workspace:^",
     "next": "^13.5.3",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "server-only": "^0.0.1"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@silverhand/eslint-config": "^4.0.1",
-    "@silverhand/eslint-config-react": "^4.0.1",
     "@silverhand/ts-config": "^4.0.0",
     "@silverhand/ts-config-react": "^4.0.0",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
-    "@types/react-router-dom": "^5.3.3",
-    "eslint": "^8.44.0",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "eslint": "^8.50.0",
+    "eslint-config-next": "latest",
     "lint-staged": "^14.0.0",
     "postcss": "^8.4.6",
     "postcss-modules": "^6.0.0",
     "prettier": "^3.0.0",
     "stylelint": "^15.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "latest"
   },
   "stylelint": {
     "extends": "@silverhand/eslint-config-react/.stylelintrc"
