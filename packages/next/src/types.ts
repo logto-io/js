@@ -10,6 +10,7 @@ export type SessionData = {
 
 export type Session = SessionData & {
   save: () => Promise<void>;
+  getValues?: () => Promise<string>;
 };
 
 export type LogtoNextConfig = LogtoConfig & {
