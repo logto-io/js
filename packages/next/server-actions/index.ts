@@ -17,7 +17,7 @@ export default class LogtoClient extends BaseClient {
   }
 
   /**
-   * Init sign in and return the url to redirect to Logto
+   * Init sign-in and return the url to redirect to Logto.
    *
    * @param cookie the raw cookie string
    * @param redirectUri the uri (callbackUri) to redirect to after sign in
@@ -44,7 +44,7 @@ export default class LogtoClient extends BaseClient {
   }
 
   /**
-   * Init sign out and return the url to redirect to Logto
+   * Init sign-out and return the url to redirect to Logto.
    *
    * @param cookie the raw cookie string
    * @param redirectUri the uri (postSignOutUri) to redirect to after sign out
@@ -63,7 +63,7 @@ export default class LogtoClient extends BaseClient {
   }
 
   /**
-   * Handle sign in callback from Logto
+   * Handle sign-in callback from Logto.
    *
    * @param cookie the raw cookie string
    * @param callbackUrl the uri (callbackUri) to redirect to after sign in, should match the one used in handleSignIn
@@ -77,7 +77,7 @@ export default class LogtoClient extends BaseClient {
   }
 
   /**
-   * Get Logto context from cookies
+   * Get Logto context from cookies.
    *
    * @param cookie the raw cookie string
    * @param config additional configs of GetContextParameters
