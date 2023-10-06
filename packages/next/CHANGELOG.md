@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.2.0
+
+### Minor Changes
+
+- 5cc1342: Add Next.js Server Actions support
+
 ## 2.1.4
 
 ### Patch Changes
