@@ -32,7 +32,7 @@
   "dependencies": {
     "@silverhand/essentials": "^2.6.2",
     "camelcase-keys": "^7.0.1",
-    "jose": "^4.13.2"
+    "jose": "^5.0.0"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "^4.0.1",
