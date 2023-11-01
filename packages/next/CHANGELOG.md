@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.2.1
+
+### Patch Changes
+
+- 1fb7878: Fix Next.js edge SDK's getContext, pass config to get access token
+
 ## 2.2.0
 
 ### Minor Changes
