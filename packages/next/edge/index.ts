@@ -95,7 +95,7 @@ export default class LogtoClient extends BaseClient {
 
   getLogtoContext = async (request: NextRequest, config: GetContextParameters = {}) => {
     const { nodeClient } = await this.createNodeClientFromEdgeRequest(request);
-    const context = await nodeClient.getContext();
+    const context = await nodeClient.getContext(config);
 
     return context;
   };
