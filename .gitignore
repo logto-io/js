@@ -31,3 +31,4 @@ cache
 .history
 .vercel
 .next
+*.local
