@@ -22,7 +22,7 @@
     "@types/react-dom": "latest",
     "eslint": "^8.50.0",
     "eslint-config-next": "latest",
-    "lint-staged": "^14.0.0",
+    "lint-staged": "^15.0.0",
     "postcss": "^8.4.6",
     "postcss-modules": "^6.0.0",
     "prettier": "^3.0.0",

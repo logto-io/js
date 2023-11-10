@@ -25,7 +25,7 @@
     "@vue/tsconfig": "^0.4.0",
     "eslint": "^8.44.0",
     "eslint-plugin-vue": "^9.10.0",
-    "lint-staged": "^14.0.0",
+    "lint-staged": "^15.0.0",
     "prettier": "^3.0.0",
     "typescript": "^5.0.0",
     "vite": "^4.2.3",
