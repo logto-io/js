@@ -1,5 +1,5 @@
 import { useLogto } from '@logto/react';
-import { useQuery, QueryClient, QueryClientProvider } from 'react-query';
+import { useQuery, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { endpoint } from '../../consts';
 
@@ -41,7 +41,7 @@ const ReactQuery = () => {
 
 const Content = () => {
   const api = useApi();
-  const query = useQuery('userinfo', async () => {
+  const query = useQuery(['userinfo'], async () => {
     const response = await api(new URL('/oidc/me', endpoint));
     return response.json();
   });
