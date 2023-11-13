@@ -1,7 +1,7 @@
 'use client';
 
 type Props = {
-  isAuthenticated: boolean;
+  readonly isAuthenticated: boolean;
 };
 
 const Nav = ({ isAuthenticated }: Props) => {

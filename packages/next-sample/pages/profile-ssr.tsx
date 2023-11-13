@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { logtoClient } from '../libraries/logto';
 
 type Props = {
-  user: LogtoContext;
+  readonly user: LogtoContext;
 };
 
 const ProfileSsr = ({ user }: Props) => {

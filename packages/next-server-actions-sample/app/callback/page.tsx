@@ -5,7 +5,7 @@ import { handleSignIn } from "../../libraries/logto";
 import { useEffect } from "react";
 
 type Props = {
-  searchParams: Record<string, string>;
+  readonly searchParams: Record<string, string>;
 };
 
 export default function Callback({ searchParams }: Props) {
