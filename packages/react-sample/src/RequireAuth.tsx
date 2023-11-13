@@ -1,9 +1,10 @@
 import { useLogto } from '@logto/react';
 import { useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
 
 import { redirectUrl } from './consts';
 
-const RequireAuth = ({ children }: { children: JSX.Element }) => {
+const RequireAuth = () => {
   const { isAuthenticated, isLoading, signIn } = useLogto();
 
   useEffect(() => {
@@ -12,7 +13,7 @@ const RequireAuth = ({ children }: { children: JSX.Element }) => {
     }
   }, [isAuthenticated, isLoading, signIn]);
 
-  return isAuthenticated ? children : null;
+  return isAuthenticated ? <Outlet /> : <p>Not authenticated</p>;
 };
 
 export default RequireAuth;
