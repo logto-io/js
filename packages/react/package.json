@@ -57,7 +57,10 @@
     "react": ">=16.8.0"
   },
   "eslintConfig": {
-    "extends": "@silverhand/react"
+    "extends": "@silverhand/react",
+    "rules": {
+      "react/prefer-read-only-props": "off"
+    }
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "publishConfig": {

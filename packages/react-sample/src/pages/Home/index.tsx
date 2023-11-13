@@ -21,7 +21,7 @@ const Home = () => {
 
   return (
     <div className={styles.container}>
-      <h3>Logto React Sample</h3>
+      <h3>Logto React sample</h3>
       {!isAuthenticated && (
         <>
           <button
@@ -30,7 +30,7 @@ const Home = () => {
               void signIn(redirectUrl);
             }}
           >
-            Sign In
+            Sign in
           </button>
           <button
             type="button"
@@ -38,7 +38,7 @@ const Home = () => {
               void signIn(redirectUrl, 'signUp');
             }}
           >
-            Sign Up
+            Sign up
           </button>
         </>
       )}
@@ -49,7 +49,7 @@ const Home = () => {
             void signOut(baseUrl);
           }}
         >
-          Sign Out
+          Sign out
         </button>
       )}
       {isAuthenticated && user && (
@@ -70,7 +70,14 @@ const Home = () => {
               ))}
             </tbody>
           </table>
-          <Link to="/protected-resource">View Protected Resource</Link>
+          <ul>
+            <li>
+              <Link to="/protected">View protected resource</Link>
+            </li>
+            <li>
+              <Link to="/protected/react-query">View user info via react-query</Link>
+            </li>
+          </ul>
         </>
       )}
     </div>
