@@ -90,6 +90,60 @@ describe('LogtoClient', () => {
       expect(accessToken).toEqual('access_token_value');
     });
 
+    it('should reuse the Promise if there is an ongoing request', async () => {
+      requester.mockClear().mockImplementation(async () => {
+        // Add a delay to simulate a slow network.
+        await new Promise((resolve) => {
+          setTimeout(resolve, 100);
+        });
+        return {
+          accessToken: 'access_token_value',
+          expiresIn: 3600,
+        };
+      });
+
+      const logtoClient = createClient(
+        undefined,
+        new MockedStorage({
+          idToken: 'id_token_value',
+          refreshToken: 'refresh_token_value',
+        })
+      );
+      const accessTokens = await Promise.all([
+        logtoClient.getAccessToken(),
+        logtoClient.getAccessToken(),
+        logtoClient.getAccessToken(),
+      ]);
+
+      expect(requester).toHaveBeenCalledTimes(1);
+      expect(accessTokens).toEqual([
+        'access_token_value',
+        'access_token_value',
+        'access_token_value',
+      ]);
+
+      logtoClient.getAccessTokenMap().clear();
+      requester.mockImplementationOnce(async () => {
+        return {
+          accessToken: 'another_access_token_value',
+          expiresIn: 3600,
+        };
+      });
+
+      const anotherAccessTokens = await Promise.all([
+        logtoClient.getAccessToken(),
+        logtoClient.getAccessToken(),
+        logtoClient.getAccessToken(),
+      ]);
+
+      expect(requester).toHaveBeenCalledTimes(2);
+      expect(anotherAccessTokens).toEqual([
+        'another_access_token_value',
+        'another_access_token_value',
+        'another_access_token_value',
+      ]);
+    });
+
     it('should delete expired access token once', async () => {
       requester.mockClear().mockImplementation(async () => ({
         accessToken: 'access_token_value',

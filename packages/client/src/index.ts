@@ -58,8 +58,24 @@ export * from './types/index.js';
  * client behavior for different environments.
  */
 export default class LogtoClient {
-  protected readonly logtoConfig: LogtoConfig;
-  protected readonly getOidcConfig = memoize(this.#getOidcConfig);
+  readonly logtoConfig: LogtoConfig;
+  readonly getOidcConfig = memoize(this.#getOidcConfig);
+  /**
+   * Get the access token from the storage.
+   *
+   * - If the access token has expired, it will try to fetch a new one using the Refresh Token.
+   * - If there's an ongoing Promise to fetch the access token, it will return the Promise.
+   *
+   * If you want to get the access token claims, use {@link getAccessTokenClaims} instead.
+   *
+   * @param resource The resource that the access token is granted for. If not
+   * specified, the access token will be used for OpenID Connect or the default
+   * resource, as specified in the Logto Console.
+   * @returns The access token string.
+   * @throws LogtoClientError if the user is not authenticated.
+   */
+  readonly getAccessToken = memoize(this.#getAccessToken);
+
   protected readonly getJwtVerifyGetKey = once(this.#getJwtVerifyGetKey);
   protected readonly adapter: ClientAdapterInstance;
   protected readonly accessTokenMap = new Map<string, AccessToken>();
@@ -98,41 +114,6 @@ export default class LogtoClient {
   }
 
   /**
-   * Get the Access Token from the storage. If the Access Token has expired, it
-   * will try to fetch a new one using the Refresh Token.
-   *
-   * If you want to get the Access Token claims, use {@link getAccessTokenClaims} instead.
-   *
-   * @param resource The resource that the Access Token is granted for. If not
-   * specified, the Access Token will be used for OpenID Connect or the default
-   * resource, as specified in the Logto Console.
-   * @returns The Access Token string.
-   * @throws LogtoClientError if the user is not authenticated.
-   */
-  async getAccessToken(resource?: string): Promise<string> {
-    if (!(await this.getIdToken())) {
-      throw new LogtoClientError('not_authenticated');
-    }
-
-    const accessTokenKey = buildAccessTokenKey(resource);
-    const accessToken = this.accessTokenMap.get(accessTokenKey);
-
-    if (accessToken && accessToken.expiresAt > Date.now() / 1000) {
-      return accessToken.token;
-    }
-
-    // Since the access token has expired, delete it from the map.
-    if (accessToken) {
-      this.accessTokenMap.delete(accessTokenKey);
-    }
-
-    /**
-     * Need to fetch a new access token using refresh token.
-     */
-    return this.getAccessTokenByRefreshToken(resource);
-  }
-
-  /**
    * Get the ID Token claims.
    */
   async getIdTokenClaims(): Promise<IdTokenClaims> {
@@ -146,10 +127,10 @@ export default class LogtoClient {
   }
 
   /**
-   * Get the Access Token claims for the specified resource.
+   * Get the access token claims for the specified resource.
    *
-   * @param resource The resource that the Access Token is granted for. If not
-   * specified, the Access Token will be used for OpenID Connect or the default
+   * @param resource The resource that the access token is granted for. If not
+   * specified, the access token will be used for OpenID Connect or the default
    * resource, as specified in the Logto Console.
    */
   async getAccessTokenClaims(resource?: string): Promise<AccessTokenClaims> {
@@ -468,5 +449,28 @@ export default class LogtoClient {
 
     const cachedJwkSet = new CachedRemoteJwkSet(new URL(jwksUri), this.adapter);
     return async (...args) => cachedJwkSet.getKey(...args);
+  }
+
+  async #getAccessToken(resource?: string): Promise<string> {
+    if (!(await this.getIdToken())) {
+      throw new LogtoClientError('not_authenticated');
+    }
+
+    const accessTokenKey = buildAccessTokenKey(resource);
+    const accessToken = this.accessTokenMap.get(accessTokenKey);
+
+    if (accessToken && accessToken.expiresAt > Date.now() / 1000) {
+      return accessToken.token;
+    }
+
+    // Since the access token has expired, delete it from the map.
+    if (accessToken) {
+      this.accessTokenMap.delete(accessTokenKey);
+    }
+
+    /**
+     * Need to fetch a new access token using refresh token.
+     */
+    return this.getAccessTokenByRefreshToken(resource);
   }
 }
