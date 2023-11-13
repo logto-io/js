@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.2.4
+
+### Patch Changes
+
+- cd5ad7d: reuse `getAccessToken()` Promise when there's an ongoing one to avoid multiple calls to the server
+
 ## 2.2.3
 
 ### Patch Changes
