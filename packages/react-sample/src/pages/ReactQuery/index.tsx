@@ -41,9 +41,12 @@ const ReactQuery = () => {
 
 const Content = () => {
   const api = useApi();
-  const query = useQuery(['userinfo'], async () => {
-    const response = await api(new URL('/oidc/me', endpoint));
-    return response.json();
+  const query = useQuery({
+    queryKey: ['userinfo'],
+    queryFn: async () => {
+      const response = await api(new URL('/oidc/me', endpoint));
+      return response.json();
+    },
   });
 
   if (query.isLoading) {
