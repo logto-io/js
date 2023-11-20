@@ -22,7 +22,7 @@
     "eslint": "^8.44.0",
     "lint-staged": "^15.0.0",
     "parcel": "^2.9.2",
-    "postcss": "^8.4.6",
+    "postcss": "^8.4.31",
     "prettier": "^3.0.0",
     "stylelint": "^15.0.0",
     "typescript": "^5.0.0"
