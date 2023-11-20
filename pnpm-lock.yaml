@@ -207,8 +207,8 @@ importers:
         specifier: ^7.0.1
         version: 7.0.2
       jose:
-        specifier: ^4.13.2
-        version: 4.13.2
+        specifier: ^5.0.0
+        version: 5.0.1
     devDependencies:
       '@silverhand/eslint-config':
         specifier: ^4.0.1
@@ -387,8 +387,8 @@ importers:
         specifier: ^7.0.1
         version: 7.0.2
       jose:
-        specifier: ^4.13.2
-        version: 4.13.2
+        specifier: ^5.0.0
+        version: 5.0.1
     devDependencies:
       '@silverhand/eslint-config':
         specifier: ^4.0.1
@@ -6578,7 +6578,7 @@ packages:
       eslint-plugin-import: 2.28.1(@typescript-eslint/parser@6.7.0)(eslint-import-resolver-typescript@3.5.5)(eslint@8.50.0)
       get-tsconfig: 4.5.0
       globby: 13.1.4
-      is-core-module: 2.13.0
+      is-core-module: 2.12.0
       is-glob: 4.0.3
       synckit: 0.8.5
     transitivePeerDependencies:
@@ -8970,8 +8970,8 @@ packages:
       - ts-node
     dev: true
 
-  /jose@4.13.2:
-    resolution: {integrity: sha512-GMUKtV+l05F6NY/06nM7rucHM6Ktvw6sxnyRqINBNWS/hCM/bBk7kanOEckRP8xtC/jzuGfTRVZvkjjuy+g4dA==}
+  /jose@5.0.1:
+    resolution: {integrity: sha512-gRVzy7s3RRdGbXmcTdlOswJOjhwPLx1ijIgAqLY6ktzFpOJxxYn4l0fC2vHaHHi4YBX/5FOL3aY+6W0cvQgpug==}
     dev: false
 
   /js-base64@3.7.4:
