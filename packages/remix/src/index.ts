@@ -37,3 +37,16 @@ export const makeLogtoRemix = (
 };
 
 export { type LogtoContext } from '@logto/node';
+export {
+  LogtoError,
+  LogtoRequestError,
+  LogtoClientError,
+  OidcError,
+  Prompt,
+  ReservedScope,
+  UserScope,
+  organizationUrnPrefix,
+  buildOrganizationUrn,
+  getOrganizationIdFromUrn,
+  PersistKey,
+} from '@logto/node';

@@ -9,11 +9,18 @@ import ExpressStorage from './storage.js';
 import type { LogtoExpressConfig } from './types.js';
 
 export {
-  ReservedScope,
-  UserScope,
   LogtoError,
-  LogtoClientError,
   LogtoRequestError,
+  LogtoClientError,
+  OidcError,
+  Prompt,
+  ReservedScope,
+  ReservedResource,
+  UserScope,
+  organizationUrnPrefix,
+  buildOrganizationUrn,
+  getOrganizationIdFromUrn,
+  PersistKey,
 } from '@logto/node';
 
 export type { LogtoContext, InteractionMode, LogtoErrorCode } from '@logto/node';
