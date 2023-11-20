@@ -1,5 +1,11 @@
-import type { Prompt } from '@logto/js';
-import { isArbitraryObject } from '@logto/js';
+import {
+  Prompt,
+  ReservedResource,
+  UserScope,
+  isArbitraryObject,
+  withDefaultScopes,
+} from '@logto/js';
+import { deduplicate } from '@silverhand/essentials';
 
 /** The configuration object for the Logto client. */
 export type LogtoConfig = {
@@ -41,6 +47,28 @@ export type LogtoConfig = {
    * The prompt parameter to be used for the authorization request.
    */
   prompt?: Prompt;
+};
+
+/**
+ * Normalize the Logto client configuration per the following rules:
+ *
+ * - Add default scopes (`openid`, `offline_access` and `profile`) if not provided.
+ * - Add {@link ReservedResource.Organization} to resources if {@link UserScope.Organizations} is included in scopes.
+ *
+ * @param config The Logto client configuration to be normalized.
+ * @returns The normalized Logto client configuration.
+ */
+export const normalizeLogtoConfig = (config: LogtoConfig): LogtoConfig => {
+  const { prompt = Prompt.Consent, scopes = [], resources, ...rest } = config;
+
+  return {
+    ...rest,
+    prompt,
+    scopes: withDefaultScopes(scopes).split(' '),
+    resources: scopes.includes(UserScope.Organizations)
+      ? deduplicate([...(resources ?? []), ReservedResource.Organization])
+      : resources,
+  };
 };
 
 export type AccessToken = {

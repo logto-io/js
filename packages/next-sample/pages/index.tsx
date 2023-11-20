@@ -32,7 +32,7 @@ const Home = () => {
             {Object.entries(data.claims).map(([key, value]) => (
               <tr key={key}>
                 <td>{key}</td>
-                <td>{value}</td>
+                <td>{String(value)}</td>
               </tr>
             ))}
           </tbody>

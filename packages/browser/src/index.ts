@@ -26,7 +26,12 @@ export {
   OidcError,
   Prompt,
   ReservedScope,
+  ReservedResource,
   UserScope,
+  organizationUrnPrefix,
+  buildOrganizationUrn,
+  getOrganizationIdFromUrn,
+  PersistKey,
 } from '@logto/client';
 
 const navigate = (url: string) => {

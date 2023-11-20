@@ -11,12 +11,17 @@ export type {
 
 export {
   LogtoError,
-  LogtoClientError,
   LogtoRequestError,
+  LogtoClientError,
   OidcError,
   Prompt,
   ReservedScope,
+  ReservedResource,
   UserScope,
+  organizationUrnPrefix,
+  buildOrganizationUrn,
+  getOrganizationIdFromUrn,
+  PersistKey,
 } from '@logto/browser';
 
 export * from './provider.js';

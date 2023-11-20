@@ -19,10 +19,17 @@ jest.mock('@logto/browser', () => {
       isAuthenticated,
       isSignInRedirected,
       handleSignInCallback,
+      getRefreshToken: jest.fn(),
       getAccessToken,
-      signIn: jest.fn().mockResolvedValue(undefined),
-      signOut: jest.fn().mockResolvedValue(undefined),
-    };
+      getAccessTokenClaims: jest.fn(),
+      getOrganizationToken: jest.fn(),
+      getOrganizationTokenClaims: jest.fn(),
+      getIdToken: jest.fn(),
+      getIdTokenClaims: jest.fn(),
+      signIn: jest.fn(),
+      signOut: jest.fn(),
+      fetchUserInfo: jest.fn(),
+    } satisfies Partial<LogtoClient>;
   });
 });
 
@@ -64,11 +71,11 @@ describe('useLogto', () => {
         result.current;
 
       expect(error).toBeUndefined();
-      expect(signIn).not.toBeUndefined();
-      expect(signOut).not.toBeUndefined();
-      expect(fetchUserInfo).not.toBeUndefined();
-      expect(getAccessToken).not.toBeUndefined();
-      expect(getIdTokenClaims).not.toBeUndefined();
+      expect(signIn).toBeDefined();
+      expect(signOut).toBeDefined();
+      expect(fetchUserInfo).toBeDefined();
+      expect(getAccessToken).toBeDefined();
+      expect(getIdTokenClaims).toBeDefined();
     });
   });
 
