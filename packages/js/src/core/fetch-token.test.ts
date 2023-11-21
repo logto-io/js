@@ -31,6 +31,21 @@ describe('fetch access token by providing authorization code', () => {
       },
       fetchFunction
     );
+
+    expect(fetchFunction).toBeCalledWith('https://logto.dev/oidc/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        client_id: 'client_id_value',
+        code: 'code_value',
+        code_verifier: 'code_verifier_value',
+        redirect_uri: 'https://localhost:3000/callback',
+        grant_type: 'authorization_code',
+        resource: 'resource_value',
+      }),
+    });
     expect(tokenResponse).toEqual(expectedTokenResponse);
   });
 });
@@ -66,6 +81,19 @@ describe('fetch access token by providing valid refresh token', () => {
       fetchFunction
     );
 
+    expect(fetchFunction).toBeCalledWith('https://logto.dev/oidc/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        client_id: 'client_id_value',
+        refresh_token: 'old_refresh_token_value',
+        grant_type: 'refresh_token',
+        resource: 'resource_value',
+        scope: 'read register manage',
+      }),
+    });
     expect(tokenResponse).toMatchObject(expectedTokenResponse);
   });
 });

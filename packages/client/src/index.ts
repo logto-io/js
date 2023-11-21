@@ -152,8 +152,7 @@ export default class LogtoClient {
    * resource, as specified in the Logto Console.
    */
   async getAccessTokenClaims(resource?: string): Promise<AccessTokenClaims> {
-    // eslint-disable-next-line unicorn/no-useless-undefined
-    const accessToken = await this.getAccessToken(resource, undefined);
+    const accessToken = await this.getAccessToken(resource);
 
     return decodeAccessToken(accessToken);
   }
@@ -181,8 +180,7 @@ export default class LogtoClient {
    */
   async fetchUserInfo(): Promise<UserInfoResponse> {
     const { userinfoEndpoint } = await this.getOidcConfig();
-    // eslint-disable-next-line unicorn/no-useless-undefined
-    const accessToken = await this.getAccessToken(undefined, undefined);
+    const accessToken = await this.getAccessToken();
 
     if (!accessToken) {
       throw new LogtoClientError('fetch_user_info_failed');

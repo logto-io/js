@@ -9,9 +9,8 @@ import { useHandleSignInCallback, useLogto } from './index.js';
 const isAuthenticated = jest.fn(async () => false);
 const isSignInRedirected = jest.fn(async () => false);
 const handleSignInCallback = jest.fn().mockResolvedValue(undefined);
-const getAccessToken = jest.fn(() => {
-  throw new Error('not authenticated');
-});
+const getAccessToken = jest.fn();
+const signIn = jest.fn();
 
 jest.mock('@logto/browser', () => {
   return jest.fn().mockImplementation(() => {
@@ -26,7 +25,7 @@ jest.mock('@logto/browser', () => {
       getOrganizationTokenClaims: jest.fn(),
       getIdToken: jest.fn(),
       getIdTokenClaims: jest.fn(),
-      signIn: jest.fn(),
+      signIn,
       signOut: jest.fn(),
       fetchUserInfo: jest.fn(),
     } satisfies Partial<LogtoClient>;
@@ -44,6 +43,7 @@ const createHookWrapper =
 
 describe('useLogto', () => {
   afterEach(() => {
+    jest.clearAllMocks();
     handleSignInCallback.mockRestore();
   });
 
@@ -77,6 +77,21 @@ describe('useLogto', () => {
       expect(getAccessToken).toBeDefined();
       expect(getIdTokenClaims).toBeDefined();
     });
+  });
+
+  it('should not call `handleSignInCallback` when logtoClient is not found in the context', async () => {
+    // Mock `isSignInRedirected` to return true for triggering `useEffect`
+    isSignInRedirected.mockResolvedValueOnce(true);
+    const { result } = renderHook(useHandleSignInCallback);
+
+    await waitFor(() => {
+      // LogtoClient is initialized
+      expect(result.current.isLoading).toBe(false);
+      expect(result.current.isAuthenticated).toBe(false);
+    });
+
+    expect(handleSignInCallback).not.toHaveBeenCalled();
+    isSignInRedirected.mockRestore();
   });
 
   it('should not call `handleSignInCallback` when it is not in callback url', async () => {
@@ -138,11 +153,49 @@ describe('useLogto', () => {
     });
 
     await act(async () => {
+      getAccessToken.mockRejectedValueOnce(new Error('not authenticated'));
       await result.current.getAccessToken();
     });
     await waitFor(() => {
       expect(result.current.error).not.toBeUndefined();
       expect(result.current.error?.message).toBe('not authenticated');
+      expect(result.current.isLoading).toBe(false);
+    });
+  });
+
+  it('should use fallback error message when getAccessToken fails', async () => {
+    const { result } = renderHook(useLogto, {
+      wrapper: createHookWrapper(),
+    });
+
+    await act(async () => {
+      getAccessToken.mockRejectedValueOnce('not authenticated');
+      await result.current.getAccessToken('foo');
+    });
+    await waitFor(() => {
+      expect(result.current.error).not.toBeUndefined();
+      expect(result.current.error?.message).toBe(
+        'Unexpected error occurred while calling bound mockConstructor.'
+      );
+      expect(result.current.isLoading).toBe(false);
+    });
+  });
+
+  it('should call the inner LogtoClient method when the hook method is called', async () => {
+    const { result } = renderHook(useLogto, {
+      wrapper: createHookWrapper(),
+    });
+
+    await act(async () => {
+      await result.current.signIn('foo');
+    });
+
+    await waitFor(() => {
+      expect(signIn).toHaveBeenCalledTimes(1);
+      expect(signIn).toHaveBeenCalledWith('foo');
+      expect(result.current.error).toBeUndefined();
+      // `signIn` disables resetting loading state
+      expect(result.current.isLoading).toBe(true);
     });
   });
 });

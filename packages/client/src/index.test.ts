@@ -1,4 +1,4 @@
-import LogtoClient, { LogtoClientError } from './index.js';
+import LogtoClient, { LogtoClientError, UserScope } from './index.js';
 import {
   appId,
   currentUnixTimeStamp,
@@ -86,8 +86,66 @@ describe('LogtoClient', () => {
       );
       const accessToken = await logtoClient.getAccessToken();
 
-      expect(requester).toHaveBeenCalledWith(tokenEndpoint, expect.anything());
+      expect(requester).toHaveBeenCalledWith(tokenEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          client_id: 'app_id_value',
+          refresh_token: 'refresh_token_value',
+          grant_type: 'refresh_token',
+        }),
+      });
       expect(accessToken).toEqual('access_token_value');
+    });
+
+    it('should return organization token by valid refresh token', async () => {
+      requester.mockClear().mockImplementation(async () => {
+        return {
+          accessToken: 'organization_token_value',
+          expiresIn: 3600,
+        };
+      });
+
+      const logtoClient = createClient(
+        undefined,
+        new MockedStorage({
+          idToken: 'id_token_value',
+          refreshToken: 'refresh_token_value',
+        }),
+        undefined,
+        [UserScope.Organizations]
+      );
+      const organizationToken = await logtoClient.getOrganizationToken('organization_id');
+
+      expect(requester).toHaveBeenCalledWith(tokenEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          client_id: 'app_id_value',
+          refresh_token: 'refresh_token_value',
+          grant_type: 'refresh_token',
+          organization_id: 'organization_id',
+        }),
+      });
+      expect(organizationToken).toEqual('organization_token_value');
+    });
+
+    it('should throw error when fetch organization token without organization scope', async () => {
+      const logtoClient = createClient(
+        undefined,
+        new MockedStorage({
+          idToken: 'id_token_value',
+          refreshToken: 'refresh_token_value',
+        })
+      );
+
+      await expect(logtoClient.getOrganizationToken('organization_id')).rejects.toMatchError(
+        new LogtoClientError('missing_scope_organizations')
+      );
     });
 
     it('should reuse the Promise if there is an ongoing request', async () => {
