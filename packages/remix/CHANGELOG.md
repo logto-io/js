@@ -1,5 +1,16 @@
 # Change Log
 
+## 2.1.0
+
+### Minor Changes
+
+- 9225576: export useful members from dependency sdk packages
+
+### Patch Changes
+
+- Updated dependencies [9225576]
+  - @logto/node@2.2.0
+
 ## 2.0.1
 
 ### Patch Changes

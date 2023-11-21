@@ -1,5 +1,20 @@
 # Change Log
 
+## 3.0.0
+
+### Major Changes
+
+- 8d693a3: allow arbitrary key access for `IdTokenClaims`
+
+  Achieve it by appending `& Record<string, unknown>` to the type of `IdTokenClaims`. This usually doesn't break things, but it may cause some type errors when iterating over the object values (e.g. `Object.values(claims)`). Mark it as a breaking change just in case.
+
+### Minor Changes
+
+- 8d693a3: sync update from `@logto/core-kit`
+
+  - add TSDoc comments to keys for better developer experience
+  - add organizations support in types and `fetchTokenByRefreshToken()`
+
 ## 2.1.3
 
 ### Patch Changes

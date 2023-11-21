@@ -1,5 +1,20 @@
 # Change Log
 
+## 2.2.0
+
+### Minor Changes
+
+- 8d693a3: export useful members from dependency sdk packages
+- 8d693a3: add organizations support
+
+  - `useLogto()` now exports `getOrganizationToken()` and `getOrganizationTokenClaims()`
+  - `useLogto()` also exports `getRefreshToken()`, `getAccessTokenClaims()`, and `getIdToken()`
+
+### Patch Changes
+
+- Updated dependencies [8d693a3]
+  - @logto/browser@2.2.0
+
 ## 2.1.2
 
 ### Patch Changes

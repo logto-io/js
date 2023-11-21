@@ -1,5 +1,16 @@
 # Change Log
 
+## 2.2.0
+
+### Minor Changes
+
+- 9225576: export useful members from dependency sdk packages
+
+### Patch Changes
+
+- Updated dependencies [8d693a3]
+  - @logto/client@2.3.0
+
 ## 2.1.2
 
 ### Patch Changes

@@ -1,5 +1,20 @@
 # Change Log
 
+## 2.3.0
+
+### Minor Changes
+
+- 8d693a3: add organizations support
+
+  - add `getOrganizationToken()` and `getOrganizationTokenClaims()` to `LogtoClient`
+  - automatically add organization resource to configuration when `scopes`` contains organization scope
+
+### Patch Changes
+
+- Updated dependencies [8d693a3]
+- Updated dependencies [8d693a3]
+  - @logto/js@3.0.0
+
 ## 2.2.4
 
 ### Patch Changes
