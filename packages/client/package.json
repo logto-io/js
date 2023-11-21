@@ -1,6 +1,6 @@
 {
   "name": "@logto/client",
-  "version": "2.2.4",
+  "version": "2.3.0",
   "type": "module",
   "main": "./lib/index.cjs",
   "module": "./lib/index.js",
@@ -31,7 +31,7 @@
     "prepack": "pnpm build && pnpm test"
   },
   "dependencies": {
-    "@logto/js": "workspace:^2.1.3",
+    "@logto/js": "workspace:^3.0.0",
     "@silverhand/essentials": "^2.6.2",
     "camelcase-keys": "^7.0.1",
     "jose": "^5.0.0"

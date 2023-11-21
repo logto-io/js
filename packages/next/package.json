@@ -1,6 +1,6 @@
 {
   "name": "@logto/next",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "type": "module",
   "main": "./lib/src/index.cjs",
   "module": "./lib/src/index.js",
@@ -57,7 +57,7 @@
   },
   "dependencies": {
     "@edge-runtime/cookies": "^4.0.0",
-    "@logto/node": "workspace:^2.1.2"
+    "@logto/node": "workspace:^2.2.0"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "^4.0.1",

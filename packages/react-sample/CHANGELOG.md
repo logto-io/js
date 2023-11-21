@@ -1,5 +1,17 @@
 # Change Log
 
+## 2.1.0
+
+### Minor Changes
+
+- 8d693a3: add organizations page to display organizations and fetch organization tokens
+
+### Patch Changes
+
+- Updated dependencies [8d693a3]
+- Updated dependencies [8d693a3]
+  - @logto/react@2.2.0
+
 ## 2.0.1
 
 ### Patch Changes

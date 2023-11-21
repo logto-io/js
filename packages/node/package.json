@@ -1,6 +1,6 @@
 {
   "name": "@logto/node",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "type": "module",
   "main": "./lib/src/index.cjs",
   "module": "./lib/src/index.js",
@@ -38,7 +38,7 @@
     "postpack": "node test.cjs"
   },
   "dependencies": {
-    "@logto/client": "workspace:^2.2.3",
+    "@logto/client": "workspace:^2.3.0",
     "@silverhand/essentials": "^2.6.2",
     "js-base64": "^3.7.4",
     "node-fetch": "^2.6.7"
