@@ -64,8 +64,9 @@ const Content = () => {
 
   return (
     <div>
-      <h1>Success</h1>
+      <h2>Success</h2>
       <p>You are seeing this page because react-query successfully fetched the user info.</p>
+      <a href="/">Go back</a>
       <p>{JSON.stringify(query.data)}</p>
     </div>
   );

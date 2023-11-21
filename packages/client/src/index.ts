@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import {
   type IdTokenClaims,
   type UserInfoResponse,
@@ -11,14 +12,13 @@ import {
   fetchUserInfo,
   generateSignInUri,
   generateSignOutUri,
-  Prompt,
   revoke,
   verifyAndParseCodeFromCallbackUri,
   verifyIdToken,
-  withDefaultScopes,
   type OidcConfigResponse,
+  UserScope,
 } from '@logto/js';
-import { type Nullable } from '@silverhand/essentials';
+import { type Optional, type Nullable } from '@silverhand/essentials';
 import { type JWTVerifyGetKey, createRemoteJWKSet } from 'jose';
 
 import {
@@ -30,7 +30,11 @@ import {
 import { LogtoClientError } from './errors.js';
 import { CachedRemoteJwkSet } from './remote-jwk-set.js';
 import type { AccessToken, LogtoConfig, LogtoSignInSessionItem } from './types/index.js';
-import { isLogtoAccessTokenMap, isLogtoSignInSessionItem } from './types/index.js';
+import {
+  isLogtoAccessTokenMap,
+  isLogtoSignInSessionItem,
+  normalizeLogtoConfig,
+} from './types/index.js';
 import { buildAccessTokenKey, getDiscoveryEndpoint } from './utils/index.js';
 import { memoize } from './utils/memoize.js';
 import { once } from './utils/once.js';
@@ -42,7 +46,11 @@ export {
   OidcError,
   Prompt,
   ReservedScope,
+  ReservedResource,
   UserScope,
+  organizationUrnPrefix,
+  buildOrganizationUrn,
+  getOrganizationIdFromUrn,
 } from '@logto/js';
 export * from './errors.js';
 export type { Storage, StorageKey, ClientAdapter } from './adapter/index.js';
@@ -61,7 +69,7 @@ export default class LogtoClient {
   readonly logtoConfig: LogtoConfig;
   readonly getOidcConfig = memoize(this.#getOidcConfig);
   /**
-   * Get the access token from the storage.
+   * Get the access token from the storage with refresh strategy.
    *
    * - If the access token has expired, it will try to fetch a new one using the Refresh Token.
    * - If there's an ongoing Promise to fetch the access token, it will return the Promise.
@@ -76,16 +84,26 @@ export default class LogtoClient {
    */
   readonly getAccessToken = memoize(this.#getAccessToken);
 
+  /**
+   * Get the access token for the specified organization from the storage with refresh strategy.
+   *
+   * Scope {@link UserScope.Organizations} is required in the config to use organization-related
+   * methods.
+   *
+   * @param organizationId The ID of the organization that the access token is granted for.
+   * @returns The access token string.
+   * @throws LogtoClientError if the user is not authenticated.
+   * @remarks
+   * It uses the same refresh strategy as {@link getAccessToken}.
+   */
+  readonly getOrganizationToken = memoize(this.#getOrganizationToken);
+
   protected readonly getJwtVerifyGetKey = once(this.#getJwtVerifyGetKey);
   protected readonly adapter: ClientAdapterInstance;
   protected readonly accessTokenMap = new Map<string, AccessToken>();
 
   constructor(logtoConfig: LogtoConfig, adapter: ClientAdapter) {
-    this.logtoConfig = {
-      ...logtoConfig,
-      prompt: logtoConfig.prompt ?? Prompt.Consent,
-      scopes: withDefaultScopes(logtoConfig.scopes).split(' '),
-    };
+    this.logtoConfig = normalizeLogtoConfig(logtoConfig);
     this.adapter = new ClientAdapterInstance(adapter);
 
     void this.loadAccessTokenMap();
@@ -135,6 +153,17 @@ export default class LogtoClient {
    */
   async getAccessTokenClaims(resource?: string): Promise<AccessTokenClaims> {
     const accessToken = await this.getAccessToken(resource);
+
+    return decodeAccessToken(accessToken);
+  }
+
+  /**
+   * Get the organization token claims for the specified organization.
+   *
+   * @param organizationId The ID of the organization that the access token is granted for.
+   */
+  async getOrganizationTokenClaims(organizationId: string): Promise<AccessTokenClaims> {
+    const accessToken = await this.getOrganizationToken(organizationId);
 
     return decodeAccessToken(accessToken);
   }
@@ -344,14 +373,17 @@ export default class LogtoClient {
     return this.adapter.setStorageItem(PersistKey.RefreshToken, value);
   }
 
-  private async getAccessTokenByRefreshToken(resource?: string): Promise<string> {
+  private async getAccessTokenByRefreshToken(
+    resource: Optional<string>,
+    organizationId: Optional<string>
+  ): Promise<string> {
     const currentRefreshToken = await this.getRefreshToken();
 
     if (!currentRefreshToken) {
       throw new LogtoClientError('not_authenticated');
     }
 
-    const accessTokenKey = buildAccessTokenKey(resource);
+    const accessTokenKey = buildAccessTokenKey(resource, organizationId);
     const { appId: clientId } = this.logtoConfig;
     const { tokenEndpoint } = await this.getOidcConfig();
     const requestedAt = Math.round(Date.now() / 1000);
@@ -361,6 +393,7 @@ export default class LogtoClient {
         tokenEndpoint,
         refreshToken: currentRefreshToken,
         resource,
+        organizationId,
       },
       this.adapter.requester
     );
@@ -451,12 +484,12 @@ export default class LogtoClient {
     return async (...args) => cachedJwkSet.getKey(...args);
   }
 
-  async #getAccessToken(resource?: string): Promise<string> {
-    if (!(await this.getIdToken())) {
+  async #getAccessToken(resource?: string, organizationId?: string): Promise<string> {
+    if (!(await this.isAuthenticated())) {
       throw new LogtoClientError('not_authenticated');
     }
 
-    const accessTokenKey = buildAccessTokenKey(resource);
+    const accessTokenKey = buildAccessTokenKey(resource, organizationId);
     const accessToken = this.accessTokenMap.get(accessTokenKey);
 
     if (accessToken && accessToken.expiresAt > Date.now() / 1000) {
@@ -471,6 +504,15 @@ export default class LogtoClient {
     /**
      * Need to fetch a new access token using refresh token.
      */
-    return this.getAccessTokenByRefreshToken(resource);
+    return this.getAccessTokenByRefreshToken(resource, organizationId);
+  }
+
+  async #getOrganizationToken(organizationId: string): Promise<string> {
+    if (!this.logtoConfig.scopes?.includes(UserScope.Organizations)) {
+      throw new LogtoClientError('missing_scope_organizations');
+    }
+
+    return this.#getAccessToken(undefined, organizationId);
   }
 }
+/* eslint-enable max-lines */

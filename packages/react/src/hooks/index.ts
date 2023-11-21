@@ -1,18 +1,34 @@
-import { type IdTokenClaims, type InteractionMode, type UserInfoResponse } from '@logto/browser';
+import type LogtoClient from '@logto/browser';
+import type { Optional } from '@silverhand/essentials';
 import { useCallback, useContext, useEffect, useRef } from 'react';
 
 import { LogtoContext, throwContextError } from '../context.js';
+
+type OptionalPromiseReturn<T> = {
+  [K in keyof T]: T[K] extends (...args: infer A) => Promise<infer R>
+    ? (...args: A) => Promise<Optional<R>>
+    : T[K];
+};
 
 type Logto = {
   isAuthenticated: boolean;
   isLoading: boolean;
   error?: Error;
-  fetchUserInfo: () => Promise<UserInfoResponse | undefined>;
-  getAccessToken: (resource?: string) => Promise<string | undefined>;
-  getIdTokenClaims: () => Promise<IdTokenClaims | undefined>;
-  signIn: (redirectUri: string, interactionMode?: InteractionMode) => Promise<void>;
-  signOut: (postLogoutRedirectUri?: string) => Promise<void>;
-};
+} & OptionalPromiseReturn<
+  Pick<
+    LogtoClient,
+    | 'getRefreshToken'
+    | 'getAccessToken'
+    | 'getAccessTokenClaims'
+    | 'getOrganizationToken'
+    | 'getOrganizationTokenClaims'
+    | 'getIdToken'
+    | 'getIdTokenClaims'
+    | 'signIn'
+    | 'signOut'
+    | 'fetchUserInfo'
+  >
+>;
 
 const useLoadingState = () => {
   const { loadingCount, setLoadingCount } = useContext(LogtoContext);
@@ -110,107 +126,44 @@ const useLogto = (): Logto => {
   const { handleError } = useErrorHandler();
 
   const isLoading = loadingCount > 0;
+  const client = logtoClient ?? throwContextError();
 
-  const signIn = useCallback(
-    async (redirectUri: string, interactionMode?: InteractionMode) => {
-      if (!logtoClient) {
-        return throwContextError();
-      }
-
-      try {
-        setLoadingState(true);
-
-        await logtoClient.signIn(redirectUri, interactionMode);
-      } catch (error: unknown) {
-        handleError(error, 'Unexpected error occurred while signing in.');
-      }
+  const proxy = useCallback(
+    <R, T extends unknown[]>(run: (...args: T) => Promise<R>, resetLoadingState = true) => {
+      return async (...args: T): Promise<Optional<R>> => {
+        try {
+          setLoadingState(true);
+          return await run(...args);
+        } catch (error: unknown) {
+          handleError(error, `Unexpected error occurred while calling ${run.name}.`);
+        } finally {
+          if (resetLoadingState) {
+            setLoadingState(false);
+          }
+        }
+      };
     },
-    [logtoClient, setLoadingState, handleError]
+    [setLoadingState, handleError]
   );
-
-  const signOut = useCallback(
-    async (postLogoutRedirectUri?: string) => {
-      if (!logtoClient) {
-        return throwContextError();
-      }
-
-      try {
-        setLoadingState(true);
-
-        await logtoClient.signOut(postLogoutRedirectUri);
-
-        // We deliberately do NOT set isAuthenticated to false here, because the app state may change immediately
-        // even before navigating to the oidc end session endpoint, which might cause rendering problems.
-        // Moreover, since the location will be redirected, the isAuthenticated state will not matter any more.
-      } catch (error: unknown) {
-        handleError(error, 'Unexpected error occurred while signing out.');
-      } finally {
-        setLoadingState(false);
-      }
-    },
-    [logtoClient, setLoadingState, handleError]
-  );
-
-  const fetchUserInfo = useCallback(async () => {
-    if (!logtoClient) {
-      return throwContextError();
-    }
-
-    try {
-      setLoadingState(true);
-
-      return await logtoClient.fetchUserInfo();
-    } catch (error: unknown) {
-      handleError(error, 'Unexpected error occurred while fetching user info.');
-    } finally {
-      setLoadingState(false);
-    }
-  }, [logtoClient, setLoadingState, handleError]);
-
-  const getAccessToken = useCallback(
-    async (resource?: string) => {
-      if (!logtoClient) {
-        return throwContextError();
-      }
-
-      try {
-        setLoadingState(true);
-
-        return await logtoClient.getAccessToken(resource);
-      } catch (error: unknown) {
-        handleError(error, 'Unexpected error occurred while getting access token.');
-      } finally {
-        setLoadingState(false);
-      }
-    },
-    [logtoClient, setLoadingState, handleError]
-  );
-
-  const getIdTokenClaims = useCallback(async () => {
-    if (!logtoClient) {
-      return throwContextError();
-    }
-
-    try {
-      return await logtoClient.getIdTokenClaims();
-    } catch {
-      // Do nothing if any exception occurs. Caller will get undefined value.
-    }
-  }, [logtoClient]);
-
-  if (!logtoClient) {
-    return throwContextError();
-  }
 
   return {
     isAuthenticated,
     isLoading,
     error,
-    signIn,
-    signOut,
-    fetchUserInfo,
-    getAccessToken,
-    getIdTokenClaims,
+    getRefreshToken: proxy(client.getRefreshToken.bind(client)),
+    getAccessToken: proxy(client.getAccessToken.bind(client)),
+    getAccessTokenClaims: proxy(client.getAccessTokenClaims.bind(client)),
+    getOrganizationToken: proxy(client.getOrganizationToken.bind(client)),
+    getOrganizationTokenClaims: proxy(client.getOrganizationTokenClaims.bind(client)),
+    getIdToken: proxy(client.getIdToken.bind(client)),
+    getIdTokenClaims: proxy(client.getIdTokenClaims.bind(client)),
+    signIn: proxy(client.signIn.bind(client), false),
+    // We deliberately do NOT set isAuthenticated to false in the function below, because the app state
+    // may change immediately even before navigating to the oidc end session endpoint, which might cause
+    // rendering problems.
+    // Moreover, since the location will be redirected, the isAuthenticated state will not matter any more.
+    signOut: proxy(client.signOut.bind(client)),
+    fetchUserInfo: proxy(client.fetchUserInfo.bind(client)),
   };
 };
 

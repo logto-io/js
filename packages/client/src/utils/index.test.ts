@@ -6,8 +6,16 @@ describe('client utilities', () => {
     expect(endpoint).toEqual('https://example.com/oidc/.well-known/openid-configuration');
   });
 
-  test('build access token key', () => {
-    const key = buildAccessTokenKey('resource', ['scope1', 'scope2']);
+  test('build access token key for resource', () => {
+    const key = buildAccessTokenKey('resource', undefined, ['scope1', 'scope2']);
     expect(key).toEqual('scope1 scope2@resource');
+  });
+
+  test('build access token key for organization', () => {
+    const key = buildAccessTokenKey('resource', 'organization', ['scope1', 'scope2']);
+    expect(key).toEqual('scope1 scope2@resource#organization');
+
+    const key2 = buildAccessTokenKey(undefined, 'organization');
+    expect(key2).toEqual('@#organization');
   });
 });

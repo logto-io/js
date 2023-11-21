@@ -121,9 +121,14 @@ export const createAdapters = (withCache = false) =>
     generateState,
   }) satisfies Partial<Record<keyof LogtoClient['adapter'], unknown>>;
 
-export const createClient = (prompt?: Prompt, storage = new MockedStorage(), withCache = false) =>
+export const createClient = (
+  prompt?: Prompt,
+  storage = new MockedStorage(),
+  withCache = false,
+  scopes?: string[]
+) =>
   new LogtoClientWithAccessors(
-    { endpoint, appId, prompt },
+    { endpoint, appId, prompt, scopes },
     {
       ...createAdapters(withCache),
       storage,

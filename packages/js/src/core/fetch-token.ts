@@ -14,10 +14,20 @@ export type FetchTokenByAuthorizationCodeParameters = {
 };
 
 export type FetchTokenByRefreshTokenParameters = {
+  /** The client ID of the application. */
   clientId: string;
+  /** The token endpoint of the authorization server. */
   tokenEndpoint: string;
+  /** The refresh token to be used to fetch the organization access token. */
   refreshToken: string;
+  /** The API resource to be fetch the access token for. */
   resource?: string;
+  /** The ID of the organization to be fetch the access token for. */
+  organizationId?: string;
+  /**
+   * The scopes to request for the access token. If not provided, the authorization server
+   * will use all the scopes that the client is authorized for.
+   */
   scopes?: string[];
 };
 
@@ -72,10 +82,17 @@ export const fetchTokenByAuthorizationCode = async (
   return camelcaseKeys(snakeCaseCodeTokenResponse);
 };
 
+/**
+ * Fetch access token by refresh token using the token endpoint and `refresh_token` grant type.
+ * @param params The parameters for fetching access token.
+ * @param requester The requester for sending HTTP request.
+ * @returns A Promise that resolves to the access token response.
+ */
 export const fetchTokenByRefreshToken = async (
-  { clientId, tokenEndpoint, refreshToken, resource, scopes }: FetchTokenByRefreshTokenParameters,
+  params: FetchTokenByRefreshTokenParameters,
   requester: Requester
 ): Promise<RefreshTokenTokenResponse> => {
+  const { clientId, tokenEndpoint, refreshToken, resource, organizationId, scopes } = params;
   const parameters = new URLSearchParams();
   parameters.append(QueryKey.ClientId, clientId);
   parameters.append(QueryKey.RefreshToken, refreshToken);
@@ -83,6 +100,10 @@ export const fetchTokenByRefreshToken = async (
 
   if (resource) {
     parameters.append(QueryKey.Resource, resource);
+  }
+
+  if (organizationId) {
+    parameters.append(QueryKey.OrganizationId, organizationId);
   }
 
   if (scopes?.length) {

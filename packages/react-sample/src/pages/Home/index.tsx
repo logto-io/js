@@ -77,6 +77,9 @@ const Home = () => {
             <li>
               <Link to="/protected/react-query">View user info via react-query</Link>
             </li>
+            <li>
+              <Link to="/protected/organizations">View organizations</Link>
+            </li>
           </ul>
         </>
       )}

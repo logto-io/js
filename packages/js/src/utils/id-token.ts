@@ -9,20 +9,47 @@ import { LogtoError } from './errors.js';
 const issuedAtTimeTolerance = 60;
 
 export type IdTokenClaims = {
+  /** Issuer of this token. */
   iss: string;
+  /** Subject (the user ID) of this token. */
   sub: string;
+  /** Audience (the client ID) of this token. */
   aud: string;
+  /** Expiration time of this token. */
   exp: number;
+  /** Time at which this token was issued. */
   iat: number;
   at_hash?: Nullable<string>;
+  /** Full name of the user. */
   name?: Nullable<string>;
+  /** Username of the user. */
   username?: Nullable<string>;
+  /** URL of the user's profile picture. */
   picture?: Nullable<string>;
+  /** Email address of the user. */
   email?: Nullable<string>;
+  /** Whether the user's email address has been verified. */
   email_verified?: boolean;
+  /** Phone number of the user. */
   phone_number?: Nullable<string>;
+  /** Whether the user's phone number has been verified. */
   phone_number_verified?: boolean;
-};
+  /** Organization IDs that the user has membership in. */
+  organizations?: string[];
+  /**
+   * All organization roles that the user has. The format is `{organizationId}:{roleName}`.
+   *
+   * Note that not all organizations are included in this list, only the ones that the user has roles in.
+   *
+   * @example
+   * ```ts
+   * ['org1:admin', 'org2:member'] // The user is an admin of org1 and a member of org2.
+   * ```
+   */
+  organization_roles?: string[];
+  /** Roles that the user has for API resources. */
+  roles?: string[];
+} & Record<string, unknown>;
 
 /* eslint-disable complexity */
 /**
