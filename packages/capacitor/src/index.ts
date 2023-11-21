@@ -7,6 +7,21 @@ import LogtoBaseClient, {
   type LogtoConfig,
 } from '@logto/browser';
 
+export {
+  LogtoError,
+  LogtoRequestError,
+  LogtoClientError,
+  OidcError,
+  Prompt,
+  ReservedScope,
+  ReservedResource,
+  UserScope,
+  organizationUrnPrefix,
+  buildOrganizationUrn,
+  getOrganizationIdFromUrn,
+  PersistKey,
+} from '@logto/browser';
+
 export type CapacitorConfig = {
   /**
    * The options to pass to the `open` method of the Capacitor Browser plugin.

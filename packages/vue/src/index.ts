@@ -19,12 +19,16 @@ export type {
 
 export {
   LogtoError,
-  LogtoClientError,
   LogtoRequestError,
+  LogtoClientError,
   OidcError,
   Prompt,
   ReservedScope,
   UserScope,
+  organizationUrnPrefix,
+  buildOrganizationUrn,
+  getOrganizationIdFromUrn,
+  PersistKey,
 } from '@logto/browser';
 
 type LogtoVuePlugin = {

@@ -14,14 +14,21 @@ import { createSession } from './session.js';
 import type { LogtoNextConfig } from './types.js';
 
 export {
-  ReservedScope,
-  UserScope,
   LogtoError,
-  LogtoClientError,
   LogtoRequestError,
+  LogtoClientError,
+  OidcError,
+  Prompt,
+  ReservedScope,
+  ReservedResource,
+  UserScope,
+  organizationUrnPrefix,
+  buildOrganizationUrn,
+  getOrganizationIdFromUrn,
+  PersistKey,
 } from '@logto/node';
 
-export type { LogtoContext, InteractionMode, LogtoErrorCode } from '@logto/node';
+export type { IdTokenClaims, LogtoContext, InteractionMode, LogtoErrorCode } from '@logto/node';
 
 export default class LogtoClient extends LogtoNextBaseClient {
   constructor(config: LogtoNextConfig) {
