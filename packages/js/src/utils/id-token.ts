@@ -6,7 +6,7 @@ import { jwtVerify } from 'jose';
 import { isArbitraryObject } from './arbitrary-object.js';
 import { LogtoError } from './errors.js';
 
-const issuedAtTimeTolerance = 60;
+const issuedAtTimeTolerance = 300; // 5 minutes
 
 export type IdTokenClaims = {
   /** Issuer of this token. */
