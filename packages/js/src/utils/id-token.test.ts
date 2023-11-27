@@ -166,7 +166,7 @@ describe('verifyIdToken', () => {
       .setSubject('bar')
       .setAudience('qux')
       .setExpirationTime('2h')
-      .setIssuedAt(Date.now() / 1000 - 180)
+      .setIssuedAt(Date.now() / 1000 - 301)
       .sign(privateKey);
 
     const jwks = createDefaultJwks();
