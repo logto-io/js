@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.0.1
+
+### Patch Changes
+
+- ba06cb4: Increase ID token issued-at-time tolerance (iat) to 5 minutes
+
 ## 3.0.0
 
 ### Major Changes
