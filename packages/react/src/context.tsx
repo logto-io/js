@@ -4,10 +4,10 @@ import { createContext } from 'react';
 export type LogtoContextProps = {
   logtoClient?: LogtoClient;
   isAuthenticated: boolean;
-  loadingCount: number;
+  isLoading: boolean;
   error?: Error;
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
-  setLoadingCount: React.Dispatch<React.SetStateAction<number>>;
+  setIsLoading: (state: boolean) => void;
   setError: React.Dispatch<React.SetStateAction<Error | undefined>>;
 };
 
@@ -18,9 +18,9 @@ export const throwContextError = (): never => {
 export const LogtoContext = createContext<LogtoContextProps>({
   logtoClient: undefined,
   isAuthenticated: false,
-  loadingCount: 0,
+  isLoading: false,
   error: undefined,
   setIsAuthenticated: throwContextError,
-  setLoadingCount: throwContextError,
+  setIsLoading: throwContextError,
   setError: throwContextError,
 });

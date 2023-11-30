@@ -30,24 +30,6 @@ type Logto = {
   >
 >;
 
-const useLoadingState = () => {
-  const { loadingCount, setLoadingCount } = useContext(LogtoContext);
-  const isLoading = loadingCount > 0;
-
-  const setLoadingState = useCallback(
-    (state: boolean) => {
-      if (state) {
-        setLoadingCount((count) => count + 1);
-      } else {
-        setLoadingCount((count) => Math.max(0, count - 1));
-      }
-    },
-    [setLoadingCount]
-  );
-
-  return { isLoading, setLoadingState };
-};
-
 const useErrorHandler = () => {
   const { setError } = useContext(LogtoContext);
 
@@ -67,8 +49,8 @@ const useErrorHandler = () => {
 };
 
 const useHandleSignInCallback = (callback?: () => void) => {
-  const { logtoClient, isAuthenticated, error, setIsAuthenticated } = useContext(LogtoContext);
-  const { isLoading, setLoadingState } = useLoadingState();
+  const { logtoClient, isAuthenticated, error, setIsAuthenticated, isLoading, setIsLoading } =
+    useContext(LogtoContext);
   const { handleError } = useErrorHandler();
   const callbackRef = useRef<() => void>();
 
@@ -87,7 +69,7 @@ const useHandleSignInCallback = (callback?: () => void) => {
       const isRedirected = await logtoClient.isSignInRedirected(currentPageUrl);
 
       if (!isAuthenticated && isRedirected) {
-        setLoadingState(true);
+        setIsLoading(true);
         await trySafe(
           async () => {
             await logtoClient.handleSignInCallback(currentPageUrl);
@@ -98,7 +80,7 @@ const useHandleSignInCallback = (callback?: () => void) => {
             handleError(error, 'Unexpected error occurred while handling sign in callback.');
           }
         );
-        setLoadingState(false);
+        setIsLoading(false);
       }
     })();
   }, [
@@ -108,7 +90,7 @@ const useHandleSignInCallback = (callback?: () => void) => {
     isLoading,
     logtoClient,
     setIsAuthenticated,
-    setLoadingState,
+    setIsLoading,
   ]);
 
   return {
@@ -119,29 +101,27 @@ const useHandleSignInCallback = (callback?: () => void) => {
 };
 
 const useLogto = (): Logto => {
-  const { logtoClient, loadingCount, isAuthenticated, error } = useContext(LogtoContext);
-  const { setLoadingState } = useLoadingState();
+  const { logtoClient, isAuthenticated, error, isLoading, setIsLoading } = useContext(LogtoContext);
   const { handleError } = useErrorHandler();
 
-  const isLoading = loadingCount > 0;
   const client = logtoClient ?? throwContextError();
 
   const proxy = useCallback(
     <R, T extends unknown[]>(run: (...args: T) => Promise<R>, resetLoadingState = true) => {
       return async (...args: T): Promise<Optional<R>> => {
         try {
-          setLoadingState(true);
+          setIsLoading(true);
           return await run(...args);
         } catch (error: unknown) {
           handleError(error, `Unexpected error occurred while calling ${run.name}.`);
         } finally {
           if (resetLoadingState) {
-            setLoadingState(false);
+            setIsLoading(false);
           }
         }
       };
     },
-    [setLoadingState, handleError]
+    [setIsLoading, handleError]
   );
 
   const methods = useMemo(
