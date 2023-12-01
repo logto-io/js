@@ -140,7 +140,7 @@ export default class LogtoClient extends LogtoNextBaseClient {
       return handler(context);
     };
 
-  private async createNodeClientFromNextApi(
+  async createNodeClientFromNextApi(
     request: IncomingMessage & {
       cookies: NextApiRequestCookies;
     },

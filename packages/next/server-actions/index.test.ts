@@ -111,4 +111,12 @@ describe('Next (server actions)', () => {
       expect(context).toHaveProperty('isAuthenticated', true);
     });
   });
+
+  describe('createNodeClientFromHeaders', () => {
+    it('should get node client', async () => {
+      const client = new LogtoClient(configs);
+      const nodeClient = await client.createNodeClientFromHeaders('{}');
+      expect(nodeClient).toBeDefined();
+    });
+  });
 });

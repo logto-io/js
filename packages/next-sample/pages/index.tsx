@@ -12,6 +12,7 @@ const Home = () => {
   const { data: rbacResponse, error: rbacResponseError } = useSWR<{ data: string }, Error>(
     '/api/rbac-scope'
   );
+  const { data: organizationsInfo } = useSWR<{ organizations: string[] }>('/api/organizations');
 
   const claims = useMemo(() => {
     if (!data?.isAuthenticated || !data.claims) {
@@ -112,6 +113,14 @@ const Home = () => {
         <div>{rbacResponse?.data}</div>
         <div>{rbacResponseError && 'Access denied.'}</div>
       </div>
+      {organizationsInfo && (
+        <div>
+          <h2>Organizations</h2>
+          {organizationsInfo.organizations.map((organizationId) => (
+            <div key={organizationId}>{organizationId}</div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
