@@ -53,7 +53,7 @@ export const getServerSideProps = logtoClient.withLogtoSsr(async function ({ req
   const { claims, isAuthenticated } = user;
 
   if (!isAuthenticated) {
-    res.setHeader('location', '/api/logto/login');
+    res.setHeader('location', '/api/logto/sign-in');
     // eslint-disable-next-line @silverhand/fp/no-mutation
     res.statusCode = 302;
     res.end();
