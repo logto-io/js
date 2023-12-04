@@ -1,6 +1,6 @@
 import type LogtoClient from '@logto/browser';
 import type { Optional } from '@silverhand/essentials';
-import { useCallback, useContext, useEffect, useRef } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 
 import { LogtoContext, throwContextError } from '../context.js';
 
@@ -146,24 +146,31 @@ const useLogto = (): Logto => {
     [setLoadingState, handleError]
   );
 
+  const methods = useMemo(
+    () => ({
+      getRefreshToken: proxy(client.getRefreshToken.bind(client)),
+      getAccessToken: proxy(client.getAccessToken.bind(client)),
+      getAccessTokenClaims: proxy(client.getAccessTokenClaims.bind(client)),
+      getOrganizationToken: proxy(client.getOrganizationToken.bind(client)),
+      getOrganizationTokenClaims: proxy(client.getOrganizationTokenClaims.bind(client)),
+      getIdToken: proxy(client.getIdToken.bind(client)),
+      getIdTokenClaims: proxy(client.getIdTokenClaims.bind(client)),
+      signIn: proxy(client.signIn.bind(client), false),
+      // We deliberately do NOT set isAuthenticated to false in the function below, because the app state
+      // may change immediately even before navigating to the oidc end session endpoint, which might cause
+      // rendering problems.
+      // Moreover, since the location will be redirected, the isAuthenticated state will not matter any more.
+      signOut: proxy(client.signOut.bind(client)),
+      fetchUserInfo: proxy(client.fetchUserInfo.bind(client)),
+    }),
+    [client, proxy]
+  );
+
   return {
     isAuthenticated,
     isLoading,
     error,
-    getRefreshToken: proxy(client.getRefreshToken.bind(client)),
-    getAccessToken: proxy(client.getAccessToken.bind(client)),
-    getAccessTokenClaims: proxy(client.getAccessTokenClaims.bind(client)),
-    getOrganizationToken: proxy(client.getOrganizationToken.bind(client)),
-    getOrganizationTokenClaims: proxy(client.getOrganizationTokenClaims.bind(client)),
-    getIdToken: proxy(client.getIdToken.bind(client)),
-    getIdTokenClaims: proxy(client.getIdTokenClaims.bind(client)),
-    signIn: proxy(client.signIn.bind(client), false),
-    // We deliberately do NOT set isAuthenticated to false in the function below, because the app state
-    // may change immediately even before navigating to the oidc end session endpoint, which might cause
-    // rendering problems.
-    // Moreover, since the location will be redirected, the isAuthenticated state will not matter any more.
-    signOut: proxy(client.signOut.bind(client)),
-    fetchUserInfo: proxy(client.fetchUserInfo.bind(client)),
+    ...methods,
   };
 };
 
