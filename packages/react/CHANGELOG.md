@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.2.1
+
+### Patch Changes
+
+- 46b3662: memorize hook methods to reduce unnecessary updates
+
 ## 2.2.0
 
 ### Minor Changes
