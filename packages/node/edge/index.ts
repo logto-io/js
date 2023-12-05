@@ -17,14 +17,13 @@ export default class LogtoClient extends BaseClient {
           ? async (...args: Parameters<typeof fetch>) => {
               const [input, init] = args;
 
+              // Encode to base64 using btoa
+              const base64Credentials = btoa(`${config.appId}:${config.appSecret ?? ''}`);
+
               return fetch(input, {
                 ...init,
                 headers: {
-                  Authorization: `Basic ${Buffer.from(
-                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                    `${config.appId}:${config.appSecret}`,
-                    'utf8'
-                  ).toString('base64')}`,
+                  Authorization: `Basic ${base64Credentials}`,
                   ...init?.headers,
                 },
               });

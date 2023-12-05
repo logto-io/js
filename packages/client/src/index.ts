@@ -67,7 +67,7 @@ export * from './types/index.js';
  */
 export default class LogtoClient {
   readonly logtoConfig: LogtoConfig;
-  readonly getOidcConfig = memoize(this.#getOidcConfig);
+  readonly getOidcConfig: () => Promise<OidcConfigResponse> = memoize(this.#getOidcConfig);
   /**
    * Get the access token from the storage with refresh strategy.
    *
