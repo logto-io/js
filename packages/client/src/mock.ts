@@ -1,4 +1,4 @@
-import { generateSignInUri, Prompt } from '@logto/js';
+import { generateSignInUri, type OidcConfigResponse, Prompt } from '@logto/js';
 import { conditional, type Nullable } from '@silverhand/essentials';
 
 import type { Storage } from './adapter/index.js';
@@ -139,7 +139,7 @@ export const createClient = (
  * Make protected fields accessible for test
  */
 export class LogtoClientWithAccessors extends LogtoClient {
-  public async runGetOidcConfig() {
+  public async runGetOidcConfig(): Promise<OidcConfigResponse> {
     return this.getOidcConfig();
   }
 
