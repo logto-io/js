@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.2.1
+
+### Patch Changes
+
+- d253362: Fix the Buffer error in edge runtime
+
 ## 2.2.0
 
 ### Minor Changes
