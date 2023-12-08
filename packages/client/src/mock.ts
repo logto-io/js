@@ -151,8 +151,8 @@ export class LogtoClientWithAccessors extends LogtoClient {
     return this.logtoConfig;
   }
 
-  public async getSignInSessionItem(): Promise<Nullable<LogtoSignInSessionItem>> {
-    return this.getSignInSession();
+  public async getSignInSession() {
+    return super.getSignInSession();
   }
 
   public async setSignInSessionItem(item: Nullable<LogtoSignInSessionItem>): Promise<void> {

@@ -1,7 +1,8 @@
 import LogtoClient from '@logto/browser';
 import { renderHook, act, waitFor } from '@testing-library/react';
-import { type ReactNode } from 'react';
+import { useContext, type ReactNode, useEffect } from 'react';
 
+import { LogtoContext } from '../context.js';
 import { LogtoProvider } from '../provider.js';
 
 import { useHandleSignInCallback, useLogto } from './index.js';
@@ -40,6 +41,26 @@ const createHookWrapper =
   ({ children }: { children?: ReactNode }) => (
     <LogtoProvider config={{ endpoint, appId }}>{children}</LogtoProvider>
   );
+
+const HasError = ({ children }: { children?: ReactNode }) => {
+  const { error, setError } = useContext(LogtoContext);
+  useEffect(() => {
+    setError(new Error('Oops'));
+  }, [setError]);
+
+  // eslint-disable-next-line react/jsx-no-useless-fragment
+  return <>{error ? children : null}</>;
+};
+
+const AlwaysLoading = ({ children }: { children?: ReactNode }) => {
+  const { loadingCount, setLoadingCount } = useContext(LogtoContext);
+  useEffect(() => {
+    setLoadingCount((count) => count + 2); // Ensure loadingCount is greater than 1
+  }, [setLoadingCount]);
+
+  // eslint-disable-next-line react/jsx-no-useless-fragment
+  return <>{loadingCount > 0 ? children : null}</>;
+};
 
 describe('useLogto', () => {
   afterEach(() => {
@@ -145,6 +166,53 @@ describe('useLogto', () => {
       expect(result.current.isAuthenticated).toBe(false);
     });
     expect(handleSignInCallback).toHaveBeenCalledTimes(1);
+  });
+
+  it('should not call `handleSignInCallback` when it is loading', async () => {
+    isSignInRedirected.mockResolvedValueOnce(true);
+
+    // eslint-disable-next-line unicorn/consistent-function-scoping -- Use for this test only
+    const useWrapped = () => {
+      const { loadingCount } = useContext(LogtoContext);
+      useHandleSignInCallback();
+      return { loadingCount };
+    };
+
+    const { result } = renderHook(useWrapped, {
+      wrapper: ({ children }) => (
+        <LogtoProvider config={{ endpoint, appId }}>
+          <AlwaysLoading>{children}</AlwaysLoading>
+        </LogtoProvider>
+      ),
+    });
+
+    await waitFor(() => {
+      expect(result.current.loadingCount).toBeGreaterThan(1);
+    });
+    // Give some time for side effects to be triggered
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1);
+    });
+    expect(handleSignInCallback).toHaveBeenCalledTimes(0);
+  });
+
+  it('should not call `handleSignInCallback` when `useLogto` has error', async () => {
+    const { result } = renderHook(useHandleSignInCallback, {
+      wrapper: ({ children }) => (
+        <LogtoProvider config={{ endpoint, appId }}>
+          <HasError>{children}</HasError>
+        </LogtoProvider>
+      ),
+    });
+
+    await waitFor(() => {
+      expect(result.current.error).toBeDefined();
+    });
+    // Give some time for side effects to be triggered
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1);
+    });
+    expect(handleSignInCallback).toHaveBeenCalledTimes(0);
   });
 
   it('should return error when getAccessToken fails', async () => {

@@ -83,25 +83,23 @@ const useHandleSignInCallback = (callback?: () => void) => {
     }
 
     (async () => {
-      setLoadingState(true);
+      const currentPageUrl = window.location.href;
+      const isRedirected = await logtoClient.isSignInRedirected(currentPageUrl);
 
-      await trySafe(
-        async () => {
-          const currentPageUrl = window.location.href;
-          const isRedirected = await logtoClient.isSignInRedirected(currentPageUrl);
-
-          if (!isAuthenticated && isRedirected) {
+      if (!isAuthenticated && isRedirected) {
+        setLoadingState(true);
+        await trySafe(
+          async () => {
             await logtoClient.handleSignInCallback(currentPageUrl);
             setIsAuthenticated(true);
             callbackRef.current?.();
+          },
+          (error) => {
+            handleError(error, 'Unexpected error occurred while handling sign in callback.');
           }
-        },
-        (error) => {
-          handleError(error, 'Unexpected error occurred while handling sign in callback.');
-        }
-      );
-
-      setLoadingState(false);
+        );
+        setLoadingState(false);
+      }
     })();
   }, [
     error,
