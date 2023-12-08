@@ -1,5 +1,5 @@
 import type LogtoClient from '@logto/browser';
-import type { Optional } from '@silverhand/essentials';
+import { trySafe, type Optional } from '@silverhand/essentials';
 import { useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 
 import { LogtoContext, throwContextError } from '../context.js';
@@ -77,41 +77,41 @@ const useHandleSignInCallback = (callback?: () => void) => {
     callbackRef.current = callback; // Update ref to the latest callback.
   }, [callback]);
 
-  const handleSignInCallback = useCallback(
-    async (callbackUri: string) => {
-      if (!logtoClient) {
-        return throwContextError();
-      }
-
-      try {
-        setLoadingState(true);
-        await logtoClient.handleSignInCallback(callbackUri);
-        setIsAuthenticated(true);
-        callbackRef.current?.();
-      } catch (error: unknown) {
-        handleError(error, 'Unexpected error occurred while handling sign in callback.');
-      } finally {
-        setLoadingState(false);
-      }
-    },
-    [logtoClient, setLoadingState, setIsAuthenticated, handleError]
-  );
-
   useEffect(() => {
-    if (!logtoClient) {
+    if (!logtoClient || isLoading || error) {
       return;
     }
 
     (async () => {
-      const currentPageUrl = window.location.href;
-      const isAuthenticated = await logtoClient.isAuthenticated();
-      const isRedirected = await logtoClient.isSignInRedirected(currentPageUrl);
+      setLoadingState(true);
 
-      if (!isAuthenticated && isRedirected) {
-        void handleSignInCallback(currentPageUrl);
-      }
+      await trySafe(
+        async () => {
+          const currentPageUrl = window.location.href;
+          const isRedirected = await logtoClient.isSignInRedirected(currentPageUrl);
+
+          if (!isAuthenticated && isRedirected) {
+            await logtoClient.handleSignInCallback(currentPageUrl);
+            setIsAuthenticated(true);
+            callbackRef.current?.();
+          }
+        },
+        (error) => {
+          handleError(error, 'Unexpected error occurred while handling sign in callback.');
+        }
+      );
+
+      setLoadingState(false);
     })();
-  }, [handleSignInCallback, isAuthenticated, logtoClient]);
+  }, [
+    error,
+    handleError,
+    isAuthenticated,
+    isLoading,
+    logtoClient,
+    setIsAuthenticated,
+    setLoadingState,
+  ]);
 
   return {
     isLoading,
