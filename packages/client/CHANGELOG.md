@@ -1,5 +1,14 @@
 # Change Log
 
+## 2.3.1
+
+### Patch Changes
+
+- 3a0713d: refactor method execution
+
+  - `getOidcConfig()` will only run once
+  - `handleSignInCallback()` is now memoized to prevent unnecessary calls (e.g. in React strict mode)
+
 ## 2.3.0
 
 ### Minor Changes

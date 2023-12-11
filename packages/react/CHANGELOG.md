@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.2.2
+
+### Patch Changes
+
+- 3a0713d: refactor `useHandleSignInCallback()`
+
+  - check `isLoading` and `error` before calling the client callback handler to prevent unnecessary calls (e.g. in React strict mode)
+
 ## 2.2.1
 
 ### Patch Changes
