@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.2.3
+
+### Patch Changes
+
+- bump `@logto/browser` version
+
 ## 2.2.2
 
 ### Patch Changes

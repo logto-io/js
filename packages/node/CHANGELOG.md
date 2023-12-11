@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.2.2
+
+### Patch Changes
+
+- bump `@logto/client` version
+
 ## 2.2.1
 
 ### Patch Changes
