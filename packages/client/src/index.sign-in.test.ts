@@ -1,4 +1,5 @@
 import { Prompt } from '@logto/js';
+import { trySafe } from '@silverhand/essentials';
 
 import type { LogtoSignInSessionItem } from './index.js';
 import { LogtoClientError } from './index.js';
@@ -41,7 +42,7 @@ describe('LogtoClient', () => {
         codeVerifier: mockedCodeVerifier,
       });
 
-      await expect(async () => signInSession.getSignInSessionItem()).rejects.toMatchError(
+      await expect(async () => signInSession.getSignInSession()).rejects.toMatchError(
         new LogtoClientError('sign_in_session.invalid')
       );
     });
@@ -50,7 +51,7 @@ describe('LogtoClient', () => {
       const signInSession = new LogtoClientWithAccessors({ endpoint, appId }, createAdapters());
 
       await signInSession.setSignInSessionItem(null);
-      await expect(signInSession.getSignInSessionItem()).resolves.toBeNull();
+      await expect(signInSession.getSignInSession()).resolves.toBeNull();
     });
 
     it('should be able to set and get the correct item', async () => {
@@ -63,7 +64,7 @@ describe('LogtoClient', () => {
       };
 
       await signInSession.setSignInSessionItem(signInSessionItem);
-      await expect(signInSession.getSignInSessionItem()).resolves.toEqual(signInSessionItem);
+      await expect(signInSession.getSignInSession()).resolves.toEqual(signInSessionItem);
     });
   });
 
@@ -109,6 +110,16 @@ describe('LogtoClient', () => {
       await expect(logtoClient.handleSignInCallback(redirectUri)).rejects.toMatchError(
         new LogtoClientError('sign_in_session.not_found')
       );
+    });
+
+    it('should only call once when calling handleSignInCallback simultaneously', async () => {
+      const logtoClient = createClient();
+      const spy = jest.spyOn(logtoClient, 'getSignInSession');
+      await Promise.all([
+        trySafe(logtoClient.handleSignInCallback(redirectUri)),
+        trySafe(logtoClient.handleSignInCallback(redirectUri)),
+      ]);
+      expect(spy).toBeCalledTimes(1);
     });
 
     it('should set tokens after calling signIn and handleSignInCallback successfully', async () => {

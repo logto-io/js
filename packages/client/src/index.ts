@@ -67,7 +67,11 @@ export * from './types/index.js';
  */
 export default class LogtoClient {
   readonly logtoConfig: LogtoConfig;
-  readonly getOidcConfig: () => Promise<OidcConfigResponse> = memoize(this.#getOidcConfig);
+  /**
+   * Get the OIDC configuration from the discovery endpoint. This method will
+   * only fetch the configuration once and cache the result.
+   */
+  readonly getOidcConfig: () => Promise<OidcConfigResponse> = once(this.#getOidcConfig);
   /**
    * Get the access token from the storage with refresh strategy.
    *
@@ -97,6 +101,17 @@ export default class LogtoClient {
    * It uses the same refresh strategy as {@link getAccessToken}.
    */
   readonly getOrganizationToken = memoize(this.#getOrganizationToken);
+
+  /**
+   * Handle the sign-in callback by parsing the authorization code from the
+   * callback URI and exchanging it for the tokens.
+   *
+   * @param callbackUri The callback URI, including the search params, that the user is redirected to after the sign-in flow is completed.
+   * The origin and pathname of this URI must match the origin and pathname of the redirect URI specified in {@link signIn}.
+   * In many cases you'll probably end up passing `window.location.href` as the argument to this function.
+   * @throws LogtoClientError if the sign-in session is not found.
+   */
+  readonly handleSignInCallback = memoize(this.#handleSignInCallback);
 
   protected readonly getJwtVerifyGetKey = once(this.#getJwtVerifyGetKey);
   protected readonly adapter: ClientAdapterInstance;
@@ -250,60 +265,6 @@ export default class LogtoClient {
     const { origin, pathname } = new URL(url);
 
     return `${origin}${pathname}` === redirectUri;
-  }
-
-  /**
-   * Handle the sign-in callback by parsing the authorization code from the
-   * callback URI and exchanging it for the tokens.
-   *
-   * @param callbackUri The callback URI, including the search params, that the user is redirected to after the sign-in flow is completed.
-   * The origin and pathname of this URI must match the origin and pathname of the redirect URI specified in {@link signIn}.
-   * In many cases you'll probably end up passing `window.location.href` as the argument to this function.
-   * @throws LogtoClientError if the sign-in session is not found.
-   */
-  async handleSignInCallback(callbackUri: string) {
-    const { requester } = this.adapter;
-    const signInSession = await this.getSignInSession();
-
-    if (!signInSession) {
-      throw new LogtoClientError('sign_in_session.not_found');
-    }
-
-    const { redirectUri, state, codeVerifier } = signInSession;
-    const code = verifyAndParseCodeFromCallbackUri(callbackUri, redirectUri, state);
-
-    // NOTE: Will add scope to accessTokenKey when needed. (Linear issue LOG-1589)
-    const accessTokenKey = buildAccessTokenKey();
-    const { appId: clientId } = this.logtoConfig;
-    const { tokenEndpoint } = await this.getOidcConfig();
-    const requestedAt = Math.round(Date.now() / 1000);
-    const { idToken, refreshToken, accessToken, scope, expiresIn } =
-      await fetchTokenByAuthorizationCode(
-        {
-          clientId,
-          tokenEndpoint,
-          redirectUri,
-          codeVerifier,
-          code,
-        },
-        requester
-      );
-
-    await this.verifyIdToken(idToken);
-    await this.setRefreshToken(refreshToken ?? null);
-    await this.setIdToken(idToken);
-
-    this.accessTokenMap.set(accessTokenKey, {
-      token: accessToken,
-      scope,
-      /** The `expiresAt` variable provides an approximate estimation of the actual `exp` property
-       * in the token claims. It is utilized by the client to determine if the cached access token
-       * has expired and when a new access token should be requested.
-       */
-      expiresAt: requestedAt + expiresIn,
-    });
-    await this.saveAccessTokenMap();
-    await this.setSignInSession(null);
   }
 
   /**
@@ -513,6 +474,51 @@ export default class LogtoClient {
     }
 
     return this.#getAccessToken(undefined, organizationId);
+  }
+
+  async #handleSignInCallback(callbackUri: string) {
+    const { requester } = this.adapter;
+    const signInSession = await this.getSignInSession();
+
+    if (!signInSession) {
+      throw new LogtoClientError('sign_in_session.not_found');
+    }
+
+    const { redirectUri, state, codeVerifier } = signInSession;
+    const code = verifyAndParseCodeFromCallbackUri(callbackUri, redirectUri, state);
+
+    // NOTE: Will add scope to accessTokenKey when needed. (Linear issue LOG-1589)
+    const accessTokenKey = buildAccessTokenKey();
+    const { appId: clientId } = this.logtoConfig;
+    const { tokenEndpoint } = await this.getOidcConfig();
+    const requestedAt = Math.round(Date.now() / 1000);
+    const { idToken, refreshToken, accessToken, scope, expiresIn } =
+      await fetchTokenByAuthorizationCode(
+        {
+          clientId,
+          tokenEndpoint,
+          redirectUri,
+          codeVerifier,
+          code,
+        },
+        requester
+      );
+
+    await this.verifyIdToken(idToken);
+    await this.setRefreshToken(refreshToken ?? null);
+    await this.setIdToken(idToken);
+
+    this.accessTokenMap.set(accessTokenKey, {
+      token: accessToken,
+      scope,
+      /** The `expiresAt` variable provides an approximate estimation of the actual `exp` property
+       * in the token claims. It is utilized by the client to determine if the cached access token
+       * has expired and when a new access token should be requested.
+       */
+      expiresAt: requestedAt + expiresIn,
+    });
+    await this.saveAccessTokenMap();
+    await this.setSignInSession(null);
   }
 }
 /* eslint-enable max-lines */
