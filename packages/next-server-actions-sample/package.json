@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@silverhand/ts-config": "^5.0.0",
-    "@silverhand/ts-config-react": "^4.0.0",
+    "@silverhand/ts-config-react": "^5.0.0",
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
