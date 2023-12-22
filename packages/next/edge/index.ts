@@ -100,7 +100,7 @@ export default class LogtoClient extends BaseClient {
     return context;
   };
 
-  private async createNodeClientFromEdgeRequest(request: Request) {
+  async createNodeClientFromEdgeRequest(request: Request) {
     const cookieName = `logto:${this.config.appId}`;
     const cookies = new RequestCookies(request.headers);
     const headers = new Headers();

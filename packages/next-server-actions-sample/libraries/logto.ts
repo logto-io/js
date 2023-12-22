@@ -1,19 +1,19 @@
-"use server";
+'use server';
 
-import LogtoClient from "@logto/next/server-actions";
-import { cookies } from "next/headers";
+import { UserScope } from '@logto/next';
+import LogtoClient from '@logto/next/server-actions';
+import { cookies } from 'next/headers';
 
 const config = {
-  appId: process.env.APP_ID ?? "<app-id>",
-  appSecret: process.env.APP_SECRET ?? "<app-secret>",
-  endpoint: process.env.ENDPOINT ?? "http://localhost:3001",
-  baseUrl: process.env.BASE_URL ?? "http://localhost:3000",
-  cookieSecret:
-    process.env.COOKIE_SECRET ?? "complex_password_at_least_32_characters_long",
-  cookieSecure: process.env.NODE_ENV === "production",
+  appId: process.env.APP_ID ?? '<app-id>',
+  appSecret: process.env.APP_SECRET ?? '<app-secret>',
+  endpoint: process.env.ENDPOINT ?? 'http://localhost:3001',
+  baseUrl: process.env.BASE_URL ?? 'http://localhost:3000',
+  cookieSecret: process.env.COOKIE_SECRET ?? 'complex_password_at_least_32_characters_long',
+  cookieSecure: process.env.NODE_ENV === 'production',
   // Optional fields for RBAC
-  resources: process.env.RESOURCES?.split(","),
-  scopes: process.env.SCOPES?.split(","),
+  resources: process.env.RESOURCES?.split(','),
+  scopes: process.env.SCOPES?.split(',') ?? [UserScope.Organizations],
 };
 
 const logtoClient = new LogtoClient(config);
@@ -32,7 +32,7 @@ const setCookies = (value?: string) => {
 };
 
 const getCookie = () => {
-  return cookies().get(cookieName)?.value ?? "";
+  return cookies().get(cookieName)?.value ?? '';
 };
 
 export const signIn = async () => {
@@ -59,10 +59,7 @@ export const handleSignIn = async (searchParams: Record<string, string>) => {
 };
 
 export const signOut = async () => {
-  const url = await logtoClient.handleSignOut(
-    getCookie(),
-    `${config.baseUrl}/callback`
-  );
+  const url = await logtoClient.handleSignOut(getCookie(), `${config.baseUrl}/callback`);
 
   setCookies('');
 
@@ -71,4 +68,23 @@ export const signOut = async () => {
 
 export const getLogtoContext = async () => {
   return await logtoClient.getLogtoContext(getCookie());
+};
+
+export const getOrganizationTokens = async () => {
+  const { isAuthenticated } = await getLogtoContext();
+
+  if (!isAuthenticated) {
+    return [];
+  }
+
+  const { nodeClient } = await logtoClient.createNodeClientFromHeaders(getCookie());
+
+  const { organizations = [] } = await nodeClient.getIdTokenClaims();
+
+  return await Promise.all(
+    organizations.map(async (organizationId) => ({
+      id: organizationId,
+      token: await nodeClient.getOrganizationToken(organizationId),
+    }))
+  );
 };

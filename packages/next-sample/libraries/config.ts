@@ -1,3 +1,5 @@
+import { UserScope } from '@logto/next';
+
 export const config = {
   appId: process.env.APP_ID ?? '<app-id>',
   appSecret: process.env.APP_SECRET ?? '<app-secret>',
@@ -7,5 +9,5 @@ export const config = {
   cookieSecure: process.env.NODE_ENV === 'production',
   // Optional fields for RBAC
   resources: process.env.RESOURCES?.split(','),
-  scopes: process.env.SCOPES?.split(','),
+  scopes: process.env.SCOPES ? process.env.SCOPES.split(',') : [UserScope.Organizations],
 };

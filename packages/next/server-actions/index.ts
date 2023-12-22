@@ -90,7 +90,7 @@ export default class LogtoClient extends BaseClient {
     return context;
   }
 
-  private async createNodeClientFromHeaders(cookie: string) {
+  async createNodeClientFromHeaders(cookie: string) {
     const session = await createSession(
       {
         secret: this.config.cookieSecret,

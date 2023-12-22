@@ -236,4 +236,19 @@ describe('Next', () => {
       });
     });
   });
+
+  describe('createNodeClientFromNextApi', () => {
+    it('should get node client without crash', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        handler: async (request, response) => {
+          await client.createNodeClientFromNextApi(request, response);
+          response.end();
+        },
+        test: async ({ fetch }) => {
+          await expect(fetch({ method: 'GET' })).resolves.not.toThrow();
+        },
+      });
+    });
+  });
 });
