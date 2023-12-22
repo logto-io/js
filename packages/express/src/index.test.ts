@@ -51,6 +51,8 @@ jest.mock('@logto/node', () =>
   }))
 );
 
+// The new version of Supertest use callback chaining instead of promise chaining
+/* eslint-disable max-nested-callbacks */
 describe('Express', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -59,41 +61,54 @@ describe('Express', () => {
   describe('handleAuthRoutes', () => {
     describe('handleSignIn', () => {
       it('should redirect to Logto sign in url and save session', async () => {
-        const response = await testRouter(handleAuthRoutes(configs)).get('/logto/sign-in');
-        expect(response.header.location).toEqual(signInUrl);
-        expect(signIn).toHaveBeenCalled();
+        testRouter(handleAuthRoutes(configs))
+          .get('/logto/sign-in')
+          .expect('Location', signInUrl)
+          .end(() => {
+            expect(signIn).toHaveBeenCalled();
+          });
       });
 
       it('should support custom auth routes prefix', async () => {
-        const response = await testRouter(
-          handleAuthRoutes({ ...configs, authRoutesPrefix: 'custom' })
-        ).get('/custom/sign-in');
-        expect(response.header.location).toEqual(signInUrl);
-        expect(signIn).toHaveBeenCalled();
+        testRouter(handleAuthRoutes({ ...configs, authRoutesPrefix: 'custom' }))
+          .get('/logto/sign-in')
+          .expect('Location', signInUrl)
+          .end(() => {
+            expect(signIn).toHaveBeenCalled();
+          });
       });
     });
 
-    describe('handleSignUn', () => {
+    describe('handleSignUp', () => {
       it('should redirect to Logto sign in url with signUp interaction mode and save session', async () => {
-        const response = await testRouter(handleAuthRoutes(configs)).get('/logto/sign-up');
-        expect(response.header.location).toEqual(`${signInUrl}?interactionMode=signUp`);
-        expect(signIn).toHaveBeenCalled();
+        testRouter(handleAuthRoutes(configs))
+          .get('/logto/sign-up')
+          .expect('Location', `${signInUrl}?interactionMode=signUp`)
+          .end(() => {
+            expect(signIn).toHaveBeenCalled();
+          });
       });
     });
 
     describe('handleSignInCallback', () => {
       it('should call client.handleSignInCallback and redirect to home page', async () => {
-        const response = await testRouter(handleAuthRoutes(configs)).get('/logto/sign-in-callback');
-        expect(response.header.location).toEqual(configs.baseUrl);
-        expect(handleSignInCallback).toHaveBeenCalled();
+        testRouter(handleAuthRoutes(configs))
+          .get('/logto/sign-in-callback')
+          .expect('Location', configs.baseUrl)
+          .end(() => {
+            expect(handleSignInCallback).toHaveBeenCalled();
+          });
       });
     });
 
     describe('handleSignOut', () => {
       it('should redirect to Logto sign out url', async () => {
-        const response = await testRouter(handleAuthRoutes(configs)).get('/logto/sign-out');
-        expect(response.header.location).toEqual(configs.baseUrl);
-        expect(signOut).toHaveBeenCalled();
+        testRouter(handleAuthRoutes(configs))
+          .get('/logto/sign-out')
+          .expect('Location', configs.baseUrl)
+          .end(() => {
+            expect(signOut).toHaveBeenCalled();
+          });
       });
     });
   });
@@ -110,3 +125,4 @@ describe('Express', () => {
     });
   });
 });
+/* eslint-enable max-nested-callbacks */
