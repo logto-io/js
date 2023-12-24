@@ -2,7 +2,7 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "[scss]": {
     "editor.codeActionsOnSave": {
-      "source.fixAll.stylelint": true
+      "source.fixAll.stylelint": "explicit"
     }
   },
   "cssVariables.lookupFiles": [
@@ -20,7 +20,7 @@
     "typescriptreact",
   ],
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true,
+    "source.fixAll.eslint": "explicit"
   },
   "cSpell.words": [
     "logto",

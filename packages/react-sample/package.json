@@ -13,9 +13,9 @@
   },
   "dependencies": {
     "@logto/react": "workspace:^2.2.0",
+    "@tanstack/react-query": "^5.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "@tanstack/react-query": "^5.0.0",
     "react-router-dom": "^6.2.2"
   },
   "devDependencies": {

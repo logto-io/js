@@ -1,5 +1,6 @@
-import type { IdTokenClaims, LogtoConfig, UserInfoResponse } from '@logto/browser';
+import type { LogtoConfig } from '@logto/browser';
 import LogtoClient from '@logto/browser';
+import { type Optional } from '@silverhand/essentials';
 import type { App, Ref } from 'vue';
 import { inject, readonly, watchEffect } from 'vue';
 
@@ -31,6 +32,12 @@ export {
   PersistKey,
 } from '@logto/browser';
 
+type OptionalPromiseReturn<T> = {
+  [K in keyof T]: T[K] extends (...args: infer A) => Promise<infer R>
+    ? (...args: A) => Promise<Optional<R>>
+    : T[K];
+};
+
 type LogtoVuePlugin = {
   install: (app: App, config: LogtoConfig) => void;
 };
@@ -39,12 +46,21 @@ type Logto = {
   isAuthenticated: Readonly<Ref<boolean>>;
   isLoading: Readonly<Ref<boolean>>;
   error: Readonly<Ref<Error | undefined>>;
-  fetchUserInfo: () => Promise<UserInfoResponse | undefined>;
-  getAccessToken: (resource?: string) => Promise<string | undefined>;
-  getIdTokenClaims: () => Promise<IdTokenClaims | undefined>;
-  signIn: (redirectUri: string) => Promise<void>;
-  signOut: (postLogoutRedirectUri?: string) => Promise<void>;
-};
+} & OptionalPromiseReturn<
+  Pick<
+    LogtoClient,
+    | 'getRefreshToken'
+    | 'getAccessToken'
+    | 'getAccessTokenClaims'
+    | 'getOrganizationToken'
+    | 'getOrganizationTokenClaims'
+    | 'getIdToken'
+    | 'getIdTokenClaims'
+    | 'signIn'
+    | 'signOut'
+    | 'fetchUserInfo'
+  >
+>;
 
 /**
  * Creates the Logto Vue plugin

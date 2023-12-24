@@ -21,6 +21,11 @@ const router = createRouter({
       name: "protected-resource",
       component: () => import("../views/ProtectedResourceView.vue"),
     },
+    {
+      path: "/organizations",
+      name: "organizations",
+      component: () => import("../views/OrganizationsView.vue"),
+    },
   ],
 });
 
