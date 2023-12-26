@@ -46,6 +46,8 @@ if (isAuthenticated.value) {
         </tbody>
       </table>
       <RouterLink to="/protected-resource">View Protected Resource</RouterLink>
+      <br />
+      <RouterLink to="/organizations">View Organizations</RouterLink>
     </div>
   </div>
 </template>

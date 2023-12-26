@@ -473,7 +473,7 @@ export default class LogtoClient {
       throw new LogtoClientError('missing_scope_organizations');
     }
 
-    return this.#getAccessToken(undefined, organizationId);
+    return this.getAccessToken(undefined, organizationId);
   }
 
   async #handleSignInCallback(callbackUri: string) {

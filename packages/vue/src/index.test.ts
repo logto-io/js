@@ -14,6 +14,7 @@ const mockedFetchUserInfo = jest.fn().mockResolvedValue({ sub: 'foo' });
 const getAccessToken = jest.fn(() => {
   throw new Error('not authenticated');
 });
+const signIn = jest.fn();
 const injectMock = jest.fn<unknown, string[]>((): unknown => {
   return undefined;
 });
@@ -24,11 +25,17 @@ jest.mock('@logto/browser', () => {
       isAuthenticated,
       isSignInRedirected,
       handleSignInCallback,
+      getRefreshToken: jest.fn(),
       getAccessToken,
+      getAccessTokenClaims: jest.fn(),
+      getOrganizationToken: jest.fn(),
+      getOrganizationTokenClaims: jest.fn(),
+      getIdToken: jest.fn(),
+      getIdTokenClaims: jest.fn(),
+      signIn,
+      signOut: jest.fn(),
       fetchUserInfo: mockedFetchUserInfo,
-      signIn: jest.fn().mockResolvedValue(undefined),
-      signOut: jest.fn().mockResolvedValue(undefined),
-    };
+    } satisfies Partial<LogtoClient>;
   });
 });
 
@@ -95,6 +102,10 @@ describe('useLogto', () => {
       signIn,
       signOut,
       getAccessToken,
+      getAccessTokenClaims,
+      getOrganizationToken,
+      getOrganizationTokenClaims,
+      getIdToken,
       getIdTokenClaims,
       fetchUserInfo,
     } = useLogto();
@@ -105,6 +116,10 @@ describe('useLogto', () => {
     expect(signIn).toBeInstanceOf(Function);
     expect(signOut).toBeInstanceOf(Function);
     expect(getAccessToken).toBeInstanceOf(Function);
+    expect(getAccessTokenClaims).toBeInstanceOf(Function);
+    expect(getOrganizationToken).toBeInstanceOf(Function);
+    expect(getOrganizationTokenClaims).toBeInstanceOf(Function);
+    expect(getIdToken).toBeInstanceOf(Function);
     expect(getIdTokenClaims).toBeInstanceOf(Function);
     expect(fetchUserInfo).toBeInstanceOf(Function);
   });
