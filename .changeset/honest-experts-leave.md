@@ -1,5 +1,4 @@
 ---
-"@logto/client": patch
 "@logto/vue": minor
 "@logto/vue-sample": minor
 ---
