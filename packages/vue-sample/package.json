@@ -1,6 +1,6 @@
 {
   "name": "@logto/vue-sample",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -11,7 +11,7 @@
     "lint": "eslint --ext .vue,.ts src"
   },
   "dependencies": {
-    "@logto/vue": "workspace:^2.0.0",
+    "@logto/vue": "workspace:^2.2.0",
     "vue": "^3.3.13",
     "vue-router": "^4.0.14"
   },

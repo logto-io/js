@@ -1,5 +1,12 @@
 # next-server-actions-sample
 
+## 2.1.4
+
+### Patch Changes
+
+- Updated dependencies [c22000a]
+  - @logto/next@2.4.0
+
 ## 2.1.3
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # Change Log
 
+## 2.1.0
+
+### Minor Changes
+
+- efdf5c5: Support organizations in Vue SDK
+
+### Patch Changes
+
+- Updated dependencies [efdf5c5]
+  - @logto/vue@2.2.0
+
 ## 2.0.0
 
 ### Major Changes

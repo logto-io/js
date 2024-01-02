@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.4.0
+
+### Minor Changes
+
+- c22000a: Add method of getting Logto Node Client in order to access organization features.
+
 ## 2.3.0
 
 ### Minor Changes

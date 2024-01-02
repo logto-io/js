@@ -1052,7 +1052,7 @@ importers:
   packages/vue-sample:
     dependencies:
       '@logto/vue':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.2.0
         version: link:../vue
       vue:
         specifier: ^3.3.13
