@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.3.2
+
+### Patch Changes
+
+- efdf5c5: Fix a potential build issue in Vue, which is caused by using private method in Client SDK.
+
 ## 2.3.1
 
 ### Patch Changes
