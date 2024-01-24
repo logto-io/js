@@ -4,6 +4,10 @@ import SignOut from './sign-out';
 
 export default async function Home() {
   const { isAuthenticated, claims } = await getLogtoContext();
+  // If you need access token, pass the getAccessToken option.
+  // and you can pass the access token to other API server or pass down to a client component.
+  // const { isAuthenticated, claims, accessToken } = await getLogtoContext({ getAccessToken: true });
+  // console.log(accessToken);
   const organizations = await getOrganizationTokens();
 
   return (

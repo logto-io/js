@@ -3,6 +3,7 @@
 import { UserScope } from '@logto/next';
 import LogtoClient from '@logto/next/server-actions';
 import { cookies } from 'next/headers';
+import { GetContextParameters } from '../../node/lib/src/types';
 
 const config = {
   appId: process.env.APP_ID ?? '<app-id>',
@@ -66,8 +67,8 @@ export const signOut = async () => {
   return url;
 };
 
-export const getLogtoContext = async () => {
-  return await logtoClient.getLogtoContext(getCookie());
+export const getLogtoContext = async (config?: GetContextParameters) => {
+  return await logtoClient.getLogtoContext(getCookie(), config);
 };
 
 export const getOrganizationTokens = async () => {
