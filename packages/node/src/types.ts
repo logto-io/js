@@ -14,10 +14,12 @@ export type LogtoContext = {
   accessToken?: string;
   userInfo?: UserInfoResponse;
   scopes?: string[];
+  organizationTokens?: Record<string, string>;
 };
 
 export type GetContextParameters = {
   fetchUserInfo?: boolean;
   getAccessToken?: boolean;
   resource?: string;
+  getOrganizationToken?: boolean;
 };
