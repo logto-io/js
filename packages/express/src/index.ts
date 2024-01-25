@@ -107,6 +107,7 @@ export const withLogto =
       getAccessToken: config.getAccessToken,
       resource: config.resource,
       fetchUserInfo: config.fetchUserInfo,
+      getOrganizationToken: config.getOrganizationToken,
     });
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods
     Object.defineProperty(request, 'user', { enumerable: true, get: () => user });

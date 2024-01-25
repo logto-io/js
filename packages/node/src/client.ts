@@ -1,5 +1,5 @@
 import BaseClient from '@logto/client';
-import { conditional } from '@silverhand/essentials';
+import { conditional, trySafe } from '@silverhand/essentials';
 
 import type { GetContextParameters, LogtoContext } from './types.js';
 
@@ -30,6 +30,7 @@ export default class LogtoNodeBaseClient extends BaseClient {
     getAccessToken,
     resource,
     fetchUserInfo,
+    getOrganizationToken,
   }: GetContextParameters = {}): Promise<LogtoContext> => {
     const isAuthenticated = await this.isAuthenticated();
 
@@ -41,29 +42,43 @@ export default class LogtoNodeBaseClient extends BaseClient {
 
     const claims = await this.getIdTokenClaims();
 
-    if (!getAccessToken) {
-      return {
-        isAuthenticated,
-        claims,
-        userInfo: conditional(fetchUserInfo && (await this.fetchUserInfo())),
-      };
-    }
+    const { accessToken, accessTokenClaims } = getAccessToken
+      ? {
+          accessToken: await trySafe(async () => this.getAccessToken(resource)),
+          accessTokenClaims: await trySafe(async () => this.getAccessTokenClaims(resource)),
+        }
+      : { accessToken: undefined, accessTokenClaims: undefined };
 
-    try {
-      const accessToken = await this.getAccessToken(resource);
-      const accessTokenClaims = await this.getAccessTokenClaims(resource);
-
-      return {
-        isAuthenticated,
-        claims: await this.getIdTokenClaims(),
-        userInfo: conditional(fetchUserInfo && (await this.fetchUserInfo())),
-        accessToken,
-        scopes: accessTokenClaims.scope?.split(' '),
-      };
-    } catch {
+    if (getAccessToken && !accessToken) {
+      // Failed to get access token, the user is not authenticated
       return {
         isAuthenticated: false,
       };
     }
+
+    const organizationTokens = conditional(
+      getOrganizationToken &&
+        claims.organizations &&
+        Object.fromEntries(
+          await Promise.all(
+            claims.organizations.map(
+              async (organizationId): Promise<[string, string]> => [
+                organizationId,
+                await this.getOrganizationToken(organizationId),
+              ]
+            )
+          )
+        )
+    );
+
+    return {
+      isAuthenticated,
+      claims,
+      userInfo: conditional(fetchUserInfo && (await this.fetchUserInfo())),
+      ...conditional(
+        getAccessToken && { accessToken, scopes: accessTokenClaims?.scope?.split(' ') }
+      ),
+      organizationTokens,
+    };
   };
 }

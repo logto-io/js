@@ -41,7 +41,10 @@ app.get('/', (request, response) => {
       <div><a href="/logto/sign-in">Sign In</a></div>
       <div><a href="/logto/sign-out">Sign Out</a></div>
       <div><a href="/local-user-claims">Profile</a></div>
-      <div><a href="/protected">Protected Resource</a></div>`
+      <div><a href="/protected">Protected Resource</a></div>
+      <div><a href="/remote-full-user">Fetch user info</a></div>
+      <div><a href="/fetch-access-token">Fetch access token</a></div>
+      <div><a href="/fetch-organization-token">Fetch organization token</a></div>`
   );
 });
 
@@ -68,6 +71,19 @@ app.get(
     // Fetch access token from remote, this may slowdown the response time,
     // you can also add "resource" if needed.
     getAccessToken: true,
+  }),
+  (request, response) => {
+    response.json(request.user);
+  }
+);
+
+app.get(
+  '/fetch-organization-token',
+  withLogto({
+    ...config,
+    // Fetch organization token from remote
+    // Remember to add "UserScope.Organizations" scope
+    getOrganizationToken: true,
   }),
   (request, response) => {
     response.json(request.user);

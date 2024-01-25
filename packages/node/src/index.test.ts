@@ -11,13 +11,16 @@ const storage = {
 };
 
 const getAccessToken = jest.fn(async () => true);
+const getOrganizationToken = jest.fn(async () => 'token');
 const fetchUserInfo = jest.fn(async () => ({ name: 'name' }));
-const getIdTokenClaims = jest.fn(async () => ({ sub: 'sub' }));
+const mockIdTokenClaims = { sub: 'sub', organizations: ['org1'] };
+const getIdTokenClaims = jest.fn(async () => mockIdTokenClaims);
 const isAuthenticated = jest.fn(async () => true);
 jest.mock('@logto/client', () => ({
   __esModule: true,
   default: jest.fn(() => ({
     getAccessToken,
+    getOrganizationToken,
     getIdTokenClaims,
     isAuthenticated,
     fetchUserInfo,
@@ -35,6 +38,7 @@ describe('LogtoClient', () => {
   describe('getContext', () => {
     beforeEach(() => {
       getAccessToken.mockClear();
+      getOrganizationToken.mockClear();
       fetchUserInfo.mockClear();
     });
 
@@ -47,6 +51,17 @@ describe('LogtoClient', () => {
         isAuthenticated: false,
       });
       expect(getAccessToken).toHaveBeenCalledWith('resource');
+    });
+
+    it('should get organization tokens', async () => {
+      const client = new LogtoClient({ endpoint, appId }, { navigate, storage });
+      await expect(client.getContext({ getOrganizationToken: true })).resolves.toEqual({
+        isAuthenticated: true,
+        claims: mockIdTokenClaims,
+        organizationTokens: { org1: 'token' },
+        userInfo: undefined,
+      });
+      expect(getOrganizationToken).toHaveBeenCalledWith('org1');
     });
 
     it('should fetch remote user info and return when "fetchUserInfo" is enabled', async () => {
@@ -62,14 +77,17 @@ describe('LogtoClient', () => {
       expect(fetchUserInfo).toHaveBeenCalled();
     });
 
-    it('should return context and not call getAccessToken and fetchUserInfo by default', async () => {
+    it('should return context and not call getAccessToken, getOrganizationToken, fetchUserInfo by default', async () => {
       const client = new LogtoClient({ endpoint, appId }, { navigate, storage });
       await expect(client.getContext()).resolves.toEqual({
         isAuthenticated: true,
-        claims: { sub: 'sub' },
+        claims: mockIdTokenClaims,
+        organizationTokens: undefined,
+        userInfo: undefined,
       });
       expect(getIdTokenClaims).toHaveBeenCalled();
       expect(getAccessToken).not.toHaveBeenCalled();
+      expect(getOrganizationToken).not.toHaveBeenCalled();
       expect(fetchUserInfo).not.toHaveBeenCalled();
     });
   });
