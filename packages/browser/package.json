@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@logto/client": "workspace:^2.3.1",
-    "@silverhand/essentials": "^2.6.2",
+    "@silverhand/essentials": "^2.8.7",
     "js-base64": "^3.7.4"
   },
   "devDependencies": {
