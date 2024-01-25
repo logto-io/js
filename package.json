@@ -19,7 +19,7 @@
     "@rollup/plugin-typescript": "^11.1.0",
     "@types/node": "^18.15.11",
     "husky": "^8.0.1",
-    "rollup": "^3.20.2",
+    "rollup": "^4.0.0",
     "rollup-plugin-summary": "^2.0.0",
     "typescript": "^5.0.0"
   },
