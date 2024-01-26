@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.0.2
+
+### Patch Changes
+
+- 867b357: Add Node v20 LTS support
+
 ## 3.0.1
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.2.1
+
+### Patch Changes
+
+- 867b357: Add Node v20 LTS support
+- Updated dependencies [867b357]
+  - @logto/browser@2.2.2
+
 ## 2.2.0
 
 ### Minor Changes

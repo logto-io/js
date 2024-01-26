@@ -1,5 +1,17 @@
 # Change Log
 
+## 2.3.0
+
+### Minor Changes
+
+- d635a10: Add organization support
+
+### Patch Changes
+
+- Updated dependencies [d635a10]
+- Updated dependencies [867b357]
+  - @logto/node@2.3.0
+
 ## 2.2.0
 
 ### Minor Changes

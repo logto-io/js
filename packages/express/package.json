@@ -1,6 +1,6 @@
 {
   "name": "@logto/express",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "type": "module",
   "main": "./lib/index.cjs",
   "module": "./lib/index.js",
@@ -32,7 +32,7 @@
     "postpack": "node test.cjs"
   },
   "dependencies": {
-    "@logto/node": "workspace:^2.2.0"
+    "@logto/node": "workspace:^2.3.0"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "^5.0.0",

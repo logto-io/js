@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.3.3
+
+### Patch Changes
+
+- 867b357: Add Node v20 LTS support
+- Updated dependencies [867b357]
+  - @logto/js@3.0.2
+
 ## 2.3.2
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@logto/vue",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "type": "module",
   "main": "./lib/index.cjs",
   "module": "./lib/index.js",
@@ -31,7 +31,7 @@
     "prepack": "pnpm build && pnpm test"
   },
   "dependencies": {
-    "@logto/browser": "workspace:^2.2.1",
+    "@logto/browser": "workspace:^2.2.2",
     "@silverhand/essentials": "^2.8.7"
   },
   "devDependencies": {

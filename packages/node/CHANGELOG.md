@@ -1,5 +1,17 @@
 # Change Log
 
+## 2.3.0
+
+### Minor Changes
+
+- d635a10: Add organization support
+
+### Patch Changes
+
+- 867b357: Add Node v20 LTS support
+- Updated dependencies [867b357]
+  - @logto/client@2.3.3
+
 ## 2.2.2
 
 ### Patch Changes
