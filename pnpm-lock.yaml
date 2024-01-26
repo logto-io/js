@@ -54,8 +54,8 @@ importers:
         specifier: workspace:^2.3.1
         version: link:../client
       '@silverhand/essentials':
-        specifier: ^2.6.2
-        version: 2.6.2
+        specifier: ^2.8.7
+        version: 2.8.7
       js-base64:
         specifier: ^3.7.4
         version: 3.7.4
@@ -201,8 +201,8 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../js
       '@silverhand/essentials':
-        specifier: ^2.6.2
-        version: 2.6.2
+        specifier: ^2.8.7
+        version: 2.8.7
       camelcase-keys:
         specifier: ^7.0.1
         version: 7.0.2
@@ -381,8 +381,8 @@ importers:
   packages/js:
     dependencies:
       '@silverhand/essentials':
-        specifier: ^2.8.6
-        version: 2.8.6
+        specifier: ^2.8.7
+        version: 2.8.7
       camelcase-keys:
         specifier: ^7.0.1
         version: 7.0.2
@@ -686,8 +686,8 @@ importers:
         specifier: workspace:^2.3.1
         version: link:../client
       '@silverhand/essentials':
-        specifier: ^2.6.2
-        version: 2.6.2
+        specifier: ^2.8.7
+        version: 2.8.7
       js-base64:
         specifier: ^3.7.4
         version: 3.7.4
@@ -802,8 +802,8 @@ importers:
         specifier: workspace:^2.2.1
         version: link:../browser
       '@silverhand/essentials':
-        specifier: ^2.6.2
-        version: 2.6.2
+        specifier: ^2.8.7
+        version: 2.8.7
     devDependencies:
       '@silverhand/eslint-config':
         specifier: ^5.0.0
@@ -1006,8 +1006,8 @@ importers:
         specifier: workspace:^2.2.1
         version: link:../browser
       '@silverhand/essentials':
-        specifier: ^2.6.2
-        version: 2.8.6
+        specifier: ^2.8.7
+        version: 2.8.7
     devDependencies:
       '@silverhand/eslint-config':
         specifier: ^5.0.0
@@ -3835,14 +3835,9 @@ packages:
       lodash: 4.17.21
     dev: true
 
-  /@silverhand/essentials@2.6.2:
-    resolution: {integrity: sha512-1b5u2BGEa14V3o8XzaE7eL+nuwmQe8c1wqSMcGvq+KAusPPZo9tV4glbfF16Xi/ohv37vUpBGJ2DNf4CfuxBLw==}
-    engines: {node: ^16.13.0 || ^18.12.0 || ^19.2.0, pnpm: ^8.0.0}
-    dev: false
-
-  /@silverhand/essentials@2.8.6:
-    resolution: {integrity: sha512-qNyc6CvZRngP66hTA8sbpXGsiu9j6Hu62jCy7LV3tJiytg/hmxJB5oM9k5tpaUa9kHwYJ2X9CManX7SYYNrzHg==}
-    engines: {node: ^16.13.0 || ^18.12.0 || ^19.2.0, pnpm: ^8.0.0}
+  /@silverhand/essentials@2.8.7:
+    resolution: {integrity: sha512-WFzd8OT7NJDRJcL1ueI23IKFc6lSEicIzO3b8Z1a91/Hy4nVtS0GqH51ZsSCUi0uU+rYpCb3eED1kLmCH+cVig==}
+    engines: {node: ^18.12.0 || ^20.9.0, pnpm: ^8.0.0}
     dev: false
 
   /@silverhand/ts-config-react@5.0.0(typescript@5.0.2):

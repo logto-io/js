@@ -30,7 +30,7 @@
     "prepack": "pnpm build && pnpm test"
   },
   "dependencies": {
-    "@silverhand/essentials": "^2.8.6",
+    "@silverhand/essentials": "^2.8.7",
     "camelcase-keys": "^7.0.1",
     "jose": "^5.0.0"
   },
