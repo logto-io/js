@@ -31,13 +31,13 @@ jobs:
         run: pnpm -r test:coverage
 
       - name: Codecov js
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           flags: js
           directory: ./packages/js
 
       - name: Codecov browser
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           flags: browser
           directory: ./packages/browser
