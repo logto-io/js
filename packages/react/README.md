@@ -1,9 +1,12 @@
 # Logto React SDK
+
 [![Version](https://img.shields.io/npm/v/@logto/react)](https://www.npmjs.com/package/@logto/react)
 [![Build Status](https://github.com/logto-io/js/actions/workflows/main.yml/badge.svg)](https://github.com/logto-io/js/actions/workflows/main.yml)
 [![Codecov](https://img.shields.io/codecov/c/github/logto-io/js)](https://app.codecov.io/gh/logto-io/js?branch=master)
 
-The Logto React SDK written in TypeScript. Check out our [integration guide](https://docs.logto.io/docs/recipes/integrate-logto/react) or [docs](https://docs.logto.io/sdk/JavaScript/react/) for more information.
+The Logto React SDK written in TypeScript.
+
+Check out our [docs](https://docs.logto.io/sdk/react/) for more information.
 
 ## Installation
 
@@ -29,14 +32,15 @@ pnpm add @logto/react
 
 A sample project can be found at [React Sample](https://github.com/logto-io/js/tree/master/packages/react-sample)
 
-Check out the source code and try it with ease.
+Check out the full JS repo and try it with ease.
 
-```
-pnpm i && pnpm start
+```bash
+pnpm i && pnpm build
+cd packages/react-sample && pnpm start
 ```
 
 ## Resources
 
 [![Website](https://img.shields.io/badge/website-logto.io-8262F8.svg)](https://logto.io/)
-[![Docs](https://img.shields.io/badge/docs-logto.io-green.svg)](https://docs.logto.io/sdk/JavaScript/react/)
+[![Docs](https://img.shields.io/badge/docs-logto.io-green.svg)](https://docs.logto.io/)
 [![Discord](https://img.shields.io/discord/965845662535147551?logo=discord&logoColor=ffffff&color=7389D8&cacheSeconds=600)](https://discord.gg/UEPaF3j5e6)
