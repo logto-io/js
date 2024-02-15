@@ -132,7 +132,10 @@ export const createClient = (
     {
       ...createAdapters(withCache),
       storage,
-    }
+    },
+    () => ({
+      verifyIdToken: jest.fn(),
+    })
   );
 
 /**
@@ -141,10 +144,6 @@ export const createClient = (
 export class LogtoClientWithAccessors extends LogtoClient {
   public async runGetOidcConfig(): Promise<OidcConfigResponse> {
     return this.getOidcConfig();
-  }
-
-  public async runGetJwtVerifyGetKey() {
-    return this.getJwtVerifyGetKey();
   }
 
   public getLogtoConfig(): Nullable<LogtoConfig> {

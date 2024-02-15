@@ -28,10 +28,13 @@ import {
 jest.mock('@logto/js', () => ({
   ...jest.requireActual('@logto/js'),
   fetchOidcConfig: async () => fetchOidcConfig(),
-  verifyIdToken: jest.fn(),
 }));
 
 describe('LogtoClient', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe('signInSession', () => {
     test('getter should throw LogtoClientError when signInSession does not contain the required property', async () => {
       const signInSession = new LogtoClientWithAccessors({ endpoint, appId }, createAdapters());
@@ -79,19 +82,19 @@ describe('LogtoClient', () => {
     it('should redirect to signInUri just after calling signIn', async () => {
       const logtoClient = createClient();
       await logtoClient.signIn(redirectUri);
-      expect(navigate).toHaveBeenCalledWith(mockedSignInUri);
+      expect(navigate).toHaveBeenCalledWith(mockedSignInUri, redirectUri);
     });
 
     it('should redirect to signInUri with interactionMode params after calling signIn with signUp mode', async () => {
       const logtoClient = createClient();
       await logtoClient.signIn(redirectUri, 'signUp');
-      expect(navigate).toHaveBeenCalledWith(mockedSignUpUri);
+      expect(navigate).toHaveBeenCalledWith(mockedSignUpUri, redirectUri);
     });
 
     it('should redirect to signInUri just after calling signIn with user specified prompt', async () => {
       const logtoClient = createClient(Prompt.Login);
       await logtoClient.signIn(redirectUri);
-      expect(navigate).toHaveBeenCalledWith(mockedSignInUriWithLoginPrompt);
+      expect(navigate).toHaveBeenCalledWith(mockedSignInUriWithLoginPrompt, redirectUri);
     });
   });
 

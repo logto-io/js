@@ -20,9 +20,9 @@ export class ClientAdapterInstance implements ClientAdapter {
   storage!: Storage<StorageKey | PersistKey>;
   unstable_cache?: Storage<CacheKey> | undefined;
   navigate!: Navigate;
-  generateState!: () => string;
-  generateCodeVerifier!: () => string;
-  generateCodeChallenge!: (codeVerifier: string) => Promise<string>;
+  generateState!: () => string | Promise<string>;
+  generateCodeVerifier!: () => string | Promise<string>;
+  generateCodeChallenge!: (codeVerifier: string) => string | Promise<string>;
   /* END OF IMPLEMENTATION */
 
   constructor(adapter: ClientAdapter) {

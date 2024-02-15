@@ -1,12 +1,8 @@
 import type { Nullable } from '@silverhand/essentials';
 import { urlSafeBase64 } from '@silverhand/essentials';
-import type { JWTVerifyGetKey } from 'jose';
-import { jwtVerify } from 'jose';
 
 import { isArbitraryObject } from './arbitrary-object.js';
 import { LogtoError } from './errors.js';
-
-const issuedAtTimeTolerance = 300; // 5 minutes
 
 export type IdTokenClaims = {
   /** Issuer of this token. */
@@ -93,19 +89,6 @@ function assertIdTokenClaims(data: unknown): asserts data is IdTokenClaims {
   }
 }
 /* eslint-enable complexity */
-
-export const verifyIdToken = async (
-  idToken: string,
-  clientId: string,
-  issuer: string,
-  jwks: JWTVerifyGetKey
-) => {
-  const result = await jwtVerify(idToken, jwks, { audience: clientId, issuer });
-
-  if (Math.abs((result.payload.iat ?? 0) - Date.now() / 1000) > issuedAtTimeTolerance) {
-    throw new LogtoError('id_token.invalid_iat');
-  }
-};
 
 export const decodeIdToken = (token: string): IdTokenClaims => {
   const { 1: encodedPayload } = token.split('.');

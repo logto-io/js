@@ -3,7 +3,7 @@ import typescript from '@rollup/plugin-typescript';
 import { summary } from 'rollup-plugin-summary';
 
 /**
- * @type {import('rollup').OutputOptions}
+ * @type {import('rollup').RollupOptions}
  */
 const configs = {
   input: ['src/index.ts'],

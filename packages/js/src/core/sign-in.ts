@@ -1,6 +1,6 @@
 import { Prompt, QueryKey } from '../consts/index.js';
 import type { InteractionMode } from '../types/index.js';
-import { withDefaultScopes } from '../utils/index.js';
+import { withDefaultScopes } from '../utils/scopes.js';
 
 const codeChallengeMethod = 'S256';
 const responseType = 'code';

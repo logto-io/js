@@ -24,13 +24,4 @@ describe('LogtoClient cache', () => {
     expect(fetchOidcConfig).toHaveBeenCalledTimes(1);
     expect(config3).toBe(config4);
   });
-
-  it('should cache JWT get key function', async () => {
-    const logtoClient = createClient(undefined, undefined, true);
-    const [function1, function2] = await Promise.all([
-      logtoClient.runGetJwtVerifyGetKey(),
-      logtoClient.runGetJwtVerifyGetKey(),
-    ]);
-    expect(function1).toBe(function2);
-  });
 });
