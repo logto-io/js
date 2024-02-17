@@ -7,8 +7,15 @@ A sample Angular application that demonstrates how to integrate Logto with `angu
 
 For more information about `angular-auth-oidc-client`, see its [repository](https://github.com/damienbod/angular-auth-oidc-client) and official [documentation](https://angular-auth-oidc-client.com/).
 
-> *[!Note]
-> This project is excluded from the workspace. To run the sample, you need to manually install project dependencies.
+## Install dependencies
+
+This project is excluded from the workspace. To run the sample, you need to manually install project dependencies.
+
+For PNPM users, run:
+
+```sh
+pnpm install --ignore-workspace
+```
 
 ---
 

@@ -16,6 +16,9 @@ node_modules
 /packages/*/out-tsc
 /packages/*/bazel-out
 
+# sample lockfile
+/packages/*-sample/pnpm-lock.yaml
+
 # logs
 logs
 *.log
