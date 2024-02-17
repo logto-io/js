@@ -69,12 +69,6 @@ jest.mock('@logto/node/edge', () =>
 );
 
 describe('Next (server actions)', () => {
-  beforeAll(() => {
-    // Mock edge environment
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    globalThis.crypto = global.crypto;
-  });
-
   it('creates an instance without crash', () => {
     expect(() => new LogtoClient(configs)).not.toThrow();
   });
