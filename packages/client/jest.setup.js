@@ -1,15 +1,15 @@
-// Need to disable following rules to mock text-decode/text-encoder and crypto for jsdom
 // https://github.com/jsdom/jsdom/issues/1612
-
-import crypto from 'node:crypto';
-
+// We need a WebCrypto polyfill since Node has no direct access to the `CryptoKey` class, which is
+// required in `jose`.
+import { CryptoKey, Crypto } from '@peculiar/webcrypto';
 import { TextDecoder, TextEncoder } from 'text-encoder';
 
 /* eslint-disable @silverhand/fp/no-mutation */
 // Mock WebCrypto in JSDOM
 if (global.window !== undefined) {
-  global.CryptoKey = crypto.webcrypto.CryptoKey;
-  global.crypto.subtle = crypto.webcrypto.subtle;
+  // Global.CryptoKey = crypto.webcrypto.CryptoKey;
+  global.CryptoKey = CryptoKey;
+  global.crypto.subtle = new Crypto().subtle;
 }
 
 global.TextDecoder = TextDecoder;
