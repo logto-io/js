@@ -1,4 +1,3 @@
-import * as crypto from 'crypto';
 import { type IncomingMessage, type ServerResponse } from 'http';
 
 import NodeClient, { type GetContextParameters, type InteractionMode } from '@logto/node';

@@ -1,5 +1,3 @@
-import * as crypto from 'crypto';
-
 import { PersistKey } from '@logto/node';
 
 import { unwrapSession, wrapSession } from './session';
