@@ -1,0 +1,9 @@
+<h1>Hello, {{ title }}</h1>
+<p>Congratulations! Your app is running. 🎉</p>
+<button *ngIf="!isAuthenticated" (click)="signIn()">Sign in</button>
+<ng-container *ngIf="isAuthenticated">
+  <pre>{{ userData | json }}</pre>
+  <p>Access token: {{ accessToken }}</p>
+  <button (click)="signOut()">Sign out</button>
+</ng-container>
+<router-outlet />

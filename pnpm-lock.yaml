@@ -411,6 +411,9 @@ importers:
       '@types/node':
         specifier: ^20.11.19
         version: 20.11.19
+      angular-auth-oidc-client:
+        specifier: ^17.0.0
+        version: 17.0.0(@angular/common@17.2.1)(@angular/core@17.2.1)(@angular/router@17.2.1)(rxjs@7.8.1)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
@@ -1122,6 +1125,62 @@ packages:
     engines: {node: '>=6.0.0'}
     dependencies:
       '@jridgewell/trace-mapping': 0.3.17
+
+  /@angular/common@17.2.1(@angular/core@17.2.1)(rxjs@7.8.1):
+    resolution: {integrity: sha512-ZkQwvjJhnqKulJn3kwbnodYvQf8g8hy2FUMB2MRLXKgwLPv9iqF/KRgSwcNIZnq8hyvIr6FmAntMdyCOonykDQ==}
+    engines: {node: ^18.13.0 || >=20.9.0}
+    peerDependencies:
+      '@angular/core': 17.2.1
+      rxjs: ^6.5.3 || ^7.4.0
+    dependencies:
+      '@angular/core': 17.2.1(rxjs@7.8.1)(zone.js@0.14.4)
+      rxjs: 7.8.1
+      tslib: 2.5.0
+    dev: true
+
+  /@angular/core@17.2.1(rxjs@7.8.1)(zone.js@0.14.4):
+    resolution: {integrity: sha512-gfWeskXA8RA0D3WOPBV5wT8RpqtqFhB8OCR8diGfLojqbMrmZXEvxALBHKAgfarWcR1rnRgmjCQKejWLWCLmmg==}
+    engines: {node: ^18.13.0 || >=20.9.0}
+    peerDependencies:
+      rxjs: ^6.5.3 || ^7.4.0
+      zone.js: ~0.14.0
+    dependencies:
+      rxjs: 7.8.1
+      tslib: 2.5.0
+      zone.js: 0.14.4
+    dev: true
+
+  /@angular/platform-browser@17.2.1(@angular/common@17.2.1)(@angular/core@17.2.1):
+    resolution: {integrity: sha512-on+fTZiDTBJmRQbQe6GOClqaUFe4GJdLS1EbmI+6/8Ntv4QW2PowWnaxajoqTj2Zrh22J9DSNy7RWcrQDdyU3g==}
+    engines: {node: ^18.13.0 || >=20.9.0}
+    peerDependencies:
+      '@angular/animations': 17.2.1
+      '@angular/common': 17.2.1
+      '@angular/core': 17.2.1
+    peerDependenciesMeta:
+      '@angular/animations':
+        optional: true
+    dependencies:
+      '@angular/common': 17.2.1(@angular/core@17.2.1)(rxjs@7.8.1)
+      '@angular/core': 17.2.1(rxjs@7.8.1)(zone.js@0.14.4)
+      tslib: 2.5.0
+    dev: true
+
+  /@angular/router@17.2.1(@angular/common@17.2.1)(@angular/core@17.2.1)(@angular/platform-browser@17.2.1)(rxjs@7.8.1):
+    resolution: {integrity: sha512-sJFraoPTHV09jZQV3XcFHRJsY7EAuXcBn5k+7GGye60YgTXAjL3OC++Cuv4AScFYRp+IqbrE3I0tflsRtQzemw==}
+    engines: {node: ^18.13.0 || >=20.9.0}
+    peerDependencies:
+      '@angular/common': 17.2.1
+      '@angular/core': 17.2.1
+      '@angular/platform-browser': 17.2.1
+      rxjs: ^6.5.3 || ^7.4.0
+    dependencies:
+      '@angular/common': 17.2.1(@angular/core@17.2.1)(rxjs@7.8.1)
+      '@angular/core': 17.2.1(rxjs@7.8.1)(zone.js@0.14.4)
+      '@angular/platform-browser': 17.2.1(@angular/common@17.2.1)(@angular/core@17.2.1)
+      rxjs: 7.8.1
+      tslib: 2.5.0
+    dev: true
 
   /@babel/code-frame@7.21.4:
     resolution: {integrity: sha512-LYvhNKfwWSPpocw8GI7gpK2nq3HSDuEPC/uSYaALSJu9xjsalaaYFOq0Pwt5KmVqwEbZlDu81aLXwBOmD/Fv9g==}
@@ -5304,6 +5363,22 @@ packages:
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
       uri-js: 4.4.1
+    dev: true
+
+  /angular-auth-oidc-client@17.0.0(@angular/common@17.2.1)(@angular/core@17.2.1)(@angular/router@17.2.1)(rxjs@7.8.1):
+    resolution: {integrity: sha512-WjQDwMJ+XpoCTht5wn8XgR1MFW+IykDvEOZNQCbpxzNzR1312hv6nPSStYQA9Jtpj3T6fZFFQsn06jfFwDE7WQ==}
+    peerDependencies:
+      '@angular/common': '>=15.0.0'
+      '@angular/core': '>=15.0.0'
+      '@angular/router': '>=15.0.0'
+      rxjs: ^6.5.3 || ^7.4.0
+    dependencies:
+      '@angular/common': 17.2.1(@angular/core@17.2.1)(rxjs@7.8.1)
+      '@angular/core': 17.2.1(rxjs@7.8.1)(zone.js@0.14.4)
+      '@angular/router': 17.2.1(@angular/common@17.2.1)(@angular/core@17.2.1)(@angular/platform-browser@17.2.1)(rxjs@7.8.1)
+      rfc4648: 1.5.3
+      rxjs: 7.8.1
+      tslib: 2.5.0
     dev: true
 
   /ansi-colors@4.1.3:
@@ -11487,6 +11562,10 @@ packages:
     engines: {iojs: '>=1.0.0', node: '>=0.10.0'}
     dev: true
 
+  /rfc4648@1.5.3:
+    resolution: {integrity: sha512-MjOWxM065+WswwnmNONOT+bD1nXzY9Km6u3kzvnx8F8/HXGZdz3T6e6vZJ8Q/RIMUSp/nxqjH3GwvJDy8ijeQQ==}
+    dev: true
+
   /rfdc@1.3.0:
     resolution: {integrity: sha512-V2hovdzFbOi77/WajaSMXk2OLm+xNIeQdMMuB7icj7bk6zi2F8GGAxigcnDFpJHbNyNcgyJDiP+8nOrY5cZGrA==}
     dev: true
@@ -11545,6 +11624,12 @@ packages:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
     dependencies:
       queue-microtask: 1.2.3
+    dev: true
+
+  /rxjs@7.8.1:
+    resolution: {integrity: sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==}
+    dependencies:
+      tslib: 2.5.0
     dev: true
 
   /safe-array-concat@1.0.1:
@@ -13182,3 +13267,9 @@ packages:
 
   /zod@3.21.4:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
+
+  /zone.js@0.14.4:
+    resolution: {integrity: sha512-NtTUvIlNELez7Q1DzKVIFZBzNb646boQMgpATo9z3Ftuu/gWvzxCW7jdjcUDoRGxRikrhVHB/zLXh1hxeJawvw==}
+    dependencies:
+      tslib: 2.5.0
+    dev: true

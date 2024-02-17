@@ -3,7 +3,13 @@ import { fetchUserInfo } from './user-info.js';
 
 describe('fetchUserInfo', () => {
   test('should return UserInfoResponse', async () => {
-    const userInfoResponse: UserInfoResponse = { sub: 'foo' };
+    const userInfoResponse: UserInfoResponse = {
+      sub: 'foo',
+      iss: 'bar',
+      aud: 'baz',
+      iat: 123,
+      exp: 123,
+    };
     const fetchFunction = jest.fn().mockResolvedValue(userInfoResponse);
     await expect(
       fetchUserInfo('https://example.com/oidc/me', 'access_token_value', fetchFunction)

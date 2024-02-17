@@ -1,5 +1,4 @@
-import type { Nullable } from '@silverhand/essentials';
-
+import { type IdTokenClaims } from '../index.js';
 import type { Requester } from '../types/index.js';
 
 type Identity = {
@@ -7,17 +6,9 @@ type Identity = {
   details?: Record<string, unknown>;
 };
 
-export type UserInfoResponse = {
-  sub: string;
-  name?: Nullable<string>;
-  username?: Nullable<string>;
-  picture?: Nullable<string>;
-  email?: Nullable<string>;
-  email_verified?: boolean;
-  phone_number?: Nullable<string>;
-  phone_number_verified?: boolean;
-  custom_data?: unknown; // Not null in DB.
-  identities?: Record<string, Identity>; // Not null in DB.
+export type UserInfoResponse = IdTokenClaims & {
+  custom_data?: unknown;
+  identities?: Record<string, Identity>;
 };
 
 export const fetchUserInfo = async (
