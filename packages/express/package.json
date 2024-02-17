@@ -55,7 +55,7 @@
     "lint-staged": "^15.0.0",
     "prettier": "^3.0.0",
     "supertest": "^6.3.3",
-    "typescript": "^5.0.0"
+    "typescript": "^5.3.3"
   },
   "peerDependencies": {
     "express": ">=4"

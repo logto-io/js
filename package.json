@@ -21,7 +21,7 @@
     "husky": "^9.0.0",
     "rollup": "^4.0.0",
     "rollup-plugin-summary": "^2.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.3.3"
   },
   "workspaces": {
     "packages": [
