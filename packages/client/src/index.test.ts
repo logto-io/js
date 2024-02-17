@@ -88,7 +88,7 @@ describe('LogtoClient', () => {
           client_id: 'app_id_value',
           refresh_token: 'refresh_token_value',
           grant_type: 'refresh_token',
-        }),
+        }).toString(),
       });
       expect(accessToken).toEqual('access_token_value');
     });
@@ -122,7 +122,7 @@ describe('LogtoClient', () => {
           refresh_token: 'refresh_token_value',
           grant_type: 'refresh_token',
           organization_id: 'organization_id',
-        }),
+        }).toString(),
       });
       expect(organizationToken).toEqual('organization_token_value');
     });

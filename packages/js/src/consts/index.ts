@@ -37,6 +37,7 @@ export enum QueryKey {
 
 /** The prompt parameter to be used for the authorization request. */
 export enum Prompt {
+  None = 'none',
   /**
    * The Authorization Server MUST prompt the End-User for consent
    * before returning information to the Client.

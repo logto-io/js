@@ -82,19 +82,22 @@ describe('LogtoClient', () => {
     it('should redirect to signInUri just after calling signIn', async () => {
       const logtoClient = createClient();
       await logtoClient.signIn(redirectUri);
-      expect(navigate).toHaveBeenCalledWith(mockedSignInUri, redirectUri);
+      expect(navigate).toHaveBeenCalledWith(mockedSignInUri, { redirectUri, for: 'sign-in' });
     });
 
     it('should redirect to signInUri with interactionMode params after calling signIn with signUp mode', async () => {
       const logtoClient = createClient();
       await logtoClient.signIn(redirectUri, 'signUp');
-      expect(navigate).toHaveBeenCalledWith(mockedSignUpUri, redirectUri);
+      expect(navigate).toHaveBeenCalledWith(mockedSignUpUri, { redirectUri, for: 'sign-in' });
     });
 
     it('should redirect to signInUri just after calling signIn with user specified prompt', async () => {
       const logtoClient = createClient(Prompt.Login);
       await logtoClient.signIn(redirectUri);
-      expect(navigate).toHaveBeenCalledWith(mockedSignInUriWithLoginPrompt, redirectUri);
+      expect(navigate).toHaveBeenCalledWith(mockedSignInUriWithLoginPrompt, {
+        redirectUri,
+        for: 'sign-in',
+      });
     });
   });
 

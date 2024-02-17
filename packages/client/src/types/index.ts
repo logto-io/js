@@ -46,7 +46,7 @@ export type LogtoConfig = {
   /**
    * The prompt parameter to be used for the authorization request.
    */
-  prompt?: Prompt;
+  prompt?: Prompt | Prompt[];
 };
 
 /**

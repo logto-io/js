@@ -43,13 +43,19 @@ export type InferStorageKey<S> = S extends Storage<infer Key> ? Key : never;
  * The navigation function that redirects the user to the specified URL.
  *
  * @param url The URL to navigate to.
- * @param redirectUri The redirect URI that the user will be redirected to after the flow is
- * completed. That is, the "redirect URI" for sign-in and "post-logout redirect URI" for sign-out.
+ * @param parameters The parameters for the navigation.
+ * @param parameters.redirectUri The redirect URI that the user will be redirected to after the
+ * flow is completed. That is, the "redirect URI" for sign-in and "post-logout redirect URI" for
+ * sign-out.
+ * @param parameters.for The purpose of the navigation. It can be either "sign-in" or "sign-out".
  * @remarks Usually, the `redirectUri` parameter can be ignored unless the client needs to pass the
  * redirect scheme or other parameters to the native app, such as `ASWebAuthenticationSession` in
  * iOS.
  */
-export type Navigate = (url: string, redirectUri?: string) => void | Promise<void>;
+export type Navigate = (
+  url: string,
+  parameters: { redirectUri?: string; for: 'sign-in' | 'sign-out' }
+) => void | Promise<void>;
 
 export type JwtVerifier = {
   verifyIdToken(idToken: string): Promise<void>;

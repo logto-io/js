@@ -234,7 +234,7 @@ export class StandardLogtoClient {
       this.setRefreshToken(null),
       this.setIdToken(null),
     ]);
-    await this.adapter.navigate(signInUri, redirectUri);
+    await this.adapter.navigate(signInUri, { redirectUri, for: 'sign-in' });
   }
 
   /**
@@ -293,7 +293,7 @@ export class StandardLogtoClient {
       this.setIdToken(null),
       this.adapter.storage.removeItem('accessToken'),
     ]);
-    await this.adapter.navigate(url, postLogoutRedirectUri);
+    await this.adapter.navigate(url, { redirectUri: postLogoutRedirectUri, for: 'sign-out' });
   }
 
   protected async getSignInSession(): Promise<Nullable<LogtoSignInSessionItem>> {

@@ -13,5 +13,5 @@ export const revoke = async (
     body: new URLSearchParams({
       [QueryKey.ClientId]: clientId,
       [QueryKey.Token]: token,
-    }),
+    }).toString(),
   });
