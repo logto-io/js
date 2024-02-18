@@ -1,5 +1,5 @@
 import LogtoClient, { type LogtoConfig } from '@logto/browser';
-import { type ReactNode, useEffect, useMemo, useState } from 'react';
+import { type ReactNode, useEffect, useMemo, useState, useCallback } from 'react';
 
 import { LogtoContext } from './context.js';
 
@@ -27,6 +27,18 @@ export const LogtoProvider = ({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState<Error>();
 
+  const isLoading = useMemo(() => loadingCount > 0, [loadingCount]);
+  const setIsLoading = useCallback(
+    (state: boolean) => {
+      if (state) {
+        setLoadingCount((count) => count + 1);
+      } else {
+        setLoadingCount((count) => Math.max(0, count - 1));
+      }
+    },
+    [setLoadingCount]
+  );
+
   useEffect(() => {
     (async () => {
       const isAuthenticated = await memorizedLogtoClient.logtoClient.isAuthenticated();
@@ -41,12 +53,12 @@ export const LogtoProvider = ({
       ...memorizedLogtoClient,
       isAuthenticated,
       setIsAuthenticated,
-      loadingCount,
-      setLoadingCount,
+      isLoading,
+      setIsLoading,
       error,
       setError,
     }),
-    [memorizedLogtoClient, isAuthenticated, loadingCount, error]
+    [memorizedLogtoClient, isAuthenticated, isLoading, setIsLoading, error]
   );
 
   return <LogtoContext.Provider value={memorizedContextValue}>{children}</LogtoContext.Provider>;

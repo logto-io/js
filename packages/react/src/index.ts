@@ -1,4 +1,4 @@
-export type { LogtoContextProps } from './context.js';
+export type { LogtoContextProps, LogtoContext } from './context.js';
 
 export type {
   LogtoConfig,
