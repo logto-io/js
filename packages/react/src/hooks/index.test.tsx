@@ -53,13 +53,13 @@ const HasError = ({ children }: { children?: ReactNode }) => {
 };
 
 const AlwaysLoading = ({ children }: { children?: ReactNode }) => {
-  const { loadingCount, setLoadingCount } = useContext(LogtoContext);
+  const { isLoading, setIsLoading } = useContext(LogtoContext);
   useEffect(() => {
-    setLoadingCount((count) => count + 2); // Ensure loadingCount is greater than 1
-  }, [setLoadingCount]);
+    setIsLoading(true); // Simulate always loading
+  }, [setIsLoading]);
 
   // eslint-disable-next-line react/jsx-no-useless-fragment
-  return <>{loadingCount > 0 ? children : null}</>;
+  return <>{children}</>;
 };
 
 describe('useLogto', () => {
@@ -171,14 +171,7 @@ describe('useLogto', () => {
   it('should not call `handleSignInCallback` when it is loading', async () => {
     isSignInRedirected.mockResolvedValueOnce(true);
 
-    // eslint-disable-next-line unicorn/consistent-function-scoping -- Use for this test only
-    const useWrapped = () => {
-      const { loadingCount } = useContext(LogtoContext);
-      useHandleSignInCallback();
-      return { loadingCount };
-    };
-
-    const { result } = renderHook(useWrapped, {
+    const { result } = renderHook(useHandleSignInCallback, {
       wrapper: ({ children }) => (
         <LogtoProvider config={{ endpoint, appId }}>
           <AlwaysLoading>{children}</AlwaysLoading>
@@ -187,8 +180,9 @@ describe('useLogto', () => {
     });
 
     await waitFor(() => {
-      expect(result.current.loadingCount).toBeGreaterThan(1);
+      expect(result.current.isLoading).toBe(true);
     });
+
     // Give some time for side effects to be triggered
     await new Promise((resolve) => {
       setTimeout(resolve, 1);
