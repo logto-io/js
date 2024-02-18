@@ -1,4 +1,4 @@
-import type { LogtoConfig, ClientAdapter } from '@logto/client';
+import type { LogtoConfig, ClientAdapter, StandardLogtoClient, JwtVerifier } from '@logto/client';
 import { createRequester } from '@logto/client';
 import fetch from 'node-fetch';
 
@@ -6,6 +6,8 @@ import BaseClient from './client.js';
 import { generateCodeChallenge, generateCodeVerifier, generateState } from './utils/generators.js';
 
 export type { LogtoContext, GetContextParameters } from './types.js';
+
+export * from './utils/session.js';
 
 export type {
   IdTokenClaims,
@@ -15,6 +17,9 @@ export type {
   Storage,
   StorageKey,
   InteractionMode,
+  ClientAdapter,
+  JwtVerifier,
+  UserInfoResponse,
 } from '@logto/client';
 
 export {
@@ -30,34 +35,43 @@ export {
   buildOrganizationUrn,
   getOrganizationIdFromUrn,
   PersistKey,
+  StandardLogtoClient,
 } from '@logto/client';
 
 export default class LogtoClient extends BaseClient {
-  constructor(config: LogtoConfig, adapter: Pick<ClientAdapter, 'navigate' | 'storage'>) {
-    super(config, {
-      ...adapter,
-      requester: createRequester(
-        config.appSecret
-          ? async (...args: Parameters<typeof fetch>) => {
-              const [input, init] = args;
+  constructor(
+    config: LogtoConfig,
+    adapter: Partial<ClientAdapter> & Pick<ClientAdapter, 'navigate' | 'storage'>,
+    buildJwtVerifier?: (client: StandardLogtoClient) => JwtVerifier
+  ) {
+    super(
+      config,
+      {
+        requester: createRequester(
+          config.appSecret
+            ? async (...args: Parameters<typeof fetch>) => {
+                const [input, init] = args;
 
-              return fetch(input, {
-                ...init,
-                headers: {
-                  Authorization: `Basic ${Buffer.from(
-                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                    `${config.appId}:${config.appSecret}`,
-                    'utf8'
-                  ).toString('base64')}`,
-                  ...init?.headers,
-                },
-              });
-            }
-          : fetch
-      ),
-      generateCodeChallenge,
-      generateCodeVerifier,
-      generateState,
-    });
+                return fetch(input, {
+                  ...init,
+                  headers: {
+                    Authorization: `Basic ${Buffer.from(
+                      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                      `${config.appId}:${config.appSecret}`,
+                      'utf8'
+                    ).toString('base64')}`,
+                    ...init?.headers,
+                  },
+                });
+              }
+            : fetch
+        ),
+        generateCodeChallenge,
+        generateCodeVerifier,
+        generateState,
+        ...adapter,
+      },
+      buildJwtVerifier
+    );
   }
 }

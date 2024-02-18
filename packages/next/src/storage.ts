@@ -1,7 +1,5 @@
-import { type Storage } from '@logto/node';
+import { type Session, type Storage } from '@logto/node';
 import { PersistKey } from '@logto/node/edge';
-
-import { type Session } from './types';
 
 export default class NextStorage implements Storage<PersistKey> {
   private sessionChanged = false;

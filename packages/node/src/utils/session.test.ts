@@ -1,6 +1,6 @@
 import { PersistKey } from '@logto/node';
 
-import { unwrapSession, wrapSession } from './session';
+import { unwrapSession, wrapSession } from './session.js';
 
 const secret = 'secret';
 

@@ -1,4 +1,6 @@
-import { type SessionData, type LogtoNextConfig } from '../src/types.js';
+import { type SessionData } from '@logto/node';
+
+import { type LogtoNextConfig } from '../src/types.js';
 
 import LogtoClient from './index.js';
 
@@ -33,7 +35,7 @@ jest.mock('../src/storage', () =>
   }))
 );
 
-jest.mock('../src/session', () => ({
+jest.mock('@logto/node', () => ({
   createSession: jest.fn((_, cookie: string) => {
     const data = JSON.parse(cookie) as SessionData;
 

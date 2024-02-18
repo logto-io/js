@@ -1,5 +1,7 @@
+import { type Session } from '@logto/node';
+
 import NextStorage from './storage';
-import type { Adapters, LogtoNextConfig, Session } from './types';
+import type { Adapters, LogtoNextConfig } from './types';
 
 export default class LogtoNextBaseClient {
   protected navigateUrl?: string;
