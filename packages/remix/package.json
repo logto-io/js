@@ -34,8 +34,6 @@
     "@logto/node": "workspace:^2.2.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^18.0.0",
-    "@commitlint/config-conventional": "^18.0.0",
     "@remix-run/node": "^2.0.0",
     "@silverhand/eslint-config": "^5.0.0",
     "@silverhand/ts-config": "^5.0.0",
