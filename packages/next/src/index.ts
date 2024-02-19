@@ -1,6 +1,10 @@
 import { type IncomingMessage, type ServerResponse } from 'http';
 
-import NodeClient, { type GetContextParameters, type InteractionMode } from '@logto/node';
+import NodeClient, {
+  createSession,
+  type GetContextParameters,
+  type InteractionMode,
+} from '@logto/node';
 import {
   type GetServerSidePropsResult,
   type GetServerSidePropsContext,
@@ -9,7 +13,6 @@ import {
 import { type NextApiRequestCookies } from 'next/dist/server/api-utils/index.js';
 
 import LogtoNextBaseClient from './client.js';
-import { createSession } from './session.js';
 import type { LogtoNextConfig } from './types.js';
 
 export {

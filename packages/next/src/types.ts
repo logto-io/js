@@ -1,17 +1,5 @@
-import type { LogtoConfig, PersistKey } from '@logto/node';
+import type { LogtoConfig } from '@logto/node';
 import type NodeClient from '@logto/node';
-
-export type SessionData = {
-  [PersistKey.AccessToken]?: string;
-  [PersistKey.IdToken]?: string;
-  [PersistKey.SignInSession]?: string;
-  [PersistKey.RefreshToken]?: string;
-};
-
-export type Session = SessionData & {
-  save: () => Promise<void>;
-  getValues?: () => Promise<string>;
-};
 
 export type LogtoNextConfig = LogtoConfig & {
   cookieSecret: string;

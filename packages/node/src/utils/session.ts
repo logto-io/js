@@ -1,4 +1,16 @@
-import { type SessionData, type Session } from './types';
+import { type PersistKey } from '@logto/client';
+
+export type SessionData = {
+  [PersistKey.AccessToken]?: string;
+  [PersistKey.IdToken]?: string;
+  [PersistKey.SignInSession]?: string;
+  [PersistKey.RefreshToken]?: string;
+};
+
+export type Session = SessionData & {
+  save: () => Promise<void>;
+  getValues?: () => Promise<string>;
+};
 
 async function getKeyFromPassword(password: string, crypto: Crypto): Promise<string> {
   const encoder = new TextEncoder();
@@ -68,7 +80,7 @@ async function decrypt(ciphertext: string, iv: string, password: string, crypto:
 export const unwrapSession = async (
   cookie: string,
   secret: string,
-  crypto: Crypto
+  crypto: Crypto = global.crypto
 ): Promise<SessionData> => {
   try {
     const [ciphertext, iv] = cookie.split('.');
@@ -90,7 +102,7 @@ export const unwrapSession = async (
 export const wrapSession = async (
   session: SessionData,
   secret: string,
-  crypto: Crypto
+  crypto: Crypto = global.crypto
 ): Promise<string> => {
   const { ciphertext, iv } = await encrypt(JSON.stringify(session), secret, crypto);
   return `${ciphertext}.${iv}`;

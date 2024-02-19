@@ -47,8 +47,11 @@ type Adapter = {
   navigate: (url: string) => void;
 };
 
-jest.mock('@logto/node', () =>
-  jest.fn((_: unknown, { navigate }: Adapter) => ({
+jest.mock('@logto/node', () => ({
+  ...jest.requireActual('@logto/node'),
+  // https://stackoverflow.com/a/70705719/12514940
+  __esModule: true,
+  default: jest.fn((_: unknown, { navigate }: Adapter) => ({
     signIn: (_redirectUri: string, interactionMode?: string) => {
       navigate(interactionMode ? `${signInUrl}?interactionMode=${interactionMode}` : signInUrl);
       signIn();
@@ -61,8 +64,8 @@ jest.mock('@logto/node', () =>
       signOut();
     },
     isAuthenticated: true,
-  }))
-);
+  })),
+}));
 
 describe('Next', () => {
   afterEach(() => {

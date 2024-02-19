@@ -1,10 +1,9 @@
 'use server';
 
-import { type GetContextParameters, type InteractionMode } from '@logto/node';
+import { createSession, type GetContextParameters, type InteractionMode } from '@logto/node';
 import NodeClient from '@logto/node/edge';
 
 import BaseClient from '../src/client';
-import { createSession } from '../src/session';
 import type { LogtoNextConfig } from '../src/types.js';
 
 export type { LogtoContext, InteractionMode } from '@logto/node';
