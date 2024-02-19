@@ -34,13 +34,6 @@ jest.mock('@logto/js', () => ({
   verifyIdToken: jest.fn(),
 }));
 
-const createRemoteJWKSet = jest.fn(async () => '');
-
-jest.mock('jose', () => ({
-  ...jest.requireActual('jose'),
-  createRemoteJWKSet: async () => createRemoteJWKSet(),
-}));
-
 describe('LogtoClient', () => {
   describe('getAccessToken', () => {
     it('should throw if idToken is empty', async () => {
@@ -95,7 +88,7 @@ describe('LogtoClient', () => {
           client_id: 'app_id_value',
           refresh_token: 'refresh_token_value',
           grant_type: 'refresh_token',
-        }),
+        }).toString(),
       });
       expect(accessToken).toEqual('access_token_value');
     });
@@ -129,7 +122,7 @@ describe('LogtoClient', () => {
           refresh_token: 'refresh_token_value',
           grant_type: 'refresh_token',
           organization_id: 'organization_id',
-        }),
+        }).toString(),
       });
       expect(organizationToken).toEqual('organization_token_value');
     });
@@ -230,32 +223,6 @@ describe('LogtoClient', () => {
 
       await Promise.all([logtoClient.getAccessToken(), logtoClient.getAccessToken()]);
       expect(accessTokenMap.delete).toBeCalledTimes(1);
-    });
-
-    it('should reuse jwk set', async () => {
-      requester.mockImplementation(async () => {
-        await new Promise((resolve) => {
-          setTimeout(resolve, 0);
-        });
-
-        return {
-          IdToken: 'id_token_value',
-          accessToken: 'access_token_value',
-          refreshToken: 'new_refresh_token_value',
-          expiresIn: 3600,
-        };
-      });
-
-      createRemoteJWKSet.mockClear();
-      const logtoClient = createClient(
-        undefined,
-        new MockedStorage({
-          idToken: 'id_token_value',
-          refreshToken: 'refresh_token_value',
-        })
-      );
-      await Promise.all([logtoClient.getAccessToken('a'), logtoClient.getAccessToken('b')]);
-      expect(createRemoteJWKSet).toBeCalledTimes(1);
     });
   });
 

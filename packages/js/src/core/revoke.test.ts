@@ -14,7 +14,7 @@ describe('revoke', () => {
     expect(mockedRequester).toBeCalledWith(revocationEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({ client_id: clientId, token }),
+      body: new URLSearchParams({ client_id: clientId, token }).toString(),
     });
   });
 });

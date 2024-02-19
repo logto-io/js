@@ -24,6 +24,7 @@ describe('LogtoClient', () => {
     const storage = new MockedStorage();
 
     beforeEach(() => {
+      jest.clearAllMocks();
       storage.reset({
         idToken: 'id_token_value',
         refreshToken: 'refresh_token_value',
@@ -53,7 +54,8 @@ describe('LogtoClient', () => {
       const encodedRedirectUri = encodeURIComponent(postSignOutRedirectUri);
 
       expect(navigate).toHaveBeenCalledWith(
-        `${endSessionEndpoint}?client_id=${appId}&post_logout_redirect_uri=${encodedRedirectUri}`
+        `${endSessionEndpoint}?client_id=${appId}&post_logout_redirect_uri=${encodedRedirectUri}`,
+        { redirectUri: postSignOutRedirectUri, for: 'sign-out' }
       );
     });
 
@@ -72,7 +74,10 @@ describe('LogtoClient', () => {
       await expect(storage.getItem('idToken')).resolves.toBeNull();
       await expect(storage.getItem('refreshToken')).resolves.toBeNull();
       await expect(storage.getItem('accessToken')).resolves.toBeNull();
-      expect(navigate).toHaveBeenCalledWith(`${endSessionEndpoint}?client_id=${appId}`);
+      expect(navigate).toHaveBeenCalledWith(`${endSessionEndpoint}?client_id=${appId}`, {
+        redirectUri: undefined,
+        for: 'sign-out',
+      });
     });
   });
 });

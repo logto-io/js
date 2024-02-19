@@ -386,9 +386,6 @@ importers:
       camelcase-keys:
         specifier: ^7.0.1
         version: 7.0.2
-      jose:
-        specifier: ^5.0.0
-        version: 5.0.1
     devDependencies:
       '@silverhand/eslint-config':
         specifier: ^5.0.0
@@ -420,6 +417,9 @@ importers:
       jest-matcher-specific-error:
         specifier: ^1.0.0
         version: 1.0.0
+      jose:
+        specifier: ^5.0.0
+        version: 5.0.1
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.0
@@ -9550,7 +9550,6 @@ packages:
 
   /jose@5.0.1:
     resolution: {integrity: sha512-gRVzy7s3RRdGbXmcTdlOswJOjhwPLx1ijIgAqLY6ktzFpOJxxYn4l0fC2vHaHHi4YBX/5FOL3aY+6W0cvQgpug==}
-    dev: false
 
   /js-base64@3.7.4:
     resolution: {integrity: sha512-wpM/wi20Tl+3ifTyi0RdDckS4YTD4Lf953mBRrpG8547T7hInHNPEj8+ck4gB8VDcGyeAWFK++Wb/fU1BeavKQ==}

@@ -76,7 +76,7 @@ export const fetchTokenByAuthorizationCode = async (
   const snakeCaseCodeTokenResponse = await requester<SnakeCaseCodeTokenResponse>(tokenEndpoint, {
     method: 'POST',
     headers: ContentType.formUrlEncoded,
-    body: parameters,
+    body: parameters.toString(),
   });
 
   return camelcaseKeys(snakeCaseCodeTokenResponse);
@@ -115,7 +115,7 @@ export const fetchTokenByRefreshToken = async (
     {
       method: 'POST',
       headers: ContentType.formUrlEncoded,
-      body: parameters,
+      body: parameters.toString(),
     }
   );
 

@@ -39,15 +39,44 @@ export type Storage<Keys extends string> = {
 
 export type InferStorageKey<S> = S extends Storage<infer Key> ? Key : never;
 
-/** The navigation function that redirects the user to the specified URL. */
-export type Navigate = (url: string) => void | Promise<void>;
+/**
+ * The navigation function that redirects the user to the specified URL.
+ *
+ * @param url The URL to navigate to.
+ * @param parameters The parameters for the navigation.
+ * @param parameters.redirectUri The redirect URI that the user will be redirected to after the
+ * flow is completed. That is, the "redirect URI" for sign-in and "post-logout redirect URI" for
+ * sign-out.
+ * @param parameters.for The purpose of the navigation. It can be either "sign-in" or "sign-out".
+ * @remarks Usually, the `redirectUri` parameter can be ignored unless the client needs to pass the
+ * redirect scheme or other parameters to the native app, such as `ASWebAuthenticationSession` in
+ * iOS.
+ */
+export type Navigate = (
+  url: string,
+  parameters: { redirectUri?: string; for: 'sign-in' | 'sign-out' }
+) => void | Promise<void>;
+
+export type JwtVerifier = {
+  verifyIdToken(idToken: string): Promise<void>;
+};
 
 /**
  * The adapter object that allows the customizations of the client behavior
  * for different environments.
  */
 export type ClientAdapter = {
+  /**
+   * The fetch-like function for network requests.
+   *
+   * @see {@link Requester}
+   */
   requester: Requester;
+  /**
+   * The storage for storing tokens and sessions. It is usually persistent.
+   *
+   * @see {@link Requester}
+   */
   storage: Storage<StorageKey | PersistKey>;
   /**
    * An optional storage for caching well-known data.
@@ -61,21 +90,21 @@ export type ClientAdapter = {
    *
    * @returns The state string.
    */
-  generateState: () => string;
+  generateState: () => string | Promise<string>;
   /**
    * The function that generates a random code verifier string for PKCE.
    *
-   * @see {@link https://www.rfc-editor.org/rfc/rfc7636.html| RFC 7636}
+   * @see {@link https://www.rfc-editor.org/rfc/rfc7636.html | RFC 7636}
    * @returns The code verifier string.
    */
-  generateCodeVerifier: () => string;
+  generateCodeVerifier: () => string | Promise<string>;
   /**
    * The function that generates a code challenge string based on the code verifier
    * for PKCE.
    *
-   * @see {@link https://www.rfc-editor.org/rfc/rfc7636.html| RFC 7636}
+   * @see {@link https://www.rfc-editor.org/rfc/rfc7636.html | RFC 7636}
    * @param codeVerifier The code verifier string.
    * @returns The code challenge string.
    */
-  generateCodeChallenge: (codeVerifier: string) => Promise<string>;
+  generateCodeChallenge: (codeVerifier: string) => string | Promise<string>;
 };

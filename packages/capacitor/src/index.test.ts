@@ -23,7 +23,7 @@ describe('CapacitorLogtoClient', () => {
   it('should override navigate', async () => {
     const client = createClient();
     expect(client.getAdapter().navigate).toBeDefined();
-    await client.getAdapter().navigate('https://example.com');
+    await client.getAdapter().navigate('https://example.com', { for: 'sign-in' });
 
     const spy = jest.spyOn(Browser, 'open');
     expect(spy).toHaveBeenCalledWith({

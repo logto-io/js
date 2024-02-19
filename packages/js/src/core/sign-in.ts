@@ -1,6 +1,6 @@
 import { Prompt, QueryKey } from '../consts/index.js';
 import type { InteractionMode } from '../types/index.js';
-import { withDefaultScopes } from '../utils/index.js';
+import { withDefaultScopes } from '../utils/scopes.js';
 
 const codeChallengeMethod = 'S256';
 const responseType = 'code';
@@ -13,8 +13,16 @@ export type SignInUriParameters = {
   state: string;
   scopes?: string[];
   resources?: string[];
-  prompt?: Prompt;
+  prompt?: Prompt | Prompt[];
   interactionMode?: InteractionMode;
+};
+
+const buildPrompt = (prompt?: Prompt | Prompt[]) => {
+  if (Array.isArray(prompt)) {
+    return prompt.join(' ');
+  }
+
+  return prompt ?? Prompt.Consent;
 };
 
 export const generateSignInUri = ({
@@ -35,7 +43,7 @@ export const generateSignInUri = ({
     [QueryKey.CodeChallengeMethod]: codeChallengeMethod,
     [QueryKey.State]: state,
     [QueryKey.ResponseType]: responseType,
-    [QueryKey.Prompt]: prompt ?? Prompt.Consent,
+    [QueryKey.Prompt]: buildPrompt(prompt),
     [QueryKey.Scope]: withDefaultScopes(scopes),
   });
 

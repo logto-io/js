@@ -44,7 +44,7 @@ describe('fetch access token by providing authorization code', () => {
         redirect_uri: 'https://localhost:3000/callback',
         grant_type: 'authorization_code',
         resource: 'resource_value',
-      }),
+      }).toString(),
     });
     expect(tokenResponse).toEqual(expectedTokenResponse);
   });
@@ -92,7 +92,7 @@ describe('fetch access token by providing valid refresh token', () => {
         grant_type: 'refresh_token',
         resource: 'resource_value',
         scope: 'read register manage',
-      }),
+      }).toString(),
     });
     expect(tokenResponse).toMatchObject(expectedTokenResponse);
   });

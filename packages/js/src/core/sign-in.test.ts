@@ -38,6 +38,20 @@ describe('generateSignInUri', () => {
     );
   });
 
+  test('with prompt array', () => {
+    const signInUri = generateSignInUri({
+      authorizationEndpoint,
+      clientId,
+      redirectUri,
+      codeChallenge,
+      state,
+      prompt: [Prompt.Consent, Prompt.Login],
+    });
+    expect(signInUri).toEqual(
+      'https://logto.dev/oidc/sign-in?client_id=clientId&redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&code_challenge=codeChallenge&code_challenge_method=S256&state=state&response_type=code&prompt=consent+login&scope=openid+offline_access+profile'
+    );
+  });
+
   test('with interactionMode', () => {
     const signInUri = generateSignInUri({
       authorizationEndpoint,

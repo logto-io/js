@@ -6,10 +6,18 @@
   "module": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "exports": {
-    "types": "./lib/index.d.ts",
-    "require": "./lib/index.cjs",
-    "import": "./lib/index.js",
-    "default": "./lib/index.js"
+    ".": {
+      "types": "./lib/index.d.ts",
+      "require": "./lib/index.cjs",
+      "import": "./lib/index.js",
+      "default": "./lib/index.js"
+    },
+    "./shim": {
+      "types": "./lib/shim.d.ts",
+      "require": "./lib/shim.cjs",
+      "import": "./lib/shim.js",
+      "default": "./lib/shim.js"
+    }
   },
   "files": [
     "lib"

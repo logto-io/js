@@ -14,6 +14,7 @@ export const createRequester = (fetchFunction: typeof fetch): Requester => {
 
     if (!response.ok) {
       const responseJson = await response.json();
+      console.error(`Logto requester error: [status=${response.status}]`, responseJson);
 
       if (!isLogtoRequestError(responseJson)) {
         throw new LogtoError('unexpected_response_error', responseJson);
