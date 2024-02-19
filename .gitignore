@@ -12,6 +12,9 @@ node_modules
 /packages/*/dist
 /packages/*/lib
 /packages/*/build
+/packages/*/tmp
+/packages/*/out-tsc
+/packages/*/bazel-out
 
 # logs
 logs
@@ -22,9 +25,12 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # misc
+.angular/cache
+.sass-cache/
 cache
 .*cache
 .DS_Store
+Thumbs.db
 *.env
 .idea/
 *.pem

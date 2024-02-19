@@ -4,3 +4,4 @@ export * from './id-token.js';
 export * from './access-token.js';
 export * from './scopes.js';
 export * from './arbitrary-object.js';
+export * from './angular.js';
