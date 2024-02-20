@@ -2,8 +2,8 @@
 
 A sample Angular application that demonstrates how to integrate Logto with `angular-auth-oidc-client`.
 
-**Configuration**: See [app.config.ts](src/app/app.config.ts).
-**Usage**: See [app.component.ts](src/app/app.component.ts).
+- **Configuration**: See [app.config.ts](src/app/app.config.ts).
+- **Usage**: See [app.component.ts](src/app/app.component.ts).
 
 For more information about `angular-auth-oidc-client`, see its [repository](https://github.com/damienbod/angular-auth-oidc-client) and official [documentation](https://angular-auth-oidc-client.com/).
 

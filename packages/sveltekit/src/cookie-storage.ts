@@ -8,11 +8,17 @@ import PQueue from 'p-queue';
 type Nullable<T> = T | null;
 
 export type CookieConfig = {
+  /** The request event from SvelteKit. */
   requestEvent: RequestEvent;
+  /** The encryption key to encrypt the session data. It should be a random string. */
   encryptionKey: string;
+  /** The name of the cookie key. Default to `logtoCookies`. */
   cookieKey?: string;
 };
 
+/**
+ * A storage that persists data in cookies with encryption.
+ */
 export class CookieStorage implements Storage<PersistKey> {
   protected get cookieOptions() {
     return Object.freeze({
