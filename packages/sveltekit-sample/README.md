@@ -1,4 +1,12 @@
-# create-svelte
+# Logto SvelteKit sample
+
+A sample SvelteKit project that demonstrates how to integrate Logto with SvelteKit.
+
+- **Hook configuration**: See [src/hooks.server.ts](src/hooks.server.ts).
+- **Use user data in layout**: See [src/routes/+layout.server.ts](src/routes/+layout.server.ts).
+- **Trigger sign-in and sign-out**: See [src/routes/+page.svelte](src/routes/+page.svelte).
+
+---
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
 
