@@ -118,6 +118,7 @@ export default class LogtoClient extends LogtoNextBaseClient {
     async (request, response) => {
       const nodeClient = await this.createNodeClientFromNextApi(request, response);
       const user = await nodeClient.getContext(config);
+      await this.storage?.save();
 
       // eslint-disable-next-line @silverhand/fp/no-mutating-methods
       Object.defineProperty(request, 'user', { enumerable: true, get: () => user });
@@ -135,6 +136,7 @@ export default class LogtoClient extends LogtoNextBaseClient {
     async (context: GetServerSidePropsContext) => {
       const nodeClient = await this.createNodeClientFromNextApi(context.req, context.res);
       const user = await nodeClient.getContext(configs);
+      await this.storage?.save();
 
       // eslint-disable-next-line @silverhand/fp/no-mutating-methods
       Object.defineProperty(context.req, 'user', { enumerable: true, get: () => user });
