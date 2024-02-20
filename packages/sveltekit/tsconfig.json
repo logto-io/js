@@ -4,6 +4,7 @@
     "outDir": "lib",
     "types": [
       "node",
+      "jest"
     ]
   },
   "include": [

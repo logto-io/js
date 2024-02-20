@@ -1,5 +1,5 @@
 import LogtoClient, { type LogtoConfig } from '@logto/node';
-import { redirect, type Handle } from '@sveltejs/kit';
+import { redirect, type Handle, type RequestEvent } from '@sveltejs/kit';
 
 import { CookieStorage, type CookieConfig } from './cookie-storage.js';
 
@@ -37,6 +37,7 @@ export type HookConfig = {
   onCallbackError?: (error: unknown) => Response;
   signInCallback?: string;
   fetchUserInfo?: boolean;
+  buildLogtoClient?: (event: RequestEvent) => LogtoClient;
 };
 
 export const handleLogto = (
@@ -44,24 +45,33 @@ export const handleLogto = (
   cookieConfig: Omit<CookieConfig, 'requestEvent'>,
   hookConfig?: HookConfig
 ): Handle => {
-  const { signInCallback = '/callback', onCallbackError, fetchUserInfo = false } = hookConfig ?? {};
+  const {
+    signInCallback = '/callback',
+    onCallbackError,
+    fetchUserInfo = false,
+    buildLogtoClient,
+  } = hookConfig ?? {};
 
   return async ({ resolve, event }) => {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- sanity check
     if (event.locals.logtoClient) {
-      console.warn('logtoClient already exists in `locals`, skipping initialization');
+      console.warn(
+        '`logtoClient` already exists in `locals`, you probably have added the `handleLogto` hook more than once. Skipping.'
+      );
       return resolve(event);
     }
 
     const storage = new CookieStorage({ requestEvent: event, ...cookieConfig });
     await storage.init();
 
-    const logtoClient = new LogtoClient(config, {
-      navigate: (url) => {
-        redirect(302, url);
-      },
-      storage,
-    });
+    const logtoClient =
+      buildLogtoClient?.(event) ??
+      new LogtoClient(config, {
+        navigate: (url) => {
+          redirect(302, url);
+        },
+        storage,
+      });
 
     // eslint-disable-next-line @silverhand/fp/no-mutation -- for init
     event.locals.logtoClient = logtoClient;
@@ -78,7 +88,7 @@ export const handleLogto = (
         );
       }
 
-      redirect(302, '/');
+      return redirect(302, '/');
     }
 
     if (await logtoClient.isAuthenticated()) {
