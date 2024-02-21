@@ -1,7 +1,7 @@
 import { type PersistKey, type Storage } from '@logto/client';
 import type { CookieSerializeOptions } from 'cookie';
-import PQueue from 'p-queue';
 
+import { PromiseQueue } from './promise-queue.js';
 import { wrapSession, unwrapSession, type SessionData } from './session.js';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -48,7 +48,7 @@ export class CookieStorage implements Storage<PersistKey> {
   }
 
   protected sessionData: SessionData = {};
-  protected saveQueue: PQueue = new PQueue({ concurrency: 1 });
+  protected saveQueue = new PromiseQueue();
   #isSecure: boolean;
 
   constructor(
@@ -87,7 +87,7 @@ export class CookieStorage implements Storage<PersistKey> {
   }
 
   protected async save() {
-    return this.saveQueue.add(async () => this.write());
+    return this.saveQueue.enqueue(async () => this.write());
   }
 
   protected async write(data = this.sessionData) {

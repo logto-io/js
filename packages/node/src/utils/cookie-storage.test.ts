@@ -1,6 +1,7 @@
-import { PersistKey, unwrapSession, wrapSession } from '@logto/node';
+import { PersistKey } from '@logto/client/shim';
 
 import { CookieStorage } from './cookie-storage.js';
+import { unwrapSession, wrapSession } from './session.js';
 
 const delay = async <T>(function_: () => Promise<T>, ms: number): Promise<T> =>
   new Promise((resolve) => {
