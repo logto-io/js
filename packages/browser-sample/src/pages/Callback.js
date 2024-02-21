@@ -1,7 +1,7 @@
 /* eslint-disable @silverhand/fp/no-mutation */
 import { baseUrl } from '../consts';
 
-const Callback = async (app, logtoClient) => {
+const Callback = (app, logtoClient) => {
   if (!logtoClient) {
     throw new Error('no logto client found');
   }
@@ -17,30 +17,17 @@ const Callback = async (app, logtoClient) => {
   fragment.append(container);
   app.append(fragment);
 
-  await logtoClient.handleSignInCallback(window.location.href);
+  // Handle the sign-in callback
+  (async () => {
+    await logtoClient.handleSignInCallback(window.location.href);
 
-  if (logtoClient.isAuthenticated) {
-    h3.innerHTML = 'Signed in!';
+    if (!logtoClient.isAuthenticated) {
+      h3.innerHTML = 'Sign in failed.';
+      return;
+    }
 
-    const h4 = document.createElement('h4');
-    container.append(h4);
-
-    // eslint-disable-next-line @silverhand/fp/no-let
-    let countDown = 3;
-    h4.innerHTML = `Redirecting back to home page in ${countDown} seconds...`;
-
-    const interval = setInterval(() => {
-      countDown -= 1;
-      h4.innerHTML = `Redirecting back to home page in ${countDown} seconds...`;
-
-      if (countDown === 0) {
-        clearInterval(interval);
-        window.location.assign(baseUrl);
-      }
-    }, 1000);
-  } else {
-    h3.innerHTML = 'Sign in failed.';
-  }
+    window.location.assign(baseUrl);
+  })();
 };
 
 export default Callback;
