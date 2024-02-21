@@ -9,6 +9,6 @@ export const handle = handleLogto(
     appSecret: env.LOGTO_APP_SECRET,
   },
   {
-    encryptionKey: env.LOGTO_COOKIE_ENCRYPTION_KEY ?? '',
+    encryptionKey: env.LOGTO_COOKIE_ENCRYPTION_KEY,
   }
 );

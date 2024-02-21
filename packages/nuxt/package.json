@@ -1,0 +1,55 @@
+{
+  "name": "@logto/nuxt",
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/module.mjs",
+      "types": "./dist/module.d.ts",
+      "require": "./dist/module.cjs"
+    }
+  },
+  "main": "./dist/module.cjs",
+  "types": "./dist/module.d.ts",
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/logto-io/js.git",
+    "directory": "packages/nuxt"
+  },
+  "scripts": {
+    "precommit": "lint-staged",
+    "dev": "nuxi dev playground",
+    "dev:prepare": "nuxt-module-build prepare && nuxi prepare playground",
+    "build": "nuxt-module-build prepare && nuxt-module-build build",
+    "check": "tsc --noEmit",
+    "lint": "eslint --ext .ts src",
+    "prepack": "pnpm build"
+  },
+  "devDependencies": {
+    "@nuxt/module-builder": "^0.5.5",
+    "@silverhand/eslint-config": "^5.0.0",
+    "eslint": "^8.56.0",
+    "h3": "^1.10.2",
+    "lint-staged": "^15.0.0",
+    "nuxt": "^3.10.2",
+    "prettier": "^3.0.0",
+    "typescript": "^5.3.3",
+    "vue": "^3.4.19"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@logto/node": "workspace:^",
+    "@nuxt/kit": "^3.10.2",
+    "defu": "^6.1.4"
+  }
+}
