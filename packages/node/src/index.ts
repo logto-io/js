@@ -5,39 +5,7 @@ import { generateCodeChallenge, generateCodeVerifier, generateState } from '../e
 
 import BaseClient from './client.js';
 
-export type { LogtoContext, GetContextParameters } from './types.js';
-
-export * from './utils/session.js';
-export * from './utils/cookie-storage.js';
-
-export type {
-  IdTokenClaims,
-  LogtoErrorCode,
-  LogtoConfig,
-  LogtoClientErrorCode,
-  Storage,
-  StorageKey,
-  InteractionMode,
-  ClientAdapter,
-  JwtVerifier,
-  UserInfoResponse,
-} from '@logto/client';
-
-export {
-  LogtoError,
-  LogtoRequestError,
-  LogtoClientError,
-  OidcError,
-  Prompt,
-  ReservedScope,
-  ReservedResource,
-  UserScope,
-  organizationUrnPrefix,
-  buildOrganizationUrn,
-  getOrganizationIdFromUrn,
-  PersistKey,
-  StandardLogtoClient,
-} from '@logto/client';
+export * from './exports.js';
 
 export default class LogtoClient extends BaseClient {
   constructor(

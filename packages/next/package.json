@@ -82,10 +82,7 @@
     "next": ">=12"
   },
   "eslintConfig": {
-    "extends": "@silverhand",
-    "rules": {
-      "unicorn/prefer-node-protocol": "off"
-    }
+    "extends": "@silverhand"
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "publishConfig": {

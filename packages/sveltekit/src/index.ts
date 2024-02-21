@@ -12,6 +12,7 @@ export type {
   ClientAdapter,
   JwtVerifier,
   UserInfoResponse,
+  CookieConfig,
 } from '@logto/node';
 
 export {
@@ -27,6 +28,7 @@ export {
   buildOrganizationUrn,
   getOrganizationIdFromUrn,
   PersistKey,
+  CookieStorage,
   StandardLogtoClient,
   default as LogtoClient,
 } from '@logto/node';
