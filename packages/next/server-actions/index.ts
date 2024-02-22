@@ -50,7 +50,7 @@ export const handleSignIn = async (
 };
 
 /**
- * Init sign out process, clear session, and redirect to Logto's sign out page
+ * Init sign out process, clear session, and redirect to the Logto sign-out page
  */
 export const signOut = async (config: LogtoNextConfig, redirectUri?: string): Promise<void> => {
   const client = new LogtoClient(config);
