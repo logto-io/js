@@ -2,7 +2,7 @@ import { type SessionData } from '@logto/node';
 
 import { type LogtoNextConfig } from '../src/types.js';
 
-import LogtoClient from './index.js';
+import LogtoClient from './client.js';
 
 const signInUrl = 'http://mock-logto-server.com/sign-in';
 const callbackUrl = 'http://localhost:3000/callback';

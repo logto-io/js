@@ -1,18 +1,19 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { signIn } from "../libraries/logto";
+type Props = {
+  onSignIn: () => Promise<void>;
+};
 
-const SignIn = () => {
-  const router = useRouter();
-
-  const handleClick = async () => {
-    const redirectUrl = await signIn();
-
-    router.push(redirectUrl);
-  };
-
-  return <button onClick={handleClick}>Sign In</button>;
+const SignIn = ({ onSignIn }: Props) => {
+  return (
+    <button
+      onClick={() => {
+        onSignIn();
+      }}
+    >
+      Sign In
+    </button>
+  );
 };
 
 export default SignIn;
