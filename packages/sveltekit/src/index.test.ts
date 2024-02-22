@@ -1,6 +1,6 @@
+import { CookieStorage } from '@logto/node';
 import { redirect, type RequestEvent } from '@sveltejs/kit';
 
-import { CookieStorage } from './cookie-storage.js';
 import { LogtoClient, handleLogto } from './index.js';
 
 const resolve = jest.fn();
@@ -41,6 +41,22 @@ const cookieConfig = Object.freeze({
   encryptionKey: 'encryptionKey',
 });
 
+const createCookieStorageFromEvent = (event: RequestEvent) => {
+  return new CookieStorage(
+    {
+      ...cookieConfig,
+      getCookie: (name) => event.cookies.get(name),
+      setCookie: (name, value, options) => {
+        event.cookies.set(name, value, options);
+      },
+    },
+    {
+      headers: event.request.headers,
+      url: event.url.href,
+    }
+  );
+};
+
 describe('handleLogto()', () => {
   it('should inject the Logto client into the request locals', async () => {
     const handle = handleLogto(config, cookieConfig);
@@ -57,7 +73,7 @@ describe('handleLogto()', () => {
       navigate: () => {
         console.log('navigate');
       },
-      storage: new CookieStorage({ requestEvent: event, encryptionKey: 'foo' }),
+      storage: createCookieStorageFromEvent(event),
     });
 
     // eslint-disable-next-line @silverhand/fp/no-mutation
@@ -74,7 +90,7 @@ describe('handleLogto()', () => {
       navigate: () => {
         console.log('navigate');
       },
-      storage: new CookieStorage({ requestEvent: event, encryptionKey: 'foo' }),
+      storage: createCookieStorageFromEvent(event),
     });
 
     jest.spyOn(client, 'handleSignInCallback').mockResolvedValueOnce();
@@ -99,7 +115,7 @@ describe('handleLogto()', () => {
       navigate: () => {
         console.log('navigate');
       },
-      storage: new CookieStorage({ requestEvent: event, encryptionKey: 'foo' }),
+      storage: createCookieStorageFromEvent(event),
     });
 
     jest.spyOn(client, 'isAuthenticated').mockResolvedValueOnce(true);

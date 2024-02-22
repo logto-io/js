@@ -1,4 +1,4 @@
-import { PersistKey } from '@logto/node';
+import { PersistKey } from '@logto/client/shim';
 
 import { unwrapSession, wrapSession } from './session.js';
 

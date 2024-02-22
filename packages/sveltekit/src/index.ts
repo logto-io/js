@@ -1,7 +1,5 @@
-import LogtoClient, { type LogtoConfig } from '@logto/node';
+import LogtoClient, { type LogtoConfig, type CookieConfig, CookieStorage } from '@logto/node';
 import { redirect, type Handle, type RequestEvent } from '@sveltejs/kit';
-
-import { CookieStorage, type CookieConfig } from './cookie-storage.js';
 
 export type {
   IdTokenClaims,
@@ -101,7 +99,7 @@ export type HookConfig = {
  */
 export const handleLogto = (
   config: LogtoConfig,
-  cookieConfig: Omit<CookieConfig, 'requestEvent'>,
+  cookieConfig: Pick<CookieConfig, 'cookieKey' | 'encryptionKey'>,
   hookConfig?: HookConfig
 ): Handle => {
   const {
@@ -120,7 +118,16 @@ export const handleLogto = (
       return resolve(event);
     }
 
-    const storage = new CookieStorage({ requestEvent: event, ...cookieConfig });
+    const storage = new CookieStorage(
+      {
+        setCookie: (...args) => {
+          event.cookies.set(...args);
+        },
+        getCookie: (...args) => event.cookies.get(...args),
+        ...cookieConfig,
+      },
+      event.request
+    );
     await storage.init();
 
     const logtoClient =

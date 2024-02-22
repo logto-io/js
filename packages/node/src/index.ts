@@ -1,6 +1,5 @@
 import type { LogtoConfig, ClientAdapter, StandardLogtoClient, JwtVerifier } from '@logto/client';
 import { createRequester } from '@logto/client';
-import fetch from 'node-fetch';
 
 import { generateCodeChallenge, generateCodeVerifier, generateState } from '../edge/generators.js';
 
@@ -9,6 +8,7 @@ import BaseClient from './client.js';
 export type { LogtoContext, GetContextParameters } from './types.js';
 
 export * from './utils/session.js';
+export * from './utils/cookie-storage.js';
 
 export type {
   IdTokenClaims,

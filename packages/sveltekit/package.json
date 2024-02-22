@@ -55,7 +55,6 @@
     "@sveltejs/kit": "^2.0.0"
   },
   "dependencies": {
-    "@logto/node": "workspace:^",
-    "p-queue": "^8.0.1"
+    "@logto/node": "workspace:^"
   }
 }

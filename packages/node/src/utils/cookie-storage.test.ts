@@ -1,7 +1,7 @@
-import { PersistKey, unwrapSession, wrapSession } from '@logto/node';
-import { type RequestEvent } from '@sveltejs/kit';
+import { PersistKey } from '@logto/client/shim';
 
 import { CookieStorage } from './cookie-storage.js';
+import { unwrapSession, wrapSession } from './session.js';
 
 const delay = async <T>(function_: () => Promise<T>, ms: number): Promise<T> =>
   new Promise((resolve) => {
@@ -18,33 +18,27 @@ class TestCookieStorage extends CookieStorage {
 
 const encryptionKey = 'foo';
 
-const createMockEvent = (
-  initialCookies: Record<string, string> = {},
-  url = 'http://localhost/',
-  headers = new Map()
-): RequestEvent => {
+const createCookieConfig = (encryptionKey: string, initialCookies: Record<string, string> = {}) => {
   const cookies = new Map(Object.entries(initialCookies));
-
   return {
-    // @ts-expect-error
-    cookies: {
-      get: (name: string) => cookies.get(name),
-      getAll: () => [...cookies.entries()].map(([name, value]) => ({ name, value })),
-      set: (name: string, value: string) => cookies.set(name, value),
-      delete: (name: string) => cookies.delete(name),
-    },
-    request: {
-      url,
-      // @ts-expect-error
-      headers,
-    },
+    encryptionKey,
+    getCookie: (name: string) => cookies.get(name),
+    setCookie: (name: string, value: string) => cookies.set(name, value),
   };
 };
+
+const createPartialRequest = (url = 'http://localhost/', headers = new Headers()) => ({
+  headers,
+  url,
+});
 
 describe('CookieStorage', () => {
   it('should be able to produce correct configs', () => {
     expect(
-      new TestCookieStorage({ requestEvent: createMockEvent(), encryptionKey }).getCookieOptions()
+      new TestCookieStorage(
+        createCookieConfig(encryptionKey),
+        createPartialRequest()
+      ).getCookieOptions()
     ).toEqual({
       httpOnly: true,
       path: '/',
@@ -54,10 +48,10 @@ describe('CookieStorage', () => {
     });
 
     expect(
-      new TestCookieStorage({
-        requestEvent: createMockEvent({}, 'https://localhost/'),
-        encryptionKey,
-      }).getCookieOptions()
+      new TestCookieStorage(
+        createCookieConfig(encryptionKey),
+        createPartialRequest('https://localhost/')
+      ).getCookieOptions()
     ).toEqual({
       httpOnly: true,
       path: '/',
@@ -67,10 +61,10 @@ describe('CookieStorage', () => {
     });
 
     expect(
-      new TestCookieStorage({
-        requestEvent: createMockEvent({}, undefined, new Map([['x-forwarded-proto', 'https']])),
-        encryptionKey,
-      }).getCookieOptions()
+      new TestCookieStorage(
+        createCookieConfig(encryptionKey),
+        createPartialRequest(undefined, new Headers({ 'x-forwarded-proto': 'https' }))
+      ).getCookieOptions()
     ).toEqual({
       httpOnly: true,
       path: '/',
@@ -81,10 +75,12 @@ describe('CookieStorage', () => {
   });
 
   it('should be able to load and save data', async () => {
-    const requestEvent = createMockEvent({
-      logtoCookies: await wrapSession({ [PersistKey.AccessToken]: 'bar' }, encryptionKey),
-    });
-    const storage = new TestCookieStorage({ requestEvent, encryptionKey });
+    const storage = new TestCookieStorage(
+      createCookieConfig(encryptionKey, {
+        logtoCookies: await wrapSession({ [PersistKey.AccessToken]: 'bar' }, encryptionKey),
+      }),
+      createPartialRequest()
+    );
     await storage.init();
     expect(storage.data).toEqual({ [PersistKey.AccessToken]: 'bar' });
     expect(await storage.getItem(PersistKey.AccessToken)).toEqual('bar');
@@ -92,22 +88,27 @@ describe('CookieStorage', () => {
 
     await storage.setItem(PersistKey.AccessToken, 'baz');
     expect(storage.data).toEqual({ [PersistKey.AccessToken]: 'baz' });
-    expect(await unwrapSession(requestEvent.cookies.get('logtoCookies')!, encryptionKey)).toEqual({
+    expect(await unwrapSession(storage.config.getCookie('logtoCookies')!, encryptionKey)).toEqual({
       [PersistKey.AccessToken]: 'baz',
     });
   });
 
   it('should be able to remove data', async () => {
-    const requestEvent = createMockEvent({
-      foo: await wrapSession({ [PersistKey.AccessToken]: 'bar' }, encryptionKey),
-    });
-    const storage = new TestCookieStorage({ requestEvent, encryptionKey, cookieKey: 'foo' });
+    const storage = new TestCookieStorage(
+      {
+        ...createCookieConfig(encryptionKey, {
+          foo: await wrapSession({ [PersistKey.AccessToken]: 'bar' }, encryptionKey),
+        }),
+        cookieKey: 'foo',
+      },
+      createPartialRequest()
+    );
     await storage.init();
     expect(storage.data).toEqual({ [PersistKey.AccessToken]: 'bar' });
 
     await storage.removeItem(PersistKey.AccessToken);
     expect(storage.data).toEqual({});
-    expect(await unwrapSession(requestEvent.cookies.get('foo')!, encryptionKey)).toEqual({});
+    expect(await unwrapSession(storage.config.getCookie('foo')!, encryptionKey)).toEqual({});
   });
 });
 
@@ -144,8 +145,8 @@ describe('CookieStorage concurrency', () => {
   ])('should have the expected result [%#]', async (StorageClass) => {
     const randomDelay = async <T>(function_: () => Promise<T>): Promise<T> =>
       delay(function_, Math.random() * 5);
-    const requestEvent = createMockEvent({});
-    const storage = new StorageClass({ requestEvent, encryptionKey });
+
+    const storage = new StorageClass(createCookieConfig(encryptionKey), createPartialRequest());
     await storage.init();
     expect(storage.data).toEqual({});
 
@@ -164,7 +165,7 @@ describe('CookieStorage concurrency', () => {
     };
     expect(storage.data).toEqual(result);
 
-    const unwrapped = await unwrapSession(requestEvent.cookies.get('logtoCookies')!, encryptionKey);
+    const unwrapped = await unwrapSession(storage.config.getCookie('logtoCookies')!, encryptionKey);
 
     if (StorageClass === NoQueueTestCookieStorage) {
       expect(unwrapped).not.toEqual(result);
