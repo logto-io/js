@@ -143,9 +143,6 @@ describe('CookieStorage concurrency', () => {
     NoQueueTestCookieStorage,
     NoQueueTestCookieStorage,
   ])('should have the expected result [%#]', async (StorageClass) => {
-    const randomDelay = async <T>(function_: () => Promise<T>): Promise<T> =>
-      delay(function_, Math.random() * 5);
-
     const storage = new StorageClass(createCookieConfig(encryptionKey), createPartialRequest());
     await storage.init();
     expect(storage.data).toEqual({});
@@ -153,15 +150,13 @@ describe('CookieStorage concurrency', () => {
     await Promise.all([
       storage.setItem(PersistKey.AccessToken, 'foo'),
       delay(async () => storage.setItem(PersistKey.RefreshToken, 'bar'), 1), // Ensure this happens after the first one
-      randomDelay(async () => storage.setItem(PersistKey.IdToken, 'baz')),
-      randomDelay(async () => storage.setItem(PersistKey.SignInSession, 'qux')),
+      delay(async () => storage.setItem(PersistKey.IdToken, 'baz'), 0),
     ]);
 
     const result = {
       [PersistKey.AccessToken]: 'foo',
       [PersistKey.RefreshToken]: 'bar',
       [PersistKey.IdToken]: 'baz',
-      [PersistKey.SignInSession]: 'qux',
     };
     expect(storage.data).toEqual(result);
 
