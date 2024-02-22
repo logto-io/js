@@ -19,6 +19,12 @@ node_modules
 # sample lockfile
 /packages/*-sample/pnpm-lock.yaml
 
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+
 # logs
 logs
 *.log
