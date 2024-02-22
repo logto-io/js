@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - 'push-action/**'
+      - "push-action/**"
   pull_request:
 
 concurrency:
@@ -39,5 +39,6 @@ jobs:
       - name: Codecov browser
         uses: codecov/codecov-action@v4
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           flags: browser
           directory: ./packages/browser
