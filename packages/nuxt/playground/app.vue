@@ -1,5 +1,24 @@
 <script setup lang="ts">
 
+const client = useLogtoClient();
+const accessToken = useState<string | undefined>('access-token');
+
+await callOnce(async () => {
+  if (!client) {
+    throw new Error('Logto client is not available');
+  }
+
+  if (!await client.isAuthenticated()) {
+    return;
+  }
+
+  try {
+    accessToken.value = await client.getAccessToken();
+  } catch (error) {
+    console.error('Failed to get access token', error);
+  }
+})
+
 const user = useLogtoUser();
 
 </script>
@@ -12,6 +31,7 @@ const user = useLogtoUser();
         <b>{{ key }}:</b> {{ value }}
       </li>
     </ul>
+    <p v-if="Boolean(user)">Access token: {{ accessToken }}</p>
     <a :href="`/sign-${ user ? 'out' : 'in' }`">
       Sign {{ user ? 'out' : 'in' }}
     </a>

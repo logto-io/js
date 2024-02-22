@@ -8,6 +8,8 @@ import { type LogtoRuntimeConfig, type LogtoRuntimeConfigInput } from './runtime
 // This will not export the default export
 export * from '@logto/node';
 export { default as LogtoNodeClient } from '@logto/node';
+export * from './runtime/utils/types';
+export * from './runtime/utils/constants';
 
 const logtoModule: NuxtModule<LogtoRuntimeConfigInput> = defineNuxtModule<LogtoRuntimeConfigInput>({
   meta: {
