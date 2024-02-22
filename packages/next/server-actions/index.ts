@@ -11,7 +11,7 @@ import { getCookies, setCookies } from './cookie';
 export type { LogtoContext, InteractionMode } from '@logto/node';
 
 /**
- * Init sign in process and redirect to Logto's sign in page
+ * Init sign in process and redirect to the Logto sign-in page
  */
 export const signIn = async (
   config: LogtoNextConfig,
