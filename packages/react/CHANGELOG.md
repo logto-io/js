@@ -1,5 +1,23 @@
 # Change Log
 
+## 3.0.0
+
+### Major Changes
+
+- 204cdcd: refactor LogtoContextProps and LogtoContext
+
+  This version marks as major because it changes the exported `LogtoContextProps` type. In most cases, this should not affect you.
+
+  - Removed `loadingCount` and `setLoadingCount` from `LogtoContextProps`.
+  - Added `isLoading` and `setIsLoading` to `LogtoContextProps`.
+  - Export `LogtoContext`.
+
+### Patch Changes
+
+- 26619ed: use TypeScript 5.3.3
+- Updated dependencies [26619ed]
+  - @logto/browser@2.2.3
+
 ## 2.2.4
 
 ### Patch Changes

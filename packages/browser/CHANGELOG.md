@@ -1,5 +1,18 @@
 # Change Log
 
+## 2.2.3
+
+### Patch Changes
+
+- 26619ed: use TypeScript 5.3.3
+- Updated dependencies [88495b2]
+- Updated dependencies [c491de1]
+- Updated dependencies [c491de1]
+- Updated dependencies [26619ed]
+- Updated dependencies [c491de1]
+- Updated dependencies [c491de1]
+  - @logto/client@2.4.0
+
 ## 2.2.2
 
 ### Patch Changes

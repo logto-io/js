@@ -1,5 +1,13 @@
 # @logto/capacitor
 
+## 1.1.2
+
+### Patch Changes
+
+- 26619ed: use TypeScript 5.3.3
+- Updated dependencies [26619ed]
+  - @logto/browser@2.2.3
+
 ## 1.1.1
 
 ### Patch Changes

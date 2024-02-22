@@ -1,5 +1,29 @@
 # Change Log
 
+## 2.4.0
+
+### Minor Changes
+
+- 88495b2: add session utils and types
+
+  Extracted from `@logto/next`, these utilities are useful for any Node.js application that needs to manage Logto sessions with encryption.
+
+- 864caab: implement reusable `CookieStorage` for Node environment
+
+  It can be used to store and retrieve encrypted cookies in Node.js environment for Logto.
+
+### Patch Changes
+
+- 864caab: remove `node-fetch` from dependencies (native fetch is available from [Node.js v17.5.0](https://nodejs.org/dist/latest-v18.x/docs/api/globals.html#fetch), we are targeting v20+)
+- 26619ed: use TypeScript 5.3.3
+- Updated dependencies [88495b2]
+- Updated dependencies [c491de1]
+- Updated dependencies [c491de1]
+- Updated dependencies [26619ed]
+- Updated dependencies [c491de1]
+- Updated dependencies [c491de1]
+  - @logto/client@2.4.0
+
 ## 2.3.0
 
 ### Minor Changes

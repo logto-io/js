@@ -1,5 +1,32 @@
 # Change Log
 
+## 4.0.0
+
+### Major Changes
+
+- c491de1: remove `verifyIdToken()` util function, now it's in `@logto/client`
+
+  This change removes the dependency of `jose` which keeps the package clean.
+
+### Minor Changes
+
+- c491de1: update prompt usage to allow multiple values
+
+  - Logto config supports both `Prompt` and `Prompt[]` types now.
+  - Added `Prompt.None` enum value.
+
+- 2febe71: add `buildAngularAuthConfig()` to build `angular-auth-oidc-client` config in a Logto way
+
+  Also add a new type `LogtoAngularConfig`.
+
+### Patch Changes
+
+- c491de1: use `.toString()` for `URLSearchParams` passing to requester
+
+  Some `fetch` implementation doesn't support `URLSearchParams` directly, so we need to convert it to string before passing it to the requester.
+
+- 26619ed: use TypeScript 5.3.3
+
 ## 3.0.2
 
 ### Patch Changes

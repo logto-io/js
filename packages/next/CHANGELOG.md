@@ -1,5 +1,23 @@
 # Change Log
 
+## 3.0.0
+
+### Major Changes
+
+- 26619ed: remove explicit crypto module imports since Node now has global WebCrypto variable by default
+
+  Marking this as a major change since it may break current code if you are using Node 18. It should be fine if you are using Node LTS. See https://nodejs.org/api/globals.html#crypto_1 for more information.
+
+### Patch Changes
+
+- b71e7c7: The page router SDK will now update cookie when access token changed
+- 26619ed: use TypeScript 5.3.3
+- Updated dependencies [88495b2]
+- Updated dependencies [864caab]
+- Updated dependencies [864caab]
+- Updated dependencies [26619ed]
+  - @logto/node@2.4.0
+
 ## 2.4.0
 
 ### Minor Changes
