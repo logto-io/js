@@ -1,14 +1,15 @@
 <p align="center">
   <a href="https://logto.io" target="_blank" align="center" alt="Logto Logo">
-      <img src="./logo.png" width="100">
+      <img src="https://github.com/logto-io.png" width="100">
   </a>
   <br/>
-  <span><i><a href="https://logto.io" target="_blank">Logto</a> helps you build the sign-in experience and user identity within minutes.</i></span>
+  <span><i><a href="https://logto.io" target="_blank">Logto</a> is an open-source Auth0 alternative designed for modern apps and SaaS products.</i></span>
 </p>
 
 # Logto JavaScript SDKs
 
 The monorepo for SDKs and working samples written in JavaScript (Well, mostly in TypeScript).
+
 ## Products
 
 | Name                               | Description                                              |
@@ -20,20 +21,26 @@ The monorepo for SDKs and working samples written in JavaScript (Well, mostly in
 | [js](./packages/js/)               | Logto JavaScript core.                                   |
 | [next](./packages/next/)           | Logto Next.js SDK built on top of node foundations.      |
 | [node](./packages/node/)           | Logto node foundation SDK.                               |
+| [nuxt](./packages/nuxt/)           | Logto Nuxt 3 SDK built on top of node foundations.       |
 | [react](./packages/react/)         | Logto React SDK built on top of browser foundations.     |
 | [remix](./packages/remix/)         | Logto Remix SDK built on top of node foundations.        |
 | [vue](./packages/vue/)             | Logto Vue SDK built on top of browser foundations.       |
+| [sveltekit](./packages/sveltekit/) | Logto SvelteKit SDK built on top of node foundations.    |
 
 ## Samples
 
-| Name                                          | Description                                                              |
-| --------------------------------------------- | ------------------------------------------------------------------------ |
-| [browser-sample](./packages/browser-sample/)           | A sample of using Logto browser SDK.                                     |
-| [express-sample](./packages/express-sample/)           | A sample of using Logto Express SDK.                                     |
-| [next-app-dir-sample](./packages/next-app-dir-sample/) | A sample of using Logto Next.js SDK for Next.js app directory structure. |
-| [next-sample](./packages/next-sample/)                 | A sample of using Logto Next.js SDK.                                     |
-| [react-sample](./packages/react-sample/)               | A sample of using Logto React SDK.                                       |
-| [vue-sample](./packages/vue-sample/)                   | A sample of using Logto Vue SDK.                                         |
+| Name                                                                 | Description                                                              |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| [angular-sample](./packages/angular-sample/)                         | A sample of using `angular-auth-oidc-client` to integrate with Logto.    |
+| [browser-sample](./packages/browser-sample/)                         | A sample of using Logto browser SDK.                                     |
+| [express-sample](./packages/express-sample/)                         | A sample of using Logto Express SDK.                                     |
+| [next-app-dir-sample](./packages/next-app-dir-sample/)               | A sample of using Logto Next.js SDK for Next.js app directory structure. |
+| [next-sample](./packages/next-sample/)                               | A sample of using Logto Next.js SDK.                                     |
+| [next-server-actions-sample](./packages/next-server-actions-sample/) | A sample of using Logto Next.js SDK for server actions.                  |
+| [passportjs-sample](./packages/passportjs-sample/)                   | A sample of using Logto with Passport.js.                                |
+| [react-sample](./packages/react-sample/)                             | A sample of using Logto React SDK.                                       |
+| [svetlekit-sample](./packages/sveltekit-sample/)                     | A sample of using Logto SvelteKit SDK.                                   |
+| [vue-sample](./packages/vue-sample/)                                 | A sample of using Logto Vue SDK.                                         |
 
 ## Resources
 
