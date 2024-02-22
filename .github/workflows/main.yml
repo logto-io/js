@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - 'push-action/**'
+      - "push-action/**"
   pull_request:
 
 concurrency:
@@ -31,13 +31,15 @@ jobs:
         run: pnpm -r test:coverage
 
       - name: Codecov js
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           flags: js
           directory: ./packages/js
 
       - name: Codecov browser
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           flags: browser
           directory: ./packages/browser
