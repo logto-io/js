@@ -1,5 +1,46 @@
 # Change Log
 
+## 2.4.0
+
+### Minor Changes
+
+- c491de1: support custom jwt verifier
+
+  Now it's possible to pass a `JwtVerifier` instance to the Logto client adapter to verify the JWT token. The client also has a built-in verifier that keeps the same behavior as before.
+
+- c491de1: provide a shim version without importing `jose` (`@logto/client/shim`)
+
+  It can avoid the use of `jose` package which is useful for certain environments that don't support native modules like `crypto`. (e.g. React Native)
+
+  To use the shim client:
+
+  ```ts
+  import { StandardLogtoClient } from "@logto/client/shim";
+  ```
+
+  The `StandardLogtoClient` class is identical to the original `LogtoClient` class, except it doesn't have the default JWT verifier implemented.
+
+- c491de1: update prompt usage to allow multiple values
+
+  - Logto config supports both `Prompt` and `Prompt[]` types now.
+  - Added `Prompt.None` enum value.
+
+### Patch Changes
+
+- 88495b2: export `JwtVerifier` type
+- c491de1: refactor adapter types
+
+  - `generateState()`, `generateCodeVerifier()`, `generateCodeChallenge()` now accept both Promise and non-Promise return types.
+  - the navigate function now calls with a second parameter which has the state information. (`{ redirectUri?: string; for: 'sign-in' | 'sign-out' }`)
+
+- 26619ed: use TypeScript 5.3.3
+- Updated dependencies [c491de1]
+- Updated dependencies [c491de1]
+- Updated dependencies [26619ed]
+- Updated dependencies [c491de1]
+- Updated dependencies [2febe71]
+  - @logto/js@4.0.0
+
 ## 2.3.3
 
 ### Patch Changes

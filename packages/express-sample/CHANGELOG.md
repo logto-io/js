@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.0.1
+
+### Patch Changes
+
+- 26619ed: use TypeScript 5.3.3
+- Updated dependencies [26619ed]
+  - @logto/express@2.3.1
+
 ## 2.0.0
 
 ### Major Changes

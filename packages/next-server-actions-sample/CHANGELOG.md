@@ -1,5 +1,15 @@
 # next-server-actions-sample
 
+## 2.1.5
+
+### Patch Changes
+
+- 26619ed: use TypeScript 5.3.3
+- Updated dependencies [26619ed]
+- Updated dependencies [b71e7c7]
+- Updated dependencies [26619ed]
+  - @logto/next@3.0.0
+
 ## 2.1.4
 
 ### Patch Changes

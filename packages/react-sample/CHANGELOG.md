@@ -1,5 +1,14 @@
 # Change Log
 
+## 2.1.1
+
+### Patch Changes
+
+- 26619ed: use TypeScript 5.3.3
+- Updated dependencies [26619ed]
+- Updated dependencies [204cdcd]
+  - @logto/react@3.0.0
+
 ## 2.1.0
 
 ### Minor Changes
