@@ -8,7 +8,7 @@ await callOnce(async () => {
     throw new Error('Logto client is not available');
   }
 
-  if (!await client.isAuthenticated()) {
+  if (!(await client.isAuthenticated())) {
     return;
   }
 
@@ -17,7 +17,7 @@ await callOnce(async () => {
   } catch (error) {
     console.error('Failed to get access token', error);
   }
-})
+});
 
 const user = useLogtoUser();
 
