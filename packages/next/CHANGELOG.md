@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.1.0
+
+### Minor Changes
+
+- 3575c5c: Add built-in signIn, handleSignIn, singOut, getLogtoContext and other helpers
+
 ## 3.0.0
 
 ### Major Changes
