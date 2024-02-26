@@ -80,11 +80,10 @@ describe('Next', () => {
     it('should redirect to Logto sign in url and save session', async () => {
       const client = new LogtoClient(configs);
       await testApiHandler({
-        handler: client.handleSignIn(),
+        pagesHandler: client.handleSignIn(),
         url: '/api/logto/sign-in',
         test: async ({ fetch }) => {
-          const response = await fetch({ method: 'GET', redirect: 'manual' });
-          const headers = response.headers as Map<string, string>;
+          const { headers } = await fetch({ method: 'GET', redirect: 'manual' });
           expect(headers.get('location')).toEqual(signInUrl);
         },
       });
@@ -95,11 +94,10 @@ describe('Next', () => {
     it('should redirect to Logto sign in url with interactionMode and save session', async () => {
       const client = new LogtoClient(configs);
       await testApiHandler({
-        handler: client.handleSignIn(undefined, 'signUp'),
+        pagesHandler: client.handleSignIn(undefined, 'signUp'),
         url: '/api/logto/sign-in',
         test: async ({ fetch }) => {
-          const response = await fetch({ method: 'GET', redirect: 'manual' });
-          const headers = response.headers as Map<string, string>;
+          const { headers } = await fetch({ method: 'GET', redirect: 'manual' });
           expect(headers.get('location')).toEqual(`${signInUrl}?interactionMode=signUp`);
         },
       });
@@ -112,12 +110,11 @@ describe('Next', () => {
     it('should call client.handleSignInCallback and redirect to home', async () => {
       const client = new LogtoClient(configs);
       await testApiHandler({
-        handler: client.handleSignInCallback(),
+        pagesHandler: client.handleSignInCallback(),
         url: '/api/logto/sign-in-callback',
         test: async ({ fetch }) => {
-          const response = await fetch({ method: 'GET', redirect: 'manual' });
-          const headers = response.headers as Map<string, string>;
-          expect(headers.get('location')).toEqual(`${configs.baseUrl}/`);
+          const { headers } = await fetch({ method: 'GET', redirect: 'manual' });
+          expect(headers.get('location')).toEqual(configs.baseUrl);
         },
       });
       expect(handleSignInCallback).toHaveBeenCalled();
@@ -129,7 +126,7 @@ describe('Next', () => {
     it('should assign `user` to `request`', async () => {
       const client = new LogtoClient(configs);
       await testApiHandler({
-        handler: client.withLogtoApiRoute((request, response) => {
+        pagesHandler: client.withLogtoApiRoute((request, response) => {
           expect(request.user).toBeDefined();
           response.end();
         }),
@@ -145,12 +142,11 @@ describe('Next', () => {
     it('should redirect to Logto sign out url', async () => {
       const client = new LogtoClient(configs);
       await testApiHandler({
-        handler: client.handleSignOut(),
+        pagesHandler: client.handleSignOut(),
         url: '/api/logto/sign-out',
         test: async ({ fetch }) => {
-          const response = await fetch({ method: 'GET', redirect: 'manual' });
-          const headers = response.headers as Map<string, string>;
-          expect(headers.get('location')).toEqual(`${configs.baseUrl}/`);
+          const { headers } = await fetch({ method: 'GET', redirect: 'manual' });
+          expect(headers.get('location')).toEqual(configs.baseUrl);
         },
       });
       expect(save).toHaveBeenCalled();
@@ -163,7 +159,7 @@ describe('Next', () => {
       const client = new LogtoClient(configs);
       jest.spyOn(client, 'handleSignIn').mockImplementation(() => mockResponse);
       await testApiHandler({
-        handler: client.handleAuthRoutes(),
+        pagesHandler: client.handleAuthRoutes(),
         paramsPatcher: (parameters) => {
           // eslint-disable-next-line @silverhand/fp/no-mutation
           parameters.action = 'sign-in';
@@ -179,7 +175,7 @@ describe('Next', () => {
       const client = new LogtoClient(configs);
       jest.spyOn(client, 'handleSignIn').mockImplementation(() => mockResponse);
       await testApiHandler({
-        handler: client.handleAuthRoutes(),
+        pagesHandler: client.handleAuthRoutes(),
         paramsPatcher: (parameters) => {
           // eslint-disable-next-line @silverhand/fp/no-mutation
           parameters.action = 'sign-up';
@@ -195,7 +191,7 @@ describe('Next', () => {
       const client = new LogtoClient(configs);
       jest.spyOn(client, 'handleSignInCallback').mockImplementation(() => mockResponse);
       await testApiHandler({
-        handler: client.handleAuthRoutes(),
+        pagesHandler: client.handleAuthRoutes(),
         paramsPatcher: (parameters) => {
           // eslint-disable-next-line @silverhand/fp/no-mutation
           parameters.action = 'sign-in-callback';
@@ -211,7 +207,7 @@ describe('Next', () => {
       const client = new LogtoClient(configs);
       jest.spyOn(client, 'handleSignOut').mockImplementation(() => mockResponse);
       await testApiHandler({
-        handler: client.handleAuthRoutes(),
+        pagesHandler: client.handleAuthRoutes(),
         paramsPatcher: (parameters) => {
           // eslint-disable-next-line @silverhand/fp/no-mutation
           parameters.action = 'sign-out';
@@ -227,7 +223,7 @@ describe('Next', () => {
       const client = new LogtoClient(configs);
       jest.spyOn(client, 'handleUser').mockImplementation(() => mockResponse);
       await testApiHandler({
-        handler: client.handleAuthRoutes(),
+        pagesHandler: client.handleAuthRoutes(),
         paramsPatcher: (parameters) => {
           // eslint-disable-next-line @silverhand/fp/no-mutation
           parameters.action = 'user';
@@ -244,7 +240,7 @@ describe('Next', () => {
     it('should get node client without crash', async () => {
       const client = new LogtoClient(configs);
       await testApiHandler({
-        handler: async (request, response) => {
+        pagesHandler: async (request, response) => {
           await client.createNodeClientFromNextApi(request, response);
           response.end();
         },
