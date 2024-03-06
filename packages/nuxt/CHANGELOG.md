@@ -1,5 +1,11 @@
 # @logto/nuxt
 
+## 0.1.2
+
+### Patch Changes
+
+- 329de84: fix import issues
+
 ## 0.1.1
 
 ### Patch Changes
