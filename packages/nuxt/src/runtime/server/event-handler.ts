@@ -1,4 +1,5 @@
 import LogtoClient, { CookieStorage } from '@logto/node';
+import { defineEventHandler } from 'h3';
 
 import { defaults } from '../utils/constants';
 import { type LogtoRuntimeConfig } from '../utils/types';
