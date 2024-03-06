@@ -1,5 +1,7 @@
 <script setup lang="ts">
 
+import { useLogtoClient, useLogtoUser, useState, callOnce } from '#imports';
+
 const client = useLogtoClient();
 const accessToken = useState<string | undefined>('access-token');
 
