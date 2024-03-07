@@ -152,4 +152,13 @@ describe('LogtoClient', () => {
       await expect(storage.getItem('signInSession')).resolves.toBeNull();
     });
   });
+
+  it('should redirect to postRedirectUri after calling signIn and handleSignInCallback successfully', async () => {
+    const logtoClient = createClient();
+    await logtoClient.signIn({ redirectUri, postRedirectUri: '/post-redirect-uri' });
+    const code = `code_value`;
+    const callbackUri = `${redirectUri}?code=${code}&state=${mockedState}&codeVerifier=${mockedCodeVerifier}`;
+    await logtoClient.handleSignInCallback(callbackUri);
+    expect(navigate).toHaveBeenCalledWith('/post-redirect-uri', { for: 'post-sign-in' });
+  });
 });
