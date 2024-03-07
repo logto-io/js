@@ -108,6 +108,7 @@ export const isLogtoAccessTokenMap = (data: unknown): data is Record<string, Acc
 
 export type LogtoSignInSessionItem = {
   redirectUri: string;
+  postRedirectUri?: string;
   codeVerifier: string;
   state: string;
 };

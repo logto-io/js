@@ -1,5 +1,5 @@
 import LogtoClient, { type LogtoConfig, type CookieConfig, CookieStorage } from '@logto/node';
-import { redirect, type Handle, type RequestEvent } from '@sveltejs/kit';
+import { redirect, type Handle, type RequestEvent, isRedirect } from '@sveltejs/kit';
 
 export type {
   IdTokenClaims,
@@ -148,11 +148,21 @@ export const handleLogto = (
       try {
         await logtoClient.handleSignInCallback(event.url.href);
       } catch (error: unknown) {
+        if (isRedirect(error)) {
+          // eslint-disable-next-line @typescript-eslint/no-throw-literal -- SvelteKit's convention
+          throw error;
+        }
+
         return (
           onCallbackError?.(error) ??
-          new Response(`Error: ${error instanceof Error ? error.message : String(error)}`, {
-            status: 400,
-          })
+          new Response(
+            `Error: ${
+              error instanceof Error ? error.message : JSON.stringify(error, undefined, 2)
+            }`,
+            {
+              status: 400,
+            }
+          )
         );
       }
 

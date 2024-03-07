@@ -17,6 +17,7 @@ export type {
   UserInfoResponse,
   InteractionMode,
   ClientAdapter,
+  SignInOptions,
 } from '@logto/client';
 
 export {

@@ -14,6 +14,7 @@ export type {
   ClientAdapter,
   JwtVerifier,
   UserInfoResponse,
+  SignInOptions,
 } from '@logto/client';
 
 export {
