@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import {
   type IdTokenClaims,
   type UserInfoResponse,
@@ -35,6 +36,28 @@ import {
 import { buildAccessTokenKey, getDiscoveryEndpoint } from './utils/index.js';
 import { memoize } from './utils/memoize.js';
 import { once } from './utils/once.js';
+
+export type SignInOptions = {
+  /**
+   * The redirect URI that the user will be redirected to after the sign-in flow is completed.
+   */
+  redirectUri: string | URL;
+  /**
+   * The URI that the user will be redirected to after `redirectUri` successfully handled the
+   * sign-in callback. If not specified, the user will stay on the `redirectUri` page.
+   */
+  postRedirectUri?: string | URL;
+  /**
+   * The interaction mode to be used for the authorization request. It determines the first page
+   * that the user will see in the sign-in flow.
+   *
+   * Note it's not a part of the OIDC standard, but a Logto-specific extension.
+   *
+   * @default InteractionMode.SignIn
+   * @see {@link InteractionMode}
+   */
+  interactionMode?: InteractionMode;
+};
 
 /**
  * The Logto base client class that provides the essential methods for
@@ -192,6 +215,7 @@ export class StandardLogtoClient {
     return fetchUserInfo(userinfoEndpoint, accessToken, this.adapter.requester);
   }
 
+  async signIn(options: SignInOptions): Promise<void>;
   /**
    * Start the sign-in flow with the specified redirect URI. The URI must be
    * registered in the Logto Console.
@@ -201,14 +225,26 @@ export class StandardLogtoClient {
    * To fetch the tokens from the authorization code, use {@link handleSignInCallback}
    * after the user is redirected in the callback URI.
    *
-   * @param redirectUri The redirect URI that the user will be redirected to after the sign-in flow is completed.
-   * @param interactionMode The interaction mode to be used for the authorization request. Note it's not
-   * a part of the OIDC standard, but a Logto-specific extension. Defaults to `signIn`.
-   *
-   * @see {@link https://docs.logto.io/docs/recipes/integrate-logto/vanilla-js/#sign-in | Sign in} for more information.
-   * @see {@link InteractionMode}
+   * @param redirectUri See {@link SignInOptions.redirectUri}.
+   * @param interactionMode See {@link SignInOptions.interactionMode}.
    */
-  async signIn(redirectUri: string, interactionMode?: InteractionMode): Promise<void> {
+  async signIn(
+    redirectUri: SignInOptions['redirectUri'],
+    interactionMode?: SignInOptions['interactionMode']
+  ): Promise<void>;
+  async signIn(
+    options: SignInOptions | string | URL,
+    mode?: SignInOptions['interactionMode']
+  ): Promise<void> {
+    const {
+      redirectUri: redirectUriUrl,
+      postRedirectUri: postRedirectUriUrl,
+      interactionMode,
+    } = typeof options === 'string' || options instanceof URL
+      ? { redirectUri: options, postRedirectUri: undefined, interactionMode: mode }
+      : options;
+    const redirectUri = redirectUriUrl.toString();
+    const postRedirectUri = postRedirectUriUrl?.toString();
     const { appId: clientId, prompt, resources, scopes } = this.logtoConfig;
     const { authorizationEndpoint } = await this.getOidcConfig();
     const [codeVerifier, state] = await Promise.all([
@@ -220,7 +256,7 @@ export class StandardLogtoClient {
     const signInUri = generateSignInUri({
       authorizationEndpoint,
       clientId,
-      redirectUri,
+      redirectUri: redirectUri.toString(),
       codeChallenge,
       state,
       scopes,
@@ -230,7 +266,7 @@ export class StandardLogtoClient {
     });
 
     await Promise.all([
-      this.setSignInSession({ redirectUri, codeVerifier, state }),
+      this.setSignInSession({ redirectUri, postRedirectUri, codeVerifier, state }),
       this.setRefreshToken(null),
       this.setIdToken(null),
     ]);
@@ -454,7 +490,7 @@ export class StandardLogtoClient {
       throw new LogtoClientError('sign_in_session.not_found');
     }
 
-    const { redirectUri, state, codeVerifier } = signInSession;
+    const { redirectUri, postRedirectUri, state, codeVerifier } = signInSession;
     const code = verifyAndParseCodeFromCallbackUri(callbackUri, redirectUri, state);
 
     // NOTE: Will add scope to accessTokenKey when needed. (Linear issue LOG-1589)
@@ -489,5 +525,10 @@ export class StandardLogtoClient {
     });
     await this.saveAccessTokenMap();
     await this.setSignInSession(null);
+
+    if (postRedirectUri) {
+      await this.adapter.navigate(postRedirectUri, { for: 'post-sign-in' });
+    }
   }
 }
+/* eslint-enable max-lines */

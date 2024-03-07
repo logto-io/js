@@ -5,6 +5,7 @@ import LogtoBaseClient, {
   LogtoClientError,
   type InteractionMode,
   type LogtoConfig,
+  type SignInOptions,
 } from '@logto/browser';
 
 export {
@@ -67,6 +68,10 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
   }
 
   /**
+   * **NOTE: Capacitor does not support this method signature, use the other overloads.**
+   */
+  async signIn(options: SignInOptions): Promise<void>;
+  /**
    * Start the sign-in flow with the specified redirect URI. The URI must be
    * registered in the Logto Console.
    *
@@ -76,7 +81,7 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
    * @param redirectUri The redirect URI that the user will be redirected to after the sign-in flow is completed.
    * @param interactionMode The interaction mode to be used for the authorization request. Note it's not
    * a part of the OIDC standard, but a Logto-specific extension. Defaults to `signIn`.
-   * @throws {@link LogtoClientError} If error happens during the sign-in flow or the user cancels the sign-in.
+   * @throws `LogtoClientError` If error happens during the sign-in flow or the user cancels the sign-in.
    *
    * @example
    * ```ts
@@ -97,7 +102,15 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
    * @see {@link https://docs.logto.io/docs/recipes/integrate-logto/vanilla-js/#sign-in | Sign in} for more information.
    * @see {@link InteractionMode}
    */
-  async signIn(redirectUri: string, interactionMode?: InteractionMode): Promise<void> {
+  async signIn(redirectUri: string, interactionMode?: InteractionMode): Promise<void>;
+  async signIn(
+    redirectUri: string | URL | SignInOptions,
+    interactionMode?: InteractionMode
+  ): Promise<void> {
+    if (typeof redirectUri === 'object' && !(redirectUri instanceof URL)) {
+      throw new TypeError('The first argument must be a string or a URL.');
+    }
+
     return new Promise((resolve, reject) => {
       const run = async () => {
         const [browserHandle, appHandle] = await Promise.all([
@@ -109,7 +122,7 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
           // Handle the case where the user completes the sign-in and is redirected
           // back to the app.
           App.addListener('appUrlOpen', async ({ url }) => {
-            if (!url.startsWith(redirectUri)) {
+            if (!url.startsWith(redirectUri.toString())) {
               return;
             }
 
