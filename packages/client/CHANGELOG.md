@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.5.0
+
+### Minor Changes
+
+- 65fca8c: support `postRedirectUri` to navigate to a URI after sign-in callback
+
 ## 2.4.0
 
 ### Minor Changes
