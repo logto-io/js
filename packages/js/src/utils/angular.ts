@@ -5,7 +5,7 @@ import { Prompt } from '../consts/index.js';
 import { withDefaultScopes } from './scopes.js';
 
 /** The Logto configuration object for Angular apps. */
-export type LogtoAngularConfig = {
+export type LogtoAngularConfig = OpenIdConfiguration & {
   /**
    * The endpoint for the Logto server, you can get it from the integration guide
    * or the team settings page of the Logto Console.
@@ -81,11 +81,13 @@ export const buildAngularAuthConfig = (logtoConfig: LogtoAngularConfig): OpenIdC
     redirectUri: redirectUrl,
     postLogoutRedirectUri,
     prompt = Prompt.Consent,
+    ...otherConfigs
   } = logtoConfig;
   const scope = withDefaultScopes(scopes);
   const customParameters = resource ? { resource } : undefined;
 
   return {
+    ...otherConfigs,
     authority: new URL('/oidc', endpoint).href,
     redirectUrl,
     postLogoutRedirectUri,
