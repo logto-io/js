@@ -51,6 +51,7 @@ export const postSignOutRedirectUri = 'http://localhost:3000';
 export const mockCodeChallenge = 'code_challenge_value';
 export const mockedCodeVerifier = 'code_verifier_value';
 export const mockedState = 'state_value';
+export const mockedUserHint = 'johndoe@example.com';
 
 export const mockedSignInUri = generateSignInUri({
   authorizationEndpoint,
@@ -76,6 +77,15 @@ export const mockedSignUpUri = generateSignInUri({
   codeChallenge: mockCodeChallenge,
   state: mockedState,
   interactionMode: 'signUp',
+});
+
+export const mockedSignInUriWithLoginHint = generateSignInUri({
+  authorizationEndpoint,
+  clientId: appId,
+  redirectUri,
+  codeChallenge: mockCodeChallenge,
+  state: mockedState,
+  loginHint: mockedUserHint,
 });
 
 export const accessToken = 'access_token_value';

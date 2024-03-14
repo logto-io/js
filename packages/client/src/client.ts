@@ -57,6 +57,10 @@ export type SignInOptions = {
    * @see {@link InteractionMode}
    */
   interactionMode?: InteractionMode;
+  /**
+   * Login hint indicates the current user (usually an email address).
+   */
+  loginHint?: string;
 };
 
 /**
@@ -230,18 +234,26 @@ export class StandardLogtoClient {
    */
   async signIn(
     redirectUri: SignInOptions['redirectUri'],
-    interactionMode?: SignInOptions['interactionMode']
+    interactionMode?: SignInOptions['interactionMode'],
+    loginHint?: SignInOptions['loginHint']
   ): Promise<void>;
   async signIn(
     options: SignInOptions | string | URL,
-    mode?: SignInOptions['interactionMode']
+    mode?: SignInOptions['interactionMode'],
+    hint?: SignInOptions['loginHint']
   ): Promise<void> {
     const {
       redirectUri: redirectUriUrl,
       postRedirectUri: postRedirectUriUrl,
       interactionMode,
+      loginHint,
     } = typeof options === 'string' || options instanceof URL
-      ? { redirectUri: options, postRedirectUri: undefined, interactionMode: mode }
+      ? {
+          redirectUri: options,
+          postRedirectUri: undefined,
+          interactionMode: mode,
+          loginHint: hint,
+        }
       : options;
     const redirectUri = redirectUriUrl.toString();
     const postRedirectUri = postRedirectUriUrl?.toString();
@@ -263,6 +275,7 @@ export class StandardLogtoClient {
       resources,
       prompt,
       interactionMode,
+      loginHint,
     });
 
     await Promise.all([
