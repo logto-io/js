@@ -90,7 +90,10 @@ describe('LogtoClient', () => {
     it('should redirect to signInUri with login_hint param after calling signIn with user hint', async () => {
       const logtoClient = createClient();
       await logtoClient.signIn(redirectUri, undefined, mockedUserHint);
-      expect(navigate).toHaveBeenCalledWith(mockedSignInUriWithLoginHint);
+      expect(navigate).toHaveBeenCalledWith(mockedSignInUriWithLoginHint, {
+        redirectUri,
+        for: 'sign-in',
+      });
     });
 
     it('should redirect to signInUri with interactionMode params after calling signIn with signUp mode', async () => {
