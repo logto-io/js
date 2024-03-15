@@ -15,6 +15,7 @@ export type SignInUriParameters = {
   resources?: string[];
   prompt?: Prompt | Prompt[];
   interactionMode?: InteractionMode;
+  loginHint?: string;
 };
 
 const buildPrompt = (prompt?: Prompt | Prompt[]) => {
@@ -35,6 +36,7 @@ export const generateSignInUri = ({
   resources,
   prompt,
   interactionMode,
+  loginHint,
 }: SignInUriParameters) => {
   const urlSearchParameters = new URLSearchParams({
     [QueryKey.ClientId]: clientId,
@@ -46,6 +48,10 @@ export const generateSignInUri = ({
     [QueryKey.Prompt]: buildPrompt(prompt),
     [QueryKey.Scope]: withDefaultScopes(scopes),
   });
+
+  if (loginHint) {
+    urlSearchParameters.append(QueryKey.LoginHint, loginHint);
+  }
 
   for (const resource of resources ?? []) {
     urlSearchParameters.append(QueryKey.Resource, resource);

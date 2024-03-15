@@ -20,6 +20,7 @@ export enum QueryKey {
   GrantType = 'grant_type',
   IdToken = 'id_token',
   IdTokenHint = 'id_token_hint',
+  LoginHint = 'login_hint',
   PostLogoutRedirectUri = 'post_logout_redirect_uri',
   Prompt = 'prompt',
   RedirectUri = 'redirect_uri',

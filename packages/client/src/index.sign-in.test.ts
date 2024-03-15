@@ -23,6 +23,8 @@ import {
   tokenEndpoint,
   createAdapters,
   mockedSignUpUri,
+  mockedUserHint,
+  mockedSignInUriWithLoginHint,
 } from './mock.js';
 
 jest.mock('@logto/js', () => ({
@@ -83,6 +85,15 @@ describe('LogtoClient', () => {
       const logtoClient = createClient();
       await logtoClient.signIn(redirectUri);
       expect(navigate).toHaveBeenCalledWith(mockedSignInUri, { redirectUri, for: 'sign-in' });
+    });
+
+    it('should redirect to signInUri with login_hint param after calling signIn with user hint', async () => {
+      const logtoClient = createClient();
+      await logtoClient.signIn(redirectUri, undefined, mockedUserHint);
+      expect(navigate).toHaveBeenCalledWith(mockedSignInUriWithLoginHint, {
+        redirectUri,
+        for: 'sign-in',
+      });
     });
 
     it('should redirect to signInUri with interactionMode params after calling signIn with signUp mode', async () => {
