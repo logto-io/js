@@ -136,6 +136,28 @@ describe('Next', () => {
       });
       expect(getContext).toHaveBeenCalled();
     });
+
+    it('custom error handler', async () => {
+      getContext.mockRejectedValueOnce(new Error('error'));
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        pagesHandler: client.withLogtoApiRoute(
+          (request, response) => {
+            expect(request.user).toBeDefined();
+            response.end();
+          },
+          undefined,
+          (request, response, error) => {
+            response.send(error instanceof Error ? error.message : 'unknown error');
+          }
+        ),
+        test: async ({ fetch }) => {
+          const response = await fetch({ method: 'GET', redirect: 'manual' });
+          await expect(response.text()).resolves.toBe('error');
+        },
+      });
+      expect(getContext).toHaveBeenCalled();
+    });
   });
 
   describe('handleSignOut', () => {

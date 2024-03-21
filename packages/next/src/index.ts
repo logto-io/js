@@ -9,6 +9,8 @@ import {
   type GetServerSidePropsResult,
   type GetServerSidePropsContext,
   type NextApiHandler,
+  type NextApiRequest,
+  type NextApiResponse,
 } from 'next';
 import { type NextApiRequestCookies } from 'next/dist/server/api-utils/index.js';
 
@@ -114,16 +116,28 @@ export default class LogtoClient extends LogtoNextBaseClient {
     };
 
   withLogtoApiRoute =
-    (handler: NextApiHandler, config: GetContextParameters = {}): NextApiHandler =>
+    (
+      handler: NextApiHandler,
+      config: GetContextParameters = {},
+      onError?: (request: NextApiRequest, response: NextApiResponse, error: unknown) => unknown
+    ): NextApiHandler =>
     async (request, response) => {
-      const nodeClient = await this.createNodeClientFromNextApi(request, response);
-      const user = await nodeClient.getContext(config);
-      await this.storage?.save();
+      try {
+        const nodeClient = await this.createNodeClientFromNextApi(request, response);
+        const user = await nodeClient.getContext(config);
+        await this.storage?.save();
 
-      // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-      Object.defineProperty(request, 'user', { enumerable: true, get: () => user });
+        // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+        Object.defineProperty(request, 'user', { enumerable: true, get: () => user });
 
-      return handler(request, response);
+        return handler(request, response);
+      } catch (error: unknown) {
+        if (onError) {
+          return onError(request, response, error);
+        }
+
+        throw error;
+      }
     };
 
   withLogtoSsr =
@@ -131,17 +145,26 @@ export default class LogtoClient extends LogtoNextBaseClient {
       handler: (
         context: GetServerSidePropsContext
       ) => GetServerSidePropsResult<P> | Promise<GetServerSidePropsResult<P>>,
-      configs: GetContextParameters = {}
+      configs: GetContextParameters = {},
+      onError?: (error: unknown) => unknown
     ) =>
     async (context: GetServerSidePropsContext) => {
-      const nodeClient = await this.createNodeClientFromNextApi(context.req, context.res);
-      const user = await nodeClient.getContext(configs);
-      await this.storage?.save();
+      try {
+        const nodeClient = await this.createNodeClientFromNextApi(context.req, context.res);
+        const user = await nodeClient.getContext(configs);
+        await this.storage?.save();
 
-      // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-      Object.defineProperty(context.req, 'user', { enumerable: true, get: () => user });
+        // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+        Object.defineProperty(context.req, 'user', { enumerable: true, get: () => user });
 
-      return handler(context);
+        return await handler(context);
+      } catch (error: unknown) {
+        if (onError) {
+          return onError(error);
+        }
+
+        throw error;
+      }
     };
 
   async createNodeClientFromNextApi(
