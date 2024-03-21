@@ -1,5 +1,12 @@
 # next-server-actions-sample
 
+## 2.1.7
+
+### Patch Changes
+
+- Updated dependencies [10f1075]
+  - @logto/next@3.1.1
+
 ## 2.1.6
 
 ### Patch Changes

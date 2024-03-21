@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.1.1
+
+### Patch Changes
+
+- 10f1075: In Next.js SDK, if cookie secure config is set to true, will add "SameSite=Lax"
+
 ## 3.1.0
 
 ### Minor Changes
