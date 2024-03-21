@@ -117,6 +117,7 @@ export default class LogtoClient extends BaseClient {
           responseCookies.set(cookieName, value, {
             maxAge: 14 * 3600 * 24,
             secure: this.config.cookieSecure,
+            sameSite: this.config.cookieSecure ? 'lax' : undefined,
           });
         }
       )
