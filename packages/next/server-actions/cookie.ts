@@ -10,5 +10,6 @@ export const setCookies = async (newCookie: string, config: LogtoNextConfig): Pr
   cookies().set(`logto:${config.appId}`, newCookie, {
     maxAge: 14 * 3600 * 24,
     secure: config.cookieSecure,
+    sameSite: config.cookieSecure ? 'lax' : undefined,
   });
 };

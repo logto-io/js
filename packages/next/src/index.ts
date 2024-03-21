@@ -165,7 +165,7 @@ export default class LogtoClient extends LogtoNextBaseClient {
           response.setHeader(
             'Set-Cookie',
             `${cookieName}=${value}; Path=/; Max-Age=${maxAge}; ${
-              secure ? 'Secure; SameSite=None' : ''
+              secure ? 'Secure; SameSite=Lax' : ''
             }`
           );
         }
