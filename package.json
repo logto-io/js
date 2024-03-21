@@ -6,6 +6,7 @@
     "preinstall": "npx only-allow pnpm",
     "changeset": "changeset",
     "prepare": "if test \"$NODE_ENV\" != \"production\" ; then husky ; fi",
+    "sdk": "pnpm -r --filter=!@logto/*-sample",
     "build": "pnpm -r build",
     "test": "pnpm -r test"
   },

@@ -1,9 +1,10 @@
 import { CookieStorage } from '@logto/node';
-import { redirect, type RequestEvent } from '@sveltejs/kit';
+import { type RequestEvent } from '@sveltejs/kit';
+import { vi, describe, it, expect } from 'vitest';
 
 import { LogtoClient, handleLogto } from './index.js';
 
-const resolve = jest.fn();
+const resolve = vi.fn();
 
 const createMockEvent = (
   initialCookies: Record<string, string> = {},
@@ -67,7 +68,7 @@ describe('handleLogto()', () => {
 
   it('should print a warning if the Logto client is already in the request locals', async () => {
     const handle = handleLogto(config, cookieConfig);
-    const spy = jest.spyOn(console, 'warn');
+    const spy = vi.spyOn(console, 'warn');
     const event = createMockEvent();
     const client = new LogtoClient(config, {
       navigate: () => {
@@ -93,11 +94,13 @@ describe('handleLogto()', () => {
       storage: createCookieStorageFromEvent(event),
     });
 
-    jest.spyOn(client, 'handleSignInCallback').mockResolvedValueOnce();
+    vi.spyOn(client, 'handleSignInCallback').mockResolvedValueOnce();
 
     const handle = handleLogto(config, cookieConfig, { buildLogtoClient: () => client });
-    await handle({ resolve, event });
-    expect(redirect).toHaveBeenCalledTimes(1);
+    await expect(handle({ resolve, event })).rejects.toThrow(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      expect.objectContaining({ status: 302, location: '/' })
+    );
   });
 
   it('should throw an error if the Logto client cannot handle the sign-in callback', async () => {
@@ -118,9 +121,9 @@ describe('handleLogto()', () => {
       storage: createCookieStorageFromEvent(event),
     });
 
-    jest.spyOn(client, 'isAuthenticated').mockResolvedValueOnce(true);
+    vi.spyOn(client, 'isAuthenticated').mockResolvedValueOnce(true);
     // @ts-expect-error
-    jest.spyOn(client, 'getIdTokenClaims').mockResolvedValueOnce({ name: 'John Doe' });
+    vi.spyOn(client, 'getIdTokenClaims').mockResolvedValueOnce({ name: 'John Doe' });
 
     const handle = handleLogto(config, cookieConfig, { buildLogtoClient: () => client });
 

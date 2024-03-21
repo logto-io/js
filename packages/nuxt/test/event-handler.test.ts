@@ -6,8 +6,6 @@ import { mockNuxtImport } from '@nuxt/test-utils/runtime';
 import { createEvent } from 'h3';
 import { describe, expect, it, vi, type Mock } from 'vitest';
 
-import handler from '@/src/runtime/server/event-handler';
-
 mockNuxtImport('useRuntimeConfig', () =>
   vi.fn(() => ({
     logto: {
@@ -20,18 +18,23 @@ mockNuxtImport('useRuntimeConfig', () =>
     },
   }))
 );
-
 const cookies = new Map();
 const getRequestURL = vi.fn(() => new URL('http://localhost:3000'));
 const sendRedirect = vi.fn();
 
-vi.stubGlobal('defineEventHandler', (handler: unknown) => handler);
-vi.stubGlobal('getRequestURL', getRequestURL);
-vi.stubGlobal('getCookie', (_event: unknown, name: string) => cookies.get(name));
-vi.stubGlobal('setCookie', (_event: unknown, name: string, value: string) => {
-  cookies.set(name, value);
-});
-vi.stubGlobal('sendRedirect', sendRedirect);
+vi.doMock('h3', async (importOriginal) => ({
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  ...(await importOriginal<{}>()),
+  defineEventHandler: vi.fn((handler: unknown) => handler),
+  getRequestURL,
+  getCookie: vi.fn((_event: unknown, name: string) => cookies.get(name)),
+  setCookie: vi.fn((_event: unknown, name: string, value: string) => {
+    cookies.set(name, value);
+  }),
+  sendRedirect,
+}));
+
+const { default: handler } = await import('@/src/runtime/server/event-handler');
 
 const LogtoClient = vi.fn();
 
