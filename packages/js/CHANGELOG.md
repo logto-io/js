@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.0.1
+
+### Patch Changes
+
+- f739621: support login_hint param on sign-in.
+
 ## 4.0.0
 
 ### Major Changes

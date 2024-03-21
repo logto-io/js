@@ -198,7 +198,7 @@ importers:
   packages/client:
     dependencies:
       '@logto/js':
-        specifier: workspace:^4.0.0
+        specifier: workspace:^4.0.1
         version: link:../js
       '@silverhand/essentials':
         specifier: ^2.8.7

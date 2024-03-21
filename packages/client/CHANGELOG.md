@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.5.1
+
+### Patch Changes
+
+- f739621: support login_hint param on sign-in.
+- Updated dependencies [f739621]
+  - @logto/js@4.0.1
+
 ## 2.5.0
 
 ### Minor Changes
