@@ -1,5 +1,11 @@
 # @logto/nuxt
 
+## 0.1.3
+
+### Patch Changes
+
+- 0675d61: fix test cases
+
 ## 0.1.2
 
 ### Patch Changes

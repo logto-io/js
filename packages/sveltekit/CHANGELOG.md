@@ -1,5 +1,11 @@
 # @logto/sveltekit
 
+## 0.2.1
+
+### Patch Changes
+
+- 0675d61: fix test cases
+
 ## 0.2.0
 
 ### Minor Changes
