@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.1.2
+
+### Patch Changes
+
+- Updated dependencies [cf96cb8]
+  - @logto/react@3.0.1
+
 ## 2.1.1
 
 ### Patch Changes
