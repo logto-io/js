@@ -81,4 +81,38 @@ describe('generateSignInUri', () => {
       'https://logto.dev/oidc/sign-in?client_id=clientId&redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&code_challenge=codeChallenge&code_challenge_method=S256&state=state&response_type=code&prompt=consent&scope=openid+offline_access+profile&login_hint=johndoe%40example.com'
     );
   });
+
+  test('with firstScreen and interactionMode', () => {
+    const signInUri = generateSignInUri({
+      authorizationEndpoint,
+      clientId,
+      redirectUri,
+      codeChallenge,
+      state,
+      firstScreen: 'register',
+      interactionMode: 'signIn',
+    });
+
+    expect(signInUri).toEqual(
+      'https://logto.dev/oidc/sign-in?client_id=clientId&redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&code_challenge=codeChallenge&code_challenge_method=S256&state=state&response_type=code&prompt=consent&scope=openid+offline_access+profile&first_screen=register'
+    );
+  });
+
+  test('with directSignIn', () => {
+    const signInUri = generateSignInUri({
+      authorizationEndpoint,
+      clientId,
+      redirectUri,
+      codeChallenge,
+      state,
+      directSignIn: {
+        method: 'email',
+        target: 'foo@bar.com',
+      },
+    });
+
+    expect(signInUri).toEqual(
+      'https://logto.dev/oidc/sign-in?client_id=clientId&redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&code_challenge=codeChallenge&code_challenge_method=S256&state=state&response_type=code&prompt=consent&scope=openid+offline_access+profile&direct_sign_in=email%3Afoo%40bar.com'
+    );
+  });
 });

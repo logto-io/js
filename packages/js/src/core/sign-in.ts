@@ -1,9 +1,24 @@
 import { Prompt, QueryKey } from '../consts/index.js';
-import type { InteractionMode } from '../types/index.js';
+import type { FirstScreen, InteractionMode } from '../types/index.js';
 import { withDefaultScopes } from '../utils/scopes.js';
 
 const codeChallengeMethod = 'S256';
 const responseType = 'code';
+
+export type DirectSignInOptions = {
+  /**
+   * The method to be used for the direct sign-in.
+   */
+  method: 'social' | 'email' | 'sms';
+  /**
+   * The target to be used for the direct sign-in.
+   *
+   * - For `method: 'social'`, it should be the social connector target.
+   * - For `method: 'email'`, it should be the email address.
+   * - For `method: 'sms'`, it should be the phone number.
+   */
+  target: string;
+};
 
 export type SignInUriParameters = {
   authorizationEndpoint: string;
@@ -14,8 +29,21 @@ export type SignInUriParameters = {
   scopes?: string[];
   resources?: string[];
   prompt?: Prompt | Prompt[];
+  /** The first screen to be shown in the sign-in experience. */
+  firstScreen?: FirstScreen;
+  /** @deprecated Use `firstScreen` instead. */
   interactionMode?: InteractionMode;
+  /**
+   * Login hint indicates the current user (usually an email address or a phone number).
+   */
   loginHint?: string;
+  /** Parameters for direct sign-in. */
+  directSignIn?: DirectSignInOptions;
+  /**
+   * Extra parameters for the authentication request. Note that the parameters should be supported
+   * by the authorization server.
+   */
+  extraParams?: Record<string, string>;
 };
 
 const buildPrompt = (prompt?: Prompt | Prompt[]) => {
@@ -35,8 +63,11 @@ export const generateSignInUri = ({
   scopes,
   resources,
   prompt,
+  firstScreen,
   interactionMode,
   loginHint,
+  directSignIn,
+  extraParams,
 }: SignInUriParameters) => {
   const urlSearchParameters = new URLSearchParams({
     [QueryKey.ClientId]: clientId,
@@ -47,18 +78,29 @@ export const generateSignInUri = ({
     [QueryKey.ResponseType]: responseType,
     [QueryKey.Prompt]: buildPrompt(prompt),
     [QueryKey.Scope]: withDefaultScopes(scopes),
+    ...extraParams,
   });
 
   if (loginHint) {
     urlSearchParameters.append(QueryKey.LoginHint, loginHint);
   }
 
+  if (directSignIn) {
+    urlSearchParameters.append(
+      QueryKey.DirectSignIn,
+      `${directSignIn.method}:${directSignIn.target}`
+    );
+  }
+
   for (const resource of resources ?? []) {
     urlSearchParameters.append(QueryKey.Resource, resource);
   }
 
-  // Set interactionMode to signUp for a create account user experience
-  if (interactionMode) {
+  if (firstScreen) {
+    urlSearchParameters.append(QueryKey.FirstScreen, firstScreen);
+  }
+  // @deprecated Remove later
+  else if (interactionMode) {
     urlSearchParameters.append(QueryKey.InteractionMode, interactionMode);
   }
 
