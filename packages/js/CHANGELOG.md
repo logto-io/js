@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.1.0
+
+### Minor Changes
+
+- e643c01: support `firstScreen`, `directSignIn`, and `extraParams` for sign-in
+
 ## 4.0.1
 
 ### Patch Changes
