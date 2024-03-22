@@ -16,5 +16,13 @@ export type Requester = <T>(...args: Parameters<typeof fetch>) => Promise<T>;
  *
  * - `signIn`: The authorization request will be initiated with a sign-in page.
  * - `signUp`: The authorization request will be initiated with a sign-up page.
+ *
+ * @deprecated Use {@link FirstScreen} instead.
  */
 export type InteractionMode = 'signIn' | 'signUp';
+
+/**
+ * The first screen to be shown in the sign-in experience. Note it's not a part of the OIDC
+ * standard, but a Logto-specific extension.
+ */
+export type FirstScreen = 'signIn' | 'register';

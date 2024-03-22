@@ -2,7 +2,6 @@
 import {
   type IdTokenClaims,
   type UserInfoResponse,
-  type InteractionMode,
   type AccessTokenClaims,
   decodeAccessToken,
   decodeIdToken,
@@ -16,6 +15,7 @@ import {
   verifyAndParseCodeFromCallbackUri,
   type OidcConfigResponse,
   UserScope,
+  type SignInUriParameters,
 } from '@logto/js';
 import { type Optional, type Nullable } from '@silverhand/essentials';
 
@@ -47,21 +47,10 @@ export type SignInOptions = {
    * sign-in callback. If not specified, the user will stay on the `redirectUri` page.
    */
   postRedirectUri?: string | URL;
-  /**
-   * The interaction mode to be used for the authorization request. It determines the first page
-   * that the user will see in the sign-in flow.
-   *
-   * Note it's not a part of the OIDC standard, but a Logto-specific extension.
-   *
-   * @default InteractionMode.SignIn
-   * @see {@link InteractionMode}
-   */
-  interactionMode?: InteractionMode;
-  /**
-   * Login hint indicates the current user (usually an email address).
-   */
-  loginHint?: string;
-};
+} & Pick<
+  SignInUriParameters,
+  'interactionMode' | 'firstScreen' | 'loginHint' | 'directSignIn' | 'extraParams'
+>;
 
 /**
  * The Logto base client class that provides the essential methods for
@@ -219,8 +208,21 @@ export class StandardLogtoClient {
     return fetchUserInfo(userinfoEndpoint, accessToken, this.adapter.requester);
   }
 
+  /**
+   * Start the sign-in flow with the specified options.
+   *
+   * The redirect URI is required and it must be registered in the Logto Console.
+   *
+   * The user will be redirected to that URI after the sign-in flow is completed,
+   * and the client will be able to get the authorization code from the URI.
+   * To fetch the tokens from the authorization code, use {@link handleSignInCallback}
+   * after the user is redirected in the callback URI.
+   *
+   * @param options The options for the sign-in flow.
+   */
   async signIn(options: SignInOptions): Promise<void>;
   /**
+   *
    * Start the sign-in flow with the specified redirect URI. The URI must be
    * registered in the Logto Console.
    *
@@ -229,8 +231,10 @@ export class StandardLogtoClient {
    * To fetch the tokens from the authorization code, use {@link handleSignInCallback}
    * after the user is redirected in the callback URI.
    *
+   * @deprecated Use the object parameter instead.
    * @param redirectUri See {@link SignInOptions.redirectUri}.
    * @param interactionMode See {@link SignInOptions.interactionMode}.
+   * @param loginHint See {@link SignInOptions.loginHint}.
    */
   async signIn(
     redirectUri: SignInOptions['redirectUri'],
@@ -245,14 +249,20 @@ export class StandardLogtoClient {
     const {
       redirectUri: redirectUriUrl,
       postRedirectUri: postRedirectUriUrl,
+      firstScreen,
       interactionMode,
       loginHint,
+      directSignIn,
+      extraParams,
     } = typeof options === 'string' || options instanceof URL
       ? {
           redirectUri: options,
           postRedirectUri: undefined,
+          firstScreen: undefined,
           interactionMode: mode,
           loginHint: hint,
+          directSignIn: undefined,
+          extraParams: undefined,
         }
       : options;
     const redirectUri = redirectUriUrl.toString();
@@ -274,8 +284,11 @@ export class StandardLogtoClient {
       scopes,
       resources,
       prompt,
+      firstScreen,
       interactionMode,
       loginHint,
+      directSignIn,
+      extraParams,
     });
 
     await Promise.all([

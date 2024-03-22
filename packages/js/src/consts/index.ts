@@ -34,6 +34,8 @@ export enum QueryKey {
   InteractionMode = 'interaction_mode',
   /** The query key for specifying the organization ID. */
   OrganizationId = 'organization_id',
+  FirstScreen = 'first_screen',
+  DirectSignIn = 'direct_sign_in',
 }
 
 /** The prompt parameter to be used for the authorization request. */
