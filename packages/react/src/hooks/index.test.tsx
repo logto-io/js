@@ -260,4 +260,22 @@ describe('useLogto', () => {
       expect(result.current.isLoading).toBe(true);
     });
   });
+
+  it('should be able to call the inner LogtoClient method overload signature', async () => {
+    const { result } = renderHook(useLogto, {
+      wrapper: createHookWrapper(),
+    });
+
+    await act(async () => {
+      await result.current.signIn({ redirectUri: 'foo' });
+    });
+
+    await waitFor(() => {
+      expect(signIn).toHaveBeenCalledTimes(1);
+      expect(signIn).toHaveBeenCalledWith({ redirectUri: 'foo' });
+      expect(result.current.error).toBeUndefined();
+      // `signIn` disables resetting loading state
+      expect(result.current.isLoading).toBe(true);
+    });
+  });
 });

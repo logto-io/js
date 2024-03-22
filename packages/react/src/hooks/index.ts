@@ -24,11 +24,12 @@ type Logto = {
     | 'getOrganizationTokenClaims'
     | 'getIdToken'
     | 'getIdTokenClaims'
-    | 'signIn'
     | 'signOut'
     | 'fetchUserInfo'
   >
->;
+> &
+  // Manually pick the method with overloads since TypeScript cannot infer the correct type.
+  Pick<LogtoClient, 'signIn'>;
 
 const useErrorHandler = () => {
   const { setError } = useContext(LogtoContext);
@@ -133,7 +134,8 @@ const useLogto = (): Logto => {
       getOrganizationTokenClaims: proxy(client.getOrganizationTokenClaims.bind(client)),
       getIdToken: proxy(client.getIdToken.bind(client)),
       getIdTokenClaims: proxy(client.getIdTokenClaims.bind(client)),
-      signIn: proxy(client.signIn.bind(client), false),
+      // eslint-disable-next-line no-restricted-syntax -- TypeScript cannot infer the correct type.
+      signIn: proxy(client.signIn.bind(client), false) as LogtoClient['signIn'],
       // We deliberately do NOT set isAuthenticated to false in the function below, because the app state
       // may change immediately even before navigating to the oidc end session endpoint, which might cause
       // rendering problems.
