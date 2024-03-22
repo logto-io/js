@@ -43,7 +43,7 @@
     "postpack": "node test.cjs"
   },
   "dependencies": {
-    "@logto/client": "workspace:^2.4.0",
+    "@logto/client": "workspace:^",
     "@silverhand/essentials": "^2.8.7",
     "js-base64": "^3.7.4"
   },

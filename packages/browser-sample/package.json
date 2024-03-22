@@ -12,7 +12,7 @@
     "stylelint": "stylelint \"src/**/*.scss\""
   },
   "dependencies": {
-    "@logto/browser": "workspace:^2.2.3"
+    "@logto/browser": "workspace:^"
   },
   "devDependencies": {
     "@parcel/core": "^2.9.2",

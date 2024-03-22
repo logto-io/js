@@ -32,7 +32,7 @@
     "postpack": "node test.cjs"
   },
   "dependencies": {
-    "@logto/node": "workspace:^2.4.0"
+    "@logto/node": "workspace:^"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "^5.0.0",

@@ -51,7 +51,7 @@ importers:
   packages/browser:
     dependencies:
       '@logto/client':
-        specifier: workspace:^2.4.0
+        specifier: workspace:^
         version: link:../client
       '@silverhand/essentials':
         specifier: ^2.8.7
@@ -103,7 +103,7 @@ importers:
   packages/browser-sample:
     dependencies:
       '@logto/browser':
-        specifier: workspace:^2.2.3
+        specifier: workspace:^
         version: link:../browser
     devDependencies:
       '@parcel/core':
@@ -143,7 +143,7 @@ importers:
   packages/capacitor:
     dependencies:
       '@logto/browser':
-        specifier: workspace:^2.2.3
+        specifier: workspace:^
         version: link:../browser
     devDependencies:
       '@capacitor/app':
@@ -198,7 +198,7 @@ importers:
   packages/client:
     dependencies:
       '@logto/js':
-        specifier: workspace:^4.0.1
+        specifier: workspace:^
         version: link:../js
       '@silverhand/essentials':
         specifier: ^2.8.7
@@ -262,7 +262,7 @@ importers:
   packages/express:
     dependencies:
       '@logto/node':
-        specifier: workspace:^2.4.0
+        specifier: workspace:^
         version: link:../node
     devDependencies:
       '@silverhand/eslint-config':
@@ -332,7 +332,7 @@ importers:
   packages/express-sample:
     dependencies:
       '@logto/express':
-        specifier: workspace:^2.3.1
+        specifier: workspace:^
         version: link:../express
       cookie-parser:
         specifier: ^1.4.6
@@ -457,7 +457,7 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       '@logto/node':
-        specifier: workspace:^2.4.0
+        specifier: workspace:^
         version: link:../node
     devDependencies:
       '@silverhand/eslint-config':
@@ -515,7 +515,7 @@ importers:
   packages/next-app-dir-sample:
     dependencies:
       '@logto/next':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^
         version: link:../next
       next:
         specifier: ^14.0.0
@@ -576,7 +576,7 @@ importers:
   packages/next-sample:
     dependencies:
       '@logto/next':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^
         version: link:../next
       next:
         specifier: ^14.0.0
@@ -692,7 +692,7 @@ importers:
   packages/node:
     dependencies:
       '@logto/client':
-        specifier: workspace:^2.4.0
+        specifier: workspace:^
         version: link:../client
       '@silverhand/essentials':
         specifier: ^2.8.7
@@ -863,7 +863,7 @@ importers:
   packages/react:
     dependencies:
       '@logto/browser':
-        specifier: workspace:^2.2.3
+        specifier: workspace:^
         version: link:../browser
       '@silverhand/essentials':
         specifier: ^2.8.7
@@ -924,7 +924,7 @@ importers:
   packages/react-sample:
     dependencies:
       '@logto/react':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^
         version: link:../react
       '@tanstack/react-query':
         specifier: ^5.0.0
@@ -1000,7 +1000,7 @@ importers:
   packages/remix:
     dependencies:
       '@logto/node':
-        specifier: workspace:^2.4.0
+        specifier: workspace:^
         version: link:../node
     devDependencies:
       '@remix-run/node':
@@ -1149,7 +1149,7 @@ importers:
   packages/vue:
     dependencies:
       '@logto/browser':
-        specifier: workspace:^2.2.3
+        specifier: workspace:^
         version: link:../browser
       '@silverhand/essentials':
         specifier: ^2.8.7
@@ -1198,7 +1198,7 @@ importers:
   packages/vue-sample:
     dependencies:
       '@logto/vue':
-        specifier: workspace:^2.2.2
+        specifier: workspace:^
         version: link:../vue
       vue:
         specifier: ^3.4.19

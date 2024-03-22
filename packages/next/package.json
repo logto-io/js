@@ -57,7 +57,7 @@
   },
   "dependencies": {
     "@edge-runtime/cookies": "^4.0.0",
-    "@logto/node": "workspace:^2.4.0"
+    "@logto/node": "workspace:^"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "^5.0.0",
