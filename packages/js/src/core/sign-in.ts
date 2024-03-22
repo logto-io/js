@@ -5,6 +5,7 @@ import { withDefaultScopes } from '../utils/scopes.js';
 const codeChallengeMethod = 'S256';
 const responseType = 'code';
 
+/** @experimental Don't use this type as it's under development. */
 export type DirectSignInOptions = {
   /**
    * The method to be used for the direct sign-in.
@@ -29,15 +30,25 @@ export type SignInUriParameters = {
   scopes?: string[];
   resources?: string[];
   prompt?: Prompt | Prompt[];
-  /** The first screen to be shown in the sign-in experience. */
+  /**
+   * The first screen to be shown in the sign-in experience.
+   *
+   * @experimental Don't use this field as it's under development.
+   */
   firstScreen?: FirstScreen;
-  /** @deprecated Use `firstScreen` instead. */
+  /** The first screen to be shown in the sign-in experience. */
   interactionMode?: InteractionMode;
   /**
    * Login hint indicates the current user (usually an email address or a phone number).
+   *
+   * @experimental Don't use this field as it's under development.
    */
   loginHint?: string;
-  /** Parameters for direct sign-in. */
+  /**
+   * Parameters for direct sign-in.
+   *
+   * @experimental Don't use this field as it's under development.
+   */
   directSignIn?: DirectSignInOptions;
   /**
    * Extra parameters for the authentication request. Note that the parameters should be supported
