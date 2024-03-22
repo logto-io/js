@@ -31,7 +31,7 @@
     "prepack": "pnpm build && pnpm test"
   },
   "dependencies": {
-    "@logto/browser": "workspace:^2.2.3"
+    "@logto/browser": "workspace:^"
   },
   "devDependencies": {
     "@capacitor/app": "^5.0.6",

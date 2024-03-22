@@ -39,7 +39,7 @@
     "prepack": "pnpm build && pnpm test"
   },
   "dependencies": {
-    "@logto/js": "workspace:^4.0.1",
+    "@logto/js": "workspace:^",
     "@silverhand/essentials": "^2.8.7",
     "camelcase-keys": "^7.0.1",
     "jose": "^5.2.2"
