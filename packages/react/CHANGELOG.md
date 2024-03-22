@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.0.1
+
+### Patch Changes
+
+- cf96cb8: for bump version to publish the package
+
 ## 3.0.0
 
 ### Major Changes
