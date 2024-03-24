@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.1.4
+
+### Patch Changes
+
+- Updated dependencies [aad00ee]
+  - @logto/next@3.2.0
+
 ## 2.1.3
 
 ### Patch Changes

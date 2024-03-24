@@ -1,5 +1,12 @@
 # Change Log
 
+## 4.1.1
+
+### Patch Changes
+
+- e6c8ec5: remove unsupported direct sign-in methods
+- 1975235: fix JSDoc comments
+
 ## 4.1.0
 
 ### Minor Changes

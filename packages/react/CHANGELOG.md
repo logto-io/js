@@ -1,5 +1,15 @@
 # Change Log
 
+## 3.0.3
+
+### Patch Changes
+
+- e6c8ec5: fix `signIn()` type
+
+  Now it can correctly infer the overload signatures.
+
+  - @logto/browser@2.2.5
+
 ## 3.0.2
 
 ### Patch Changes
