@@ -222,6 +222,19 @@ export class StandardLogtoClient {
    */
   async signIn(options: SignInOptions): Promise<void>;
   /**
+   * Start the sign-in flow with the specified options.
+   *
+   * The redirect URI is required and it must be registered in the Logto Console.
+   *
+   * The user will be redirected to that URI after the sign-in flow is completed,
+   * and the client will be able to get the authorization code from the URI.
+   * To fetch the tokens from the authorization code, use {@link handleSignInCallback}
+   * after the user is redirected in the callback URI.
+   *
+   * @param redirectUri See {@link SignInOptions.redirectUri}.
+   */
+  async signIn(redirectUri: SignInOptions['redirectUri']): Promise<void>;
+  /**
    *
    * Start the sign-in flow with the specified redirect URI. The URI must be
    * registered in the Logto Console.
@@ -239,6 +252,7 @@ export class StandardLogtoClient {
   async signIn(
     redirectUri: SignInOptions['redirectUri'],
     interactionMode?: SignInOptions['interactionMode'],
+    // eslint-disable-next-line @typescript-eslint/unified-signatures -- We will deprecate this signature soon.
     loginHint?: SignInOptions['loginHint']
   ): Promise<void>;
   async signIn(

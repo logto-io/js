@@ -10,13 +10,11 @@ export type DirectSignInOptions = {
   /**
    * The method to be used for the direct sign-in.
    */
-  method: 'social' | 'email' | 'sms';
+  method: 'social';
   /**
    * The target to be used for the direct sign-in.
    *
    * - For `method: 'social'`, it should be the social connector target.
-   * - For `method: 'email'`, it should be the email address.
-   * - For `method: 'sms'`, it should be the phone number.
    */
   target: string;
 };
