@@ -1,5 +1,11 @@
 # @logto/sveltekit
 
+## 0.2.3
+
+### Patch Changes
+
+- @logto/node@2.4.2
+
 ## 0.2.2
 
 ### Patch Changes

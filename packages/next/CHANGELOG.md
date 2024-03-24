@@ -1,5 +1,15 @@
 # Change Log
 
+## 3.2.0
+
+### Minor Changes
+
+- aad00ee: Add error handler to Next.js SDK's withLogtoApiRoute.
+
+### Patch Changes
+
+- @logto/node@2.4.2
+
 ## 3.1.2
 
 ### Patch Changes

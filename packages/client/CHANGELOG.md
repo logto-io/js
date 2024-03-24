@@ -1,5 +1,14 @@
 # Change Log
 
+## 2.6.1
+
+### Patch Changes
+
+- e6c8ec5: add `signIn(redirectUri: string)` as a normal signature
+- Updated dependencies [e6c8ec5]
+- Updated dependencies [1975235]
+  - @logto/js@4.1.1
+
 ## 2.6.0
 
 ### Minor Changes
