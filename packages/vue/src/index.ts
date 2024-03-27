@@ -10,6 +10,7 @@ import { createContext, throwContextError } from './context.js';
 import { createPluginMethods } from './plugin.js';
 
 export type {
+  AccessTokenClaims,
   LogtoConfig,
   IdTokenClaims,
   UserInfoResponse,

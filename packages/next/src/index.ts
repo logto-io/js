@@ -32,7 +32,13 @@ export {
   PersistKey,
 } from '@logto/node';
 
-export type { IdTokenClaims, LogtoContext, InteractionMode, LogtoErrorCode } from '@logto/node';
+export type {
+  AccessTokenClaims,
+  IdTokenClaims,
+  LogtoContext,
+  InteractionMode,
+  LogtoErrorCode,
+} from '@logto/node';
 
 export default class LogtoClient extends LogtoNextBaseClient {
   constructor(config: LogtoNextConfig) {

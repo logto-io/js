@@ -6,7 +6,13 @@ import { type NextRequest } from 'next/server';
 import BaseClient from '../src/client';
 import type { LogtoNextConfig } from '../src/types.js';
 
-export type { LogtoContext, InteractionMode } from '@logto/node';
+export type {
+  AccessTokenClaims,
+  IdTokenClaims,
+  LogtoContext,
+  InteractionMode,
+  LogtoErrorCode,
+} from '@logto/node';
 
 export default class LogtoClient extends BaseClient {
   constructor(config: LogtoNextConfig) {

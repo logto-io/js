@@ -7,6 +7,7 @@ export type {
   LogtoErrorCode,
   LogtoClientErrorCode,
   InteractionMode,
+  AccessTokenClaims,
 } from '@logto/browser';
 
 export {
