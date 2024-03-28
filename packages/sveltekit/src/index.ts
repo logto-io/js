@@ -2,6 +2,7 @@ import LogtoClient, { type LogtoConfig, type CookieConfig, CookieStorage } from 
 import { redirect, type Handle, type RequestEvent, isRedirect } from '@sveltejs/kit';
 
 export type {
+  AccessTokenClaims,
   IdTokenClaims,
   LogtoErrorCode,
   LogtoConfig,

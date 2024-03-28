@@ -10,6 +10,7 @@ export { createRequester, default as BaseClient } from '@logto/client';
 export { generateCodeChallenge, generateCodeVerifier, generateState } from './utils/generators.js';
 
 export type {
+  AccessTokenClaims,
   IdTokenClaims,
   LogtoErrorCode,
   LogtoConfig,

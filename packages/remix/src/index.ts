@@ -36,7 +36,14 @@ export const makeLogtoRemix = (
   });
 };
 
-export { type LogtoContext } from '@logto/node';
+export type {
+  AccessTokenClaims,
+  IdTokenClaims,
+  LogtoContext,
+  InteractionMode,
+  LogtoErrorCode,
+} from '@logto/node';
+
 export {
   LogtoError,
   LogtoRequestError,

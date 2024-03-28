@@ -4,6 +4,7 @@ export * from './utils/cookie-storage.js';
 export type { LogtoContext, GetContextParameters } from './types.js';
 
 export type {
+  AccessTokenClaims,
   IdTokenClaims,
   LogtoErrorCode,
   LogtoConfig,

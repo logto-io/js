@@ -4,7 +4,13 @@
  * that don't support native modules like `crypto`. (e.g. React Native)
  */
 
-export type { IdTokenClaims, LogtoErrorCode, UserInfoResponse, InteractionMode } from '@logto/js';
+export type {
+  AccessTokenClaims,
+  IdTokenClaims,
+  LogtoErrorCode,
+  UserInfoResponse,
+  InteractionMode,
+} from '@logto/js';
 export {
   LogtoError,
   LogtoRequestError,

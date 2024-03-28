@@ -23,6 +23,13 @@ export {
   PersistKey,
 } from '@logto/browser';
 
+export type {
+  AccessTokenClaims,
+  IdTokenClaims,
+  InteractionMode,
+  LogtoErrorCode,
+} from '@logto/browser';
+
 export type CapacitorConfig = {
   /**
    * The options to pass to the `open` method of the Capacitor Browser plugin.
