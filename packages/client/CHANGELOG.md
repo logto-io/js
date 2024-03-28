@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.6.2
+
+### Patch Changes
+
+- 76d113f: export more typescript types
+
 ## 2.6.1
 
 ### Patch Changes
