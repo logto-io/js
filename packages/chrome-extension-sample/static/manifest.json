@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Logto integration example",
+  "version": "0.1.0",
+  "description": "Logto integration example for Chrome extensions.",
+  "icons": {
+    "16": "images/cube@16w.png",
+    "32": "images/cube@32w.png",
+    "48": "images/cube@48w.png",
+    "128": "images/cube@128w.png"
+  },
+  "permissions": [
+    "storage",
+    "identity"
+  ],
+  "host_permissions": [
+    "https://*.logto.dev/*"
+  ],
+  "action": {
+    "default_popup": "index.html"
+  },
+  "background": {
+    "service_worker": "service-worker.js",
+    "type": "module"
+  }
+}

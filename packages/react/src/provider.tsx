@@ -11,18 +11,20 @@ export type LogtoProviderProps = {
    */
   // eslint-disable-next-line react/boolean-prop-naming
   unstable_enableCache?: boolean;
+  LogtoClientClass?: typeof LogtoClient;
   children?: ReactNode;
 };
 
 export const LogtoProvider = ({
   config,
+  LogtoClientClass = LogtoClient,
   children,
   unstable_enableCache = false,
 }: LogtoProviderProps) => {
   const [loadingCount, setLoadingCount] = useState(1);
   const memorizedLogtoClient = useMemo(
-    () => ({ logtoClient: new LogtoClient(config, unstable_enableCache) }),
-    [config, unstable_enableCache]
+    () => ({ logtoClient: new LogtoClientClass(config, unstable_enableCache) }),
+    [LogtoClientClass, config, unstable_enableCache]
   );
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState<Error>();
