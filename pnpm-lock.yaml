@@ -228,6 +228,9 @@ importers:
       '@logto/chrome-extension':
         specifier: workspace:^
         version: link:../chrome-extension
+      '@rollup/plugin-commonjs':
+        specifier: ^25.0.7
+        version: 25.0.7(rollup@4.9.1)
       '@rollup/plugin-node-resolve':
         specifier: ^15.0.2
         version: 15.2.3(rollup@4.9.1)

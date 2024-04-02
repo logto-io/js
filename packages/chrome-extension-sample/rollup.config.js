@@ -1,3 +1,4 @@
+import commonjs from '@rollup/plugin-commonjs';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import copy from 'rollup-plugin-copy';
@@ -19,6 +20,8 @@ const configs = {
     dotenv(),
     typescript({ tsconfig: 'tsconfig.json' }),
     nodeResolve({ browser: true }),
+    // TODO: remove after we drop commonjs support
+    commonjs(),
     copy({ targets: [{ src: 'static/*', dest: 'dist' }] }),
   ],
 };

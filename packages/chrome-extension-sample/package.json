@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@logto/chrome-extension": "workspace:^",
+    "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.0.2",
     "@rollup/plugin-typescript": "^11.1.0",
     "@silverhand/eslint-config": "^5.0.0",
