@@ -1,5 +1,14 @@
 # @logto/capacitor
 
+## 1.1.5
+
+### Patch Changes
+
+- 76d113f: export more typescript types
+- Updated dependencies [e0d20a3]
+- Updated dependencies [76d113f]
+  - @logto/browser@2.2.6
+
 ## 1.1.4
 
 ### Patch Changes

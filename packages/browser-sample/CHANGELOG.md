@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.0.6
+
+### Patch Changes
+
+- Updated dependencies [e0d20a3]
+- Updated dependencies [76d113f]
+  - @logto/browser@2.2.6
+
 ## 2.0.5
 
 ### Patch Changes
