@@ -17,7 +17,7 @@
   },
   "scripts": {
     "precommit": "lint-staged",
-    "build": "tsc",
+    "build": "rm -rf lib && tsc",
     "lint": "eslint --ext .ts --ext .tsx src",
     "prepack": "pnpm build"
   },
@@ -43,5 +43,8 @@
   "eslintConfig": {
     "extends": "@silverhand/react"
   },
-  "prettier": "@silverhand/eslint-config/.prettierrc"
+  "prettier": "@silverhand/eslint-config/.prettierrc",
+  "publishConfig": {
+    "access": "public"
+  }
 }

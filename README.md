@@ -12,20 +12,21 @@ The monorepo for SDKs and working samples written in JavaScript (Well, mostly in
 
 ## Products
 
-| Name                               | Description                                              |
-| ---------------------------------- | -------------------------------------------------------- |
-| [browser](./packages/browser/)     | Logto browser foundation SDK.                            |
-| [capacitor](./packages/capacitor/) | Logto Capacitor SDK built on top of browser foundations. |
-| [client](./packages/client/)       | Logto JavaScript cross-platform foundation client.       |
-| [express](./packages/express/)     | Logto Express SDK built on top of node foundations.      |
-| [js](./packages/js/)               | Logto JavaScript core.                                   |
-| [next](./packages/next/)           | Logto Next.js SDK built on top of node foundations.      |
-| [node](./packages/node/)           | Logto node foundation SDK.                               |
-| [nuxt](./packages/nuxt/)           | Logto Nuxt 3 SDK built on top of node foundations.       |
-| [react](./packages/react/)         | Logto React SDK built on top of browser foundations.     |
-| [remix](./packages/remix/)         | Logto Remix SDK built on top of node foundations.        |
-| [vue](./packages/vue/)             | Logto Vue SDK built on top of browser foundations.       |
-| [sveltekit](./packages/sveltekit/) | Logto SvelteKit SDK built on top of node foundations.    |
+| Name                                             | Description                                              |
+| ------------------------------------------------ | -------------------------------------------------------- |
+| [browser](./packages/browser/)                   | Logto browser foundation SDK.                            |
+| [capacitor](./packages/capacitor/)               | Logto Capacitor SDK built on top of browser foundations. |
+| [chrome-extension](./packages/chrome-extension/) | Logto Chrome extension SDK.                              |
+| [client](./packages/client/)                     | Logto JavaScript cross-platform foundation client.       |
+| [express](./packages/express/)                   | Logto Express SDK built on top of node foundations.      |
+| [js](./packages/js/)                             | Logto JavaScript core.                                   |
+| [next](./packages/next/)                         | Logto Next.js SDK built on top of node foundations.      |
+| [node](./packages/node/)                         | Logto node foundation SDK.                               |
+| [nuxt](./packages/nuxt/)                         | Logto Nuxt 3 SDK built on top of node foundations.       |
+| [react](./packages/react/)                       | Logto React SDK built on top of browser foundations.     |
+| [remix](./packages/remix/)                       | Logto Remix SDK built on top of node foundations.        |
+| [vue](./packages/vue/)                           | Logto Vue SDK built on top of browser foundations.       |
+| [sveltekit](./packages/sveltekit/)               | Logto SvelteKit SDK built on top of node foundations.    |
 
 ## Samples
 
@@ -33,6 +34,7 @@ The monorepo for SDKs and working samples written in JavaScript (Well, mostly in
 | -------------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | [angular-sample](./packages/angular-sample/)                         | A sample of using `angular-auth-oidc-client` to integrate with Logto.    |
 | [browser-sample](./packages/browser-sample/)                         | A sample of using Logto browser SDK.                                     |
+| [chrome-extension-sample](./packages/chrome-extension-sample/)       | A sample Chrome extension that demonstrates how to integrate Logto.      |
 | [express-sample](./packages/express-sample/)                         | A sample of using Logto Express SDK.                                     |
 | [next-app-dir-sample](./packages/next-app-dir-sample/)               | A sample of using Logto Next.js SDK for Next.js app directory structure. |
 | [next-sample](./packages/next-sample/)                               | A sample of using Logto Next.js SDK.                                     |
