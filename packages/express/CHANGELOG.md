@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.3.4
+
+### Patch Changes
+
+- 76d113f: export more typescript types
+- Updated dependencies [76d113f]
+  - @logto/node@2.4.3
+
 ## 2.3.3
 
 ### Patch Changes

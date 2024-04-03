@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.6.2
+
+### Patch Changes
+
+- 76d113f: export more typescript types
+- e0d20a3: export `isLogtoRequestError`
+
 ## 2.6.1
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # Change Log
 
+## 3.0.4
+
+### Patch Changes
+
+- 76d113f: export more typescript types
+- e0d20a3: allow overriding `LogtoClient` class for `LogtoProvider`
+- Updated dependencies [e0d20a3]
+- Updated dependencies [76d113f]
+  - @logto/browser@2.2.6
+
 ## 3.0.3
 
 ### Patch Changes

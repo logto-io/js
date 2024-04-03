@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.1.5
+
+### Patch Changes
+
+- Updated dependencies [76d113f]
+- Updated dependencies [e0d20a3]
+  - @logto/react@3.0.4
+
 ## 2.1.4
 
 ### Patch Changes
