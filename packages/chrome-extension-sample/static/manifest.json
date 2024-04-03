@@ -14,7 +14,7 @@
     "identity"
   ],
   "host_permissions": [
-    "https://*.logto.dev/*"
+    "https://*.logto.app/*"
   ],
   "action": {
     "default_popup": "index.html"
