@@ -19,6 +19,7 @@ export type {
   InteractionMode,
   ClientAdapter,
   SignInOptions,
+  Storage,
 } from '@logto/client';
 
 export {
@@ -34,7 +35,10 @@ export {
   buildOrganizationUrn,
   getOrganizationIdFromUrn,
   PersistKey,
+  isLogtoRequestError,
 } from '@logto/client';
+
+export { BrowserStorage } from './storage.js';
 
 const navigate = (url: string) => {
   window.location.assign(url);

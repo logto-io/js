@@ -1,0 +1,47 @@
+{
+  "name": "@logto/chrome-extension",
+  "version": "0.0.0",
+  "description": "Logto Chrome extension SDK",
+  "type": "module",
+  "files": [
+    "lib"
+  ],
+  "module": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./lib/index.js",
+      "default": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    }
+  },
+  "scripts": {
+    "precommit": "lint-staged",
+    "build": "tsc",
+    "lint": "eslint --ext .ts --ext .tsx src",
+    "prepack": "pnpm build"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/logto-io/js.git",
+    "directory": "packages/chrome-extension-sample"
+  },
+  "dependencies": {
+    "@logto/browser": "workspace:^"
+  },
+  "devDependencies": {
+    "@silverhand/eslint-config": "^5.0.0",
+    "@silverhand/ts-config": "^5.0.0",
+    "chrome-types": "^0.1.276",
+    "eslint": "^8.57.0",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.3.3"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand/react"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc"
+}

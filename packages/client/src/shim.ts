@@ -22,6 +22,7 @@ export {
   organizationUrnPrefix,
   buildOrganizationUrn,
   getOrganizationIdFromUrn,
+  isLogtoRequestError,
 } from '@logto/js';
 export * from './errors.js';
 export type { Storage, StorageKey, ClientAdapter, JwtVerifier } from './adapter/index.js';

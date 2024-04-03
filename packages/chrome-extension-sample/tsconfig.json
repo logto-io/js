@@ -1,0 +1,12 @@
+{
+  "extends": "@silverhand/ts-config/tsconfig.base",
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+    "module": "esnext",
+    "types": ["node", "chrome-types"],
+    "outDir": "dist"
+  },
+  "include": [
+    "src"
+  ]
+}
