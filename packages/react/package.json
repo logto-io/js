@@ -44,7 +44,7 @@
     "@testing-library/react": "^14.2.1",
     "@types/jest": "^29.5.0",
     "@types/react": "^18.2.56",
-    "eslint": "^8.44.0",
+    "eslint": "^8.57.0",
     "jest": "^29.5.0",
     "lint-staged": "^15.0.0",
     "postcss": "^8.4.31",
