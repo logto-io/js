@@ -309,6 +309,7 @@ export class StandardLogtoClient {
       this.setSignInSession({ redirectUri, postRedirectUri, codeVerifier, state }),
       this.setRefreshToken(null),
       this.setIdToken(null),
+      this.clearAccessToken(),
     ]);
     await this.adapter.navigate(signInUri, { redirectUri, for: 'sign-in' });
   }
@@ -362,13 +363,7 @@ export class StandardLogtoClient {
       clientId,
     });
 
-    this.accessTokenMap.clear();
-
-    await Promise.all([
-      this.setRefreshToken(null),
-      this.setIdToken(null),
-      this.adapter.storage.removeItem('accessToken'),
-    ]);
+    await Promise.all([this.setRefreshToken(null), this.setIdToken(null), this.clearAccessToken()]);
     await this.adapter.navigate(url, { redirectUri: postLogoutRedirectUri, for: 'sign-out' });
   }
 
@@ -398,6 +393,11 @@ export class StandardLogtoClient {
 
   private async setRefreshToken(value: Nullable<string>) {
     return this.adapter.setStorageItem(PersistKey.RefreshToken, value);
+  }
+
+  private async clearAccessToken(): Promise<void> {
+    this.accessTokenMap.clear();
+    await this.adapter.storage.removeItem('accessToken');
   }
 
   private async getAccessTokenByRefreshToken(
