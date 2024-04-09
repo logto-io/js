@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.2.6
+
+### Patch Changes
+
+- 24d1680: fix: clear access token storage on sign-in
+- Updated dependencies [24d1680]
+  - @logto/browser@2.2.7
+
 ## 2.2.5
 
 ### Patch Changes

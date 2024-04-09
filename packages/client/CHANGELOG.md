@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.6.3
+
+### Patch Changes
+
+- 24d1680: fix: clear access token storage on sign-in
+
 ## 2.6.2
 
 ### Patch Changes
