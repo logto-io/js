@@ -1,6 +1,6 @@
 {
   "name": "@logto/node",
-  "version": "2.4.3",
+  "version": "2.4.4",
   "type": "module",
   "main": "./lib/src/index.cjs",
   "module": "./lib/src/index.js",

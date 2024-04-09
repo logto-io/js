@@ -1,5 +1,13 @@
 # Change Log
 
+## 3.2.2
+
+### Patch Changes
+
+- 24d1680: fix: clear access token storage on sign-in
+- Updated dependencies [24d1680]
+  - @logto/node@2.4.4
+
 ## 3.2.1
 
 ### Patch Changes

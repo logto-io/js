@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.1.5
+
+### Patch Changes
+
+- Updated dependencies [24d1680]
+  - @logto/vue@2.2.6
+
 ## 2.1.4
 
 ### Patch Changes

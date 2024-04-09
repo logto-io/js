@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.0.5
+
+### Patch Changes
+
+- Updated dependencies [24d1680]
+  - @logto/express@2.3.5
+
 ## 2.0.4
 
 ### Patch Changes

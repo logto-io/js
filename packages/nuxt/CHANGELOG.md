@@ -1,5 +1,13 @@
 # @logto/nuxt
 
+## 0.1.7
+
+### Patch Changes
+
+- 24d1680: fix: clear access token storage on sign-in
+- Updated dependencies [24d1680]
+  - @logto/node@2.4.4
+
 ## 0.1.6
 
 ### Patch Changes
