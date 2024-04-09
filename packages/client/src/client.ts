@@ -305,10 +305,13 @@ export class StandardLogtoClient {
       extraParams,
     });
 
+    this.accessTokenMap.clear();
+
     await Promise.all([
       this.setSignInSession({ redirectUri, postRedirectUri, codeVerifier, state }),
       this.setRefreshToken(null),
       this.setIdToken(null),
+      this.adapter.storage.removeItem('accessToken'),
     ]);
     await this.adapter.navigate(signInUri, { redirectUri, for: 'sign-in' });
   }
