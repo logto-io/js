@@ -964,8 +964,8 @@ importers:
         specifier: ^0.2.24
         version: 0.2.24(@swc/core@1.3.50)
       '@testing-library/react':
-        specifier: ^14.2.1
-        version: 14.2.1(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^15.0.0
+        version: 15.0.0(react-dom@18.2.0)(react@18.2.0)
       '@types/jest':
         specifier: ^29.5.0
         version: 29.5.0
@@ -6114,9 +6114,9 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@testing-library/dom@9.2.0:
-    resolution: {integrity: sha512-xTEnpUKiV/bMyEsE5bT4oYA0x0Z/colMtxzUY8bKyPXBNLn/e0V4ZjBZkEhms0xE4pv9QsPfSRu9AWS4y5wGvA==}
-    engines: {node: '>=14'}
+  /@testing-library/dom@10.0.0:
+    resolution: {integrity: sha512-PmJPnogldqoVFf+EwbHvbBJ98MmqASV8kLrBYgsDNxQcFMeIS7JFL48sfyXvuMtgmWO/wMhh25odr+8VhDmn4g==}
+    engines: {node: '>=18'}
     dependencies:
       '@babel/code-frame': 7.23.5
       '@babel/runtime': 7.21.0
@@ -6128,15 +6128,15 @@ packages:
       pretty-format: 27.5.1
     dev: true
 
-  /@testing-library/react@14.2.1(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-sGdjws32ai5TLerhvzThYFbpnF9XtL65Cjf+gB0Dhr29BGqK+mAeN7SURSdu+eqgET4ANcWoC7FQpkaiGvBr+A==}
-    engines: {node: '>=14'}
+  /@testing-library/react@15.0.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-Nb2Sq8MoSvGVdOGGppRqXeafLtvXCOwiOQtcbqCfkpVNZZNUqIjeSOwrfJ59zBfmZbAn8PitnWEzUKD1YwMrCg==}
+    engines: {node: '>=18'}
     peerDependencies:
       react: ^18.0.0
       react-dom: ^18.0.0
     dependencies:
       '@babel/runtime': 7.21.0
-      '@testing-library/dom': 9.2.0
+      '@testing-library/dom': 10.0.0
       '@types/react-dom': 18.2.19
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -12390,7 +12390,7 @@ packages:
       jest-snapshot: 29.5.0
       jest-util: 29.5.0
       p-limit: 3.1.0
-      pretty-format: 29.5.0
+      pretty-format: 29.7.0
       pure-rand: 6.0.1
       slash: 3.0.0
       stack-utils: 2.0.5
@@ -12486,7 +12486,7 @@ packages:
       jest-validate: 29.5.0
       micromatch: 4.0.5
       parse-json: 5.2.0
-      pretty-format: 29.5.0
+      pretty-format: 29.7.0
       slash: 3.0.0
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
@@ -12525,7 +12525,7 @@ packages:
       jest-validate: 29.5.0
       micromatch: 4.0.5
       parse-json: 5.2.0
-      pretty-format: 29.5.0
+      pretty-format: 29.7.0
       slash: 3.0.0
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
@@ -12567,7 +12567,7 @@ packages:
       chalk: 4.1.2
       jest-get-type: 29.4.3
       jest-util: 29.5.0
-      pretty-format: 29.6.3
+      pretty-format: 29.7.0
     dev: true
 
   /jest-environment-jsdom@29.5.0:
@@ -12639,7 +12639,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       jest-get-type: 29.4.3
-      pretty-format: 29.5.0
+      pretty-format: 29.7.0
     dev: true
 
   /jest-location-mock@2.0.0:
@@ -12824,7 +12824,7 @@ packages:
       jest-message-util: 29.5.0
       jest-util: 29.5.0
       natural-compare: 1.4.0
-      pretty-format: 29.5.0
+      pretty-format: 29.7.0
       semver: 7.6.0
     transitivePeerDependencies:
       - supports-color
@@ -12851,7 +12851,7 @@ packages:
       chalk: 4.1.2
       jest-get-type: 29.4.3
       leven: 3.1.0
-      pretty-format: 29.5.0
+      pretty-format: 29.7.0
     dev: true
 
   /jest-watcher@29.5.0:
