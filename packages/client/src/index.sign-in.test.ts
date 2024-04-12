@@ -139,6 +139,15 @@ describe('LogtoClient', () => {
         for: 'sign-in',
       });
     });
+
+    it('should take the prompt from the function argument over config', async () => {
+      const logtoClient = createClient(Prompt.Consent);
+      await logtoClient.signIn({ redirectUri, prompt: Prompt.Login });
+      expect(navigate).toHaveBeenCalledWith(mockedSignInUriWithLoginPrompt, {
+        redirectUri,
+        for: 'sign-in',
+      });
+    });
   });
 
   describe('isSignInRedirected', () => {

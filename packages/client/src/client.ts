@@ -47,6 +47,11 @@ export type SignInOptions = {
    * sign-in callback. If not specified, the user will stay on the `redirectUri` page.
    */
   postRedirectUri?: string | URL;
+  /**
+   * The prompt parameter to be used for the authorization request.
+   * Note: If specified, it will override the prompt value in Logto configs.
+   */
+  prompt?: SignInUriParameters['prompt'];
 } & Pick<
   SignInUriParameters,
   'interactionMode' | 'firstScreen' | 'loginHint' | 'directSignIn' | 'extraParams'
@@ -268,6 +273,7 @@ export class StandardLogtoClient {
       loginHint,
       directSignIn,
       extraParams,
+      prompt,
     } = typeof options === 'string' || options instanceof URL
       ? {
           redirectUri: options,
@@ -277,11 +283,12 @@ export class StandardLogtoClient {
           loginHint: hint,
           directSignIn: undefined,
           extraParams: undefined,
+          prompt: undefined,
         }
       : options;
     const redirectUri = redirectUriUrl.toString();
     const postRedirectUri = postRedirectUriUrl?.toString();
-    const { appId: clientId, prompt, resources, scopes } = this.logtoConfig;
+    const { appId: clientId, prompt: promptViaConfig, resources, scopes } = this.logtoConfig;
     const { authorizationEndpoint } = await this.getOidcConfig();
     const [codeVerifier, state] = await Promise.all([
       this.adapter.generateCodeVerifier(),
@@ -297,7 +304,7 @@ export class StandardLogtoClient {
       state,
       scopes,
       resources,
-      prompt,
+      prompt: prompt ?? promptViaConfig,
       firstScreen,
       interactionMode,
       loginHint,
