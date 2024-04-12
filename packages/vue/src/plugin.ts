@@ -41,6 +41,7 @@ export const createPluginMethods = (context: Context) => {
     // Moreover, since the location will be redirected, the isAuthenticated state will not matter any more.
     signOut: proxy(client.signOut.bind(client)),
     fetchUserInfo: proxy(client.fetchUserInfo.bind(client)),
+    clearAccessToken: proxy(client.clearAccessToken.bind(client)),
   };
 
   const handleSignInCallback = async (callbackUri: string, callbackFunction?: () => void) => {

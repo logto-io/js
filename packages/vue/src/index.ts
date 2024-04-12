@@ -60,6 +60,7 @@ type Logto = {
     | 'signIn'
     | 'signOut'
     | 'fetchUserInfo'
+    | 'clearAccessToken'
   >
 >;
 
