@@ -1,5 +1,11 @@
 # @logto/chrome-extension
 
+## 0.1.2
+
+### Patch Changes
+
+- @logto/browser@2.2.8
+
 ## 0.1.1
 
 ### Patch Changes

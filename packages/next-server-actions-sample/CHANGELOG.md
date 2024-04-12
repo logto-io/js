@@ -1,5 +1,11 @@
 # next-server-actions-sample
 
+## 2.1.12
+
+### Patch Changes
+
+- @logto/next@3.2.3
+
 ## 2.1.11
 
 ### Patch Changes
