@@ -224,38 +224,7 @@ describe('LogtoClient', () => {
       await Promise.all([logtoClient.getAccessToken(), logtoClient.getAccessToken()]);
       expect(accessTokenMap.delete).toBeCalledTimes(1);
     });
-  });
 
-  describe('getIdTokenClaims', () => {
-    it('should throw if id token is empty', async () => {
-      const logtoClient = createClient();
-
-      await expect(async () => logtoClient.getIdTokenClaims()).rejects.toMatchError(
-        new LogtoClientError('not_authenticated')
-      );
-    });
-
-    it('should return id token claims', async () => {
-      const logtoClient = createClient(
-        undefined,
-        new MockedStorage({
-          idToken: 'id_token_value',
-        })
-      );
-      const idTokenClaims = await logtoClient.getIdTokenClaims();
-
-      expect(idTokenClaims).toEqual({
-        iss: 'issuer_value',
-        sub: 'subject_value',
-        aud: 'audience_value',
-        exp: currentUnixTimeStamp + 3600,
-        iat: currentUnixTimeStamp,
-        at_hash: 'at_hash_value',
-      });
-    });
-  });
-
-  describe('getAccessToken', () => {
     it('should load access token', async () => {
       const logtoClient = createClient(
         undefined,
@@ -312,6 +281,54 @@ describe('LogtoClient', () => {
       const anotherClient = createClient(undefined, storage);
 
       await expect(anotherClient.getAccessToken()).resolves.not.toThrow();
+    });
+  });
+
+  describe('clearAccessToken', () => {
+    it('should clear access token cache storage', async () => {
+      const storage = new MockedStorage({
+        idToken,
+        refreshToken,
+        accessToken: JSON.stringify({
+          [buildAccessTokenKey()]: {
+            token: accessToken,
+            scope: '',
+            expiresAt: Date.now() + 1000,
+          },
+        }),
+      });
+      const logtoClient = createClient(undefined, storage);
+      await logtoClient.clearAccessToken();
+      await expect(storage.getItem('accessToken')).resolves.toBeNull();
+    });
+  });
+
+  describe('getIdTokenClaims', () => {
+    it('should throw if id token is empty', async () => {
+      const logtoClient = createClient();
+
+      await expect(async () => logtoClient.getIdTokenClaims()).rejects.toMatchError(
+        new LogtoClientError('not_authenticated')
+      );
+    });
+
+    it('should return id token claims', async () => {
+      const logtoClient = createClient(
+        undefined,
+        new MockedStorage({
+          idToken: 'id_token_value',
+        })
+      );
+      const idTokenClaims = await logtoClient.getIdTokenClaims();
+
+      expect(idTokenClaims).toEqual({
+        iss: 'issuer_value',
+        sub: 'subject_value',
+        aud: 'audience_value',
+        exp: currentUnixTimeStamp + 3600,
+        iat: currentUnixTimeStamp,
+        at_hash: 'at_hash_value',
+      });
     });
   });
 

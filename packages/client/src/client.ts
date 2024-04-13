@@ -107,6 +107,11 @@ export class StandardLogtoClient {
   readonly getOrganizationToken = memoize(this.#getOrganizationToken);
 
   /**
+   * Clear the access token from the cache storage.
+   */
+  readonly clearAccessToken = memoize(this.#clearAccessToken);
+
+  /**
    * Handle the sign-in callback by parsing the authorization code from the
    * callback URI and exchanging it for the tokens.
    *
@@ -402,11 +407,6 @@ export class StandardLogtoClient {
     return this.adapter.setStorageItem(PersistKey.RefreshToken, value);
   }
 
-  private async clearAccessToken(): Promise<void> {
-    this.accessTokenMap.clear();
-    await this.adapter.storage.removeItem('accessToken');
-  }
-
   private async getAccessTokenByRefreshToken(
     resource: Optional<string>,
     organizationId: Optional<string>
@@ -528,6 +528,11 @@ export class StandardLogtoClient {
     }
 
     return this.getAccessToken(undefined, organizationId);
+  }
+
+  async #clearAccessToken(): Promise<void> {
+    this.accessTokenMap.clear();
+    await this.adapter.storage.removeItem('accessToken');
   }
 
   async #handleSignInCallback(callbackUri: string) {

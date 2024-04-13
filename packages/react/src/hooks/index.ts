@@ -26,6 +26,7 @@ type Logto = {
     | 'getIdTokenClaims'
     | 'signOut'
     | 'fetchUserInfo'
+    | 'clearAccessToken'
   >
 > &
   // Manually pick the method with overloads since TypeScript cannot infer the correct type.
@@ -142,6 +143,7 @@ const useLogto = (): Logto => {
       // Moreover, since the location will be redirected, the isAuthenticated state will not matter any more.
       signOut: proxy(client.signOut.bind(client)),
       fetchUserInfo: proxy(client.fetchUserInfo.bind(client)),
+      clearAccessToken: proxy(client.clearAccessToken.bind(client)),
     }),
     [client, proxy]
   );
