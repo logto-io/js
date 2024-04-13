@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.6.5
+
+### Patch Changes
+
+- bc86d46: export "clearAccessToken()" method from Client SDK
+
 ## 2.6.4
 
 ### Patch Changes

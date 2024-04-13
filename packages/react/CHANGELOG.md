@@ -1,5 +1,12 @@
 # Change Log
 
+## 3.0.7
+
+### Patch Changes
+
+- bc86d46: export "clearAccessToken()" method from Client SDK
+  - @logto/browser@2.2.9
+
 ## 3.0.6
 
 ### Patch Changes
