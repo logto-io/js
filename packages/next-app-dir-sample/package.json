@@ -1,6 +1,6 @@
 {
   "name": "@logto/next-app-dir-sample",
-  "version": "2.1.7",
+  "version": "2.1.8",
   "license": "MIT",
   "private": true,
   "scripts": {

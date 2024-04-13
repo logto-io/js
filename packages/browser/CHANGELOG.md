@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.2.9
+
+### Patch Changes
+
+- Updated dependencies [bc86d46]
+  - @logto/client@2.6.5
+
 ## 2.2.8
 
 ### Patch Changes
