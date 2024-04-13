@@ -4,4 +4,4 @@
 "@logto/vue": patch
 ---
 
-export "clearAccessToken()" method from Client SDK.
+export "clearAccessToken()" method from Client SDK
