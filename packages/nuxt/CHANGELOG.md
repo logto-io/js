@@ -1,5 +1,11 @@
 # @logto/nuxt
 
+## 0.1.10
+
+### Patch Changes
+
+- @logto/node@2.4.7
+
 ## 0.1.9
 
 ### Patch Changes
