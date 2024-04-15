@@ -1,5 +1,12 @@
 # Change Log
 
+## 3.0.8
+
+### Patch Changes
+
+- 3e28e29: add new method "clearAllTokens()" to clear all cached tokens from storage
+  - @logto/browser@2.2.10
+
 ## 3.0.7
 
 ### Patch Changes

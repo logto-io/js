@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.6.6
+
+### Patch Changes
+
+- 3e28e29: add new method "clearAllTokens()" to clear all cached tokens from storage
+
 ## 2.6.5
 
 ### Patch Changes

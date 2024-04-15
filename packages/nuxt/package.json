@@ -1,6 +1,6 @@
 {
   "name": "@logto/nuxt",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "type": "module",
   "exports": {
     ".": {

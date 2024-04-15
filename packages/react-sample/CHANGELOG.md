@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.1.9
+
+### Patch Changes
+
+- Updated dependencies [3e28e29]
+  - @logto/react@3.0.8
+
 ## 2.1.8
 
 ### Patch Changes

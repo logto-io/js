@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.3.8
+
+### Patch Changes
+
+- @logto/node@2.4.7
+
 ## 2.3.7
 
 ### Patch Changes
