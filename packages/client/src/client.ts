@@ -112,6 +112,11 @@ export class StandardLogtoClient {
   readonly clearAccessToken = memoize(this.#clearAccessToken);
 
   /**
+   * Clear all cached tokens from storage.
+   */
+  readonly clearAllTokens = memoize(this.#clearAllTokens);
+
+  /**
    * Handle the sign-in callback by parsing the authorization code from the
    * callback URI and exchanging it for the tokens.
    *
@@ -319,9 +324,7 @@ export class StandardLogtoClient {
 
     await Promise.all([
       this.setSignInSession({ redirectUri, postRedirectUri, codeVerifier, state }),
-      this.setRefreshToken(null),
-      this.setIdToken(null),
-      this.clearAccessToken(),
+      this.clearAllTokens(),
     ]);
     await this.adapter.navigate(signInUri, { redirectUri, for: 'sign-in' });
   }
@@ -375,7 +378,7 @@ export class StandardLogtoClient {
       clientId,
     });
 
-    await Promise.all([this.setRefreshToken(null), this.setIdToken(null), this.clearAccessToken()]);
+    await this.clearAllTokens();
     await this.adapter.navigate(url, { redirectUri: postLogoutRedirectUri, for: 'sign-out' });
   }
 
@@ -533,6 +536,10 @@ export class StandardLogtoClient {
   async #clearAccessToken(): Promise<void> {
     this.accessTokenMap.clear();
     await this.adapter.storage.removeItem('accessToken');
+  }
+
+  async #clearAllTokens(): Promise<void> {
+    await Promise.all([this.setRefreshToken(null), this.setIdToken(null), this.clearAccessToken()]);
   }
 
   async #handleSignInCallback(callbackUri: string) {
