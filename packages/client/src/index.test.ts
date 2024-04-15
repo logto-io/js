@@ -303,6 +303,27 @@ describe('LogtoClient', () => {
     });
   });
 
+  describe('clearAllTokens', () => {
+    it('should clear all tokens', async () => {
+      const storage = new MockedStorage({
+        idToken,
+        refreshToken,
+        accessToken: JSON.stringify({
+          [buildAccessTokenKey()]: {
+            token: accessToken,
+            scope: '',
+            expiresAt: Date.now() + 1000,
+          },
+        }),
+      });
+      const logtoClient = createClient(undefined, storage);
+      await logtoClient.clearAllTokens();
+      await expect(storage.getItem('idToken')).resolves.toBeNull();
+      await expect(storage.getItem('refreshToken')).resolves.toBeNull();
+      await expect(storage.getItem('accessToken')).resolves.toBeNull();
+    });
+  });
+
   describe('getIdTokenClaims', () => {
     it('should throw if id token is empty', async () => {
       const logtoClient = createClient();
