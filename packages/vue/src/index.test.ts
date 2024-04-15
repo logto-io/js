@@ -36,6 +36,7 @@ jest.mock('@logto/browser', () => {
       signOut: jest.fn(),
       fetchUserInfo: mockedFetchUserInfo,
       clearAccessToken: jest.fn(),
+      clearAllTokens: jest.fn(),
     } satisfies Partial<LogtoClient>;
   });
 });
@@ -110,6 +111,7 @@ describe('useLogto', () => {
       getIdTokenClaims,
       fetchUserInfo,
       clearAccessToken,
+      clearAllTokens,
     } = useLogto();
 
     expect(isAuthenticated.value).toBe(false);
@@ -125,6 +127,7 @@ describe('useLogto', () => {
     expect(getIdTokenClaims).toBeInstanceOf(Function);
     expect(fetchUserInfo).toBeInstanceOf(Function);
     expect(clearAccessToken).toBeInstanceOf(Function);
+    expect(clearAllTokens).toBeInstanceOf(Function);
   });
 
   it('should return error when getAccessToken fails', async () => {

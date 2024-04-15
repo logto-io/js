@@ -42,6 +42,7 @@ export const createPluginMethods = (context: Context) => {
     signOut: proxy(client.signOut.bind(client)),
     fetchUserInfo: proxy(client.fetchUserInfo.bind(client)),
     clearAccessToken: proxy(client.clearAccessToken.bind(client)),
+    clearAllTokens: proxy(client.clearAllTokens.bind(client)),
   };
 
   const handleSignInCallback = async (callbackUri: string, callbackFunction?: () => void) => {

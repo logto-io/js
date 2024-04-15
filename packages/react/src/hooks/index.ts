@@ -27,6 +27,7 @@ type Logto = {
     | 'signOut'
     | 'fetchUserInfo'
     | 'clearAccessToken'
+    | 'clearAllTokens'
   >
 > &
   // Manually pick the method with overloads since TypeScript cannot infer the correct type.
@@ -144,6 +145,7 @@ const useLogto = (): Logto => {
       signOut: proxy(client.signOut.bind(client)),
       fetchUserInfo: proxy(client.fetchUserInfo.bind(client)),
       clearAccessToken: proxy(client.clearAccessToken.bind(client)),
+      clearAllTokens: proxy(client.clearAllTokens.bind(client)),
     }),
     [client, proxy]
   );

@@ -30,6 +30,7 @@ jest.mock('@logto/browser', () => {
       signOut: jest.fn(),
       fetchUserInfo: jest.fn(),
       clearAccessToken: jest.fn(),
+      clearAllTokens: jest.fn(),
     } satisfies Partial<LogtoClient>;
   });
 });
@@ -96,6 +97,7 @@ describe('useLogto', () => {
         getAccessToken,
         getIdTokenClaims,
         clearAccessToken,
+        clearAllTokens,
         error,
       } = result.current;
 
@@ -106,6 +108,7 @@ describe('useLogto', () => {
       expect(getAccessToken).toBeDefined();
       expect(getIdTokenClaims).toBeDefined();
       expect(clearAccessToken).toBeDefined();
+      expect(clearAllTokens).toBeDefined();
     });
   });
 
