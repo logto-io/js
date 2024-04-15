@@ -61,6 +61,7 @@ type Logto = {
     | 'signOut'
     | 'fetchUserInfo'
     | 'clearAccessToken'
+    | 'clearAllTokens'
   >
 >;
 
