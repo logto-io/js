@@ -20,6 +20,8 @@ export type LogtoContext = {
 export type GetContextParameters = {
   fetchUserInfo?: boolean;
   getAccessToken?: boolean;
+  /** The optional `organization_id` param for granting access token. */
+  accessTokenOrganizationId?: string;
   resource?: string;
   getOrganizationToken?: boolean;
 };

@@ -50,7 +50,21 @@ describe('LogtoClient', () => {
       ).resolves.toEqual({
         isAuthenticated: false,
       });
-      expect(getAccessToken).toHaveBeenCalledWith('resource');
+      expect(getAccessToken).toHaveBeenCalledWith('resource', undefined);
+    });
+
+    it('should get access token with organization_id', async () => {
+      const client = new LogtoClient({ endpoint, appId }, { navigate, storage });
+      await expect(
+        client.getContext({
+          getAccessToken: true,
+          resource: 'resource',
+          accessTokenOrganizationId: 'org1',
+        })
+      ).resolves.toMatchObject({
+        isAuthenticated: true,
+      });
+      expect(getAccessToken).toHaveBeenCalledWith('resource', 'org1');
     });
 
     it('should get organization tokens', async () => {

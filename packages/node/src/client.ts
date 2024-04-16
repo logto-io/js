@@ -31,6 +31,7 @@ export default class LogtoNodeBaseClient extends BaseClient {
     resource,
     fetchUserInfo,
     getOrganizationToken,
+    accessTokenOrganizationId,
   }: GetContextParameters = {}): Promise<LogtoContext> => {
     const isAuthenticated = await this.isAuthenticated();
 
@@ -44,7 +45,9 @@ export default class LogtoNodeBaseClient extends BaseClient {
 
     const { accessToken, accessTokenClaims } = getAccessToken
       ? {
-          accessToken: await trySafe(async () => this.getAccessToken(resource)),
+          accessToken: await trySafe(async () =>
+            this.getAccessToken(resource, accessTokenOrganizationId)
+          ),
           accessTokenClaims: await trySafe(async () => this.getAccessTokenClaims(resource)),
         }
       : { accessToken: undefined, accessTokenClaims: undefined };
