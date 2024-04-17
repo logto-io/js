@@ -17,6 +17,8 @@ import { type NextApiRequestCookies } from 'next/dist/server/api-utils/index.js'
 import LogtoNextBaseClient from './client.js';
 import type { LogtoNextConfig } from './types.js';
 
+export type { LogtoNextConfig } from './types.js';
+
 export {
   LogtoError,
   LogtoRequestError,
