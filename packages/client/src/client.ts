@@ -184,9 +184,14 @@ export class StandardLogtoClient {
    * @param resource The resource that the access token is granted for. If not
    * specified, the access token will be used for OpenID Connect or the default
    * resource, as specified in the Logto Console.
+   * @param organizationId The ID of the organization, if specified, will narrow
+   * down the scopes inherited from organizations to only that organization.
    */
-  async getAccessTokenClaims(resource?: string): Promise<AccessTokenClaims> {
-    const accessToken = await this.getAccessToken(resource);
+  async getAccessTokenClaims(
+    resource?: string,
+    organizationId?: string
+  ): Promise<AccessTokenClaims> {
+    const accessToken = await this.getAccessToken(resource, organizationId);
 
     return decodeAccessToken(accessToken);
   }
