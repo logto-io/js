@@ -14,44 +14,45 @@ const configs: LogtoNextConfig = {
   cookieSecure: process.env.NODE_ENV === 'production',
 };
 
-const setItem = jest.fn((key, value) => {
+const setItem = vi.fn((key, value) => {
   console.log(key, value);
 });
-const getItem = jest.fn();
-const save = jest.fn();
-const signIn = jest.fn();
-const handleSignInCallback = jest.fn();
-const getIdTokenClaims = jest.fn(() => ({
+const getItem = vi.fn();
+const save = vi.fn();
+const signIn = vi.fn();
+const handleSignInCallback = vi.fn();
+const getIdTokenClaims = vi.fn(() => ({
   sub: 'user_id',
 }));
-const signOut = jest.fn();
-const getContext = jest.fn(async () => true);
+const signOut = vi.fn();
+const getContext = vi.fn(async () => true);
 
 const mockResponse = (_: unknown, response: NextApiResponse) => {
   response.status(200).end();
 };
 
-jest.mock('./storage', () =>
-  jest.fn(() => ({
+vi.mock('./storage', () => ({
+  default: vi.fn(() => ({
     setItem,
     getItem,
-    removeItem: jest.fn(),
-    destroy: jest.fn(),
+    removeItem: vi.fn(),
+    destroy: vi.fn(),
     save: () => {
       save();
     },
-  }))
-);
+  })),
+}));
 
 type Adapter = {
   navigate: (url: string) => void;
 };
 
-jest.mock('@logto/node', () => ({
-  ...jest.requireActual('@logto/node'),
+vi.mock('@logto/node', async (importOriginal) => ({
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+  ...(await importOriginal<typeof import('@logto/node')>()),
   // https://stackoverflow.com/a/70705719/12514940
   __esModule: true,
-  default: jest.fn((_: unknown, { navigate }: Adapter) => ({
+  default: vi.fn((_: unknown, { navigate }: Adapter) => ({
     signIn: (_redirectUri: string, interactionMode?: string) => {
       navigate(interactionMode ? `${signInUrl}?interactionMode=${interactionMode}` : signInUrl);
       signIn();
@@ -69,7 +70,7 @@ jest.mock('@logto/node', () => ({
 
 describe('Next', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('creates an instance without crash', () => {
@@ -179,7 +180,7 @@ describe('Next', () => {
   describe('handleAuthRoutes', () => {
     it('should call handleSignIn for "sign-in"', async () => {
       const client = new LogtoClient(configs);
-      jest.spyOn(client, 'handleSignIn').mockImplementation(() => mockResponse);
+      vi.spyOn(client, 'handleSignIn').mockImplementation(() => mockResponse);
       await testApiHandler({
         pagesHandler: client.handleAuthRoutes(),
         paramsPatcher: (parameters) => {
@@ -195,7 +196,7 @@ describe('Next', () => {
 
     it('should call handleSignIn for "sign-up"', async () => {
       const client = new LogtoClient(configs);
-      jest.spyOn(client, 'handleSignIn').mockImplementation(() => mockResponse);
+      vi.spyOn(client, 'handleSignIn').mockImplementation(() => mockResponse);
       await testApiHandler({
         pagesHandler: client.handleAuthRoutes(),
         paramsPatcher: (parameters) => {
@@ -211,7 +212,7 @@ describe('Next', () => {
 
     it('should call handleSignInCallback for "sign-in-callback"', async () => {
       const client = new LogtoClient(configs);
-      jest.spyOn(client, 'handleSignInCallback').mockImplementation(() => mockResponse);
+      vi.spyOn(client, 'handleSignInCallback').mockImplementation(() => mockResponse);
       await testApiHandler({
         pagesHandler: client.handleAuthRoutes(),
         paramsPatcher: (parameters) => {
@@ -227,7 +228,7 @@ describe('Next', () => {
 
     it('should call handleSignOut for "sign-out"', async () => {
       const client = new LogtoClient(configs);
-      jest.spyOn(client, 'handleSignOut').mockImplementation(() => mockResponse);
+      vi.spyOn(client, 'handleSignOut').mockImplementation(() => mockResponse);
       await testApiHandler({
         pagesHandler: client.handleAuthRoutes(),
         paramsPatcher: (parameters) => {
@@ -243,7 +244,7 @@ describe('Next', () => {
 
     it('should call handleUser for "user"', async () => {
       const client = new LogtoClient(configs);
-      jest.spyOn(client, 'handleUser').mockImplementation(() => mockResponse);
+      vi.spyOn(client, 'handleUser').mockImplementation(() => mockResponse);
       await testApiHandler({
         pagesHandler: client.handleAuthRoutes(),
         paramsPatcher: (parameters) => {

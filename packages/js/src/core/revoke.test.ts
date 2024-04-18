@@ -5,7 +5,7 @@ describe('revoke', () => {
     const revocationEndpoint = 'https://logto.dev/oidc/token/revocation';
     const clientId = 'clientId';
     const token = 'token';
-    const mockedRequester = jest.fn();
+    const mockedRequester = vi.fn();
 
     await expect(
       revoke(revocationEndpoint, clientId, token, mockedRequester)

@@ -1,11 +1,8 @@
-import { createClient, mockFetchOidcConfig } from './mock.js';
+import { mockFetchOidcConfig } from './mock.js';
 
-const fetchOidcConfig = mockFetchOidcConfig(1);
+const { createClient, fetchOidcConfig } = await import('./mock.js');
 
-jest.mock('@logto/js', () => ({
-  ...jest.requireActual('@logto/js'),
-  fetchOidcConfig: async () => fetchOidcConfig(),
-}));
+fetchOidcConfig.mockImplementation(mockFetchOidcConfig(1));
 
 describe('LogtoClient cache', () => {
   it('should memoize fetch promise and cache OpenID config', async () => {

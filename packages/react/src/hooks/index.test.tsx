@@ -7,32 +7,34 @@ import { LogtoProvider } from '../provider.js';
 
 import { useHandleSignInCallback, useLogto } from './index.js';
 
-const isAuthenticated = jest.fn(async () => false);
-const isSignInRedirected = jest.fn(async () => false);
-const handleSignInCallback = jest.fn().mockResolvedValue(undefined);
-const getAccessToken = jest.fn();
-const signIn = jest.fn();
+const isAuthenticated = vi.fn(async () => false);
+const isSignInRedirected = vi.fn(async () => false);
+const handleSignInCallback = vi.fn().mockResolvedValue(undefined);
+const getAccessToken = vi.fn();
+const signIn = vi.fn();
 
-jest.mock('@logto/browser', () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      isAuthenticated,
-      isSignInRedirected,
-      handleSignInCallback,
-      getRefreshToken: jest.fn(),
-      getAccessToken,
-      getAccessTokenClaims: jest.fn(),
-      getOrganizationToken: jest.fn(),
-      getOrganizationTokenClaims: jest.fn(),
-      getIdToken: jest.fn(),
-      getIdTokenClaims: jest.fn(),
-      signIn,
-      signOut: jest.fn(),
-      fetchUserInfo: jest.fn(),
-      clearAccessToken: jest.fn(),
-      clearAllTokens: jest.fn(),
-    } satisfies Partial<LogtoClient>;
-  });
+vi.mock('@logto/browser', () => {
+  return {
+    default: vi.fn().mockImplementation(() => {
+      return {
+        isAuthenticated,
+        isSignInRedirected,
+        handleSignInCallback,
+        getRefreshToken: vi.fn(),
+        getAccessToken,
+        getAccessTokenClaims: vi.fn(),
+        getOrganizationToken: vi.fn(),
+        getOrganizationTokenClaims: vi.fn(),
+        getIdToken: vi.fn(),
+        getIdTokenClaims: vi.fn(),
+        signIn,
+        signOut: vi.fn(),
+        fetchUserInfo: vi.fn(),
+        clearAccessToken: vi.fn(),
+        clearAllTokens: vi.fn(),
+      } satisfies Partial<LogtoClient>;
+    }),
+  };
 });
 
 const endpoint = 'https://logto.dev';
@@ -55,7 +57,7 @@ const HasError = ({ children }: { children?: ReactNode }) => {
 };
 
 const AlwaysLoading = ({ children }: { children?: ReactNode }) => {
-  const { isLoading, setIsLoading } = useContext(LogtoContext);
+  const { setIsLoading } = useContext(LogtoContext);
   useEffect(() => {
     setIsLoading(true); // Simulate always loading
   }, [setIsLoading]);
@@ -66,7 +68,7 @@ const AlwaysLoading = ({ children }: { children?: ReactNode }) => {
 
 describe('useLogto', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     handleSignInCallback.mockRestore();
   });
 
@@ -249,7 +251,7 @@ describe('useLogto', () => {
     await waitFor(() => {
       expect(result.current.error).not.toBeUndefined();
       expect(result.current.error?.message).toBe(
-        'Unexpected error occurred while calling bound mockConstructor.'
+        'Unexpected error occurred while calling bound spy.'
       );
       expect(result.current.isLoading).toBe(false);
     });

@@ -16,27 +16,27 @@ const context: LogtoContext = {
   },
 };
 
-export const getContext = jest.fn(async () => ({
+export const getContext = vi.fn(async () => ({
   context,
 }));
 
 const session = createSession();
 export const storage = createStorage(session);
 
-export const handleSignIn = jest.fn(async () => ({
+export const handleSignIn = vi.fn(async () => ({
   session,
   navigateToUrl: '/success-handle-sign-in',
 }));
 
-export const handleSignInCallback = jest.fn(async () => ({
+export const handleSignInCallback = vi.fn(async () => ({
   session,
 }));
 
-export const handleSignOut = jest.fn(async () => ({
+export const handleSignOut = vi.fn(async () => ({
   navigateToUrl: '/success-handle-sign-out',
 }));
 
-export const createLogtoAdapter: CreateLogtoAdapter = jest.fn((session: Session) => {
+export const createLogtoAdapter: CreateLogtoAdapter = vi.fn((session: Session) => {
   return {
     handleSignIn,
     handleSignInCallback,
@@ -46,9 +46,9 @@ export const createLogtoAdapter: CreateLogtoAdapter = jest.fn((session: Session)
 });
 
 // eslint-disable-next-line no-restricted-syntax
-export const commitSession = jest.fn(async (session: Session) => session.data as unknown as string);
-export const destroySession = jest.fn();
-export const getSession = jest.fn();
+export const commitSession = vi.fn(async (session: Session) => session.data as unknown as string);
+export const destroySession = vi.fn();
+export const getSession = vi.fn();
 
 export const sessionStorage: SessionStorage = {
   commitSession,

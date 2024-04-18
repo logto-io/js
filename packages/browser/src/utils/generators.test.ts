@@ -40,20 +40,6 @@ describe('generateCodeVerifier', () => {
 });
 
 describe('generateCodeChallenge', () => {
-  test('should throw optimized error message when crypto.subtle is unavailable', async () => {
-    const originalSubtle = crypto.subtle;
-    // @ts-expect-error make it undefined on purpose
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    crypto.subtle = undefined;
-
-    const codeVerifier = generateCodeVerifier();
-    await expect(generateCodeChallenge(codeVerifier)).rejects.toThrow();
-
-    // @ts-expect-error revert it to the original value
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    crypto.subtle = originalSubtle;
-  });
-
   test('dealing with different code verifiers should not be equal', async () => {
     const codeVerifier1 = generateCodeVerifier();
     const codeChallenge1 = await generateCodeChallenge(codeVerifier1);

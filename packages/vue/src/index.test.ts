@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/no-useless-undefined */
 import LogtoClient from '@logto/browser';
 import { type App, readonly } from 'vue';
 
@@ -7,46 +6,48 @@ import { createContext } from './context.js';
 import { useLogto, useHandleSignInCallback, createLogto } from './index.js';
 import { createPluginMethods } from './plugin.js';
 
-const isAuthenticated = jest.fn(async () => false);
-const isSignInRedirected = jest.fn(async () => false);
-const handleSignInCallback = jest.fn().mockResolvedValue(undefined);
-const mockedFetchUserInfo = jest.fn().mockResolvedValue({ sub: 'foo' });
-const getAccessToken = jest.fn(() => {
+const isAuthenticated = vi.fn(async () => false);
+const isSignInRedirected = vi.fn(async () => false);
+const handleSignInCallback = vi.fn().mockResolvedValue(true);
+const mockedFetchUserInfo = vi.fn().mockResolvedValue({ sub: 'foo' });
+const getAccessToken = vi.fn(() => {
   throw new Error('not authenticated');
 });
-const signIn = jest.fn();
-const injectMock = jest.fn<unknown, string[]>((): unknown => {
+const signIn = vi.fn();
+const injectMock = vi.fn<string[], unknown>((): unknown => {
   return undefined;
 });
-
-jest.mock('@logto/browser', () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      isAuthenticated,
-      isSignInRedirected,
-      handleSignInCallback,
-      getRefreshToken: jest.fn(),
-      getAccessToken,
-      getAccessTokenClaims: jest.fn(),
-      getOrganizationToken: jest.fn(),
-      getOrganizationTokenClaims: jest.fn(),
-      getIdToken: jest.fn(),
-      getIdTokenClaims: jest.fn(),
-      signIn,
-      signOut: jest.fn(),
-      fetchUserInfo: mockedFetchUserInfo,
-      clearAccessToken: jest.fn(),
-      clearAllTokens: jest.fn(),
-    } satisfies Partial<LogtoClient>;
-  });
-});
-
-jest.mock('vue', () => {
+vi.mock('vue', async (importOriginal) => {
   return {
-    ...jest.requireActual('vue'),
+    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+    ...(await importOriginal<typeof import('vue')>()),
     inject: (key: string) => {
       return injectMock(key);
     },
+  };
+});
+
+vi.mock('@logto/browser', () => {
+  return {
+    default: vi.fn().mockImplementation(() => {
+      return {
+        isAuthenticated,
+        isSignInRedirected,
+        handleSignInCallback,
+        getRefreshToken: vi.fn(),
+        getAccessToken,
+        getAccessTokenClaims: vi.fn(),
+        getOrganizationToken: vi.fn(),
+        getOrganizationTokenClaims: vi.fn(),
+        getIdToken: vi.fn(),
+        getIdTokenClaims: vi.fn(),
+        signIn,
+        signOut: vi.fn(),
+        fetchUserInfo: mockedFetchUserInfo,
+        clearAccessToken: vi.fn(),
+        clearAllTokens: vi.fn(),
+      } satisfies Partial<LogtoClient>;
+    }),
   };
 });
 
@@ -54,7 +55,7 @@ const appId = 'foo';
 const endpoint = 'https://endpoint.com';
 
 const appMock = {
-  provide: jest.fn(),
+  provide: vi.fn(),
 } as unknown as App;
 
 describe('createLogto.install', () => {
@@ -179,8 +180,14 @@ describe('useHandleSignInCallback', () => {
     useHandleSignInCallback();
 
     await signIn('https://example.com');
-    expect(handleSignInCallback).toHaveBeenCalledTimes(1);
-    handleSignInCallback.mockRestore();
+
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        expect(handleSignInCallback).toHaveBeenCalledTimes(1);
+        handleSignInCallback.mockRestore();
+        resolve();
+      });
+    });
   });
 
   it('should call `handleSignInCallback` only once even if it fails internally', async () => {
@@ -191,7 +198,13 @@ describe('useHandleSignInCallback', () => {
     useHandleSignInCallback();
 
     await signIn('https://example.com');
-    expect(handleSignInCallback).toHaveBeenCalledTimes(1);
+
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        expect(handleSignInCallback).toHaveBeenCalledTimes(1);
+        resolve();
+      });
+    });
   });
 
   it('should return userinfo after calling `fetchUserInfo`', async () => {
@@ -202,4 +215,3 @@ describe('useHandleSignInCallback', () => {
     expect(mockedFetchUserInfo).toHaveBeenCalledTimes(1);
   });
 });
-/* eslint-enable unicorn/no-useless-undefined */

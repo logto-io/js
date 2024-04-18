@@ -15,34 +15,34 @@ const configs: LogtoNextConfig = {
   cookieSecure: false,
 };
 
-const setItem = jest.fn();
-const getItem = jest.fn();
-const signIn = jest.fn();
-const handleSignInCallback = jest.fn();
-const getIdTokenClaims = jest.fn(() => ({
+const setItem = vi.fn();
+const getItem = vi.fn();
+const signIn = vi.fn();
+const handleSignInCallback = vi.fn();
+const getIdTokenClaims = vi.fn(() => ({
   sub: 'user_id',
 }));
-const signOut = jest.fn();
-const getContext = jest.fn(async () => ({ isAuthenticated: true }));
+const signOut = vi.fn();
+const getContext = vi.fn(async () => ({ isAuthenticated: true }));
 
-jest.mock('../src/storage', () =>
-  jest.fn(() => ({
+vi.mock('../src/storage', () => ({
+  default: vi.fn(() => ({
     setItem,
     getItem,
-    removeItem: jest.fn(),
-    destroy: jest.fn(),
-    save: jest.fn(),
-  }))
-);
+    removeItem: vi.fn(),
+    destroy: vi.fn(),
+    save: vi.fn(),
+  })),
+}));
 
-jest.mock('@logto/node', () => ({
-  createSession: jest.fn((_, cookie: string) => {
+vi.mock('@logto/node', () => ({
+  createSession: vi.fn((_, cookie: string) => {
     const data = JSON.parse(cookie) as SessionData;
 
     const session = {
       ...data,
-      save: jest.fn(),
-      getValues: jest.fn(async () => JSON.stringify(data)),
+      save: vi.fn(),
+      getValues: vi.fn(async () => JSON.stringify(data)),
     };
 
     return session;
@@ -53,8 +53,8 @@ type Adapter = {
   navigate: (url: string) => void;
 };
 
-jest.mock('@logto/node/edge', () =>
-  jest.fn((_: unknown, { navigate }: Adapter) => ({
+vi.mock('@logto/node/edge', () => ({
+  default: vi.fn((_: unknown, { navigate }: Adapter) => ({
     signIn: () => {
       navigate(signInUrl);
       signIn();
@@ -67,8 +67,8 @@ jest.mock('@logto/node/edge', () =>
       signOut();
     },
     isAuthenticated: true,
-  }))
-);
+  })),
+}));
 
 describe('Next (server actions)', () => {
   it('creates an instance without crash', () => {

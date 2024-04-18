@@ -4,12 +4,11 @@
     "outDir": "lib",
     "types": [
       "node",
-      "jest",
-      "jest-matcher-specific-error"
+      "vitest/globals"
     ]
   },
   "include": [
     "src",
-    "jest.config.ts",
+    "vitest.*.ts",
   ]
 }

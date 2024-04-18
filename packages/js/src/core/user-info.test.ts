@@ -10,7 +10,7 @@ describe('fetchUserInfo', () => {
       iat: 123,
       exp: 123,
     };
-    const fetchFunction = jest.fn().mockResolvedValue(userInfoResponse);
+    const fetchFunction = vi.fn().mockResolvedValue(userInfoResponse);
     await expect(
       fetchUserInfo('https://example.com/oidc/me', 'access_token_value', fetchFunction)
     ).resolves.toMatchObject(userInfoResponse);

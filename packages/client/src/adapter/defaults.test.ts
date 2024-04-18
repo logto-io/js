@@ -1,6 +1,7 @@
 import { LogtoError } from '@logto/js';
 import { createRemoteJWKSet, exportJWK, generateKeyPair, SignJWT } from 'jose';
-import nock from 'nock';
+
+import { nocked } from '../mock.js';
 
 import { verifyIdToken } from './defaults.js';
 
@@ -10,14 +11,12 @@ const mockJwkResponse = (key: unknown) => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (global.window === undefined) {
     // Mock in Node env
-    nock('https://logto.dev', { allowUnmocked: true })
-      .get('/oidc/jwks')
-      .reply(200, { keys: [key] });
+    nocked.get('/oidc/jwks').reply(200, { keys: [key] });
   } else {
     // Mock in JSDOM env
     // @ts-expect-error for testing
     // eslint-disable-next-line @silverhand/fp/no-mutation
-    global.fetch = jest.fn(async () => ({
+    global.fetch = vi.fn(async () => ({
       status: 200,
       json: async () => ({ keys: [key] }),
     }));
@@ -171,7 +170,7 @@ describe('verifyIdToken', () => {
 
     const jwks = createDefaultJwks();
 
-    await expect(verifyIdToken(idToken, 'qux', 'foo', jwks)).rejects.toMatchError(
+    await expect(verifyIdToken(idToken, 'qux', 'foo', jwks)).rejects.toMatchObject(
       new LogtoError('id_token.invalid_iat')
     );
   });

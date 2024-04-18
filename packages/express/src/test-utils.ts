@@ -27,9 +27,9 @@ export const testMiddleware = async ({ middleware, url, test }: TestMiddlewarePa
     session: {},
   } as unknown as Request;
   const response = {
-    redirect: jest.fn(),
+    redirect: vi.fn(),
   } as unknown as Response;
-  const next = jest.fn() as unknown as NextFunction;
+  const next = vi.fn() as unknown as NextFunction;
   /* eslint-enable no-restricted-syntax */
   await middleware(request, response, next);
   await test({ request, response, next });

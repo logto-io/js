@@ -3,7 +3,9 @@ import { createLogtoAdapter, sessionStorage, handleSignInCallback } from '../../
 import { makeHandleSignInCallbackUseCase } from './HandleSignInCallbackUseCase.js';
 
 describe('useCases:handleSignInCallback:HandleSignInCallbackUseCase', () => {
-  afterEach(() => jest.resetAllMocks());
+  afterEach(() => {
+    vi.resetAllMocks();
+  });
 
   it('can make a use case executer', async () => {
     const execute = makeHandleSignInCallbackUseCase({

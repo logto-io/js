@@ -8,7 +8,9 @@ import {
 import { makeGetContextUseCase } from './GetContextUseCase.js';
 
 describe('useCases:getContext:GetContextUseCase', () => {
-  afterEach(() => jest.resetAllMocks());
+  afterEach(() => {
+    vi.resetAllMocks();
+  });
 
   it('can make a use case executer', async () => {
     const execute = makeGetContextUseCase({

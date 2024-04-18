@@ -3,7 +3,9 @@ import { createLogtoAdapter, sessionStorage, handleSignIn } from '../../framewor
 import { makeHandleSignInUseCase } from './HandleSignInUseCase.js';
 
 describe('useCases:handleSignIn:HandleSignInUseCase', () => {
-  afterEach(() => jest.resetAllMocks());
+  afterEach(() => {
+    vi.resetAllMocks();
+  });
 
   it('can make a use case executer', async () => {
     const execute = makeHandleSignInUseCase({

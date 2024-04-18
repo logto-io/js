@@ -3,7 +3,9 @@ import { createLogtoAdapter, sessionStorage, handleSignOut } from '../../framewo
 import { makeHandleSignOutUseCase } from './HandleSignOutUseCase.js';
 
 describe('useCases:handleSignOut:makeHandleSignOutUseCase', () => {
-  afterEach(() => jest.resetAllMocks());
+  afterEach(() => {
+    vi.resetAllMocks();
+  });
 
   it('can make a use case executer', async () => {
     const execute = makeHandleSignOutUseCase({
