@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@silverhand/eslint-config": "^5.0.0",
-    "@silverhand/ts-config": "^5.0.0",
+    "@silverhand/ts-config": "^6.0.0",
     "@sveltejs/kit": "^2.0.0",
     "@swc/core": "^1.4.2",
     "@types/cookie": "^0.6.0",

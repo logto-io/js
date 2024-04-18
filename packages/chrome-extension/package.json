@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@silverhand/eslint-config": "^5.0.0",
-    "@silverhand/ts-config": "^5.0.0",
+    "@silverhand/ts-config": "^6.0.0",
     "chrome-types": "^0.1.276",
     "eslint": "^8.57.0",
     "lint-staged": "^15.0.0",
