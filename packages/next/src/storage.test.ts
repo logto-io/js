@@ -3,8 +3,8 @@ import { PersistKey } from '@logto/node';
 import NextStorage from './storage.js';
 
 const makeSession = () => ({
-  save: jest.fn(),
-  destroy: jest.fn(),
+  save: vi.fn(),
+  destroy: vi.fn(),
 });
 
 describe('NextStorage', () => {

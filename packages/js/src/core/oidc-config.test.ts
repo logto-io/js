@@ -2,7 +2,7 @@ import { fetchOidcConfig } from './oidc-config.js';
 
 describe('fetchOidcConfig', () => {
   test('should return OidcConfigResponse with camel case keys', async () => {
-    const requester = jest.fn().mockResolvedValue({
+    const requester = vi.fn().mockResolvedValue({
       authorization_endpoint: 'foo',
       token_endpoint: 'foo',
       userinfo_endpoint: 'foo',

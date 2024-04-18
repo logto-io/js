@@ -52,6 +52,7 @@ export const createPluginMethods = (context: Context) => {
 
     try {
       setLoading(true);
+      console.log('handleSignInCallback');
       await logtoClient.value.handleSignInCallback(callbackUri);
       setIsAuthenticated(true);
       callbackFunction?.();

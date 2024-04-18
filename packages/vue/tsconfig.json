@@ -2,10 +2,13 @@
   "extends": "@silverhand/ts-config/tsconfig.base",
   "compilerOptions": {
     "noEmit": false,
-    "outDir": "lib"
+    "outDir": "lib",
+    "types": [
+      "vitest/globals"
+    ],
   },
   "include": [
     "src",
-    "jest.config.ts"
+    "vitest.*.ts",
   ]
 }

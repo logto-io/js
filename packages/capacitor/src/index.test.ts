@@ -2,9 +2,9 @@ import { Browser } from '@capacitor/browser';
 
 import CapacitorLogtoClient from './index.js';
 
-jest.mock('@capacitor/browser', () => ({
+vi.mock('@capacitor/browser', () => ({
   Browser: {
-    open: jest.fn(),
+    open: vi.fn(),
   },
 }));
 
@@ -25,8 +25,7 @@ describe('CapacitorLogtoClient', () => {
     expect(client.getAdapter().navigate).toBeDefined();
     await client.getAdapter().navigate('https://example.com', { for: 'sign-in' });
 
-    const spy = jest.spyOn(Browser, 'open');
-    expect(spy).toHaveBeenCalledWith({
+    expect(Browser.open).toHaveBeenCalledWith({
       url: 'https://example.com',
       windowName: '_self',
       presentationStyle: 'popover',

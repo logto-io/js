@@ -27,16 +27,7 @@ import {
   mockedSignInUriWithLoginHint,
 } from './mock.js';
 
-jest.mock('@logto/js', () => ({
-  ...jest.requireActual('@logto/js'),
-  fetchOidcConfig: async () => fetchOidcConfig(),
-}));
-
 describe('LogtoClient', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   describe('signInSession', () => {
     test('getter should throw LogtoClientError when signInSession does not contain the required property', async () => {
       const signInSession = new LogtoClientWithAccessors({ endpoint, appId }, createAdapters());
@@ -47,7 +38,7 @@ describe('LogtoClient', () => {
         codeVerifier: mockedCodeVerifier,
       });
 
-      await expect(async () => signInSession.getSignInSession()).rejects.toMatchError(
+      await expect(async () => signInSession.getSignInSession()).rejects.toStrictEqual(
         new LogtoClientError('sign_in_session.invalid')
       );
     });
@@ -162,14 +153,14 @@ describe('LogtoClient', () => {
   describe('handleSignInCallback', () => {
     it('should throw LogtoClientError when the sign-in session does not exist', async () => {
       const logtoClient = createClient();
-      await expect(logtoClient.handleSignInCallback(redirectUri)).rejects.toMatchError(
+      await expect(logtoClient.handleSignInCallback(redirectUri)).rejects.toStrictEqual(
         new LogtoClientError('sign_in_session.not_found')
       );
     });
 
     it('should only call once when calling handleSignInCallback simultaneously', async () => {
       const logtoClient = createClient();
-      const spy = jest.spyOn(logtoClient, 'getSignInSession');
+      const spy = vi.spyOn(logtoClient, 'getSignInSession');
       await Promise.all([
         trySafe(logtoClient.handleSignInCallback(redirectUri)),
         trySafe(logtoClient.handleSignInCallback(redirectUri)),

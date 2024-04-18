@@ -2,7 +2,6 @@ import LogtoClient from './index.js';
 import {
   appId,
   endpoint,
-  fetchOidcConfig,
   navigate,
   MockedStorage,
   requester,
@@ -12,19 +11,14 @@ import {
   endSessionEndpoint,
   failingRequester,
   createAdapters,
+  fetchOidcConfig,
 } from './mock.js';
-
-jest.mock('@logto/js', () => ({
-  ...jest.requireActual('@logto/js'),
-  fetchOidcConfig: async () => fetchOidcConfig(),
-}));
 
 describe('LogtoClient', () => {
   describe('signOut', () => {
     const storage = new MockedStorage();
 
     beforeEach(() => {
-      jest.clearAllMocks();
       storage.reset({
         idToken: 'id_token_value',
         refreshToken: 'refresh_token_value',
@@ -68,6 +62,7 @@ describe('LogtoClient', () => {
           storage,
         }
       );
+      vi.spyOn(logtoClient, 'getOidcConfig').mockReturnValue(fetchOidcConfig());
 
       await expect(logtoClient.signOut()).resolves.not.toThrow();
       expect(failingRequester).toBeCalledTimes(1);

@@ -167,6 +167,9 @@ export const useHandleSignInCallback = (callback?: () => void) => {
     const isAuthenticated = await logtoClient.value.isAuthenticated();
     const isRedirected = await logtoClient.value.isSignInRedirected(currentPageUrl);
 
+    console.log('isAuthenticated', isAuthenticated);
+    console.log('isRedirected', isRedirected);
+
     if (!isAuthenticated && isRedirected) {
       void handleSignInCallback(currentPageUrl, callback);
     }

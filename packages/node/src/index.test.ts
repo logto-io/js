@@ -3,29 +3,29 @@ import LogtoClient from './index.js';
 const appId = 'app_id_value';
 const endpoint = 'https://logto.dev';
 
-const navigate = jest.fn();
+const navigate = vi.fn();
 const storage = {
-  setItem: jest.fn(),
-  getItem: jest.fn(),
-  removeItem: jest.fn(),
+  setItem: vi.fn(),
+  getItem: vi.fn(),
+  removeItem: vi.fn(),
 };
 
-const getAccessToken = jest.fn(async () => true);
-const getOrganizationToken = jest.fn(async () => 'token');
-const fetchUserInfo = jest.fn(async () => ({ name: 'name' }));
+const getAccessToken = vi.fn(async () => true);
+const getOrganizationToken = vi.fn(async () => 'token');
+const fetchUserInfo = vi.fn(async () => ({ name: 'name' }));
 const mockIdTokenClaims = { sub: 'sub', organizations: ['org1'] };
-const getIdTokenClaims = jest.fn(async () => mockIdTokenClaims);
-const isAuthenticated = jest.fn(async () => true);
-jest.mock('@logto/client', () => ({
+const getIdTokenClaims = vi.fn(async () => mockIdTokenClaims);
+const isAuthenticated = vi.fn(async () => true);
+vi.mock('@logto/client', () => ({
   __esModule: true,
-  default: jest.fn(() => ({
+  default: vi.fn(() => ({
     getAccessToken,
     getOrganizationToken,
     getIdTokenClaims,
     isAuthenticated,
     fetchUserInfo,
   })),
-  createRequester: jest.fn(),
+  createRequester: vi.fn(),
 }));
 
 describe('LogtoClient', () => {

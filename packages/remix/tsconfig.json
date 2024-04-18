@@ -1,14 +1,14 @@
 {
-  "extends": "@silverhand/ts-config-react/tsconfig.base",
+  "extends": "@silverhand/ts-config/tsconfig.base",
   "compilerOptions": {
     "outDir": "lib",
     "types": [
-      "jest",
-      "jest-matcher-specific-error"
+      "node",
+      "vitest/globals"
     ]
   },
   "include": [
     "src",
-    "jest.config.ts",
+    "vitest.config.ts",
   ]
 }

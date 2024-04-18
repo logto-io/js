@@ -1,5 +1,7 @@
 import { generateSignInUri, type OidcConfigResponse, Prompt } from '@logto/js';
 import { conditional, type Nullable } from '@silverhand/essentials';
+import nock from 'nock';
+import { type Mock } from 'vitest';
 
 import type { Storage } from './adapter/index.js';
 import type { AccessToken, LogtoConfig, LogtoSignInSessionItem } from './index.js';
@@ -94,8 +96,10 @@ export const idToken = 'id_token_value';
 
 export const currentUnixTimeStamp = Date.now() / 1000;
 
-export const mockFetchOidcConfig = (delay = 0) =>
-  jest.fn(async () => {
+export const mockFetchOidcConfig: (
+  delay?: number
+) => Mock<unknown[], Promise<OidcConfigResponse>> = (delay = 0) =>
+  vi.fn(async () => {
     await new Promise((resolve) => {
       setTimeout(resolve, delay);
     });
@@ -111,14 +115,13 @@ export const mockFetchOidcConfig = (delay = 0) =>
     };
   });
 
-export const fetchOidcConfig = mockFetchOidcConfig();
-
-export const requester = jest.fn();
-export const failingRequester = jest.fn().mockRejectedValue(new Error('Failed!'));
-export const navigate = jest.fn();
-export const generateCodeChallenge = jest.fn(async () => mockCodeChallenge);
-export const generateCodeVerifier = jest.fn(() => mockedCodeVerifier);
-export const generateState = jest.fn(() => mockedState);
+export const fetchOidcConfig: Mock<unknown[], Promise<OidcConfigResponse>> = mockFetchOidcConfig();
+export const requester = vi.fn();
+export const failingRequester = vi.fn().mockRejectedValue(new Error('Failed request'));
+export const navigate = vi.fn();
+export const generateCodeChallenge = vi.fn(async () => mockCodeChallenge);
+export const generateCodeVerifier = vi.fn(() => mockedCodeVerifier);
+export const generateState = vi.fn(() => mockedState);
 
 export const createAdapters = (withCache = false) =>
   ({
@@ -136,18 +139,19 @@ export const createClient = (
   storage = new MockedStorage(),
   withCache = false,
   scopes?: string[]
-) =>
-  new LogtoClientWithAccessors(
+) => {
+  const client = new LogtoClientWithAccessors(
     { endpoint, appId, prompt, scopes },
     {
       ...createAdapters(withCache),
       storage,
     },
     () => ({
-      verifyIdToken: jest.fn(),
+      verifyIdToken: vi.fn(),
     })
   );
-
+  return client;
+};
 /**
  * Make protected fields accessible for test
  */
@@ -172,3 +176,5 @@ export class LogtoClientWithAccessors extends LogtoClient {
     return this.accessTokenMap;
   }
 }
+
+export const nocked = nock('https://logto.dev/', { allowUnmocked: true });

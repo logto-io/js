@@ -18,7 +18,7 @@ describe('fetch access token by providing authorization code', () => {
       expiresIn: 3600,
     };
 
-    const fetchFunction = jest.fn().mockResolvedValue(mockedOidcResponse);
+    const fetchFunction = vi.fn().mockResolvedValue(mockedOidcResponse);
 
     const tokenResponse = await fetchTokenByAuthorizationCode(
       {
@@ -68,7 +68,7 @@ describe('fetch access token by providing valid refresh token', () => {
       expiresIn: 3600,
     };
 
-    const fetchFunction = jest.fn().mockResolvedValue(mockedOidcResponse);
+    const fetchFunction = vi.fn().mockResolvedValue(mockedOidcResponse);
 
     const tokenResponse = await fetchTokenByRefreshToken(
       {

@@ -10,32 +10,32 @@ const configs: LogtoExpressConfig = {
   baseUrl: 'http://localhost:3000',
 };
 
-const setItem = jest.fn((key, value) => {
+const setItem = vi.fn((key, value) => {
   console.log(key, value);
 });
-const getItem = jest.fn();
-const signIn = jest.fn();
-const handleSignInCallback = jest.fn();
-const getIdTokenClaims = jest.fn(() => ({
+const getItem = vi.fn();
+const signIn = vi.fn();
+const handleSignInCallback = vi.fn();
+const getIdTokenClaims = vi.fn(() => ({
   sub: 'user_id',
 }));
-const signOut = jest.fn();
-const getContext = jest.fn(async () => ({ isAuthenticated: true }));
+const signOut = vi.fn();
+const getContext = vi.fn(async () => ({ isAuthenticated: true }));
 
-jest.mock('./storage', () =>
-  jest.fn(() => ({
+vi.mock('./storage', () => ({
+  default: vi.fn(() => ({
     setItem,
     getItem,
-    removeItem: jest.fn(),
-  }))
-);
+    removeItem: vi.fn(),
+  })),
+}));
 
 type Adapter = {
   navigate: (url: string) => void;
 };
 
-jest.mock('@logto/node', () =>
-  jest.fn((_: unknown, { navigate }: Adapter) => ({
+vi.mock('@logto/node', () => ({
+  default: vi.fn((_: unknown, { navigate }: Adapter) => ({
     signIn: (_redirectUri?: string, interactionMode?: string) => {
       navigate(interactionMode ? `${signInUrl}?interactionMode=${interactionMode}` : signInUrl);
       signIn();
@@ -48,14 +48,14 @@ jest.mock('@logto/node', () =>
       signOut();
     },
     isAuthenticated: true,
-  }))
-);
+  })),
+}));
 
 // The new version of Supertest use callback chaining instead of promise chaining
 /* eslint-disable max-nested-callbacks */
 describe('Express', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('handleAuthRoutes', () => {

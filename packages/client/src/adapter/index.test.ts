@@ -27,8 +27,8 @@ describe('ClientAdapterInstance', () => {
 
   it('should be able get with cache and directly return the cached value when needed', async () => {
     const adapterInstance = new ClientAdapterInstance(createAdapters(true));
-    const spy = jest.spyOn(adapterInstance, 'getWithCache');
-    const getter = jest.fn().mockResolvedValue({ test: 'test' });
+    const spy = vi.spyOn(adapterInstance, 'getWithCache');
+    const getter = vi.fn().mockResolvedValue({ test: 'test' });
 
     expect(await adapterInstance.getWithCache(CacheKey.OpenidConfig, getter)).toEqual({
       test: 'test',

@@ -5,7 +5,7 @@ import ExpressStorage from './storage.js';
 const makeRequest = (): IncomingMessage => {
   const request = {
     session: {
-      save: jest.fn(),
+      save: vi.fn(),
     },
   };
 

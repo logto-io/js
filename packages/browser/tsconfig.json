@@ -3,13 +3,11 @@
   "compilerOptions": {
     "outDir": "lib",
     "types": [
-      "jest",
-      "jest-matcher-specific-error"
+      "vitest/globals"
     ]
   },
   "include": [
     "src",
-    "jest.config.ts",
-    "FixJsdomEnvironment.ts",
+    "vitest.config.ts",
   ]
 }

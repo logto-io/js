@@ -3,7 +3,6 @@ import {
   appId,
   currentUnixTimeStamp,
   endpoint,
-  fetchOidcConfig,
   LogtoClientWithAccessors,
   mockedCodeVerifier,
   mockedState,
@@ -20,20 +19,6 @@ import {
 } from './mock.js';
 import { buildAccessTokenKey } from './utils/index.js';
 
-jest.mock('@logto/js', () => ({
-  ...jest.requireActual('@logto/js'),
-  fetchOidcConfig: async () => fetchOidcConfig(),
-  decodeIdToken: jest.fn(() => ({
-    iss: 'issuer_value',
-    sub: 'subject_value',
-    aud: 'audience_value',
-    exp: currentUnixTimeStamp + 3600,
-    iat: currentUnixTimeStamp,
-    at_hash: 'at_hash_value',
-  })),
-  verifyIdToken: jest.fn(),
-}));
-
 describe('LogtoClient', () => {
   describe('getAccessToken', () => {
     it('should throw if idToken is empty', async () => {
@@ -44,7 +29,7 @@ describe('LogtoClient', () => {
         })
       );
 
-      await expect(logtoClient.getAccessToken()).rejects.toMatchError(
+      await expect(logtoClient.getAccessToken()).rejects.toStrictEqual(
         new LogtoClientError('not_authenticated')
       );
     });
@@ -57,7 +42,7 @@ describe('LogtoClient', () => {
         })
       );
 
-      await expect(logtoClient.getAccessToken()).rejects.toMatchError(
+      await expect(logtoClient.getAccessToken()).rejects.toStrictEqual(
         new LogtoClientError('not_authenticated')
       );
     });
@@ -136,7 +121,7 @@ describe('LogtoClient', () => {
         })
       );
 
-      await expect(logtoClient.getOrganizationToken('organization_id')).rejects.toMatchError(
+      await expect(logtoClient.getOrganizationToken('organization_id')).rejects.toStrictEqual(
         new LogtoClientError('missing_scope_organizations')
       );
     });
@@ -214,7 +199,7 @@ describe('LogtoClient', () => {
       );
 
       const accessTokenMap = logtoClient.getAccessTokenMap();
-      jest.spyOn(accessTokenMap, 'delete');
+      vi.spyOn(accessTokenMap, 'delete');
       accessTokenMap.set('@', {
         token: 'token_value',
         scope: 'scope_value',
@@ -328,7 +313,7 @@ describe('LogtoClient', () => {
     it('should throw if id token is empty', async () => {
       const logtoClient = createClient();
 
-      await expect(async () => logtoClient.getIdTokenClaims()).rejects.toMatchError(
+      await expect(async () => logtoClient.getIdTokenClaims()).rejects.toStrictEqual(
         new LogtoClientError('not_authenticated')
       );
     });
@@ -364,7 +349,7 @@ describe('LogtoClient', () => {
         }
       );
 
-      await expect(logtoClient.fetchUserInfo()).rejects.toMatchError(
+      await expect(logtoClient.fetchUserInfo()).rejects.toStrictEqual(
         new LogtoClientError('not_authenticated')
       );
     });
