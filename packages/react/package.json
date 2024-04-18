@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@silverhand/eslint-config": "^5.0.0",
-    "@silverhand/eslint-config-react": "^5.0.0",
+    "@silverhand/eslint-config-react": "^6.0.0",
     "@silverhand/ts-config": "^5.0.0",
     "@silverhand/ts-config-react": "^5.0.0",
     "@testing-library/react": "^15.0.0",
