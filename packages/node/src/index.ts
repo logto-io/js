@@ -25,7 +25,6 @@ export default class LogtoClient extends BaseClient {
                   ...init,
                   headers: {
                     Authorization: `Basic ${Buffer.from(
-                      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                       `${config.appId}:${config.appSecret}`,
                       'utf8'
                     ).toString('base64')}`,

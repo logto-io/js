@@ -77,9 +77,5 @@ export const makeHandleAuthRoutes =
 
         return handler(request);
       }
-
-      default: {
-        throw HandleAuthRoutesError.becauseOfUnknownRoute(configKey);
-      }
     }
   };
