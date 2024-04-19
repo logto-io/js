@@ -49,7 +49,7 @@ export class CookieStorage implements Storage<PersistKey> {
 
   protected sessionData: SessionData = {};
   protected saveQueue = new PromiseQueue();
-  #isSecure: boolean;
+  readonly #isSecure: boolean;
 
   constructor(
     public config: CookieConfig,

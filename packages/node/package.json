@@ -48,8 +48,8 @@
     "js-base64": "^3.7.4"
   },
   "devDependencies": {
-    "@silverhand/eslint-config": "^5.0.0",
-    "@silverhand/ts-config": "^5.0.0",
+    "@silverhand/eslint-config": "^6.0.1",
+    "@silverhand/ts-config": "^6.0.0",
     "@types/cookie": "^0.6.0",
     "@types/node": "^20.11.19",
     "@vitest/coverage-v8": "^1.4.0",

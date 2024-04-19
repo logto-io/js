@@ -20,13 +20,13 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 
   if (message.action === 'signIn') {
     // eslint-disable-next-line promise/prefer-await-to-then
-    signIn().finally(sendResponse);
+    void signIn().finally(sendResponse);
     return true;
   }
 
   if (message.action === 'signOut') {
     // eslint-disable-next-line promise/prefer-await-to-then
-    signOut().finally(sendResponse);
+    void signOut().finally(sendResponse);
     return true;
   }
 

@@ -36,8 +36,8 @@
     "js-base64": "^3.7.4"
   },
   "devDependencies": {
-    "@silverhand/eslint-config": "^5.0.0",
-    "@silverhand/ts-config": "^5.0.0",
+    "@silverhand/eslint-config": "^6.0.1",
+    "@silverhand/ts-config": "^6.0.0",
     "@vitest/coverage-v8": "^1.4.0",
     "eslint": "^8.57.0",
     "happy-dom": "^14.0.0",

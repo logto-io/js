@@ -30,9 +30,7 @@ export class DefaultJwtVerifier implements JwtVerifier {
     const { appId } = this.client.logtoConfig;
     const { issuer, jwksUri } = await this.client.getOidcConfig();
 
-    if (!this.getJwtVerifyGetKey) {
-      this.getJwtVerifyGetKey = createRemoteJWKSet(new URL(jwksUri));
-    }
+    this.getJwtVerifyGetKey ||= createRemoteJWKSet(new URL(jwksUri));
 
     await verifyIdToken(idToken, appId, issuer, this.getJwtVerifyGetKey);
   }

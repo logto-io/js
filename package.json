@@ -30,13 +30,9 @@
     ]
   },
   "pnpm": {
-    "overrides": {
-      "eslint-plugin-prettier": "^5.0.0-alpha.2"
-    },
     "peerDependencyRules": {
       "allowedVersions": {
-        "typescript": "^5.0.0",
-        "stylelint": "^16.0.0"
+        "typescript": "^5.0.0"
       }
     }
   }
