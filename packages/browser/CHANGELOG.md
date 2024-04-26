@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.2.11
+
+### Patch Changes
+
+- Updated dependencies [bc3e8da]
+  - @logto/client@2.6.7
+
 ## 2.2.10
 
 ### Patch Changes

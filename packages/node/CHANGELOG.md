@@ -1,5 +1,18 @@
 # Change Log
 
+## 2.5.0
+
+### Minor Changes
+
+- 957a1c9: Add `organizationId` to `getContext` function.
+
+  This will allow the users to get access token with "organization_id" claim, which supports organization API resources.
+
+### Patch Changes
+
+- Updated dependencies [bc3e8da]
+  - @logto/client@2.6.7
+
 ## 2.4.7
 
 ### Patch Changes

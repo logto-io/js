@@ -1,5 +1,13 @@
 # Change Log
 
+## 3.2.6
+
+### Patch Changes
+
+- cf524a0: Export type LogtoNextConfig
+- Updated dependencies [957a1c9]
+  - @logto/node@2.5.0
+
 ## 3.2.5
 
 ### Patch Changes
