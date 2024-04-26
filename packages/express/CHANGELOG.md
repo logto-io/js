@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.3.9
+
+### Patch Changes
+
+- Updated dependencies [957a1c9]
+  - @logto/node@2.5.0
+
 ## 2.3.8
 
 ### Patch Changes

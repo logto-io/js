@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.1.10
+
+### Patch Changes
+
+- Updated dependencies [cf524a0]
+  - @logto/next@3.2.6
+
 ## 2.1.9
 
 ### Patch Changes
