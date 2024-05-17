@@ -30,25 +30,28 @@ export const signIn = async (
   redirect(url);
 };
 
-/**
- * Handle sign in callback from search params, save tokens to session
- */
-export const handleSignIn = async (
-  config: LogtoNextConfig,
-  searchParams: URLSearchParams,
-  redirectUri?: string
-): Promise<void> => {
-  const search = searchParams.toString();
+export function handleSignIn(config: LogtoNextConfig, searchParams: URLSearchParams): Promise<void>;
+export function handleSignIn(config: LogtoNextConfig, url: URL): Promise<void>;
 
+/**
+ * Handle sign in callback from search params or full redirect URL, save tokens to session
+ */
+export async function handleSignIn(
+  config: LogtoNextConfig,
+  searchParamsOrUrl: URLSearchParams | URL
+): Promise<void> {
   const client = new LogtoClient(config);
   const newCookie = await client.handleSignInCallback(
     await getCookies(config),
-    redirectUri ?? `${config.baseUrl}/callback?${search}`
+    searchParamsOrUrl instanceof URL
+      ? searchParamsOrUrl.toString()
+      : `${config.baseUrl}/callback?${searchParamsOrUrl.toString()}`
   );
+
   if (newCookie) {
     await setCookies(newCookie, config);
   }
-};
+}
 
 /**
  * Init sign out process, clear session, and redirect to the Logto sign-out page
