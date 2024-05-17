@@ -35,14 +35,15 @@ export const signIn = async (
  */
 export const handleSignIn = async (
   config: LogtoNextConfig,
-  searchParams: URLSearchParams
+  searchParams: URLSearchParams,
+  redirectUri?: string
 ): Promise<void> => {
   const search = searchParams.toString();
 
   const client = new LogtoClient(config);
   const newCookie = await client.handleSignInCallback(
     await getCookies(config),
-    `${config.baseUrl}/callback?${search}`
+    redirectUri ?? `${config.baseUrl}/callback?${search}`
   );
   if (newCookie) {
     await setCookies(newCookie, config);
