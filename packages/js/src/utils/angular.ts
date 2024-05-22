@@ -2,7 +2,7 @@ import { type OpenIdConfiguration } from 'angular-auth-oidc-client';
 
 import { Prompt } from '../consts/index.js';
 
-import { withDefaultScopes } from './scopes.js';
+import { withReservedScopes } from './scopes.js';
 
 /** The Logto configuration object for Angular apps. */
 export type LogtoAngularConfig = {
@@ -46,6 +46,12 @@ export type LogtoAngularConfig = {
    * @default Prompt.Consent
    */
   prompt?: Prompt | Prompt[];
+  /**
+   * Whether to include reserved scopes (`openid`, `offline_access` and `profile`) in the scopes.
+   *
+   * @default true
+   */
+  includeReservedScopes?: boolean;
 };
 
 /**
@@ -81,8 +87,9 @@ export const buildAngularAuthConfig = (logtoConfig: LogtoAngularConfig): OpenIdC
     redirectUri: redirectUrl,
     postLogoutRedirectUri,
     prompt = Prompt.Consent,
+    includeReservedScopes = true,
   } = logtoConfig;
-  const scope = withDefaultScopes(scopes);
+  const scope = includeReservedScopes ? withReservedScopes(scopes) : scopes?.join(' ');
   const customParameters = resource ? { resource } : undefined;
 
   return {

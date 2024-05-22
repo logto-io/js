@@ -1,6 +1,6 @@
 import { ReservedScope, UserScope } from '../consts/index.js';
 
-import { withDefaultScopes } from './scopes.js';
+import { withReservedScopes } from './scopes.js';
 
 const offlineAccess = ReservedScope.OfflineAccess;
 const openid = ReservedScope.OpenId;
@@ -15,30 +15,30 @@ const reservedScopeString = Object.values(ReservedScope).join(' ');
 
 describe('withReservedScopes', () => {
   test('with undefined param', () => {
-    expect(withDefaultScopes()).toEqual(defaultScopesString);
+    expect(withReservedScopes()).toEqual(defaultScopesString);
   });
 
   test('with nothing', () => {
-    expect(withDefaultScopes([])).toEqual(defaultScopesString);
+    expect(withReservedScopes([])).toEqual(defaultScopesString);
   });
 
   test('with default scope "profile"', () => {
-    expect(withDefaultScopes([profile])).toEqual(defaultScopesString);
+    expect(withReservedScopes([profile])).toEqual(defaultScopesString);
   });
 
   test('with all default scopes', () => {
-    expect(withDefaultScopes([openid, offlineAccess, profile])).toEqual(defaultScopesString);
+    expect(withReservedScopes([openid, offlineAccess, profile])).toEqual(defaultScopesString);
   });
 
   test('with "profile" and "email"', () => {
-    expect(withDefaultScopes([profile, email])).toEqual(`${defaultScopesString} ${email}`);
+    expect(withReservedScopes([profile, email])).toEqual(`${defaultScopesString} ${email}`);
   });
 
   test('with "email" and "phone"', () => {
-    expect(withDefaultScopes([email, phone])).toEqual(`${defaultScopesString} ${email} ${phone}`);
+    expect(withReservedScopes([email, phone])).toEqual(`${defaultScopesString} ${email} ${phone}`);
   });
 
   test('with all user scopes', () => {
-    expect(withDefaultScopes(userScopes)).toEqual(`${reservedScopeString} ${userScopesString}`);
+    expect(withReservedScopes(userScopes)).toEqual(`${reservedScopeString} ${userScopesString}`);
   });
 });

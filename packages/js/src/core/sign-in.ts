@@ -1,6 +1,6 @@
 import { Prompt, QueryKey } from '../consts/index.js';
 import type { FirstScreen, InteractionMode } from '../types/index.js';
-import { withDefaultScopes } from '../utils/scopes.js';
+import { withReservedScopes } from '../utils/scopes.js';
 
 const codeChallengeMethod = 'S256';
 const responseType = 'code';
@@ -53,6 +53,12 @@ export type SignInUriParameters = {
    * by the authorization server.
    */
   extraParams?: Record<string, string>;
+  /**
+   * Whether to include reserved scopes (`openid`, `offline_access` and `profile`) in the scopes.
+   *
+   * @default true
+   */
+  includeReservedScopes?: boolean;
 };
 
 const buildPrompt = (prompt?: Prompt | Prompt[]) => {
@@ -77,6 +83,7 @@ export const generateSignInUri = ({
   loginHint,
   directSignIn,
   extraParams,
+  includeReservedScopes = true,
 }: SignInUriParameters) => {
   const urlSearchParameters = new URLSearchParams({
     [QueryKey.ClientId]: clientId,
@@ -86,9 +93,13 @@ export const generateSignInUri = ({
     [QueryKey.State]: state,
     [QueryKey.ResponseType]: responseType,
     [QueryKey.Prompt]: buildPrompt(prompt),
-    [QueryKey.Scope]: withDefaultScopes(scopes),
-    ...extraParams,
   });
+
+  const computedScopes = includeReservedScopes ? withReservedScopes(scopes) : scopes?.join(' ');
+
+  if (computedScopes) {
+    urlSearchParameters.append(QueryKey.Scope, computedScopes);
+  }
 
   if (loginHint) {
     urlSearchParameters.append(QueryKey.LoginHint, loginHint);
@@ -111,6 +122,12 @@ export const generateSignInUri = ({
   // @deprecated Remove later
   else if (interactionMode) {
     urlSearchParameters.append(QueryKey.InteractionMode, interactionMode);
+  }
+
+  if (extraParams) {
+    for (const [key, value] of Object.entries(extraParams)) {
+      urlSearchParameters.append(key, value);
+    }
   }
 
   return `${authorizationEndpoint}?${urlSearchParameters.toString()}`;

@@ -42,4 +42,14 @@ describe('normalizeLogtoConfigs', () => {
     ]);
     expect(normalized.resources).toEqual(['123', ReservedResource.Organization]);
   });
+
+  it('should honor `includeReservedScopes`', () => {
+    const normalized = normalizeLogtoConfig({
+      appId: '123',
+      endpoint: 'https://example.com',
+      scopes: ['openid'],
+      includeReservedScopes: false,
+    });
+    expect(normalized.scopes).toEqual(['openid']);
+  });
 });
