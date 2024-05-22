@@ -3,7 +3,7 @@ import {
   ReservedResource,
   UserScope,
   isArbitraryObject,
-  withDefaultScopes,
+  withReservedScopes,
 } from '@logto/js';
 import { deduplicate } from '@silverhand/essentials';
 
@@ -47,24 +47,33 @@ export type LogtoConfig = {
    * The prompt parameter to be used for the authorization request.
    */
   prompt?: Prompt | Prompt[];
+  /**
+   * Whether to include reserved scopes (`openid`, `offline_access` and `profile`) in the scopes.
+   *
+   * @default true
+   */
+  includeReservedScopes?: boolean;
 };
 
 /**
  * Normalize the Logto client configuration per the following rules:
  *
- * - Add default scopes (`openid`, `offline_access` and `profile`) if not provided.
- * - Add {@link ReservedResource.Organization} to resources if {@link UserScope.Organizations} is included in scopes.
+ * - Add default scopes (`openid`, `offline_access` and `profile`) if not provided and
+ * `includeReservedScopes` is `true`.
+ * - Add {@link ReservedResource.Organization} to resources if {@link UserScope.Organizations} is
+ * included in scopes.
  *
  * @param config The Logto client configuration to be normalized.
  * @returns The normalized Logto client configuration.
  */
 export const normalizeLogtoConfig = (config: LogtoConfig): LogtoConfig => {
   const { prompt = Prompt.Consent, scopes = [], resources, ...rest } = config;
+  const includeReservedScopes = config.includeReservedScopes ?? true;
 
   return {
     ...rest,
     prompt,
-    scopes: withDefaultScopes(scopes).split(' '),
+    scopes: includeReservedScopes ? withReservedScopes(scopes).split(' ') : scopes,
     resources: scopes.includes(UserScope.Organizations)
       ? deduplicate([...(resources ?? []), ReservedResource.Organization])
       : resources,
