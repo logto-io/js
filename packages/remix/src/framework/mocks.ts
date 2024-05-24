@@ -36,11 +36,17 @@ export const handleSignOut = vi.fn(async () => ({
   navigateToUrl: '/success-handle-sign-out',
 }));
 
+export const handleSignUp = vi.fn(async () => ({
+  session,
+  navigateToUrl: '/success-handle-sign-up',
+}));
+
 export const createLogtoAdapter: CreateLogtoAdapter = vi.fn((session: Session) => {
   return {
     handleSignIn,
     handleSignInCallback,
     handleSignOut,
+    handleSignUp,
     getContext,
   };
 });
