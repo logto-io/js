@@ -1,6 +1,6 @@
 {
   "name": "@logto/vue",
-  "version": "2.2.10",
+  "version": "2.2.11",
   "type": "module",
   "main": "./lib/index.cjs",
   "module": "./lib/index.js",

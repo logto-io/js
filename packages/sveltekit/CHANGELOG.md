@@ -1,5 +1,15 @@
 # @logto/sveltekit
 
+## 0.2.10
+
+### Patch Changes
+
+- 57894dd: add `svelte` export tag in package.json
+
+  This will provide a hint for `vite-plugin-svelte` to handle `Svelte` libraries in SSR properly.
+
+  - @logto/node@2.5.1
+
 ## 0.2.9
 
 ### Patch Changes

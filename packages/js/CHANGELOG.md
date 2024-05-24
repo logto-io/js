@@ -1,5 +1,12 @@
 # Change Log
 
+## 4.1.2
+
+### Patch Changes
+
+- 7f477b3: allow not including reserved scopes by setting `includeReservedScopes` to `false`
+- 7f477b3: deprecate `withDefaultScopes`, use `withReservedScopes`
+
 ## 4.1.1
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.5.1
+
+### Patch Changes
+
+- Updated dependencies [7f477b3]
+  - @logto/client@2.6.8
+
 ## 2.5.0
 
 ### Minor Changes

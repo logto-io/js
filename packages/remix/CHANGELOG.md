@@ -1,5 +1,15 @@
 # Change Log
 
+## 2.2.0
+
+### Minor Changes
+
+- e787411: add sign up flow support
+
+### Patch Changes
+
+- @logto/node@2.5.1
+
 ## 2.1.9
 
 ### Patch Changes
