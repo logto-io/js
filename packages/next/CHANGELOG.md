@@ -1,5 +1,12 @@
 # Change Log
 
+## 3.2.7
+
+### Patch Changes
+
+- 917158c: support custom redirectUri for handleSignIn function in Server Actions.
+  - @logto/node@2.5.1
+
 ## 3.2.6
 
 ### Patch Changes

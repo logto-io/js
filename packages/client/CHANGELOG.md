@@ -1,5 +1,14 @@
 # Change Log
 
+## 2.6.8
+
+### Patch Changes
+
+- 7f477b3: allow not including reserved scopes by setting `includeReservedScopes` to `false`
+- Updated dependencies [7f477b3]
+- Updated dependencies [7f477b3]
+  - @logto/js@4.1.2
+
 ## 2.6.7
 
 ### Patch Changes
