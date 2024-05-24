@@ -96,31 +96,42 @@ export default class LogtoClient extends LogtoNextBaseClient {
     }, configs);
 
   handleAuthRoutes =
-    (configs?: GetContextParameters): NextApiHandler =>
+    (
+      configs?: GetContextParameters,
+      onError?: (request: NextApiRequest, response: NextApiResponse, error: unknown) => unknown
+    ): NextApiHandler =>
     (request, response) => {
-      const { action } = request.query;
+      try {
+        const { action } = request.query;
 
-      if (action === 'sign-in') {
-        return this.handleSignIn()(request, response);
+        if (action === 'sign-in') {
+          return this.handleSignIn()(request, response);
+        }
+
+        if (action === 'sign-up') {
+          return this.handleSignIn(undefined, 'signUp')(request, response);
+        }
+
+        if (action === 'sign-in-callback') {
+          return this.handleSignInCallback()(request, response);
+        }
+
+        if (action === 'sign-out') {
+          return this.handleSignOut()(request, response);
+        }
+
+        if (action === 'user') {
+          return this.handleUser(configs)(request, response);
+        }
+
+        response.status(404).end();
+      } catch (error: unknown) {
+        if (onError) {
+          return onError(request, response, error);
+        }
+
+        throw error;
       }
-
-      if (action === 'sign-up') {
-        return this.handleSignIn(undefined, 'signUp')(request, response);
-      }
-
-      if (action === 'sign-in-callback') {
-        return this.handleSignInCallback()(request, response);
-      }
-
-      if (action === 'sign-out') {
-        return this.handleSignOut()(request, response);
-      }
-
-      if (action === 'user') {
-        return this.handleUser(configs)(request, response);
-      }
-
-      response.status(404).end();
     };
 
   withLogtoApiRoute =
