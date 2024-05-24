@@ -4,6 +4,7 @@ import type { CreateLogtoAdapter } from '../../infrastructure/logto/index.js';
 import { makeHandleSignIn } from '../handleSignIn/index.js';
 import { makeHandleSignInCallback } from '../handleSignInCallback/index.js';
 import { makeHandleSignOut } from '../handleSignOut/index.js';
+import { makeHandleSignUp } from '../handleSignUp/index.js';
 
 import { HandleAuthRoutesError } from './HandleAuthRoutesError.js';
 
@@ -12,7 +13,7 @@ type AuthRouteConfig = {
   readonly redirectBackTo: string;
 };
 
-type PossibleRouteTypes = 'sign-in' | 'sign-in-callback' | 'sign-out';
+type PossibleRouteTypes = 'sign-in' | 'sign-in-callback' | 'sign-out' | 'sign-up';
 
 type HandleAuthRoutesDto = Record<PossibleRouteTypes, AuthRouteConfig>;
 
@@ -58,6 +59,17 @@ export const makeHandleAuthRoutes =
 
       case 'sign-in-callback': {
         const handler = makeHandleSignInCallback(
+          {
+            redirectBackTo: `${baseUrl}${config.redirectBackTo}`,
+          },
+          { sessionStorage, createLogtoAdapter }
+        );
+
+        return handler(request);
+      }
+
+      case 'sign-up': {
+        const handler = makeHandleSignUp(
           {
             redirectBackTo: `${baseUrl}${config.redirectBackTo}`,
           },

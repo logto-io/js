@@ -84,6 +84,10 @@ export const loader = logto.handleAuthRoutes({
     path: "/api/logto/sign-out",
     redirectBackTo: "/",
   },
+  "sign-up": {
+    path: "/api/logto/sign-up",
+    redirectBackTo: "/api/logto/callback",
+  },
 });
 ```
 
