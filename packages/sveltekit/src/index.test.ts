@@ -1,6 +1,6 @@
 import { CookieStorage } from '@logto/node';
 import { type RequestEvent } from '@sveltejs/kit';
-import { vi, describe, it, expect } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { LogtoClient, handleLogto } from './index.js';
 
@@ -129,5 +129,32 @@ describe('handleLogto()', () => {
 
     await handle({ resolve, event });
     expect(event.locals.user).toEqual({ name: 'John Doe' });
+  });
+
+  it('should call onGetUserInfoError if an error occurs while fetching user info', async () => {
+    const event = createMockEvent();
+    const client = new LogtoClient(config, {
+      navigate: () => {
+        console.log('navigate');
+      },
+      storage: createCookieStorageFromEvent(event),
+    });
+
+    vi.spyOn(client, 'isAuthenticated').mockResolvedValueOnce(true);
+    vi.spyOn(client, 'getIdTokenClaims').mockRejectedValueOnce(new Error('User info error'));
+
+    const handle = handleLogto(config, cookieConfig, {
+      buildLogtoClient: () => client,
+      onGetUserInfoError: (error: unknown) => {
+        if (error instanceof Error) {
+          return new Response(error.message, { status: 400 });
+        }
+        return new Response('Unknown error', { status: 500 });
+      },
+    });
+
+    const response = await handle({ resolve, event });
+    expect(response.status).toBe(400);
+    expect(await response.text()).toBe('User info error');
   });
 });

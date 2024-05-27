@@ -1,37 +1,37 @@
-import LogtoClient, { type LogtoConfig, type CookieConfig, CookieStorage } from '@logto/node';
-import { redirect, type Handle, type RequestEvent, isRedirect } from '@sveltejs/kit';
+import LogtoClient, { CookieStorage, type CookieConfig, type LogtoConfig } from '@logto/node';
+import { isRedirect, redirect, type Handle, type RequestEvent } from '@sveltejs/kit';
 
 export type {
   AccessTokenClaims,
+  ClientAdapter,
+  CookieConfig,
   IdTokenClaims,
-  LogtoErrorCode,
-  LogtoConfig,
+  InteractionMode,
+  JwtVerifier,
   LogtoClientErrorCode,
+  LogtoConfig,
+  LogtoErrorCode,
   Storage,
   StorageKey,
-  InteractionMode,
-  ClientAdapter,
-  JwtVerifier,
   UserInfoResponse,
-  CookieConfig,
 } from '@logto/node';
 
 export {
+  CookieStorage,
+  default as LogtoClient,
+  LogtoClientError,
   LogtoError,
   LogtoRequestError,
-  LogtoClientError,
   OidcError,
+  PersistKey,
   Prompt,
-  ReservedScope,
   ReservedResource,
+  ReservedScope,
+  StandardLogtoClient,
   UserScope,
-  organizationUrnPrefix,
   buildOrganizationUrn,
   getOrganizationIdFromUrn,
-  PersistKey,
-  CookieStorage,
-  StandardLogtoClient,
-  default as LogtoClient,
+  organizationUrnPrefix,
 } from '@logto/node';
 
 export type HookConfig = {
@@ -42,6 +42,13 @@ export type HookConfig = {
    * @param error The error that occurred.
    */
   onCallbackError?: (error: unknown) => Response;
+  /**
+   * The error response factory when an error occurs during fetching user info or parsing the IdToken.
+   * If not provided, a 500 response will be returned.
+   *
+   * @param error
+   */
+  onGetUserInfoError?: (error: unknown) => Response;
   /**
    * The path to the callback handler. Default to `/callback`.
    */
@@ -108,6 +115,7 @@ export const handleLogto = (
   const {
     signInCallback = '/callback',
     onCallbackError,
+    onGetUserInfoError,
     fetchUserInfo = false,
     buildLogtoClient,
   } = hookConfig ?? {};
@@ -154,29 +162,32 @@ export const handleLogto = (
           throw error;
         }
 
-        return (
-          onCallbackError?.(error) ??
-          new Response(
-            `Error: ${
-              error instanceof Error ? error.message : JSON.stringify(error, undefined, 2)
-            }`,
-            {
-              status: 400,
-            }
-          )
-        );
+        return onCallbackError?.(error) ?? defaultErrorHandler(error, 400);
       }
 
       return redirect(302, '/');
     }
 
     if (await logtoClient.isAuthenticated()) {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      event.locals.user = await (fetchUserInfo
-        ? logtoClient.fetchUserInfo()
-        : logtoClient.getIdTokenClaims());
+      try {
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        event.locals.user = await (fetchUserInfo
+          ? logtoClient.fetchUserInfo()
+          : logtoClient.getIdTokenClaims());
+      } catch (error: unknown) {
+        return onGetUserInfoError?.(error) ?? defaultErrorHandler(error);
+      }
     }
 
     return resolve(event);
   };
+};
+
+const defaultErrorHandler = (error: unknown, status = 500): Response => {
+  return new Response(
+    `Error: ${error instanceof Error ? error.message : JSON.stringify(error, undefined, 2)}`,
+    {
+      status,
+    }
+  );
 };
