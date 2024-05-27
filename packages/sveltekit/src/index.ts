@@ -1,4 +1,10 @@
-import LogtoClient, { CookieStorage, type CookieConfig, type LogtoConfig } from '@logto/node';
+import LogtoClient, {
+  CookieStorage,
+  type CookieConfig,
+  type LogtoConfig,
+  type PersistKey,
+  type Storage,
+} from '@logto/node';
 import { isRedirect, redirect, type Handle, type RequestEvent } from '@sveltejs/kit';
 
 export type {
@@ -62,6 +68,11 @@ export type HookConfig = {
    * created.
    */
   buildLogtoClient?: (event: RequestEvent) => LogtoClient;
+  /**
+   * The custom persistent storage instance parsed to the `LogtoClient`. It will be used to store the session and tokens.
+   * If not provided, a default `CookieStorage` instance will be created.
+   */
+  customStorage?: Storage<PersistKey>;
 };
 
 /**
@@ -103,13 +114,14 @@ export type HookConfig = {
  * ```
  *
  * @param config The Logto configuration.
- * @param cookieConfig The configuration object for the cookie storage.
+ * @param cookieConfig The configuration object for the cookie storage. Required if no custom storage is provided.
  * @param hookConfig The configuration object for the hook itself.
  * @returns The SvelteKit hook.
  */
+
 export const handleLogto = (
   config: LogtoConfig,
-  cookieConfig: Pick<CookieConfig, 'cookieKey' | 'encryptionKey'>,
+  cookieConfig?: Pick<CookieConfig, 'cookieKey' | 'encryptionKey'>,
   hookConfig?: HookConfig
 ): Handle => {
   const {
@@ -120,6 +132,7 @@ export const handleLogto = (
     buildLogtoClient,
   } = hookConfig ?? {};
 
+  // eslint-disable-next-line complexity
   return async ({ resolve, event }) => {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- sanity check
     if (event.locals.logtoClient) {
@@ -129,17 +142,8 @@ export const handleLogto = (
       return resolve(event);
     }
 
-    const storage = new CookieStorage(
-      {
-        setCookie: (...args) => {
-          event.cookies.set(...args);
-        },
-        getCookie: (...args) => event.cookies.get(...args),
-        ...cookieConfig,
-      },
-      event.request
-    );
-    await storage.init();
+    const storage =
+      hookConfig?.customStorage ?? (await buildCookieStorageFromEvent(event, cookieConfig));
 
     const logtoClient =
       buildLogtoClient?.(event) ??
@@ -190,4 +194,28 @@ const defaultErrorHandler = (error: unknown, status = 500): Response => {
       status,
     }
   );
+};
+
+const buildCookieStorageFromEvent = async (
+  event: RequestEvent,
+  cookieConfig?: Pick<CookieConfig, 'cookieKey' | 'encryptionKey'>
+): Promise<CookieStorage> => {
+  if (!cookieConfig) {
+    throw new Error('Missing cookie configuration for the CookieStorage.');
+  }
+
+  const storage = new CookieStorage(
+    {
+      setCookie: (...args) => {
+        event.cookies.set(...args);
+      },
+      getCookie: (...args) => event.cookies.get(...args),
+      ...cookieConfig,
+    },
+    event.request
+  );
+
+  await storage.init();
+
+  return storage;
 };
