@@ -281,8 +281,8 @@ importers:
         specifier: ^15.0.0
         version: 15.0.0
       nock:
-        specifier: 14.0.0-beta.5
-        version: 14.0.0-beta.5
+        specifier: 14.0.0-beta.7
+        version: 14.0.0-beta.7
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -13378,8 +13378,8 @@ packages:
       - uWebSockets.js
     dev: true
 
-  /nock@14.0.0-beta.5:
-    resolution: {integrity: sha512-u255tf4DYvyErTlPZA9uTfXghiZZy+NflUOFONPVKZ5tP0yaHwKig28zyFOLhu8y5YcCRC+V5vDk4HHileh2iw==}
+  /nock@14.0.0-beta.7:
+    resolution: {integrity: sha512-+EQMm5W9K8YnBE2Ceg4hnJynaCZmvK8ZlFXQ2fxGwtkOkBUq8GpQLTks2m1jpvse9XDxMDDOHgOWpiznFuh0bA==}
     engines: {node: '>= 18'}
     dependencies:
       json-stringify-safe: 5.0.1
