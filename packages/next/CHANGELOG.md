@@ -1,5 +1,13 @@
 # Change Log
 
+## 3.3.0
+
+### Minor Changes
+
+- e888a7c: add error handler to handleAuthRoutes
+
+  You can now pass a custom error handler to handleAuthRoutes. This will allow you to handle errors in a way that makes sense for your application.
+
 ## 3.2.7
 
 ### Patch Changes
