@@ -19,7 +19,7 @@ describe('LogtoError', () => {
     const logtoError = new LogtoError(code, new OidcError(error, errorDescription));
     expect(logtoError).toHaveProperty('code', code);
     expect(logtoError).toHaveProperty('message', 'Missing code in the callback URI');
-    expect(logtoError).toHaveProperty('data', { error, errorDescription });
+    expect(logtoError).toHaveProperty('data', { error, errorDescription, name: 'OidcError' });
     expect(logtoError.data).toBeInstanceOf(OidcError);
   });
 });
@@ -32,18 +32,19 @@ describe('isLogtoRequestError checks the error response from the server', () => 
     expect(isLogtoRequestError({})).toBeFalsy();
   });
 
-  it('should be true when the error response contains the expected properties', () => {
-    expect(isLogtoRequestError({ code, message })).toBeTruthy();
+  it('should be false for plain objects', () => {
+    expect(isLogtoRequestError({ code, message })).toBeFalsy();
   });
 
-  it('should be true when the error response contains more than the expected properties', () => {
-    expect(isLogtoRequestError({ code, message, foo: 'bar' })).toBeTruthy();
+  it('should be true when the error response is an instance of LogtoRequestError', () => {
+    expect(isLogtoRequestError(new LogtoRequestError(code, message))).toBeTruthy();
   });
 });
 
 describe('LogtoRequestError', () => {
   test('new LogtoRequestError should contain correct properties', () => {
     const logtoRequestError = new LogtoRequestError(code, message);
+    expect(logtoRequestError).toHaveProperty('name', 'LogtoRequestError');
     expect(logtoRequestError).toHaveProperty('code', code);
     expect(logtoRequestError).toHaveProperty('message', message);
   });

@@ -22,7 +22,7 @@ export const createRequester = (fetchFunction: typeof fetch): Requester => {
 
       // Expected request error from server
       const { code, message } = responseJson;
-      throw new LogtoRequestError(code, message);
+      throw new LogtoRequestError(code, message, response.clone());
     }
 
     return response.json();
