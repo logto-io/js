@@ -1,5 +1,5 @@
 import type { Requester } from '@logto/js';
-import { LogtoError, LogtoRequestError, isLogtoRequestError } from '@logto/js';
+import { LogtoError, LogtoRequestError, isLogtoRequestErrorJson } from '@logto/js';
 
 /**
  * A factory function that creates a requester by accepting a `fetch`-like function.
@@ -16,7 +16,7 @@ export const createRequester = (fetchFunction: typeof fetch): Requester => {
       const responseJson = await response.json();
       console.error(`Logto requester error: [status=${response.status}]`, responseJson);
 
-      if (!isLogtoRequestError(responseJson)) {
+      if (!isLogtoRequestErrorJson(responseJson)) {
         throw new LogtoError('unexpected_response_error', responseJson);
       }
 

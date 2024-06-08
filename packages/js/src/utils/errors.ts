@@ -34,6 +34,16 @@ export const isLogtoRequestError = (data: unknown): data is LogtoRequestError =>
   return data instanceof Error && data.name === 'LogtoRequestError';
 };
 
+export const isLogtoRequestErrorJson = (
+  data: unknown
+): data is { code: string; message: string } => {
+  if (!isArbitraryObject(data)) {
+    return false;
+  }
+
+  return typeof data.code === 'string' && typeof data.message === 'string';
+};
+
 export class LogtoRequestError extends Error {
   name = 'LogtoRequestError';
 
