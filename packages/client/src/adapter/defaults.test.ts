@@ -142,7 +142,7 @@ describe('verifyIdToken', () => {
       .setIssuer('foo')
       .setSubject('bar')
       .setAudience('qux')
-      .setExpirationTime(Date.now() / 1000 - 1)
+      .setExpirationTime(Date.now() / 1000 - 301)
       .setIssuedAt()
       .sign(privateKey);
 
@@ -173,5 +173,25 @@ describe('verifyIdToken', () => {
     await expect(verifyIdToken(idToken, 'qux', 'foo', jwks)).rejects.toMatchObject(
       new LogtoError('id_token.invalid_iat')
     );
+  });
+
+  test('issued at time within clock tolerance should not throw', async () => {
+    const alg = 'RS256';
+    const { privateKey, publicKey } = await generateKeyPair(alg);
+
+    mockJwkResponse(await exportJWK(publicKey));
+
+    const idToken = await new SignJWT({})
+      .setProtectedHeader({ alg })
+      .setIssuer('foo')
+      .setSubject('bar')
+      .setAudience('qux')
+      .setExpirationTime('2h')
+      .setIssuedAt(Date.now() / 1000 - 3599)
+      .sign(privateKey);
+
+    const jwks = createDefaultJwks();
+
+    await expect(verifyIdToken(idToken, 'qux', 'foo', jwks, 3600)).resolves.not.toThrow();
   });
 });
