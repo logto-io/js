@@ -1,6 +1,6 @@
 {
   "name": "@logto/remix",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "type": "module",
   "main": "./lib/index.cjs",
   "module": "./lib/index.js",

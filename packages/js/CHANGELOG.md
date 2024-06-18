@@ -1,5 +1,14 @@
 # Change Log
 
+## 4.1.3
+
+### Patch Changes
+
+- 2f8a855: improve `LogtoRequestError`
+
+  - Add `cause` property to `LogtoRequestError` to expose the original response.
+  - Make `isLogtoRequestError` more reliable by checking the instance of the error and the `name` property.
+
 ## 4.1.2
 
 ### Patch Changes

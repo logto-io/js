@@ -1,5 +1,33 @@
 # Change Log
 
+## 2.7.0
+
+### Minor Changes
+
+- bf6fedc: - support clock tolerance config in `DefaultJwtVerifier`
+
+  - allow set `jwtVerifier` after `LogtoClient` instance created
+
+  ```ts
+  const client = new LogtoClient(
+    config,
+    adapters,
+    (client) => new DefaultJwtVerifier(client, { clockTolerance: 10 }),
+  );
+
+  client.setJwtVerifier(new DefaultJwtVerifier(client, { clockTolerance: 20 }));
+  ```
+
+### Patch Changes
+
+- 2f8a855: improve `LogtoRequestError`
+
+  - Add `cause` property to `LogtoRequestError` to expose the original response.
+  - Make `isLogtoRequestError` more reliable by checking the instance of the error and the `name` property.
+
+- Updated dependencies [2f8a855]
+  - @logto/js@4.1.3
+
 ## 2.6.8
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.1.11
+
+### Patch Changes
+
+- @logto/vue@2.2.12
+
 ## 2.1.10
 
 ### Patch Changes
