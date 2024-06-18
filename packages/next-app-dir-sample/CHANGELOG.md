@@ -1,5 +1,11 @@
 # @logto/next-app-dir-sample
 
+## 2.1.13
+
+### Patch Changes
+
+- @logto/next@3.3.1
+
 ## 2.1.12
 
 ### Patch Changes
