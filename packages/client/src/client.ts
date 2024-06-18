@@ -127,9 +127,13 @@ export class StandardLogtoClient {
    */
   readonly handleSignInCallback = memoize(this.#handleSignInCallback);
   readonly adapter: ClientAdapterInstance;
-  readonly jwtVerifier: JwtVerifier;
 
+  protected jwtVerifierInstance: JwtVerifier;
   protected readonly accessTokenMap = new Map<string, AccessToken>();
+
+  get jwtVerifier() {
+    return this.jwtVerifierInstance;
+  }
 
   constructor(
     logtoConfig: LogtoConfig,
@@ -138,9 +142,18 @@ export class StandardLogtoClient {
   ) {
     this.logtoConfig = normalizeLogtoConfig(logtoConfig);
     this.adapter = new ClientAdapterInstance(adapter);
-    this.jwtVerifier = buildJwtVerifier(this);
+    this.jwtVerifierInstance = buildJwtVerifier(this);
 
     void this.loadAccessTokenMap();
+  }
+
+  /**
+   * Set the JWT verifier for the client.
+   * @param buildJwtVerifier The JWT verifier instance or a function that returns the JWT verifier instance.
+   */
+  setJwtVerifier(buildJwtVerifier: JwtVerifier | ((client: StandardLogtoClient) => JwtVerifier)) {
+    this.jwtVerifierInstance =
+      typeof buildJwtVerifier === 'function' ? buildJwtVerifier(this) : buildJwtVerifier;
   }
 
   /**
