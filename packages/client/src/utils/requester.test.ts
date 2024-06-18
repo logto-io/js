@@ -23,6 +23,7 @@ describe('createRequester', () => {
       const fetchFunction = vi.fn().mockResolvedValue({
         ok: false,
         json: async () => ({ code, message }),
+        clone: () => ({}),
       });
       const requester = createRequester(fetchFunction);
       await expect(requester('foo')).rejects.toMatchObject(new LogtoRequestError(code, message));
@@ -32,6 +33,7 @@ describe('createRequester', () => {
       const fetchFunction = vi.fn().mockResolvedValue({
         ok: false,
         json: async () => ({ code, message, foo: 'bar' }),
+        clone: () => ({}),
       });
       const requester = createRequester(fetchFunction);
       await expect(requester('foo')).rejects.toMatchObject(new LogtoRequestError(code, message));
@@ -79,6 +81,7 @@ describe('createRequester', () => {
         json: async () => {
           throw new TypeError('not json content');
         },
+        clone: () => ({}),
       });
       const requester = createRequester(fetchFunction);
       await expect(requester('foo')).rejects.toThrowError(TypeError);

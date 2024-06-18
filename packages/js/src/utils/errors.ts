@@ -16,17 +16,27 @@ const logtoErrorCodes = Object.freeze({
 export type LogtoErrorCode = keyof typeof logtoErrorCodes;
 
 export class LogtoError extends Error {
-  code: LogtoErrorCode;
-  data: unknown;
+  name = 'LogtoError';
 
-  constructor(code: LogtoErrorCode, data?: unknown) {
+  constructor(
+    public code: LogtoErrorCode,
+    public data?: unknown
+  ) {
     super(logtoErrorCodes[code]);
-    this.code = code;
-    this.data = data;
   }
 }
 
-export const isLogtoRequestError = (data: unknown): data is { code: string; message: string } => {
+export const isLogtoRequestError = (data: unknown): data is LogtoRequestError => {
+  if (!isArbitraryObject(data)) {
+    return false;
+  }
+
+  return data instanceof Error && data.name === 'LogtoRequestError';
+};
+
+export const isLogtoRequestErrorJson = (
+  data: unknown
+): data is { code: string; message: string } => {
   if (!isArbitraryObject(data)) {
     return false;
   }
@@ -35,15 +45,21 @@ export const isLogtoRequestError = (data: unknown): data is { code: string; mess
 };
 
 export class LogtoRequestError extends Error {
-  code: string;
+  name = 'LogtoRequestError';
 
-  constructor(code: string, message: string) {
+  constructor(
+    public code: string,
+    message: string,
+    /** The original response object from the server. */
+    public cause?: Response
+  ) {
     super(message);
-    this.code = code;
   }
 }
 
 export class OidcError {
+  name = 'OidcError';
+
   constructor(
     public error: string,
     public errorDescription?: string
