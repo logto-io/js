@@ -57,6 +57,7 @@
   "dependencies": {
     "@logto/node": "workspace:^",
     "@nuxt/kit": "^3.10.2",
+    "@silverhand/essentials": "^2.8.7",
     "defu": "^6.1.4"
   }
 }
