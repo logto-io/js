@@ -1,6 +1,7 @@
 import { type IncomingMessage, type ServerResponse } from 'node:http';
 
 import NodeClient, {
+  type SignInOptions,
   createSession,
   type GetContextParameters,
   type InteractionMode,
@@ -42,6 +43,11 @@ export type {
   LogtoErrorCode,
 } from '@logto/node';
 
+type HandleSignIn = {
+  (redirectUri?: string, interactionMode?: InteractionMode): NextApiHandler;
+  (options: SignInOptions): NextApiHandler;
+};
+
 export default class LogtoClient extends LogtoNextBaseClient {
   constructor(config: LogtoNextConfig) {
     super(config, {
@@ -49,14 +55,18 @@ export default class LogtoClient extends LogtoNextBaseClient {
     });
   }
 
-  handleSignIn =
+  handleSignIn: HandleSignIn =
     (
-      redirectUri = `${this.config.baseUrl}/api/logto/sign-in-callback`,
+      redirectUriOrOptions = `${this.config.baseUrl}/api/logto/sign-in-callback`,
       interactionMode?: InteractionMode
     ): NextApiHandler =>
     async (request, response) => {
+      const options =
+        typeof redirectUriOrOptions === 'string'
+          ? { redirectUri: redirectUriOrOptions, interactionMode }
+          : redirectUriOrOptions;
       const nodeClient = await this.createNodeClientFromNextApi(request, response);
-      await nodeClient.signIn(redirectUri, interactionMode);
+      await nodeClient.signIn(options);
       await this.storage?.save();
 
       if (this.navigateUrl) {
