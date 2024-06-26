@@ -1,5 +1,15 @@
 # @logto/nuxt
 
+## 0.2.0
+
+### Minor Changes
+
+- 3ba2e81: return undefined when fetchUserInfo failed
+
+  When `fetchUserInfo` is set to `true`, `useLogto()` will call `fetchUserInfo` to get user info. If `fetchUserInfo` failed, it now returns `undefined` instead of throwing an error.
+
+  You can check the value of `userLogto()` to see if the user is authenticated.
+
 ## 0.1.13
 
 ### Patch Changes
