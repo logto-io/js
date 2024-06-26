@@ -1,4 +1,5 @@
 import LogtoClient, { CookieStorage } from '@logto/node';
+import { trySafe } from '@silverhand/essentials';
 import { defineEventHandler, getRequestURL, getCookie, setCookie, sendRedirect } from 'h3';
 
 import { defaults } from '../utils/constants';
@@ -76,6 +77,6 @@ export default defineEventHandler(async (event) => {
   event.context.logtoClient = logto;
   // eslint-disable-next-line @silverhand/fp/no-mutation
   event.context.logtoUser = (await logto.isAuthenticated())
-    ? await (fetchUserInfo ? logto.fetchUserInfo() : logto.getIdTokenClaims())
+    ? await (fetchUserInfo ? trySafe(async () => logto.fetchUserInfo()) : logto.getIdTokenClaims())
     : undefined;
 });
