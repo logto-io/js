@@ -77,6 +77,6 @@ export default defineEventHandler(async (event) => {
   event.context.logtoClient = logto;
   // eslint-disable-next-line @silverhand/fp/no-mutation
   event.context.logtoUser = (await logto.isAuthenticated())
-    ? await (fetchUserInfo ? trySafe(async () => logto.fetchUserInfo()) : logto.getIdTokenClaims())
+    ? await trySafe(async () => (fetchUserInfo ? logto.fetchUserInfo() : logto.getIdTokenClaims()))
     : undefined;
 });
