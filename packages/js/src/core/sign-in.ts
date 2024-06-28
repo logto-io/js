@@ -5,12 +5,11 @@ import { withReservedScopes } from '../utils/scopes.js';
 const codeChallengeMethod = 'S256';
 const responseType = 'code';
 
-/** @experimental Don't use this type as it's under development. */
 export type DirectSignInOptions = {
   /**
    * The method to be used for the direct sign-in.
    */
-  method: 'social';
+  method: 'social' | 'sso';
   /**
    * The target to be used for the direct sign-in.
    *
@@ -30,8 +29,6 @@ export type SignInUriParameters = {
   prompt?: Prompt | Prompt[];
   /**
    * The first screen to be shown in the sign-in experience.
-   *
-   * @experimental Don't use this field as it's under development.
    */
   firstScreen?: FirstScreen;
   /** The first screen to be shown in the sign-in experience. */
@@ -45,7 +42,7 @@ export type SignInUriParameters = {
   /**
    * Parameters for direct sign-in.
    *
-   * @experimental Don't use this field as it's under development.
+   * @see {@link https://docs.logto.io/docs/references/openid-connect/authentication-parameters/#direct-sign-in Direct sign-in} for more information.
    */
   directSignIn?: DirectSignInOptions;
   /**
