@@ -34,7 +34,7 @@ jobs:
         uses: nick-fields/retry@v3
         with: 
           timeout_minutes: 10
-          max_attempts: 3
+          max_attempts: 5
           command: pnpm -r --workspace-concurrency=0 test:coverage
 
       - name: Codecov js
