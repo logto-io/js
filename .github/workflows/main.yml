@@ -30,7 +30,7 @@ jobs:
         run: pnpm -r lint
 
       - name: Test
-        run: pnpm -r test:coverage
+        run: pnpm -r --workspace-concurrency=0 test:coverage
 
       - name: Codecov js
         uses: codecov/codecov-action@v4
