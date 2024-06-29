@@ -1,5 +1,14 @@
 # Change Log
 
+## 4.1.4
+
+### Patch Changes
+
+- 6b1eb78: update sign-in options
+
+  - Remove experimental tags from the sign-in options.
+  - Update direct sign-in options to include `sso`.
+
 ## 4.1.3
 
 ### Patch Changes

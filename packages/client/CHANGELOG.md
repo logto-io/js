@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.7.1
+
+### Patch Changes
+
+- Updated dependencies [6b1eb78]
+  - @logto/js@4.1.4
+
 ## 2.7.0
 
 ### Minor Changes
