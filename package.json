@@ -7,8 +7,8 @@
     "changeset": "changeset",
     "prepare": "if test \"$NODE_ENV\" != \"production\" ; then husky ; fi",
     "sdk": "pnpm -r --filter=!@logto/*-sample",
-    "build": "pnpm -r --parallel --workspace-concurrency=0 build",
-    "test": "pnpm -r --parallel --workspace-concurrency=2 test"
+    "build": "pnpm -r build",
+    "test": "pnpm -r test"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.1",
