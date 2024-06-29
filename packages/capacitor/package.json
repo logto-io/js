@@ -34,9 +34,9 @@
     "@logto/browser": "workspace:^"
   },
   "devDependencies": {
-    "@capacitor/app": "^5.0.6",
-    "@capacitor/browser": "^5.0.6",
-    "@capacitor/preferences": "^5.0.6",
+    "@capacitor/app": "^6.0.0",
+    "@capacitor/browser": "^6.0.0",
+    "@capacitor/preferences": "^6.0.0",
     "@silverhand/eslint-config": "^6.0.1",
     "@silverhand/ts-config": "^6.0.0",
     "@vitest/coverage-v8": "^1.6.0",
@@ -55,8 +55,8 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@capacitor/app": "^5.0.6",
-    "@capacitor/browser": "^5.0.6",
-    "@capacitor/preferences": "^5.0.6"
+    "@capacitor/app": "^6.0.0",
+    "@capacitor/browser": "^6.0.0",
+    "@capacitor/preferences": "^6.0.0"
   }
 }
