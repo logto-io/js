@@ -1,5 +1,5 @@
 ---
-"@logto/capacitor": minor
+"@logto/capacitor": major
 ---
 
-bump @capacitor pacakges to v6
+bump @capacitor packages to v6
