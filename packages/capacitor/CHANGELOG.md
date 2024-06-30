@@ -1,5 +1,11 @@
 # @logto/capacitor
 
+## 2.0.0
+
+### Major Changes
+
+- 3ce1565: bump @capacitor packages to v6
+
 ## 1.1.13
 
 ### Patch Changes
