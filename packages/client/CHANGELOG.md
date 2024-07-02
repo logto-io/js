@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.7.2
+
+### Patch Changes
+
+- e0cc59f: fix request error handler
+
+  Clone the response object before consuming it to avoid the unexpected "Body has already been consumed." error.
+
 ## 2.7.1
 
 ### Patch Changes

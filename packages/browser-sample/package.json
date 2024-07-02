@@ -1,6 +1,6 @@
 {
   "name": "@logto/browser-sample",
-  "version": "2.0.14",
+  "version": "2.0.15",
   "license": "MIT",
   "private": true,
   "source": "public/index.html",
