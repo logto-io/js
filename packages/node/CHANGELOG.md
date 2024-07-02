@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.5.4
+
+### Patch Changes
+
+- Updated dependencies [e0cc59f]
+  - @logto/client@2.7.2
+
 ## 2.5.3
 
 ### Patch Changes
