@@ -13,6 +13,7 @@ export const createRequester = (fetchFunction: typeof fetch): Requester => {
     const response = await fetchFunction(...args);
 
     if (!response.ok) {
+      const cloned = response.clone();
       const responseJson = await response.json();
       console.error(`Logto requester error: [status=${response.status}]`, responseJson);
 
@@ -22,7 +23,7 @@ export const createRequester = (fetchFunction: typeof fetch): Requester => {
 
       // Expected request error from server
       const { code, message } = responseJson;
-      throw new LogtoRequestError(code, message, response.clone());
+      throw new LogtoRequestError(code, message, cloned);
     }
 
     return response.json();
