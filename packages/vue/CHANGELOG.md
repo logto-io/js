@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.2.15
+
+### Patch Changes
+
+- 33f7c21: fix vue sdk sign-in method type infer
+  - @logto/browser@2.2.16
+
 ## 2.2.14
 
 ### Patch Changes

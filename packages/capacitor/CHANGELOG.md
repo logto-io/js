@@ -1,5 +1,12 @@
 # @logto/capacitor
 
+## 2.0.2
+
+### Patch Changes
+
+- 5f64e0e: export `UserInfoResponse` type
+  - @logto/browser@2.2.16
+
 ## 2.0.1
 
 ### Patch Changes

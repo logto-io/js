@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.0.14
+
+### Patch Changes
+
+- @logto/browser@2.2.16
+
 ## 3.0.13
 
 ### Patch Changes
