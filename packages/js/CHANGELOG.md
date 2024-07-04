@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.1.5
+
+### Patch Changes
+
+- 5f64e0e: update `UserInfoResponse` type definition by adding `organization_data` claim
+
 ## 4.1.4
 
 ### Patch Changes

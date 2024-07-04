@@ -1,6 +1,6 @@
 {
   "name": "@logto/next-server-actions-sample",
-  "version": "2.1.20",
+  "version": "2.1.21",
   "license": "MIT",
   "private": true,
   "scripts": {

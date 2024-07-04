@@ -1,5 +1,12 @@
 # @logto/next-app-dir-sample
 
+## 2.1.16
+
+### Patch Changes
+
+- Updated dependencies [5f64e0e]
+  - @logto/next@3.3.4
+
 ## 2.1.15
 
 ### Patch Changes

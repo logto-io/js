@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.3.14
+
+### Patch Changes
+
+- 5f64e0e: export `UserInfoResponse` type
+  - @logto/node@2.5.5
+
 ## 2.3.13
 
 ### Patch Changes

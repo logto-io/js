@@ -1,6 +1,6 @@
 {
   "name": "@logto/js",
-  "version": "4.1.4",
+  "version": "4.1.5",
   "type": "module",
   "main": "./lib/index.cjs",
   "module": "./lib/index.js",
