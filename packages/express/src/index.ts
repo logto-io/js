@@ -29,6 +29,7 @@ export type {
   LogtoContext,
   InteractionMode,
   LogtoErrorCode,
+  UserInfoResponse,
 } from '@logto/node';
 export type { LogtoExpressConfig } from './types.js';
 

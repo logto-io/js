@@ -28,6 +28,7 @@ export type {
   IdTokenClaims,
   InteractionMode,
   LogtoErrorCode,
+  UserInfoResponse,
 } from '@logto/browser';
 
 export type CapacitorConfig = {

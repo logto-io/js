@@ -12,6 +12,7 @@ export type {
   LogtoContext,
   InteractionMode,
   LogtoErrorCode,
+  UserInfoResponse,
 } from '@logto/node';
 
 export default class LogtoClient extends BaseClient {

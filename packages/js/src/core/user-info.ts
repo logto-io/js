@@ -1,3 +1,5 @@
+import { type Nullable } from 'vitest';
+
 import { type IdTokenClaims } from '../index.js';
 import type { Requester } from '../types/index.js';
 
@@ -6,9 +8,16 @@ type Identity = {
   details?: Record<string, unknown>;
 };
 
+type OrganizationData = {
+  id: string;
+  name: string;
+  description: Nullable<string>;
+};
+
 export type UserInfoResponse = IdTokenClaims & {
   custom_data?: unknown;
   identities?: Record<string, Identity>;
+  organization_data?: OrganizationData[];
 };
 
 export const fetchUserInfo = async (
