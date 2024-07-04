@@ -57,13 +57,13 @@ type Logto = {
     | 'getOrganizationTokenClaims'
     | 'getIdToken'
     | 'getIdTokenClaims'
-    | 'signIn'
     | 'signOut'
     | 'fetchUserInfo'
     | 'clearAccessToken'
     | 'clearAllTokens'
   >
->;
+> &
+  Pick<LogtoClient, 'signIn'>;
 
 /**
  * Creates the Logto Vue plugin

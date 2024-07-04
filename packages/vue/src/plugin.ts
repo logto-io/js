@@ -1,3 +1,4 @@
+import type LogtoClient from '@logto/browser';
 import { type Optional } from '@silverhand/essentials';
 
 import type { Context } from './context.js';
@@ -34,7 +35,8 @@ export const createPluginMethods = (context: Context) => {
     getOrganizationTokenClaims: proxy(client.getOrganizationTokenClaims.bind(client)),
     getIdToken: proxy(client.getIdToken.bind(client)),
     getIdTokenClaims: proxy(client.getIdTokenClaims.bind(client)),
-    signIn: proxy(client.signIn.bind(client), false),
+    // eslint-disable-next-line no-restricted-syntax
+    signIn: proxy(client.signIn.bind(client), false) as LogtoClient['signIn'],
     // We deliberately do NOT set isAuthenticated to false in the function below, because the app state
     // may change immediately even before navigating to the oidc end session endpoint, which might cause
     // rendering problems.
