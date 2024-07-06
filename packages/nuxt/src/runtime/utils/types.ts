@@ -62,6 +62,11 @@ type LogtoModuleOptions = {
      */
     callback: string;
   };
+  /**
+   * Optional override for the base URL used in redirect URIs.
+   * If not provided, the request URL will be used.
+   */
+  baseUrlOverride?: string;
 };
 
 /** The full runtime configuration for the Logto module. */
