@@ -75,7 +75,7 @@ export default class LogtoNodeBaseClient extends BaseClient {
     return {
       isAuthenticated,
       claims,
-      userInfo: conditional(fetchUserInfo && (await this.fetchUserInfo())),
+      userInfo: conditional(fetchUserInfo && (await trySafe(async () => this.fetchUserInfo()))),
       ...conditional(
         getAccessToken && { accessToken, scopes: accessTokenClaims?.scope?.split(' ') }
       ),
