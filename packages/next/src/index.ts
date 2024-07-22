@@ -9,13 +9,12 @@ import {
   type GetServerSidePropsResult,
   type GetServerSidePropsContext,
   type NextApiHandler,
-  type NextApiRequest,
-  type NextApiResponse,
 } from 'next';
 import { type NextApiRequestCookies } from 'next/dist/server/api-utils/index.js';
 
 import LogtoNextBaseClient from './client.js';
-import type { LogtoNextConfig } from './types.js';
+import type { ErrorHandler, LogtoNextConfig } from './types.js';
+import { buildHandler } from './utils.js';
 
 export type { LogtoNextConfig } from './types.js';
 
@@ -50,12 +49,12 @@ export default class LogtoClient extends LogtoNextBaseClient {
     });
   }
 
-  handleSignIn =
-    (
-      redirectUri = `${this.config.baseUrl}/api/logto/sign-in-callback`,
-      interactionMode?: InteractionMode
-    ): NextApiHandler =>
-    async (request, response) => {
+  handleSignIn = (
+    redirectUri = `${this.config.baseUrl}/api/logto/sign-in-callback`,
+    interactionMode?: InteractionMode,
+    onError?: ErrorHandler
+  ): NextApiHandler =>
+    buildHandler(async (request, response) => {
       const nodeClient = await this.createNodeClientFromNextApi(request, response);
       await nodeClient.signIn(redirectUri, interactionMode);
       await this.storage?.save();
@@ -63,11 +62,13 @@ export default class LogtoClient extends LogtoNextBaseClient {
       if (this.navigateUrl) {
         response.redirect(this.navigateUrl);
       }
-    };
+    }, onError);
 
-  handleSignInCallback =
-    (redirectTo = this.config.baseUrl): NextApiHandler =>
-    async (request, response) => {
+  handleSignInCallback = (
+    redirectTo = this.config.baseUrl,
+    onError?: ErrorHandler
+  ): NextApiHandler =>
+    buildHandler(async (request, response) => {
       const nodeClient = await this.createNodeClientFromNextApi(request, response);
 
       if (request.url) {
@@ -75,11 +76,10 @@ export default class LogtoClient extends LogtoNextBaseClient {
         await this.storage?.save();
         response.redirect(redirectTo);
       }
-    };
+    }, onError);
 
-  handleSignOut =
-    (redirectUri = this.config.baseUrl): NextApiHandler =>
-    async (request, response) => {
+  handleSignOut = (redirectUri = this.config.baseUrl, onError?: ErrorHandler): NextApiHandler =>
+    buildHandler(async (request, response) => {
       const nodeClient = await this.createNodeClientFromNextApi(request, response);
       await nodeClient.signOut(redirectUri);
 
@@ -89,76 +89,60 @@ export default class LogtoClient extends LogtoNextBaseClient {
       if (this.navigateUrl) {
         response.redirect(this.navigateUrl);
       }
-    };
+    }, onError);
 
-  handleUser = (configs?: GetContextParameters) =>
-    this.withLogtoApiRoute((request, response) => {
-      response.json(request.user);
-    }, configs);
+  handleUser = (configs?: GetContextParameters, onError?: ErrorHandler) =>
+    this.withLogtoApiRoute(
+      (request, response) => {
+        response.json(request.user);
+      },
+      configs,
+      onError
+    );
 
   handleAuthRoutes =
-    (
-      configs?: GetContextParameters,
-      onError?: (request: NextApiRequest, response: NextApiResponse, error: unknown) => unknown
-    ): NextApiHandler =>
+    (configs?: GetContextParameters, onError?: ErrorHandler): NextApiHandler =>
     (request, response) => {
-      try {
-        const { action } = request.query;
+      const { action } = request.query;
 
-        if (action === 'sign-in') {
-          return this.handleSignIn()(request, response);
-        }
-
-        if (action === 'sign-up') {
-          return this.handleSignIn(undefined, 'signUp')(request, response);
-        }
-
-        if (action === 'sign-in-callback') {
-          return this.handleSignInCallback()(request, response);
-        }
-
-        if (action === 'sign-out') {
-          return this.handleSignOut()(request, response);
-        }
-
-        if (action === 'user') {
-          return this.handleUser(configs)(request, response);
-        }
-
-        response.status(404).end();
-      } catch (error: unknown) {
-        if (onError) {
-          return onError(request, response, error);
-        }
-
-        throw error;
+      if (action === 'sign-in') {
+        return this.handleSignIn(undefined, undefined, onError)(request, response);
       }
+
+      if (action === 'sign-up') {
+        return this.handleSignIn(undefined, 'signUp', onError)(request, response);
+      }
+
+      if (action === 'sign-in-callback') {
+        return this.handleSignInCallback(undefined, onError)(request, response);
+      }
+
+      if (action === 'sign-out') {
+        return this.handleSignOut(undefined, onError)(request, response);
+      }
+
+      if (action === 'user') {
+        return this.handleUser(configs)(request, response);
+      }
+
+      response.status(404).end();
     };
 
-  withLogtoApiRoute =
-    (
-      handler: NextApiHandler,
-      config: GetContextParameters = {},
-      onError?: (request: NextApiRequest, response: NextApiResponse, error: unknown) => unknown
-    ): NextApiHandler =>
-    async (request, response) => {
-      try {
-        const nodeClient = await this.createNodeClientFromNextApi(request, response);
-        const user = await nodeClient.getContext(config);
-        await this.storage?.save();
+  withLogtoApiRoute = (
+    handler: NextApiHandler,
+    config: GetContextParameters = {},
+    onError?: ErrorHandler
+  ): NextApiHandler =>
+    buildHandler(async (request, response) => {
+      const nodeClient = await this.createNodeClientFromNextApi(request, response);
+      const user = await nodeClient.getContext(config);
+      await this.storage?.save();
 
-        // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-        Object.defineProperty(request, 'user', { enumerable: true, get: () => user });
+      // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+      Object.defineProperty(request, 'user', { enumerable: true, get: () => user });
 
-        return handler(request, response);
-      } catch (error: unknown) {
-        if (onError) {
-          return onError(request, response, error);
-        }
-
-        throw error;
-      }
-    };
+      return handler(request, response);
+    }, onError);
 
   withLogtoSsr =
     <P extends Record<string, unknown> = Record<string, unknown>>(
@@ -169,22 +153,13 @@ export default class LogtoClient extends LogtoNextBaseClient {
       onError?: (error: unknown) => unknown
     ) =>
     async (context: GetServerSidePropsContext) => {
-      try {
-        const nodeClient = await this.createNodeClientFromNextApi(context.req, context.res);
-        const user = await nodeClient.getContext(configs);
-        await this.storage?.save();
-
-        // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-        Object.defineProperty(context.req, 'user', { enumerable: true, get: () => user });
-
-        return await handler(context);
-      } catch (error: unknown) {
-        if (onError) {
-          return onError(error);
-        }
-
-        throw error;
-      }
+      return this.withLogtoApiRoute(
+        async () => {
+          return handler(context);
+        },
+        configs,
+        onError
+      );
     };
 
   async createNodeClientFromNextApi(

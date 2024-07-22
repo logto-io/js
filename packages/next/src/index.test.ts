@@ -205,7 +205,7 @@ describe('Next', () => {
         },
         test: async ({ fetch }) => {
           await fetch({ method: 'GET', redirect: 'manual' });
-          expect(client.handleSignIn).toHaveBeenCalledWith(undefined, 'signUp');
+          expect(client.handleSignIn).toHaveBeenCalledWith(undefined, 'signUp', undefined);
         },
       });
     });
