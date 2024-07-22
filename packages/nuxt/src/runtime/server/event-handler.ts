@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
     .map(([key]) => key);
 
   if (defaultValueKeys.length > 0) {
-    throw new TypeError(
+    console.warn(
       `The following Logto configuration keys have default values: ${defaultValueKeys.join(
         ', '
       )}. Please replace them with your own values.`
