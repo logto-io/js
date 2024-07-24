@@ -1,5 +1,11 @@
 # @logto/nuxt
 
+## 0.3.3
+
+### Patch Changes
+
+- ea4555f: use warning to replace the error of empty configuration
+
 ## 0.3.2
 
 ### Patch Changes
