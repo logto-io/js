@@ -39,7 +39,7 @@
     "@types/node": "^20.11.19",
     "@vitest/coverage-v8": "^1.6.0",
     "angular-auth-oidc-client": "^18.0.0",
-    "eslint": "^8.57.0",
+    "eslint": "^9.0.0",
     "happy-dom": "^14.0.0",
     "jose": "^5.2.2",
     "lint-staged": "^15.0.0",
