@@ -43,7 +43,7 @@
     "@types/express": "^4.17.13",
     "@types/express-session": "^1.17.5",
     "@types/supertest": "^6.0.0",
-    "@vitest/coverage-v8": "^1.6.0",
+    "@vitest/coverage-v8": "^2.0.0",
     "cookie-parser": "^1.4.6",
     "eslint": "^8.57.0",
     "express": "^4.19.2",
@@ -52,7 +52,7 @@
     "prettier": "^3.0.0",
     "supertest": "^7.0.0",
     "typescript": "^5.3.3",
-    "vitest": "^1.6.0"
+    "vitest": "^2.0.0"
   },
   "peerDependencies": {
     "express": ">=4"

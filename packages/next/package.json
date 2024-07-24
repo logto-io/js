@@ -63,7 +63,7 @@
     "@silverhand/eslint-config": "^6.0.1",
     "@silverhand/ts-config": "^6.0.0",
     "@silverhand/ts-config-react": "^6.0.0",
-    "@vitest/coverage-v8": "^1.6.0",
+    "@vitest/coverage-v8": "^2.0.0",
     "eslint": "^8.57.0",
     "lint-staged": "^15.0.0",
     "next": "^14.1.1",
@@ -72,7 +72,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.3.3",
-    "vitest": "^1.6.0"
+    "vitest": "^2.0.0"
   },
   "peerDependencies": {
     "next": ">=12"
