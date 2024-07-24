@@ -68,7 +68,19 @@ export const signOut = async (config: LogtoNextConfig, redirectUri?: string): Pr
  */
 export const getLogtoContext = async (
   config: LogtoNextConfig,
-  getContextParameters?: GetContextParameters
+  getContextParameters?: Omit<
+    GetContextParameters,
+    'getAccessToken' | 'resource' | 'organizationId' | 'getOrganizationToken'
+  > & {
+    /** @deprecated use getAccessToken() */
+    getAccessToken?: GetContextParameters['getAccessToken'];
+    /** @deprecated use getOrganizationToken() */
+    getOrganizationToken?: GetContextParameters['getOrganizationToken'];
+    /** @deprecated use getAccessToken() */
+    resource?: GetContextParameters['resource'];
+    /** @deprecated use getOrganizationToken() */
+    organizationId?: GetContextParameters['organizationId'];
+  }
 ): Promise<LogtoContext> => {
   const client = new LogtoClient(config);
   return client.getLogtoContext(await getCookies(config), getContextParameters);
@@ -76,6 +88,8 @@ export const getLogtoContext = async (
 
 /**
  * Get organization tokens from session
+ *
+ * @deprecated Use getOrganizationToken instead
  */
 export const getOrganizationTokens = async (config: LogtoNextConfig) => {
   const { isAuthenticated } = await getLogtoContext(config);
@@ -95,6 +109,41 @@ export const getOrganizationTokens = async (config: LogtoNextConfig) => {
       token: await nodeClient.getOrganizationToken(organizationId),
     }))
   );
+};
+
+/**
+ * Get access token for the specified resource or organization,
+ * this function can be used in server actions or API routes
+ */
+export const getAccessToken = async (
+  config: LogtoNextConfig,
+  resource?: string,
+  organizationId?: string
+): Promise<string> => {
+  const client = new LogtoClient(config);
+  const { nodeClient, session } = await client.createNodeClientFromHeaders(
+    await getCookies(config)
+  );
+  const accessToken = await nodeClient.getAccessToken(resource, organizationId);
+
+  // Update access token cache
+  const newCookie = await session.getValues?.();
+  if (newCookie) {
+    await setCookies(newCookie, config);
+  }
+
+  return accessToken;
+};
+
+/**
+ * Get organization token from session,
+ * this function can be used in server actions or API routes
+ */
+export const getOrganizationToken = async (
+  config: LogtoNextConfig,
+  organizationId?: string
+): Promise<string> => {
+  return getAccessToken(config, undefined, organizationId);
 };
 
 export { default } from './client';

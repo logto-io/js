@@ -1,28 +1,33 @@
-import { getLogtoContext, getOrganizationTokens, signIn, signOut } from '@logto/next/server-actions';
+import { getAccessToken, getLogtoContext, signIn, signOut } from '@logto/next/server-actions';
 import SignIn from './sign-in';
 import SignOut from './sign-out';
 import { logtoConfig } from './logto';
+import GetAccessToken from './get-access-token';
 
 export default async function Home() {
   const { isAuthenticated, claims } = await getLogtoContext(logtoConfig);
-  // If you need access token, pass the getAccessToken option.
-  // and you can pass the access token to other API server or pass down to a client component.
-  // const { isAuthenticated, claims, accessToken } = await getLogtoContext({ getAccessToken: true });
-  // console.log(accessToken);
-  const organizations = await getOrganizationTokens(logtoConfig);
 
   return (
     <main>
       <h1>Hello Logto.</h1>
       <div>
         {isAuthenticated ? (
-          <SignOut
-            onSignOut={async () => {
-              'use server';
+          <>
+            <SignOut
+              onSignOut={async () => {
+                'use server';
 
-              await signOut(logtoConfig);
-            }}
-          />
+                await signOut(logtoConfig);
+              }}
+            />{' '}
+            <GetAccessToken
+              onGetAccessToken={async () => {
+                'use server';
+
+                return getAccessToken(logtoConfig);
+              }}
+            />
+          </>
         ) : (
           <SignIn
             onSignIn={async () => {
@@ -54,16 +59,6 @@ export default async function Home() {
           </table>
         </div>
       )}
-      {organizations.length > 0 ? (
-        <div>
-          <h2>Organizations</h2>
-          <ul>
-            {organizations.map((organization) => (
-              <li key={organization.id}>{organization.id}</li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
     </main>
   );
 }
