@@ -9,5 +9,5 @@ export const logtoConfig = {
   cookieSecure: process.env.NODE_ENV === 'production',
   // Optional fields for RBAC
   resources: process.env.RESOURCES?.split(','),
-  scopes: process.env.SCOPES?.split(',') ?? [UserScope.Organizations],
+  scopes: process.env.SCOPES?.split(',') ?? [UserScope.Organizations, UserScope.OrganizationRoles],
 };
