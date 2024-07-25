@@ -458,8 +458,8 @@ importers:
   packages/next:
     dependencies:
       '@edge-runtime/cookies':
-        specifier: ^4.0.0
-        version: 4.0.0
+        specifier: ^5.0.0
+        version: 5.0.0
       '@logto/node':
         specifier: workspace:^
         version: link:../node
@@ -744,7 +744,7 @@ importers:
         version: 0.5.5(@nuxt/kit@3.10.2(rollup@4.14.3))(nuxi@3.11.1)(typescript@5.3.3)
       '@nuxt/test-utils':
         specifier: ^3.12.1
-        version: 3.12.1(@vue/test-utils@2.4.4(@vue/server-renderer@3.4.23(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3)))(h3@1.11.1)(happy-dom@14.3.1)(rollup@4.14.3)(vite@5.2.9(@types/node@20.12.2)(terser@5.27.2))(vitest@1.6.0(@types/node@20.12.2)(happy-dom@14.3.1)(terser@5.27.2))(vue-router@4.3.1(vue@3.4.23(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3))
+        version: 3.12.1(@vue/test-utils@2.4.4(@vue/server-renderer@3.4.23(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3)))(h3@1.11.1)(happy-dom@14.3.1)(rollup@4.14.3)(vite@5.2.9(@types/node@20.12.2)(terser@5.27.2))(vitest@1.6.0(@types/node@20.12.2)(happy-dom@14.3.1)(terser@5.27.2))(vue-router@4.3.1(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3))
       '@silverhand/eslint-config':
         specifier: ^6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
@@ -1684,8 +1684,8 @@ packages:
     peerDependencies:
       postcss-selector-parser: ^6.0.13
 
-  '@edge-runtime/cookies@4.0.0':
-    resolution: {integrity: sha512-PPgW/669apZqT3qUOa4JV0ctXQ7ayCNiklKXDD1z5fC7aemWrjpZ7r0Na7yQ96Fp673pNF5lzpfTJh26sWaGDg==}
+  '@edge-runtime/cookies@5.0.0':
+    resolution: {integrity: sha512-VTTuKiK86cLuLKoLLwkCLN75CrXElmitD6Q+7XAYOMQyDUgsNEF/muorgZWttrvYQBVG+7Pdb8udFqIcLszyLw==}
     engines: {node: '>=16'}
 
   '@esbuild/aix-ppc64@0.19.10':
@@ -10520,7 +10520,7 @@ snapshots:
     dependencies:
       postcss-selector-parser: 6.0.16
 
-  '@edge-runtime/cookies@4.0.0': {}
+  '@edge-runtime/cookies@5.0.0': {}
 
   '@esbuild/aix-ppc64@0.19.10':
     optional: true
@@ -11245,7 +11245,7 @@ snapshots:
       - rollup
       - supports-color
 
-  '@nuxt/test-utils@3.12.1(@vue/test-utils@2.4.4(@vue/server-renderer@3.4.23(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3)))(h3@1.11.1)(happy-dom@14.3.1)(rollup@4.14.3)(vite@5.2.9(@types/node@20.12.2)(terser@5.27.2))(vitest@1.6.0(@types/node@20.12.2)(happy-dom@14.3.1)(terser@5.27.2))(vue-router@4.3.1(vue@3.4.23(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3))':
+  '@nuxt/test-utils@3.12.1(@vue/test-utils@2.4.4(@vue/server-renderer@3.4.23(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3)))(h3@1.11.1)(happy-dom@14.3.1)(rollup@4.14.3)(vite@5.2.9(@types/node@20.12.2)(terser@5.27.2))(vitest@1.6.0(@types/node@20.12.2)(happy-dom@14.3.1)(terser@5.27.2))(vue-router@4.3.1(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3))':
     dependencies:
       '@nuxt/kit': 3.11.2(rollup@4.14.3)
       '@nuxt/schema': 3.11.2(rollup@4.14.3)
@@ -11271,7 +11271,7 @@ snapshots:
       unenv: 1.9.0
       unplugin: 1.10.1
       vite: 5.2.9(@types/node@20.12.2)(sass@1.58.0)(terser@5.27.2)
-      vitest-environment-nuxt: 1.0.0(@vue/test-utils@2.4.4(@vue/server-renderer@3.4.23(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3)))(h3@1.11.1)(happy-dom@14.3.1)(rollup@4.14.3)(vite@5.2.9(@types/node@20.12.2)(terser@5.27.2))(vitest@1.6.0(@types/node@20.12.2)(happy-dom@14.3.1)(terser@5.27.2))(vue-router@4.3.1(vue@3.4.23(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3))
+      vitest-environment-nuxt: 1.0.0(@vue/test-utils@2.4.4(@vue/server-renderer@3.4.23(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3)))(h3@1.11.1)(happy-dom@14.3.1)(rollup@4.14.3)(vite@5.2.9(@types/node@20.12.2)(terser@5.27.2))(vitest@1.6.0(@types/node@20.12.2)(happy-dom@14.3.1)(terser@5.27.2))(vue-router@4.3.1(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3))
       vue: 3.4.19(typescript@5.3.3)
       vue-router: 4.3.1(vue@3.4.19(typescript@5.3.3))
     optionalDependencies:
@@ -15145,7 +15145,7 @@ snapshots:
       '@typescript-eslint/parser': 6.7.0(eslint@8.50.0)(typescript@5.3.3)
       eslint: 8.50.0
       eslint-import-resolver-node: 0.3.7
-      eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1)(eslint@8.50.0)
+      eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1(eslint@8.50.0))(eslint@8.50.0)
       eslint-plugin-import: 2.28.1(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.5.5)(eslint@8.50.0)
       eslint-plugin-jsx-a11y: 6.7.1(eslint@8.50.0)
       eslint-plugin-react: 7.33.2(eslint@8.50.0)
@@ -15194,12 +15194,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1)(eslint@8.50.0):
+  eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1(eslint@8.50.0))(eslint@8.50.0):
     dependencies:
       debug: 4.3.4
       enhanced-resolve: 5.13.0
       eslint: 8.50.0
-      eslint-module-utils: 2.8.0(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1)(eslint@8.50.0))(eslint@8.50.0)
+      eslint-module-utils: 2.8.0(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1(eslint@8.50.0))(eslint@8.50.0))(eslint@8.50.0)
       eslint-plugin-import: 2.28.1(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.5.5)(eslint@8.50.0)
       get-tsconfig: 4.5.0
       globby: 13.1.4
@@ -15229,14 +15229,14 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.8.0(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1)(eslint@8.50.0))(eslint@8.50.0):
+  eslint-module-utils@2.8.0(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1(eslint@8.50.0))(eslint@8.50.0))(eslint@8.50.0):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 6.7.0(eslint@8.50.0)(typescript@5.3.3)
       eslint: 8.50.0
       eslint-import-resolver-node: 0.3.7
-      eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1)(eslint@8.50.0)
+      eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1(eslint@8.50.0))(eslint@8.50.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -15279,7 +15279,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.50.0
       eslint-import-resolver-node: 0.3.7
-      eslint-module-utils: 2.8.0(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1)(eslint@8.50.0))(eslint@8.50.0)
+      eslint-module-utils: 2.8.0(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1(eslint@8.50.0))(eslint@8.50.0))(eslint@8.50.0)
       has: 1.0.3
       is-core-module: 2.13.0
       is-glob: 4.0.3
@@ -20218,9 +20218,9 @@ snapshots:
     optionalDependencies:
       vite: 5.2.9(@types/node@20.12.2)(sass@1.58.0)(terser@5.27.2)
 
-  vitest-environment-nuxt@1.0.0(@vue/test-utils@2.4.4(@vue/server-renderer@3.4.23(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3)))(h3@1.11.1)(happy-dom@14.3.1)(rollup@4.14.3)(vite@5.2.9(@types/node@20.12.2)(terser@5.27.2))(vitest@1.6.0(@types/node@20.12.2)(happy-dom@14.3.1)(terser@5.27.2))(vue-router@4.3.1(vue@3.4.23(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3)):
+  vitest-environment-nuxt@1.0.0(@vue/test-utils@2.4.4(@vue/server-renderer@3.4.23(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3)))(h3@1.11.1)(happy-dom@14.3.1)(rollup@4.14.3)(vite@5.2.9(@types/node@20.12.2)(terser@5.27.2))(vitest@1.6.0(@types/node@20.12.2)(happy-dom@14.3.1)(terser@5.27.2))(vue-router@4.3.1(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3)):
     dependencies:
-      '@nuxt/test-utils': 3.12.1(@vue/test-utils@2.4.4(@vue/server-renderer@3.4.23(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3)))(h3@1.11.1)(happy-dom@14.3.1)(rollup@4.14.3)(vite@5.2.9(@types/node@20.12.2)(terser@5.27.2))(vitest@1.6.0(@types/node@20.12.2)(happy-dom@14.3.1)(terser@5.27.2))(vue-router@4.3.1(vue@3.4.23(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3))
+      '@nuxt/test-utils': 3.12.1(@vue/test-utils@2.4.4(@vue/server-renderer@3.4.23(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3)))(h3@1.11.1)(happy-dom@14.3.1)(rollup@4.14.3)(vite@5.2.9(@types/node@20.12.2)(terser@5.27.2))(vitest@1.6.0(@types/node@20.12.2)(happy-dom@14.3.1)(terser@5.27.2))(vue-router@4.3.1(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3))
     transitivePeerDependencies:
       - '@cucumber/cucumber'
       - '@jest/globals'

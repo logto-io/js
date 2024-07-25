@@ -56,7 +56,7 @@
     "postpack": "node test.cjs"
   },
   "dependencies": {
-    "@edge-runtime/cookies": "^4.0.0",
+    "@edge-runtime/cookies": "^5.0.0",
     "@logto/node": "workspace:^"
   },
   "devDependencies": {
