@@ -1,5 +1,3 @@
-import { type Nullable } from 'vitest';
-
 import { type IdTokenClaims } from '../index.js';
 import type { Requester } from '../types/index.js';
 
@@ -11,7 +9,7 @@ type Identity = {
 type OrganizationData = {
   id: string;
   name: string;
-  description: Nullable<string>;
+  description?: string;
 };
 
 export type UserInfoResponse = IdTokenClaims & {
