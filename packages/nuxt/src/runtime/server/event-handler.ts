@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
     pathnames,
     postCallbackRedirectUri,
     postLogoutRedirectUri,
-    baseUrlOverride,
+    baseUrl,
     ...clientConfig
   } = logtoConfig;
 
@@ -38,8 +38,8 @@ export default defineEventHandler(async (event) => {
 
   const requestUrl = getRequestURL(event);
 
-  // Use the baseUrlOverride if provided, otherwise use the request URL
-  const baseUrl = baseUrlOverride ? new URL(baseUrlOverride) : requestUrl;
+  // Use the baseUrl if provided, otherwise use the request URL
+  const url = baseUrl ? new URL(baseUrl) : requestUrl;
 
   const storage = new CookieStorage(
     {
@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
         setCookie(event, name, value, options);
       },
     },
-    { headers: event.headers, url: baseUrl.href }
+    { headers: event.headers, url: url.href }
   );
 
   await storage.init();
@@ -63,18 +63,18 @@ export default defineEventHandler(async (event) => {
   });
 
   if (requestUrl.pathname === pathnames.signIn) {
-    await logto.signIn(new URL(pathnames.callback, baseUrl).href);
+    await logto.signIn(new URL(pathnames.callback, url).href);
     return;
   }
 
   if (requestUrl.pathname === pathnames.signOut) {
-    await logto.signOut(new URL(postLogoutRedirectUri, baseUrl).href);
+    await logto.signOut(new URL(postLogoutRedirectUri, url).href);
     return;
   }
 
   if (requestUrl.pathname === pathnames.callback) {
     // Use the baseUrl for the callback, but keep the original query parameters
-    const callbackUrl = new URL(requestUrl.pathname + requestUrl.search, baseUrl);
+    const callbackUrl = new URL(requestUrl.pathname + requestUrl.search, url);
     await logto.handleSignInCallback(callbackUrl.href);
     await sendRedirect(event, postCallbackRedirectUri, 302);
     return;

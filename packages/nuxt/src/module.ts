@@ -31,7 +31,7 @@ const logtoModule: NuxtModule<LogtoRuntimeConfigInput> = defineNuxtModule<LogtoR
           signOut: '/sign-out',
           callback: '/callback',
         },
-        baseUrlOverride: undefined,
+        baseUrl: undefined,
       } satisfies LogtoRuntimeConfigInput
     );
 
