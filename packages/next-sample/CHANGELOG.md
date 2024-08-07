@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.1.18
+
+### Patch Changes
+
+- Updated dependencies [9142c6c]
+  - @logto/next@3.5.0
+
 ## 2.1.17
 
 ### Patch Changes
