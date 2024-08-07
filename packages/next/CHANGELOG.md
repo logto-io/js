@@ -1,5 +1,13 @@
 # Change Log
 
+## 3.5.0
+
+### Minor Changes
+
+- 9142c6c: add getAccessTokenRSC to the server actions package
+
+  Introduced two new asynchronous functions, getAccessTokenRSC and getOrganizationTokenRSC, designed to retrieve access tokens within React Server Components (RSC) environments. These functions facilitate token management in a server-side context without updating the session, since in RSC cookies are not writable.
+
 ## 3.4.0
 
 ### Minor Changes
