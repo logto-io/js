@@ -72,13 +72,13 @@ export const getLogtoContext = async (
     GetContextParameters,
     'getAccessToken' | 'resource' | 'organizationId' | 'getOrganizationToken'
   > & {
-    /** @deprecated use getAccessToken() */
+    /** @deprecated use getAccessTokenRSC() */
     getAccessToken?: GetContextParameters['getAccessToken'];
-    /** @deprecated use getOrganizationToken() */
+    /** @deprecated use getOrganizationTokenRSC() */
     getOrganizationToken?: GetContextParameters['getOrganizationToken'];
-    /** @deprecated use getAccessToken() */
+    /** @deprecated use getAccessTokenRSC() */
     resource?: GetContextParameters['resource'];
-    /** @deprecated use getOrganizationToken() */
+    /** @deprecated use getOrganizationTokenRSC() */
     organizationId?: GetContextParameters['organizationId'];
   }
 ): Promise<LogtoContext> => {
@@ -144,6 +144,35 @@ export const getOrganizationToken = async (
   organizationId?: string
 ): Promise<string> => {
   return getAccessToken(config, undefined, organizationId);
+};
+
+/**
+ * Get access token for the specified resource or organization,
+ * this function can be used in React Server Components (RSC)
+ * Note: You can't write to the cookie in a React Server Component, so if the access token is refreshed, it won't be persisted in the session.
+ * When using server actions or API routes, we highly recommand to use the getAccessToken method
+ */
+export const getAccessTokenRSC = async (
+  config: LogtoNextConfig,
+  resource?: string,
+  organizationId?: string
+): Promise<string> => {
+  const client = new LogtoClient(config);
+  const { nodeClient } = await client.createNodeClientFromHeaders(await getCookies(config));
+  return nodeClient.getAccessToken(resource, organizationId);
+};
+
+/**
+ * Get organization token from session,
+ * this function can be used in React Server Components (RSC)
+ * Note: You can't write to the cookie in a React Server Component, so if the access token is refreshed, it won't be persisted in the session.
+ * When using server actions or API routes, we highly recommand to use the getOrganizationToken method
+ */
+export const getOrganizationTokenRSC = async (
+  config: LogtoNextConfig,
+  organizationId?: string
+): Promise<string> => {
+  return getAccessTokenRSC(config, undefined, organizationId);
 };
 
 export { default } from './client';
