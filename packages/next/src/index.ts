@@ -9,6 +9,8 @@ import {
   type GetServerSidePropsResult,
   type GetServerSidePropsContext,
   type NextApiHandler,
+  type NextApiRequest,
+  type NextApiResponse,
 } from 'next';
 import { type NextApiRequestCookies } from 'next/dist/server/api-utils/index.js';
 
@@ -127,6 +129,24 @@ export default class LogtoClient extends LogtoNextBaseClient {
 
       response.status(404).end();
     };
+
+  getAccessToken = async (
+    request: NextApiRequest,
+    response: NextApiResponse,
+    resource: string
+  ): Promise<string> => {
+    const nodeClient = await this.createNodeClientFromNextApi(request, response);
+    return nodeClient.getAccessToken(resource);
+  };
+
+  getOrganizationToken = async (
+    request: NextApiRequest,
+    response: NextApiResponse,
+    organizationId: string
+  ): Promise<string> => {
+    const nodeClient = await this.createNodeClientFromNextApi(request, response);
+    return nodeClient.getOrganizationToken(organizationId);
+  };
 
   withLogtoApiRoute = (
     handler: NextApiHandler,

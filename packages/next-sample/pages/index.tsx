@@ -1,5 +1,4 @@
 import { type LogtoContext } from '@logto/next';
-import Link from 'next/link';
 import { useMemo } from 'react';
 import useSWR from 'swr';
 
@@ -8,11 +7,6 @@ const Home = () => {
   const { data } = useSWR<LogtoContext>('/api/logto/user');
   // Remote full user info
   const { data: dataWithUserInfo } = useSWR<LogtoContext>('/api/logto/user-info');
-  const { data: protectedResource } = useSWR<{ data: string }>('/api/protected-resource');
-  const { data: rbacResponse, error: rbacResponseError } = useSWR<{ data: string }, Error>(
-    '/api/rbac-scope'
-  );
-  const { data: organizationsInfo } = useSWR<{ organizations: string[] }>('/api/organizations');
 
   const claims = useMemo(() => {
     if (!data?.isAuthenticated || !data.claims) {
@@ -96,31 +90,6 @@ const Home = () => {
       </nav>
       {claims}
       {userInfo}
-      {protectedResource && (
-        <div>
-          <h2>Protected resource:</h2>
-          <div>{protectedResource.data}</div>
-          <h3>
-            <Link href="/protected">Example1: Require sign in and auto redirect</Link>
-          </h3>
-          <h3>
-            <Link href="/profile-ssr">Example2: Server-render page with getServerSideProps</Link>
-          </h3>
-        </div>
-      )}
-      <div>
-        <h2>Protected by RBAC scope:</h2>
-        <div>{rbacResponse?.data}</div>
-        <div>{rbacResponseError && 'Access denied.'}</div>
-      </div>
-      {organizationsInfo && (
-        <div>
-          <h2>Organizations</h2>
-          {organizationsInfo.organizations.map((organizationId) => (
-            <div key={organizationId}>{organizationId}</div>
-          ))}
-        </div>
-      )}
     </div>
   );
 };
