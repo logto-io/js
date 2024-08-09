@@ -43,19 +43,13 @@ const cookieConfig = Object.freeze({
 });
 
 const createCookieStorageFromEvent = (event: RequestEvent) => {
-  return new CookieStorage(
-    {
-      ...cookieConfig,
-      getCookie: (name) => event.cookies.get(name),
-      setCookie: (name, value, options) => {
-        event.cookies.set(name, value, options);
-      },
+  return new CookieStorage({
+    ...cookieConfig,
+    getCookie: (name) => event.cookies.get(name),
+    setCookie: (name, value, options) => {
+      event.cookies.set(name, value, options);
     },
-    {
-      headers: event.request.headers,
-      url: event.url.href,
-    }
-  );
+  });
 };
 
 describe('handleLogto()', () => {

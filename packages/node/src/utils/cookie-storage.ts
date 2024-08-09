@@ -1,5 +1,5 @@
 import { type PersistKey, type Storage } from '@logto/client';
-import type { CookieSerializeOptions } from 'cookie';
+import { type CookieSerializeOptions } from 'cookie';
 
 import { PromiseQueue } from './promise-queue.js';
 import { wrapSession, unwrapSession, type SessionData } from './session.js';
@@ -12,17 +12,14 @@ export type CookieConfig = {
   encryptionKey: string;
   /** The name of the cookie key. Default to `logtoCookies`. */
   cookieKey?: string;
+  /** Set to true in https */
+  isSecure?: boolean;
   getCookie: (name: string) => string | undefined;
   setCookie: (
     name: string,
     value: string,
     options: CookieSerializeOptions & { path: string }
   ) => void;
-};
-
-export type PartialRequest = {
-  headers: Headers;
-  url: string;
 };
 
 /**
@@ -34,7 +31,7 @@ export class CookieStorage implements Storage<PersistKey> {
       httpOnly: true,
       path: '/',
       sameSite: 'lax',
-      secure: this.#isSecure,
+      secure: this.config.isSecure ?? false,
       maxAge: 14 * 24 * 3600, // 14 days
     } satisfies Readonly<CookieSerializeOptions & { path: string }>);
   }
@@ -49,18 +46,11 @@ export class CookieStorage implements Storage<PersistKey> {
 
   protected sessionData: SessionData = {};
   protected saveQueue = new PromiseQueue();
-  readonly #isSecure: boolean;
 
-  constructor(
-    public config: CookieConfig,
-    request: PartialRequest
-  ) {
+  constructor(public config: CookieConfig) {
     if (!config.encryptionKey) {
       throw new TypeError('The `encryptionKey` string is required for `CookieStorage`');
     }
-
-    this.#isSecure =
-      request.headers.get('x-forwarded-proto') === 'https' || request.url.startsWith('https');
   }
 
   async init() {
@@ -86,16 +76,18 @@ export class CookieStorage implements Storage<PersistKey> {
     await this.save();
   }
 
+  async destroy() {
+    this.sessionData = {};
+    await this.save();
+  }
+
   protected async save() {
     return this.saveQueue.enqueue(async () => this.write());
   }
 
   protected async write(data = this.sessionData) {
     const { encryptionKey } = this.config;
-    this.config.setCookie(
-      this.cookieKey,
-      await wrapSession(data, encryptionKey),
-      this.cookieOptions
-    );
+    const value = await wrapSession(data, encryptionKey);
+    this.config.setCookie(this.cookieKey, value, this.cookieOptions);
   }
 }
