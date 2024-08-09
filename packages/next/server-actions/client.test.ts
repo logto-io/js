@@ -78,7 +78,7 @@ describe('Next (server actions)', () => {
   describe('handleSignIn', () => {
     it('should get redirect url and new cookie', async () => {
       const client = new LogtoClient(configs);
-      const { url, newCookie } = await client.handleSignIn('{}', signInUrl);
+      const { url, newCookie } = await client.handleSignIn(signInUrl);
       expect(url).toEqual(signInUrl);
       expect(newCookie).not.toBeUndefined();
     });
@@ -87,7 +87,7 @@ describe('Next (server actions)', () => {
   describe('handleSignInCallback', () => {
     it('should call nodClient.handleSignInCallback', async () => {
       const client = new LogtoClient(configs);
-      await client.handleSignInCallback('{}', callbackUrl);
+      await client.handleSignInCallback(callbackUrl);
       expect(handleSignInCallback).toHaveBeenCalledWith(callbackUrl);
     });
   });
@@ -103,15 +103,15 @@ describe('Next (server actions)', () => {
   describe('getLogtoContext', () => {
     it('should get context', async () => {
       const client = new LogtoClient(configs);
-      const context = await client.getLogtoContext('{}');
+      const context = await client.getLogtoContext();
       expect(context).toHaveProperty('isAuthenticated', true);
     });
   });
 
-  describe('createNodeClientFromHeaders', () => {
+  describe('createNodeClient', () => {
     it('should get node client', async () => {
       const client = new LogtoClient(configs);
-      const nodeClient = await client.createNodeClientFromHeaders('{}');
+      const nodeClient = await client.createNodeClient();
       expect(nodeClient).toBeDefined();
     });
   });

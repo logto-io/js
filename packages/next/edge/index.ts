@@ -1,5 +1,5 @@
 import { RequestCookies, ResponseCookies } from '@edge-runtime/cookies';
-import { createSession, type GetContextParameters, type InteractionMode } from '@logto/node';
+import { CookieStorage, type GetContextParameters, type InteractionMode } from '@logto/node';
 import NodeClient from '@logto/node/edge';
 import { type NextRequest } from 'next/server';
 
@@ -30,7 +30,6 @@ export default class LogtoClient extends BaseClient {
     async (request: Request) => {
       const { nodeClient, headers } = await this.createNodeClientFromEdgeRequest(request);
       await nodeClient.signIn(redirectUri, interactionMode);
-      await this.storage?.save();
 
       const response = new Response(null, {
         headers,
@@ -50,7 +49,6 @@ export default class LogtoClient extends BaseClient {
       const { nodeClient, headers } = await this.createNodeClientFromEdgeRequest(request);
       await nodeClient.signOut(redirectUri);
       await this.storage?.destroy();
-      await this.storage?.save();
 
       const response = new Response(null, {
         headers,
@@ -78,7 +76,6 @@ export default class LogtoClient extends BaseClient {
           this.config.baseUrl
         );
         await nodeClient.handleSignInCallback(callbackUrl.toString());
-        await this.storage?.save();
       }
 
       const response = new Response(null, {
@@ -102,33 +99,35 @@ export default class LogtoClient extends BaseClient {
   getLogtoContext = async (request: NextRequest, config: GetContextParameters = {}) => {
     const { nodeClient } = await this.createNodeClientFromEdgeRequest(request);
     const context = await nodeClient.getContext(config);
-    await this.storage?.save();
 
     return context;
   };
 
   async createNodeClientFromEdgeRequest(request: Request) {
-    const cookieName = `logto:${this.config.appId}`;
     const cookies = new RequestCookies(request.headers);
     const headers = new Headers();
     const responseCookies = new ResponseCookies(headers);
 
-    const nodeClient = super.createNodeClient(
-      await createSession(
-        {
-          secret: this.config.cookieSecret,
-          crypto,
-        },
-        cookies.get(cookieName)?.value ?? '',
-        (value) => {
-          responseCookies.set(cookieName, value, {
-            maxAge: 14 * 3600 * 24,
-            secure: this.config.cookieSecure,
-            sameSite: this.config.cookieSecure ? 'lax' : undefined,
-          });
-        }
-      )
-    );
+    this.storage = new CookieStorage({
+      encryptionKey: this.config.cookieSecret,
+      cookieKey: `logto:${this.config.appId}`,
+      isSecure: this.config.cookieSecure,
+      getCookie: (name) => {
+        return cookies.get(name)?.value ?? '';
+      },
+      setCookie: (name, value, options) => {
+        responseCookies.set(name, value, options);
+      },
+    });
+
+    await this.storage.init();
+
+    const nodeClient = new this.adapters.NodeClient(this.config, {
+      storage: this.storage,
+      navigate: (url) => {
+        this.navigateUrl = url;
+      },
+    });
 
     return { nodeClient, headers };
   }
