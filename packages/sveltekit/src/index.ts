@@ -204,16 +204,16 @@ const buildCookieStorageFromEvent = async (
     throw new Error('Missing cookie configuration for the CookieStorage.');
   }
 
-  const storage = new CookieStorage(
-    {
-      setCookie: (...args) => {
-        event.cookies.set(...args);
-      },
-      getCookie: (...args) => event.cookies.get(...args),
-      ...cookieConfig,
+  const storage = new CookieStorage({
+    setCookie: (...args) => {
+      event.cookies.set(...args);
     },
-    event.request
-  );
+    getCookie: (...args) => event.cookies.get(...args),
+    isSecure:
+      event.request.headers.get('x-forwarded-proto') === 'https' ||
+      event.request.url.startsWith('https'),
+    ...cookieConfig,
+  });
 
   await storage.init();
 

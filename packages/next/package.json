@@ -57,12 +57,14 @@
   },
   "dependencies": {
     "@edge-runtime/cookies": "^4.0.0",
-    "@logto/node": "workspace:^"
+    "@logto/node": "workspace:^",
+    "cookie": "^0.6.0"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "^6.0.1",
     "@silverhand/ts-config": "^6.0.0",
     "@silverhand/ts-config-react": "^6.0.0",
+    "@types/cookie": "^0.6.0",
     "@vitest/coverage-v8": "^1.6.0",
     "eslint": "^8.57.0",
     "lint-staged": "^15.0.0",

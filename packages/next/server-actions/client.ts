@@ -1,6 +1,6 @@
 'use server';
 
-import { createSession, type GetContextParameters, type InteractionMode } from '@logto/node';
+import { CookieStorage, type GetContextParameters, type InteractionMode } from '@logto/node';
 import NodeClient from '@logto/node/edge';
 
 import BaseClient from '../src/client';
@@ -18,17 +18,15 @@ export default class LogtoClient extends BaseClient {
   /**
    * Init sign-in and return the url to redirect to Logto.
    *
-   * @param cookie the raw cookie string
    * @param redirectUri the uri (callbackUri) to redirect to after sign in
    * @param interactionMode OIDC interaction mode
-   * @returns the url to redirect to and new cookie if any
+   * @returns the url to redirect
    */
   async handleSignIn(
-    cookie: string,
     redirectUri: string,
     interactionMode?: InteractionMode
   ): Promise<{ url: string; newCookie?: string }> {
-    const { nodeClient, session } = await this.createNodeClientFromHeaders(cookie);
+    const nodeClient = await this.createNodeClient();
     await nodeClient.signIn(redirectUri, interactionMode);
 
     if (!this.navigateUrl) {
@@ -38,20 +36,19 @@ export default class LogtoClient extends BaseClient {
 
     return {
       url: this.navigateUrl,
-      newCookie: await session.getValues?.(),
     };
   }
 
   /**
    * Init sign-out and return the url to redirect to Logto.
    *
-   * @param cookie the raw cookie string
    * @param redirectUri the uri (postSignOutUri) to redirect to after sign out
    * @returns the url to redirect to
    */
-  async handleSignOut(cookie: string, redirectUri = this.config.baseUrl): Promise<string> {
-    const { nodeClient } = await this.createNodeClientFromHeaders(cookie);
+  async handleSignOut(redirectUri = this.config.baseUrl): Promise<string> {
+    const nodeClient = await this.createNodeClient();
     await nodeClient.signOut(redirectUri);
+    await this.storage?.destroy();
 
     if (!this.navigateUrl) {
       // Not expected to happen
@@ -64,42 +61,51 @@ export default class LogtoClient extends BaseClient {
   /**
    * Handle sign-in callback from Logto.
    *
-   * @param cookie the raw cookie string
    * @param callbackUrl the uri (callbackUri) to redirect to after sign in, should match the one used in handleSignIn
-   * @returns new cookie if any
    */
-  async handleSignInCallback(cookie: string, callbackUrl: string): Promise<string | undefined> {
-    const { nodeClient, session } = await this.createNodeClientFromHeaders(cookie);
+  async handleSignInCallback(callbackUrl: string) {
+    const nodeClient = await this.createNodeClient();
 
     await nodeClient.handleSignInCallback(callbackUrl);
-    return session.getValues?.();
   }
 
   /**
    * Get Logto context from cookies.
    *
-   * @param cookie the raw cookie string
    * @param config additional configs of GetContextParameters
    * @returns LogtoContext
    */
-  async getLogtoContext(cookie: string, config: GetContextParameters = {}) {
-    const { nodeClient } = await this.createNodeClientFromHeaders(cookie);
+  async getLogtoContext(config: GetContextParameters = {}) {
+    const nodeClient = await this.createNodeClient({ ignoreCookieChange: true });
     const context = await nodeClient.getContext(config);
 
     return context;
   }
 
-  async createNodeClientFromHeaders(cookie: string) {
-    const session = await createSession(
-      {
-        secret: this.config.cookieSecret,
-        crypto,
+  async createNodeClient({ ignoreCookieChange }: { ignoreCookieChange?: boolean } = {}) {
+    const { cookies } = await import('next/headers');
+    this.storage = new CookieStorage({
+      encryptionKey: this.config.cookieSecret,
+      cookieKey: `logto:${this.config.appId}`,
+      isSecure: this.config.cookieSecure,
+      getCookie: (...args) => {
+        return cookies().get(...args)?.value ?? '';
       },
-      cookie
-    );
+      setCookie: (...args) => {
+        // In server component (RSC), it is not allowed to modify cookies, see https://nextjs.org/docs/app/api-reference/functions/cookies#cookiessetname-value-options.
+        if (!ignoreCookieChange) {
+          cookies().set(...args);
+        }
+      },
+    });
 
-    const nodeClient = super.createNodeClient(session);
+    await this.storage.init();
 
-    return { nodeClient, session };
+    return new this.adapters.NodeClient(this.config, {
+      storage: this.storage,
+      navigate: (url) => {
+        this.navigateUrl = url;
+      },
+    });
   }
 }

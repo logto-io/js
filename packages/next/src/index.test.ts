@@ -14,10 +14,6 @@ const configs: LogtoNextConfig = {
   cookieSecure: process.env.NODE_ENV === 'production',
 };
 
-const setItem = vi.fn((key, value) => {
-  console.log(key, value);
-});
-const getItem = vi.fn();
 const save = vi.fn();
 const signIn = vi.fn();
 const handleSignInCallback = vi.fn();
@@ -30,18 +26,6 @@ const getContext = vi.fn(async () => true);
 const mockResponse = (_: unknown, response: NextApiResponse) => {
   response.status(200).end();
 };
-
-vi.mock('./storage', () => ({
-  default: vi.fn(() => ({
-    setItem,
-    getItem,
-    removeItem: vi.fn(),
-    destroy: vi.fn(),
-    save: () => {
-      save();
-    },
-  })),
-}));
 
 type Adapter = {
   navigate: (url: string) => void;
@@ -88,7 +72,6 @@ describe('Next', () => {
           expect(headers.get('location')).toEqual(signInUrl);
         },
       });
-      expect(save).toHaveBeenCalled();
       expect(signIn).toHaveBeenCalled();
     });
 
@@ -102,7 +85,6 @@ describe('Next', () => {
           expect(headers.get('location')).toEqual(`${signInUrl}?interactionMode=signUp`);
         },
       });
-      expect(save).toHaveBeenCalled();
       expect(signIn).toHaveBeenCalled();
     });
   });
@@ -119,7 +101,6 @@ describe('Next', () => {
         },
       });
       expect(handleSignInCallback).toHaveBeenCalled();
-      expect(save).toHaveBeenCalled();
     });
   });
 
@@ -172,7 +153,6 @@ describe('Next', () => {
           expect(headers.get('location')).toEqual(configs.baseUrl);
         },
       });
-      expect(save).toHaveBeenCalled();
       expect(signOut).toHaveBeenCalled();
     });
   });

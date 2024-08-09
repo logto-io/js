@@ -6,7 +6,6 @@ import { redirect } from 'next/navigation';
 import type { LogtoNextConfig } from '../src/types.js';
 
 import LogtoClient from './client';
-import { getCookies, setCookies } from './cookie';
 
 export type { LogtoContext, InteractionMode } from '@logto/node';
 
@@ -19,14 +18,10 @@ export const signIn = async (
   interactionMode?: InteractionMode
 ): Promise<void> => {
   const client = new LogtoClient(config);
-  const { url, newCookie } = await client.handleSignIn(
-    await getCookies(config),
+  const { url } = await client.handleSignIn(
     redirectUri ?? `${config.baseUrl}/callback`,
     interactionMode
   );
-  if (newCookie) {
-    await setCookies(newCookie, config);
-  }
   redirect(url);
 };
 
@@ -41,16 +36,11 @@ export async function handleSignIn(
   searchParamsOrUrl: URLSearchParams | URL
 ): Promise<void> {
   const client = new LogtoClient(config);
-  const newCookie = await client.handleSignInCallback(
-    await getCookies(config),
+  await client.handleSignInCallback(
     searchParamsOrUrl instanceof URL
       ? searchParamsOrUrl.toString()
       : `${config.baseUrl}/callback?${searchParamsOrUrl.toString()}`
   );
-
-  if (newCookie) {
-    await setCookies(newCookie, config);
-  }
 }
 
 /**
@@ -58,8 +48,7 @@ export async function handleSignIn(
  */
 export const signOut = async (config: LogtoNextConfig, redirectUri?: string): Promise<void> => {
   const client = new LogtoClient(config);
-  const url = await client.handleSignOut(await getCookies(config), redirectUri);
-  await setCookies('', config);
+  const url = await client.handleSignOut(redirectUri);
   redirect(url);
 };
 
@@ -83,7 +72,7 @@ export const getLogtoContext = async (
   }
 ): Promise<LogtoContext> => {
   const client = new LogtoClient(config);
-  return client.getLogtoContext(await getCookies(config), getContextParameters);
+  return client.getLogtoContext(getContextParameters);
 };
 
 /**
@@ -99,7 +88,7 @@ export const getOrganizationTokens = async (config: LogtoNextConfig) => {
   }
 
   const client = new LogtoClient(config);
-  const { nodeClient } = await client.createNodeClientFromHeaders(await getCookies(config));
+  const nodeClient = await client.createNodeClient();
 
   const { organizations = [] } = await nodeClient.getIdTokenClaims();
 
@@ -121,16 +110,8 @@ export const getAccessToken = async (
   organizationId?: string
 ): Promise<string> => {
   const client = new LogtoClient(config);
-  const { nodeClient, session } = await client.createNodeClientFromHeaders(
-    await getCookies(config)
-  );
+  const nodeClient = await client.createNodeClient();
   const accessToken = await nodeClient.getAccessToken(resource, organizationId);
-
-  // Update access token cache
-  const newCookie = await session.getValues?.();
-  if (newCookie) {
-    await setCookies(newCookie, config);
-  }
 
   return accessToken;
 };
@@ -158,7 +139,7 @@ export const getAccessTokenRSC = async (
   organizationId?: string
 ): Promise<string> => {
   const client = new LogtoClient(config);
-  const { nodeClient } = await client.createNodeClientFromHeaders(await getCookies(config));
+  const nodeClient = await client.createNodeClient({ ignoreCookieChange: true });
   return nodeClient.getAccessToken(resource, organizationId);
 };
 
