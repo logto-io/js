@@ -26,6 +26,8 @@ const getIdTokenClaims = vi.fn(() => ({
 }));
 const signOut = vi.fn();
 const getContext = vi.fn(async () => true);
+const getAccessToken = vi.fn();
+const getOrganizationToken = vi.fn();
 
 const mockResponse = (_: unknown, response: NextApiResponse) => {
   response.status(200).end();
@@ -59,6 +61,8 @@ vi.mock('@logto/node', async (importOriginal) => ({
     },
     handleSignInCallback,
     getContext,
+    getAccessToken,
+    getOrganizationToken,
     getIdTokenClaims,
     signOut: () => {
       navigate(configs.baseUrl);
@@ -120,6 +124,40 @@ describe('Next', () => {
       });
       expect(handleSignInCallback).toHaveBeenCalled();
       expect(save).toHaveBeenCalled();
+    });
+  });
+
+  describe('getAccessToken', () => {
+    it('should call client.getAccessToken', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        pagesHandler: async (request, response) => {
+          await client.getAccessToken(request, response, 'resource');
+          response.end();
+        },
+        url: '/api/logto/get-access-token',
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET' });
+          expect(getAccessToken).toHaveBeenCalledWith('resource');
+        },
+      });
+    });
+  });
+
+  describe('getOrganizationToken', () => {
+    it('should call client.getOrganizationToken', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        pagesHandler: async (request, response) => {
+          await client.getOrganizationToken(request, response, 'organization_id');
+          response.end();
+        },
+        url: '/api/logto/get-access-token',
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET' });
+          expect(getOrganizationToken).toHaveBeenCalledWith('organization_id');
+        },
+      });
     });
   });
 
