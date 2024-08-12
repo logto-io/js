@@ -1,3 +1,5 @@
+import { type Nullable } from '@silverhand/essentials';
+
 import { type IdTokenClaims } from '../index.js';
 import type { Requester } from '../types/index.js';
 
@@ -9,7 +11,7 @@ type Identity = {
 type OrganizationData = {
   id: string;
   name: string;
-  description?: string;
+  description: Nullable<string>;
 };
 
 export type UserInfoResponse = IdTokenClaims & {

@@ -2,4 +2,4 @@
 "@logto/js": patch
 ---
 
-remove import from dev dependency
+fix an incorrect `Nullable` import in js core
