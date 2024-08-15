@@ -54,7 +54,7 @@ export type SignInOptions = {
   prompt?: SignInUriParameters['prompt'];
 } & Pick<
   SignInUriParameters,
-  'interactionMode' | 'firstScreen' | 'loginHint' | 'directSignIn' | 'extraParams'
+  'interactionMode' | 'firstScreen' | 'identifiers' | 'loginHint' | 'directSignIn' | 'extraParams'
 >;
 
 /**
@@ -292,6 +292,7 @@ export class StandardLogtoClient {
       redirectUri: redirectUriUrl,
       postRedirectUri: postRedirectUriUrl,
       firstScreen,
+      identifiers,
       interactionMode,
       loginHint,
       directSignIn,
@@ -302,6 +303,7 @@ export class StandardLogtoClient {
           redirectUri: options,
           postRedirectUri: undefined,
           firstScreen: undefined,
+          identifiers: undefined,
           interactionMode: mode,
           loginHint: hint,
           directSignIn: undefined,
@@ -329,6 +331,7 @@ export class StandardLogtoClient {
       resources,
       prompt: prompt ?? promptViaConfig,
       firstScreen,
+      identifiers,
       interactionMode,
       loginHint,
       directSignIn,

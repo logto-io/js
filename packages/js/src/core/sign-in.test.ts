@@ -98,6 +98,22 @@ describe('generateSignInUri', () => {
     );
   });
 
+  test('with identifier', () => {
+    const signInUri = generateSignInUri({
+      authorizationEndpoint,
+      clientId,
+      redirectUri,
+      codeChallenge,
+      state,
+      firstScreen: 'identifier:sign_in',
+      identifiers: ['email', 'phone'],
+    });
+
+    expect(signInUri).toEqual(
+      'https://logto.dev/oidc/sign-in?client_id=clientId&redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&code_challenge=codeChallenge&code_challenge_method=S256&state=state&response_type=code&prompt=consent&scope=openid+offline_access+profile&first_screen=identifier%3Asign_in&identifier=email+phone'
+    );
+  });
+
   test('with directSignIn', () => {
     const signInUri = generateSignInUri({
       authorizationEndpoint,

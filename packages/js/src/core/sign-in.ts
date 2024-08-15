@@ -18,6 +18,8 @@ export type DirectSignInOptions = {
   target: string;
 };
 
+type Identifier = 'email' | 'phone' | 'username';
+
 export type SignInUriParameters = {
   authorizationEndpoint: string;
   clientId: string;
@@ -31,7 +33,23 @@ export type SignInUriParameters = {
    * The first screen to be shown in the sign-in experience.
    */
   firstScreen?: FirstScreen;
-  /** The first screen to be shown in the sign-in experience. */
+  /**
+   * Specifies identifiers used in the identifier sign-in or identifier register page.
+   *
+   * Available values: `email`, `phone`, `username`.
+   *
+   * This parameter is applicable only when the `firstScreen` is set to either `identifierSignIn` or `identifierRegister`.
+   *
+   * If the provided identifier is not supported in the Logto sign-in experience configuration, it will be ignored,
+   * and if no one of them is supported, it will fallback to the sign-in / sign-up method value set in the sign-in experience configuration.
+   *
+   */
+  identifiers?: Identifier[];
+  /**
+   * The first screen to be shown in the sign-in experience.
+   *
+   * @deprecated Use `firstScreen` instead.
+   */
   interactionMode?: InteractionMode;
   /**
    * Login hint indicates the current user (usually an email address or a phone number).
@@ -66,6 +84,7 @@ const buildPrompt = (prompt?: Prompt | Prompt[]) => {
   return prompt ?? Prompt.Consent;
 };
 
+// eslint-disable-next-line complexity
 export const generateSignInUri = ({
   authorizationEndpoint,
   clientId,
@@ -76,6 +95,7 @@ export const generateSignInUri = ({
   resources,
   prompt,
   firstScreen,
+  identifiers: identifier,
   interactionMode,
   loginHint,
   directSignIn,
@@ -119,6 +139,10 @@ export const generateSignInUri = ({
   // @deprecated Remove later
   else if (interactionMode) {
     urlSearchParameters.append(QueryKey.InteractionMode, interactionMode);
+  }
+
+  if (identifier && identifier.length > 0) {
+    urlSearchParameters.append(QueryKey.Identifier, identifier.join(' '));
   }
 
   if (extraParams) {
