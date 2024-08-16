@@ -1,4 +1,4 @@
-import { type Nullable } from 'vitest';
+import { type Nullable } from '@silverhand/essentials';
 
 import { type IdTokenClaims } from '../index.js';
 import type { Requester } from '../types/index.js';
