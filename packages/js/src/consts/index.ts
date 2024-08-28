@@ -35,6 +35,7 @@ export enum QueryKey {
   /** The query key for specifying the organization ID. */
   OrganizationId = 'organization_id',
   FirstScreen = 'first_screen',
+  Identifier = 'identifier',
   DirectSignIn = 'direct_sign_in',
 }
 
