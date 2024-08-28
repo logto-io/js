@@ -1,5 +1,17 @@
 # Change Log
 
+## 3.6.0
+
+### Minor Changes
+
+- 5610505: add getAccessToken and getOrganizationToken methods for pages router
+
+  You can now use `getAccessToken(request, response, 'resource-indicator')` to get access token directly in your pages router. And `getOrganizationToken` is also available to get organization token.
+
+### Patch Changes
+
+- @logto/node@2.5.6
+
 ## 3.5.0
 
 ### Minor Changes
