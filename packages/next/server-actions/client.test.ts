@@ -1,5 +1,3 @@
-import { type SessionData } from '@logto/node';
-
 import { type LogtoNextConfig } from '../src/types.js';
 
 import LogtoClient from './client.js';
@@ -15,8 +13,6 @@ const configs: LogtoNextConfig = {
   cookieSecure: false,
 };
 
-const setItem = vi.fn();
-const getItem = vi.fn();
 const signIn = vi.fn();
 const handleSignInCallback = vi.fn();
 const getIdTokenClaims = vi.fn(() => ({
@@ -25,27 +21,12 @@ const getIdTokenClaims = vi.fn(() => ({
 const signOut = vi.fn();
 const getContext = vi.fn(async () => ({ isAuthenticated: true }));
 
-vi.mock('../src/storage', () => ({
-  default: vi.fn(() => ({
-    setItem,
-    getItem,
-    removeItem: vi.fn(),
-    destroy: vi.fn(),
-    save: vi.fn(),
-  })),
-}));
-
 vi.mock('@logto/node', () => ({
-  createSession: vi.fn((_, cookie: string) => {
-    const data = JSON.parse(cookie) as SessionData;
-
-    const session = {
-      ...data,
-      save: vi.fn(),
-      getValues: vi.fn(async () => JSON.stringify(data)),
+  CookieStorage: vi.fn((_, cookie: string) => {
+    return {
+      init: vi.fn(),
+      destroy: vi.fn(),
     };
-
-    return session;
   }),
 }));
 
@@ -76,18 +57,17 @@ describe('Next (server actions)', () => {
   });
 
   describe('handleSignIn', () => {
-    it('should get redirect url and new cookie', async () => {
+    it('should get redirect url', async () => {
       const client = new LogtoClient(configs);
-      const { url, newCookie } = await client.handleSignIn('{}', signInUrl);
+      const { url } = await client.handleSignIn(signInUrl);
       expect(url).toEqual(signInUrl);
-      expect(newCookie).not.toBeUndefined();
     });
   });
 
   describe('handleSignInCallback', () => {
     it('should call nodClient.handleSignInCallback', async () => {
       const client = new LogtoClient(configs);
-      await client.handleSignInCallback('{}', callbackUrl);
+      await client.handleSignInCallback(callbackUrl);
       expect(handleSignInCallback).toHaveBeenCalledWith(callbackUrl);
     });
   });
@@ -103,15 +83,15 @@ describe('Next (server actions)', () => {
   describe('getLogtoContext', () => {
     it('should get context', async () => {
       const client = new LogtoClient(configs);
-      const context = await client.getLogtoContext('{}');
+      const context = await client.getLogtoContext();
       expect(context).toHaveProperty('isAuthenticated', true);
     });
   });
 
-  describe('createNodeClientFromHeaders', () => {
+  describe('createNodeClient', () => {
     it('should get node client', async () => {
       const client = new LogtoClient(configs);
-      const nodeClient = await client.createNodeClientFromHeaders('{}');
+      const nodeClient = await client.createNodeClient();
       expect(nodeClient).toBeDefined();
     });
   });

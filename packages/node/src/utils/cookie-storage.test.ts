@@ -1,6 +1,6 @@
 import { PersistKey } from '@logto/client/shim';
 
-import { CookieStorage } from './cookie-storage.js';
+import { type CookieConfig, CookieStorage } from './cookie-storage.js';
 import { unwrapSession, wrapSession } from './session.js';
 
 const delay = async <T>(function_: () => Promise<T>, ms: number): Promise<T> =>
@@ -18,28 +18,23 @@ class TestCookieStorage extends CookieStorage {
 
 const encryptionKey = 'foo';
 
-const createCookieConfig = (encryptionKey: string, initialCookies: Record<string, string> = {}) => {
+const createCookieConfig = (
+  encryptionKey: string,
+  initialCookies: Record<string, string> = {},
+  otherConfigs?: Partial<CookieConfig>
+) => {
   const cookies = new Map(Object.entries(initialCookies));
   return {
     encryptionKey,
     getCookie: (name: string) => cookies.get(name),
     setCookie: (name: string, value: string) => cookies.set(name, value),
+    ...otherConfigs,
   };
 };
 
-const createPartialRequest = (url = 'http://localhost/', headers = new Headers()) => ({
-  headers,
-  url,
-});
-
 describe('CookieStorage', () => {
   it('should be able to produce correct configs', () => {
-    expect(
-      new TestCookieStorage(
-        createCookieConfig(encryptionKey),
-        createPartialRequest()
-      ).getCookieOptions()
-    ).toEqual({
+    expect(new TestCookieStorage(createCookieConfig(encryptionKey)).getCookieOptions()).toEqual({
       httpOnly: true,
       path: '/',
       sameSite: 'lax',
@@ -49,21 +44,7 @@ describe('CookieStorage', () => {
 
     expect(
       new TestCookieStorage(
-        createCookieConfig(encryptionKey),
-        createPartialRequest('https://localhost/')
-      ).getCookieOptions()
-    ).toEqual({
-      httpOnly: true,
-      path: '/',
-      sameSite: 'lax',
-      secure: true,
-      maxAge: 14 * 24 * 3600,
-    });
-
-    expect(
-      new TestCookieStorage(
-        createCookieConfig(encryptionKey),
-        createPartialRequest(undefined, new Headers({ 'x-forwarded-proto': 'https' }))
+        createCookieConfig(encryptionKey, undefined, { isSecure: true })
       ).getCookieOptions()
     ).toEqual({
       httpOnly: true,
@@ -78,8 +59,7 @@ describe('CookieStorage', () => {
     const storage = new TestCookieStorage(
       createCookieConfig(encryptionKey, {
         logtoCookies: await wrapSession({ [PersistKey.AccessToken]: 'bar' }, encryptionKey),
-      }),
-      createPartialRequest()
+      })
     );
     await storage.init();
     expect(storage.data).toEqual({ [PersistKey.AccessToken]: 'bar' });
@@ -94,15 +74,12 @@ describe('CookieStorage', () => {
   });
 
   it('should be able to remove data', async () => {
-    const storage = new TestCookieStorage(
-      {
-        ...createCookieConfig(encryptionKey, {
-          foo: await wrapSession({ [PersistKey.AccessToken]: 'bar' }, encryptionKey),
-        }),
-        cookieKey: 'foo',
-      },
-      createPartialRequest()
-    );
+    const storage = new TestCookieStorage({
+      ...createCookieConfig(encryptionKey, {
+        foo: await wrapSession({ [PersistKey.AccessToken]: 'bar' }, encryptionKey),
+      }),
+      cookieKey: 'foo',
+    });
     await storage.init();
     expect(storage.data).toEqual({ [PersistKey.AccessToken]: 'bar' });
 
@@ -143,7 +120,7 @@ describe('CookieStorage concurrency', () => {
     NoQueueTestCookieStorage,
     NoQueueTestCookieStorage,
   ])('should have the expected result [%#]', async (StorageClass) => {
-    const storage = new StorageClass(createCookieConfig(encryptionKey), createPartialRequest());
+    const storage = new StorageClass(createCookieConfig(encryptionKey));
     await storage.init();
     expect(storage.data).toEqual({});
 

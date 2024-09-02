@@ -1,10 +1,11 @@
 import { type IncomingMessage, type ServerResponse } from 'node:http';
 
 import NodeClient, {
-  createSession,
+  CookieStorage,
   type GetContextParameters,
   type InteractionMode,
 } from '@logto/node';
+import { serialize } from 'cookie';
 import {
   type GetServerSidePropsResult,
   type GetServerSidePropsContext,
@@ -59,7 +60,6 @@ export default class LogtoClient extends LogtoNextBaseClient {
     buildHandler(async (request, response) => {
       const nodeClient = await this.createNodeClientFromNextApi(request, response);
       await nodeClient.signIn(redirectUri, interactionMode);
-      await this.storage?.save();
 
       if (this.navigateUrl) {
         response.redirect(this.navigateUrl);
@@ -75,7 +75,6 @@ export default class LogtoClient extends LogtoNextBaseClient {
 
       if (request.url) {
         await nodeClient.handleSignInCallback(`${this.config.baseUrl}${request.url}`);
-        await this.storage?.save();
         response.redirect(redirectTo);
       }
     }, onError);
@@ -86,7 +85,6 @@ export default class LogtoClient extends LogtoNextBaseClient {
       await nodeClient.signOut(redirectUri);
 
       await this.storage?.destroy();
-      await this.storage?.save();
 
       if (this.navigateUrl) {
         response.redirect(this.navigateUrl);
@@ -156,7 +154,6 @@ export default class LogtoClient extends LogtoNextBaseClient {
     buildHandler(async (request, response) => {
       const nodeClient = await this.createNodeClientFromNextApi(request, response);
       const user = await nodeClient.getContext(config);
-      await this.storage?.save();
 
       // eslint-disable-next-line @silverhand/fp/no-mutating-methods
       Object.defineProperty(request, 'user', { enumerable: true, get: () => user });
@@ -188,26 +185,25 @@ export default class LogtoClient extends LogtoNextBaseClient {
     },
     response: ServerResponse
   ): Promise<NodeClient> {
-    const cookieName = `logto:${this.config.appId}`;
+    this.storage = new CookieStorage({
+      encryptionKey: this.config.cookieSecret,
+      cookieKey: `logto:${this.config.appId}`,
+      isSecure: this.config.cookieSecure,
+      getCookie: (name) => {
+        return request.cookies[name] ?? '';
+      },
+      setCookie: (name, value, options) => {
+        response.setHeader('Set-Cookie', serialize(name, value, options));
+      },
+    });
 
-    return super.createNodeClient(
-      await createSession(
-        {
-          secret: this.config.cookieSecret,
-          crypto,
-        },
-        request.cookies[cookieName] ?? '',
-        (value) => {
-          const secure = this.config.cookieSecure;
-          const maxAge = 14 * 3600 * 24;
-          response.setHeader(
-            'Set-Cookie',
-            `${cookieName}=${value}; Path=/; Max-Age=${maxAge}; ${
-              secure ? 'Secure; SameSite=Lax' : ''
-            }`
-          );
-        }
-      )
-    );
+    await this.storage.init();
+
+    return new this.adapters.NodeClient(this.config, {
+      storage: this.storage,
+      navigate: (url) => {
+        this.navigateUrl = url;
+      },
+    });
   }
 }
