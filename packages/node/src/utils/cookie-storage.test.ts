@@ -1,4 +1,4 @@
-import { PersistKey } from '@logto/client/shim';
+import { PersistKey } from '@logto/client';
 
 import { type CookieConfig, CookieStorage } from './cookie-storage.js';
 import { unwrapSession, wrapSession } from './session.js';
