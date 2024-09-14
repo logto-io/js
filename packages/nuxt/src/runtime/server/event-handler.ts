@@ -15,6 +15,7 @@ export default defineEventHandler(async (event) => {
   const {
     cookieName,
     cookieEncryptionKey,
+    cookieSecure,
     fetchUserInfo,
     pathnames,
     postCallbackRedirectUri,
@@ -36,17 +37,15 @@ export default defineEventHandler(async (event) => {
   }
 
   const url = getRequestURL(event);
-  const storage = new CookieStorage(
-    {
-      cookieKey: cookieName,
-      encryptionKey: cookieEncryptionKey,
-      getCookie: (name) => getCookie(event, name),
-      setCookie: (name, value, options) => {
-        setCookie(event, name, value, options);
-      },
+  const storage = new CookieStorage({
+    cookieKey: cookieName,
+    encryptionKey: cookieEncryptionKey,
+    isSecure: cookieSecure,
+    getCookie: (name) => getCookie(event, name),
+    setCookie: (name, value, options) => {
+      setCookie(event, name, value, options);
     },
-    { headers: event.headers, url: url.href }
-  );
+  });
 
   await storage.init();
 
