@@ -78,6 +78,21 @@ export type LogtoRuntimeConfig = LogtoModuleOptions & {
    * The secret used to encrypt the Logto cookie. It should be a random string.
    */
   cookieEncryptionKey: string;
+  /**
+   * Custom base URL for redirects
+   *
+   * This URL is used as the base for generating redirect and callback URLs.
+   * It's particularly useful in environments where the application is behind
+   * a proxy or where URLs are rewritten.
+   *
+   * If set, this value will be used instead of the automatically detected URL.
+   * If not set, the system will use the URL obtained from `getRequestURL`.
+   *
+   * Example: 'https://your-public-facing-domain.com'
+   *
+   * Note: Provide only the base URL without paths or query parameters.
+   */
+  customRedirectBaseUrl: string;
 } & Omit<LogtoConfig, 'appSecret'> &
   Required<Pick<LogtoConfig, 'appSecret'>>;
 

@@ -20,6 +20,7 @@ export default defineEventHandler(async (event) => {
     pathnames,
     postCallbackRedirectUri,
     postLogoutRedirectUri,
+    customRedirectBaseUrl,
     ...clientConfig
   } = logtoConfig;
 
@@ -36,7 +37,21 @@ export default defineEventHandler(async (event) => {
     );
   }
 
-  const url = getRequestURL(event);
+  const requestUrl = getRequestURL(event);
+
+  /**
+   * This approach allows us to:
+   * 1. Override the base URL when necessary (e.g., in proxy environments)
+   * 2. Preserve the original path and query parameters
+   * 3. Fall back to the original URL when no custom base is provided
+   *
+   * It's particularly useful in scenarios where the application is deployed
+   * behind a reverse proxy or in environments that rewrite URLs.
+   */
+  const url = customRedirectBaseUrl
+    ? new URL(requestUrl.pathname + requestUrl.search + requestUrl.hash, customRedirectBaseUrl)
+    : requestUrl;
+
   const storage = new CookieStorage({
     cookieKey: cookieName,
     encryptionKey: cookieEncryptionKey,
