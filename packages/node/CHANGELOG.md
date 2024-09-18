@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.5.7
+
+### Patch Changes
+
+- Updated dependencies [e92940f]
+  - @logto/client@2.8.1
+
 ## 2.5.6
 
 ### Patch Changes
