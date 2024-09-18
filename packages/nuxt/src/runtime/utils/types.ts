@@ -15,6 +15,14 @@ type LogtoModuleOptions = {
    */
   cookieName?: string;
   /**
+   * Whether the Logto cookie should be secure.
+   *
+   * Set this to `true` if you are using https.
+   *
+   * @see {@link CookieConfig.isSecure}
+   */
+  cookieSecure?: boolean;
+  /**
    * If Logto should fetch from the [userinfo endpoint](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo)
    * in the server side for the `event.context.logtoUser` property (used by `useLogtoUser` composable).
    *
