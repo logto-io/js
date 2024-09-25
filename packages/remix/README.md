@@ -1,4 +1,5 @@
 # Logto Remix SDK
+
 [![Version](https://img.shields.io/npm/v/@logto/remix)](https://www.npmjs.com/package/@logto/remix)
 [![Build Status](https://github.com/logto-io/js/actions/workflows/main.yml/badge.svg)](https://github.com/logto-io/js/actions/workflows/main.yml)
 [![Codecov](https://img.shields.io/codecov/c/github/logto-io/js)](https://app.codecov.io/gh/logto-io/js?branch=master)
@@ -6,6 +7,8 @@
 The Logto Remix SDK written in TypeScript.
 
 ## Installation
+
+**Note:** This package requires Node.js version 20 or higher.
 
 ### Using npm
 
@@ -30,24 +33,17 @@ pnpm add @logto/remix
 Before initializing the SDK, we have to create a `SessionStorage` instance which takes care of the session persistence. In our case, we want to use a cookie-based session:
 
 ```ts
-// services/authentication.ts
-import { createCookieSessionStorage } from "@remix-run/node";
+// service/auth.server.ts
+import { createCookieSessionStorage } from '@remix-run/node';
+import { makeLogtoRemix } from '@logto/remix';
 
 const sessionStorage = createCookieSessionStorage({
   cookie: {
-    name: "logto-session",
+    name: 'logto-session',
     maxAge: 14 * 24 * 60 * 60,
-    secrets: ["s3cret1"],
+    secrets: ['secr3tSession'],
   },
 });
-```
-
-Afterwards, we can initialize the SDK via:
-
-```ts
-// app/services/authentication.ts
-
-import { makeLogtoRemix } from "@logto/remix";
 
 export const logto = makeLogtoRemix(
   {
@@ -64,29 +60,29 @@ Whereas the environment variables reflect the respective configuration of the ap
 
 ### Mounting the authentication route handlers
 
-The SDK ships with a convenient function that mounts the authentication routes: sign-in, sign-in callback and the sign-out route:
+The SDK ships with a convenient function that mounts the authentication routes: sign-in, sign-in callback and the sign-out route. Create a file `routes/api.logto.$action.ts`
 
 ```ts
-// app/routes/api/logto/$action.ts
+// routes/api.logto.$action.ts
 
-import { logto } from "../../../services/authentication";
+import { logto } from '../../service/auth.server';
 
 export const loader = logto.handleAuthRoutes({
-  "sign-in": {
-    path: "/api/logto/sign-in",
-    redirectBackTo: "/api/logto/callback",
+  'sign-in': {
+    path: '/api/logto/sign-in',
+    redirectBackTo: '/api/logto/callback',
   },
-  "sign-in-callback": {
-    path: "/api/logto/callback",
-    redirectBackTo: "/",
+  'sign-in-callback': {
+    path: '/api/logto/callback',
+    redirectBackTo: '/',
   },
-  "sign-out": {
-    path: "/api/logto/sign-out",
-    redirectBackTo: "/",
+  'sign-out': {
+    path: '/api/logto/sign-out',
+    redirectBackTo: '/',
   },
-  "sign-up": {
-    path: "/api/logto/sign-up",
-    redirectBackTo: "/api/logto/callback",
+  'sign-up': {
+    path: '/api/logto/sign-up',
+    redirectBackTo: '/api/logto/callback',
   },
 });
 ```
@@ -101,23 +97,21 @@ A typical use case is to fetch the _authentication context_ which contains infor
 
 ```ts
 // app/routes/index.tsx
-import type { LogtoContext } from "@logto/remix";
-import { LoaderFunction, json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import type { LogtoContext } from '@logto/remix';
+import { LoaderFunction, json } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 
-import { logto } from "~/services/authentication";
+import { logto } from '../../service/auth.server';
 
 type LoaderResponse = {
   readonly context: LogtoContext;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const context = await logto.getContext({ getAccessToken: false })(
-    request
-  );
+  const context = await logto.getContext({ getAccessToken: false })(request);
 
   if (!context.isAuthenticated) {
-    return redirect("/api/logto/sign-in");
+    return redirect('/api/logto/sign-in');
   }
 
   return json<LoaderResponse>({ context });
