@@ -1,6 +1,11 @@
 'use server';
 
-import { type LogtoContext, type GetContextParameters, type InteractionMode } from '@logto/node';
+import {
+  type LogtoContext,
+  type GetContextParameters,
+  type InteractionMode,
+  type SignInOptions,
+} from '@logto/node';
 import { redirect } from 'next/navigation';
 
 import type { LogtoNextConfig } from '../src/types.js';
@@ -12,18 +17,31 @@ export type { LogtoContext, InteractionMode } from '@logto/node';
 /**
  * Init sign in process and redirect to the Logto sign-in page
  */
-export const signIn = async (
+export async function signIn(config: LogtoNextConfig, options?: SignInOptions): Promise<void>;
+/**
+ * Init sign in process and redirect to the Logto sign-in page
+ *
+ * @deprecated Use the object parameter instead.
+ */
+export async function signIn(
   config: LogtoNextConfig,
   redirectUri?: string,
   interactionMode?: InteractionMode
-): Promise<void> => {
+): Promise<void>;
+export async function signIn(
+  config: LogtoNextConfig,
+  options?: SignInOptions | string,
+  interactionMode?: InteractionMode
+): Promise<void> {
   const client = new LogtoClient(config);
-  const { url } = await client.handleSignIn(
-    redirectUri ?? `${config.baseUrl}/callback`,
-    interactionMode
-  );
+  const finalOptions: SignInOptions =
+    typeof options === 'string' || options === undefined
+      ? { redirectUri: options ?? `${config.baseUrl}/callback`, interactionMode }
+      : options;
+
+  const { url } = await client.handleSignIn(finalOptions);
   redirect(url);
-};
+}
 
 export function handleSignIn(config: LogtoNextConfig, searchParams: URLSearchParams): Promise<void>;
 export function handleSignIn(config: LogtoNextConfig, url: URL): Promise<void>;
