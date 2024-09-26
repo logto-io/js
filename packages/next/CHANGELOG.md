@@ -1,5 +1,13 @@
 # Change Log
 
+## 3.7.0
+
+### Minor Changes
+
+- 8ca35ed: add support for sign in options including first screen values and identifier config
+
+  The function signature of `signIn` is changed to accept an options object, the old signature is deprecated and will be removed in the next major release.
+
 ## 3.6.1
 
 ### Patch Changes
