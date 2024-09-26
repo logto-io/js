@@ -1,5 +1,18 @@
 # Change Log
 
+## 2.2.0
+
+### Minor Changes
+
+- 8ca35ed: add support for sign in options including first screen values and identifier config
+
+  The function signature of `signIn` is changed to accept an options object, the old signature is deprecated and will be removed in the next major release.
+
+### Patch Changes
+
+- Updated dependencies [8ca35ed]
+  - @logto/next@3.7.0
+
 ## 2.1.20
 
 ### Patch Changes
