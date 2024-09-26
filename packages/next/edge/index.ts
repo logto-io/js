@@ -1,5 +1,10 @@
 import { RequestCookies, ResponseCookies } from '@edge-runtime/cookies';
-import { CookieStorage, type GetContextParameters, type InteractionMode } from '@logto/node';
+import {
+  CookieStorage,
+  type SignInOptions,
+  type GetContextParameters,
+  type InteractionMode,
+} from '@logto/node';
 import NodeClient from '@logto/node/edge';
 import { type NextRequest } from 'next/server';
 
@@ -22,26 +27,25 @@ export default class LogtoClient extends BaseClient {
     });
   }
 
-  handleSignIn =
-    (
-      redirectUri = `${this.config.baseUrl}/api/logto/sign-in-callback`,
-      interactionMode?: InteractionMode
-    ) =>
-    async (request: Request) => {
-      const { nodeClient, headers } = await this.createNodeClientFromEdgeRequest(request);
-      await nodeClient.signIn(redirectUri, interactionMode);
+  handleSignIn: (
+    options?: SignInOptions | string,
+    interactionMode?: InteractionMode
+  ) => (request: Request) => Promise<Response> = (
+    options?: SignInOptions | string,
+    interactionMode?: InteractionMode
+  ) => {
+    // The array function can not have multiple signatures, have to warn the deprecated usage
+    if (typeof options === 'string') {
+      console.warn('Deprecated: Use the object parameter for handleSignIn instead.');
+      return this.handleSignInImplementation({ redirectUri: options, interactionMode });
+    }
 
-      const response = new Response(null, {
-        headers,
-        status: 307,
-      });
-
-      if (this.navigateUrl) {
-        response.headers.append('Location', this.navigateUrl);
+    return this.handleSignInImplementation(
+      options ?? {
+        redirectUri: `${this.config.baseUrl}/api/logto/sign-in-callback`,
       }
-
-      return response;
-    };
+    );
+  };
 
   handleSignOut =
     (redirectUri = this.config.baseUrl) =>
@@ -131,4 +135,22 @@ export default class LogtoClient extends BaseClient {
 
     return { nodeClient, headers };
   }
+
+  private readonly handleSignInImplementation =
+    (options: SignInOptions) =>
+    async (request: Request): Promise<Response> => {
+      const { nodeClient, headers } = await this.createNodeClientFromEdgeRequest(request);
+      await nodeClient.signIn(options);
+
+      const response = new Response(null, {
+        headers,
+        status: 307,
+      });
+
+      if (this.navigateUrl) {
+        response.headers.append('Location', this.navigateUrl);
+      }
+
+      return response;
+    };
 }

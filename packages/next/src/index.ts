@@ -2,6 +2,7 @@ import { type IncomingMessage, type ServerResponse } from 'node:http';
 
 import NodeClient, {
   CookieStorage,
+  type SignInOptions,
   type GetContextParameters,
   type InteractionMode,
 } from '@logto/node';
@@ -52,19 +53,36 @@ export default class LogtoClient extends LogtoNextBaseClient {
     });
   }
 
-  handleSignIn = (
-    redirectUri = `${this.config.baseUrl}/api/logto/sign-in-callback`,
+  handleSignIn: (
+    options?:
+      | (SignInOptions & {
+          onError?: ErrorHandler;
+        })
+      | string,
     interactionMode?: InteractionMode,
     onError?: ErrorHandler
-  ): NextApiHandler =>
-    buildHandler(async (request, response) => {
-      const nodeClient = await this.createNodeClientFromNextApi(request, response);
-      await nodeClient.signIn(redirectUri, interactionMode);
+  ) => NextApiHandler = (
+    options?:
+      | (SignInOptions & {
+          onError?: ErrorHandler;
+        })
+      | string,
+    interactionMode?: InteractionMode,
+    onError?: ErrorHandler
+  ) => {
+    // The array function can not have multiple signatures, have to warn the deprecated usage
+    if (typeof options === 'string') {
+      console.warn('Deprecated: Use the object parameter for handleSignIn instead.');
+      return this.handleSignInImplementation({ redirectUri: options, interactionMode, onError });
+    }
 
-      if (this.navigateUrl) {
-        response.redirect(this.navigateUrl);
+    return this.handleSignInImplementation(
+      options ?? {
+        redirectUri: `${this.config.baseUrl}/api/logto/sign-in-callback`,
+        interactionMode,
       }
-    }, onError);
+    );
+  };
 
   handleSignInCallback = (
     redirectTo = this.config.baseUrl,
@@ -206,4 +224,18 @@ export default class LogtoClient extends LogtoNextBaseClient {
       },
     });
   }
+
+  private readonly handleSignInImplementation = (
+    options: SignInOptions & {
+      onError?: ErrorHandler;
+    }
+  ): NextApiHandler =>
+    buildHandler(async (request, response) => {
+      const nodeClient = await this.createNodeClientFromNextApi(request, response);
+      await nodeClient.signIn(options);
+
+      if (this.navigateUrl) {
+        response.redirect(this.navigateUrl);
+      }
+    }, options.onError);
 }

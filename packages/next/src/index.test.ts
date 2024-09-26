@@ -1,3 +1,4 @@
+import { type SignInOptions } from '@logto/node';
 import type { NextApiResponse } from 'next';
 import { testApiHandler } from 'next-test-api-route-handler';
 
@@ -39,8 +40,12 @@ vi.mock('@logto/node', async (importOriginal) => ({
   // https://stackoverflow.com/a/70705719/12514940
   __esModule: true,
   default: vi.fn((_: unknown, { navigate }: Adapter) => ({
-    signIn: (_redirectUri: string, interactionMode?: string) => {
-      navigate(interactionMode ? `${signInUrl}?interactionMode=${interactionMode}` : signInUrl);
+    signIn: (options?: SignInOptions) => {
+      navigate(
+        options?.interactionMode
+          ? `${signInUrl}?interactionMode=${options.interactionMode}`
+          : signInUrl
+      );
       signIn();
     },
     handleSignInCallback,
