@@ -1,5 +1,12 @@
 # Change Log
 
+## 3.7.1
+
+### Patch Changes
+
+- Updated dependencies [8d0b058]
+  - @logto/node@2.5.8
+
 ## 3.7.0
 
 ### Minor Changes
