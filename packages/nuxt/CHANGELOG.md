@@ -1,5 +1,12 @@
 # @logto/nuxt
 
+## 1.0.1
+
+### Patch Changes
+
+- Updated dependencies [8d0b058]
+  - @logto/node@2.5.8
+
 ## 1.0.0
 
 ### Major Changes
