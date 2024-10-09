@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "cookie-parser": "^1.4.6",
-    "express": "^4.19.2",
+    "express": "^4.20.0",
     "express-session": "^1.17.3",
     "passport": "^0.7.0",
     "passport-openidconnect": "^0.1.1"
