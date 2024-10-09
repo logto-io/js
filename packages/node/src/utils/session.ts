@@ -77,11 +77,7 @@ async function decrypt(ciphertext: string, iv: string, password: string, crypto:
   return new TextDecoder().decode(cleartext);
 }
 
-export const unwrapSession = async (
-  cookie: string,
-  secret: string,
-  crypto: Crypto = global.crypto
-): Promise<SessionData> => {
+export const unwrapSession = async (cookie: string, secret: string): Promise<SessionData> => {
   try {
     const [ciphertext, iv] = cookie.split('.');
 
@@ -99,36 +95,7 @@ export const unwrapSession = async (
   return {};
 };
 
-export const wrapSession = async (
-  session: SessionData,
-  secret: string,
-  crypto: Crypto = global.crypto
-): Promise<string> => {
+export const wrapSession = async (session: SessionData, secret: string): Promise<string> => {
   const { ciphertext, iv } = await encrypt(JSON.stringify(session), secret, crypto);
   return `${ciphertext}.${iv}`;
-};
-
-type SessionConfigs = {
-  secret: string;
-  crypto: Crypto;
-};
-
-export const createSession = async (
-  { secret, crypto }: SessionConfigs,
-  cookie: string,
-  setCookie?: (value: string) => void
-): Promise<Session> => {
-  const data = await unwrapSession(cookie, secret, crypto);
-
-  const getValues = async () => wrapSession(session, secret, crypto);
-
-  const session: Session = {
-    ...data,
-    save: async () => {
-      setCookie?.(await getValues());
-    },
-    getValues,
-  };
-
-  return session;
 };
