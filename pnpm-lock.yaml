@@ -458,8 +458,8 @@ importers:
   packages/next:
     dependencies:
       '@edge-runtime/cookies':
-        specifier: ^4.0.0
-        version: 4.0.0
+        specifier: ^5.0.0
+        version: 5.0.0
       '@logto/node':
         specifier: workspace:^
         version: link:../node
@@ -1562,8 +1562,8 @@ packages:
     peerDependencies:
       postcss-selector-parser: ^6.0.13
 
-  '@edge-runtime/cookies@4.0.0':
-    resolution: {integrity: sha512-PPgW/669apZqT3qUOa4JV0ctXQ7ayCNiklKXDD1z5fC7aemWrjpZ7r0Na7yQ96Fp673pNF5lzpfTJh26sWaGDg==}
+  '@edge-runtime/cookies@5.0.0':
+    resolution: {integrity: sha512-VTTuKiK86cLuLKoLLwkCLN75CrXElmitD6Q+7XAYOMQyDUgsNEF/muorgZWttrvYQBVG+7Pdb8udFqIcLszyLw==}
     engines: {node: '>=16'}
 
   '@esbuild/aix-ppc64@0.19.10':
@@ -10114,7 +10114,7 @@ snapshots:
     dependencies:
       postcss-selector-parser: 6.0.16
 
-  '@edge-runtime/cookies@4.0.0': {}
+  '@edge-runtime/cookies@5.0.0': {}
 
   '@esbuild/aix-ppc64@0.19.10':
     optional: true
