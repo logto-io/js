@@ -315,8 +315,8 @@ importers:
         specifier: ^1.4.3
         version: 1.4.3
       '@types/express':
-        specifier: ^4.17.13
-        version: 4.17.13
+        specifier: ^5.0.0
+        version: 5.0.0
       '@types/express-session':
         specifier: ^1.17.5
         version: 1.17.5
@@ -379,8 +379,8 @@ importers:
         specifier: ^1.4.3
         version: 1.4.3
       '@types/express':
-        specifier: ^4.17.13
-        version: 4.17.13
+        specifier: ^5.0.0
+        version: 5.0.0
       '@types/express-session':
         specifier: ^1.17.5
         version: 1.17.5
@@ -755,8 +755,8 @@ importers:
         specifier: ^1.4.3
         version: 1.4.3
       '@types/express':
-        specifier: ^4.17.13
-        version: 4.17.13
+        specifier: ^5.0.0
+        version: 5.0.0
       '@types/express-session':
         specifier: ^1.17.5
         version: 1.17.5
@@ -3391,14 +3391,14 @@ packages:
   '@types/estree@1.0.5':
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
 
-  '@types/express-serve-static-core@4.17.29':
-    resolution: {integrity: sha512-uMd++6dMKS32EOuw1Uli3e3BPgdLIXmezcfHv7N4c1s3gkhikBplORPpMq3fuWkxncZN1reb16d5n8yhQ80x7Q==}
+  '@types/express-serve-static-core@5.0.0':
+    resolution: {integrity: sha512-AbXMTZGt40T+KON9/Fdxx0B2WK5hsgxcfXJLr5bFpZ7b4JCex2WyQPTEKdXqfHiY5nKKBScZ7yCoO6Pvgxfvnw==}
 
   '@types/express-session@1.17.5':
     resolution: {integrity: sha512-l0DhkvNVfyUPEEis8fcwbd46VptfA/jmMwHfob2TfDMf3HyPLiB9mKD71LXhz5TMUobODXPD27zXSwtFQLHm+w==}
 
-  '@types/express@4.17.13':
-    resolution: {integrity: sha512-6bSZTPaTIACxn48l50SR+axgrqm6qXFIxrdAKaG6PaJk3+zuUr35hBlgT7vOmJcum+OEaIBLtHV/qloEAFITeA==}
+  '@types/express@5.0.0':
+    resolution: {integrity: sha512-DvZriSMehGHL1ZNLzi6MidnsDhUZM/x2pRdDIKdwbUNqqwHxMlRdkxtn6/EPKyqKpHqTl/4nRZsRNLpZxZRpPQ==}
 
   '@types/fs-extra@8.1.5':
     resolution: {integrity: sha512-0dzKcwO+S8s2kuF5Z9oUWatQJj5Uq/iqphEtE3GQJVRRYm/tD1LglU2UnXi2A8jLq5umkGouOXOR9y0n613ZwQ==}
@@ -3504,6 +3504,9 @@ packages:
 
   '@types/semver@7.5.1':
     resolution: {integrity: sha512-cJRQXpObxfNKkFAZbJl2yjWtJCqELQIdShsogr1d2MilP8dKD9TE/nEKHkJgUNHdGKCQaf9HbIynuV2csLGVLg==}
+
+  '@types/send@0.17.4':
+    resolution: {integrity: sha512-x2EM6TJOybec7c52BX0ZspPodMsQUd5L6PRwOunVyVUhXiBSKf3AezDL8Dgvgt5o0UfKNfuA0eMLr2wLT4AiBA==}
 
   '@types/serve-static@1.13.10':
     resolution: {integrity: sha512-nCkHGI4w7ZgAdNkrEu0bv+4xNV/XDqW+DydknebMOQwkpDGx8G+HTlj7R7ABI8i8nKxVw0wtKPi1D+lPOkh4YQ==}
@@ -12271,15 +12274,15 @@ snapshots:
   '@types/body-parser@1.19.2':
     dependencies:
       '@types/connect': 3.4.35
-      '@types/node': 20.11.19
+      '@types/node': 20.12.2
 
   '@types/connect@3.4.35':
     dependencies:
-      '@types/node': 20.11.19
+      '@types/node': 20.12.2
 
   '@types/cookie-parser@1.4.3':
     dependencies:
-      '@types/express': 4.17.13
+      '@types/express': 5.0.0
 
   '@types/cookie@0.4.1': {}
 
@@ -12289,20 +12292,21 @@ snapshots:
 
   '@types/estree@1.0.5': {}
 
-  '@types/express-serve-static-core@4.17.29':
+  '@types/express-serve-static-core@5.0.0':
     dependencies:
-      '@types/node': 20.11.19
+      '@types/node': 20.12.2
       '@types/qs': 6.9.7
       '@types/range-parser': 1.2.4
+      '@types/send': 0.17.4
 
   '@types/express-session@1.17.5':
     dependencies:
-      '@types/express': 4.17.13
+      '@types/express': 5.0.0
 
-  '@types/express@4.17.13':
+  '@types/express@5.0.0':
     dependencies:
       '@types/body-parser': 1.19.2
-      '@types/express-serve-static-core': 4.17.29
+      '@types/express-serve-static-core': 5.0.0
       '@types/qs': 6.9.7
       '@types/serve-static': 1.13.10
 
@@ -12371,19 +12375,19 @@ snapshots:
 
   '@types/passport-openidconnect@0.1.3':
     dependencies:
-      '@types/express': 4.17.13
+      '@types/express': 5.0.0
       '@types/oauth': 0.9.4
       '@types/passport': 1.0.16
       '@types/passport-strategy': 0.2.38
 
   '@types/passport-strategy@0.2.38':
     dependencies:
-      '@types/express': 4.17.13
+      '@types/express': 5.0.0
       '@types/passport': 1.0.16
 
   '@types/passport@1.0.16':
     dependencies:
-      '@types/express': 4.17.13
+      '@types/express': 5.0.0
 
   '@types/prop-types@15.7.4': {}
 
@@ -12420,10 +12424,15 @@ snapshots:
 
   '@types/semver@7.5.1': {}
 
+  '@types/send@0.17.4':
+    dependencies:
+      '@types/mime': 1.3.2
+      '@types/node': 20.12.2
+
   '@types/serve-static@1.13.10':
     dependencies:
       '@types/mime': 1.3.2
-      '@types/node': 20.11.19
+      '@types/node': 20.12.2
 
   '@types/superagent@4.1.16':
     dependencies:
