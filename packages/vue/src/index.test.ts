@@ -14,7 +14,7 @@ const getAccessToken = vi.fn(() => {
   throw new Error('not authenticated');
 });
 const signIn = vi.fn();
-const injectMock = vi.fn<string[], unknown>((): unknown => {
+const injectMock = vi.fn((key: string): unknown => {
   return undefined;
 });
 vi.mock('vue', async (importOriginal) => {
