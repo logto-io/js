@@ -1035,8 +1035,8 @@ importers:
         specifier: ^4.2.7
         version: 4.2.11
       svelte-check:
-        specifier: ^3.6.0
-        version: 3.6.4(@babel/core@7.24.4)(postcss@8.4.38)(sass@1.58.0)(svelte@4.2.11)
+        specifier: ^4.0.0
+        version: 4.0.0(svelte@4.2.11)(typescript@5.3.3)
       tslib:
         specifier: ^2.4.1
         version: 2.6.2
@@ -2025,14 +2025,8 @@ packages:
   '@jridgewell/source-map@0.3.5':
     resolution: {integrity: sha512-UTYAUj/wviwdsMfzoSJspJxbkH5o1snzwX0//0ENX1u/55kkZZkcTZP6u9bwKGkv+dkk9at4m1Cpt0uY80kcpQ==}
 
-  '@jridgewell/sourcemap-codec@1.4.14':
-    resolution: {integrity: sha512-XPSJHWmi394fuUuzDnGz1wiKqWfo1yXecHQMRf2l6hztTO+nPru658AyDngaBe7isIxEkRsPR3FZh+s7iVa4Uw==}
-
   '@jridgewell/sourcemap-codec@1.4.15':
     resolution: {integrity: sha512-eF2rxCRulEKXHTRiDrDy6erMYWqNw4LPdQ8UQA4huuxaQsVeRPFl2oM8oDGxMFhJUWZf9McpLtJasDDZb/Bpeg==}
-
-  '@jridgewell/trace-mapping@0.3.17':
-    resolution: {integrity: sha512-MCNzAp77qzKca9+W/+I0+sEpaUnZoeasnghNeVc41VZCEKaCH73Vq3BZZ/SzWIgrqE4H4ceI+p+b6C0mHf9T4g==}
 
   '@jridgewell/trace-mapping@0.3.22':
     resolution: {integrity: sha512-Wf963MzWtA2sjrNt+g18IAln9lKnlRp+K2eH4jjIoF1wYeq3aMREpG09xhlhdzS0EjwU7qmUJYangWa+151vZw==}
@@ -3320,9 +3314,6 @@ packages:
   '@types/prop-types@15.7.4':
     resolution: {integrity: sha512-rZ5drC/jWjrArrS8BR6SIr4cWpW09RNTYt9AMZo3Jwwif+iacXAqgVjm0B0Bv/S1jhDXKHqRVNCbACkJ89RAnQ==}
 
-  '@types/pug@2.0.10':
-    resolution: {integrity: sha512-Sk/uYFOBAB7mb74XcpizmH0KOR2Pv3D2Hmrh1Dmy5BmK3MpdSa5kqZcg6EKBdklU0bFXX9gCfzvpnyUehrPIuA==}
-
   '@types/qs@6.9.7':
     resolution: {integrity: sha512-FGa1F62FT09qcrueBA6qYTrJPVDzah9a+493+o2PCXsesWHIn27G98TsSMs3WPNbZIEj4+VJf6saSFpvD+3Zsw==}
 
@@ -4206,9 +4197,6 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
 
-  buffer-crc32@0.2.13:
-    resolution: {integrity: sha512-VO9Ht/+p3SN7SKWqcrgEzjGbRSJYTx+Q1pTQC0wrWqHx0vpJraQ6GtHx8tvcg1rlK1byhU5gccxgOgj7B0TDkQ==}
-
   buffer-crc32@1.0.0:
     resolution: {integrity: sha512-Db1SbgBS/fg/392AblrMJk97KggmvYhr4pB5ZIMTWtaivCPMWLkmb7m21cJvpvgK+J3nsU2CmmixNBZx4vFj/w==}
     engines: {node: '>=8.0.0'}
@@ -5075,9 +5063,6 @@ packages:
     resolution: {integrity: sha512-QCOllgZJtaUo9miYBcLChTUaHNjJF3PYs1VidD7AwiEj1kYxKeQTctLAezAOH5ZKRH0g2IgPn6KwB4IT8iRpvA==}
     engines: {node: '>= 0.4'}
 
-  es6-promise@3.3.1:
-    resolution: {integrity: sha512-SOp9Phqvqn7jtEUxPWdWfWoLmyt2VaJ6MpvP9Comy1MceMXqE6bxvaTu4iaxpYYPzhny28Lc+M87/c2cPK6lDg==}
-
   esbuild@0.19.10:
     resolution: {integrity: sha512-S1Y27QGt/snkNYrRcswgRFqZjaTG5a5xM3EQo97uNBnH505pdzSNe/HLBq1v0RO7iK/ngdbhJB6mDAp0OK+iUA==}
     engines: {node: '>=12'}
@@ -5468,6 +5453,14 @@ packages:
 
   fastq@1.13.0:
     resolution: {integrity: sha512-YpkpUnK8od0o1hmeSc7UUs/eB/vIPWJYjKck2QKIzAf71Vm1AAQ3EbuZB3g2JIy+pg+ERD0vqI79KyZiB2e2Nw==}
+
+  fdir@6.3.0:
+    resolution: {integrity: sha512-QOnuT+BOtivR77wYvCWHfGt9s4Pz1VIMbD463vegT5MLqNXy8rYFT/lPVEqf/bhYeT6qmqrNHhsX+rWwe3rOCQ==}
+    peerDependencies:
+      picomatch: ^3 || ^4
+    peerDependenciesMeta:
+      picomatch:
+        optional: true
 
   file-entry-cache@6.0.1:
     resolution: {integrity: sha512-7Gps/XWymbLk2QLYK4NzpMOrYjMhdIxXuIvy2QBsLE6ljuodKvdkWs/cpyJJ3CVIVpH0Oi1Hvg1ovbMzLdFBBg==}
@@ -6914,10 +6907,6 @@ packages:
     resolution: {integrity: sha512-VC5fg6ySUscaWUpI4gxCBTQMH2RdUpNrk+MsbpCYtIvf9SBJdiUey4qE7BXviJsJR4nDQxCZ+3yaYNW3guz/Pw==}
     engines: {node: '>= 8.0.0'}
 
-  mkdirp@0.5.6:
-    resolution: {integrity: sha512-FP+p8RB8OWpF3YZBCrP5gtADmtXApB5AMLn+vdyA+PyxCjrCs00mjyUozssO33cwDeT3wNGdLxJ5M//YqtHAJw==}
-    hasBin: true
-
   mkdirp@1.0.4:
     resolution: {integrity: sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==}
     engines: {node: '>=10'}
@@ -8230,11 +8219,6 @@ packages:
   rfdc@1.3.1:
     resolution: {integrity: sha512-r5a3l5HzYlIC68TpmYKlxWjmOP6wiPJ1vWv2HeLhNsRZMrCkxeqxiHlQ21oXmQ4F3SiryXBHhAD7JZqvOJjFmg==}
 
-  rimraf@2.7.1:
-    resolution: {integrity: sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==}
-    deprecated: Rimraf versions prior to v4 are no longer supported
-    hasBin: true
-
   rimraf@3.0.2:
     resolution: {integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==}
     deprecated: Rimraf versions prior to v4 are no longer supported
@@ -8320,9 +8304,6 @@ packages:
 
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
-
-  sander@0.5.1:
-    resolution: {integrity: sha512-3lVqBir7WuKDHGrKRDn/1Ye3kwpXaDOMsiRP1wd6wpZW56gJhsbp5RqQpA6JG/P+pkXizygnr1dKR8vzWaVsfA==}
 
   sass@1.58.0:
     resolution: {integrity: sha512-PiMJcP33DdKtZ/1jSjjqVIKihoDc6yWmYr9K/4r3fVVIEDAluD0q7XZiRKrNJcPK3qkLRF/79DND1H5q1LBjgg==}
@@ -8487,10 +8468,6 @@ packages:
     resolution: {integrity: sha512-vfuYK48HXCTFD03G/1/zkIls3Ebr2YNa4qU9gHDZdblHLiqhJrJGkY3+0Nx0JpN9qBhJbVObc1CNciT1bIZJxw==}
     engines: {node: '>= 10.0.0', npm: '>= 3.0.0'}
     deprecated: please use 2.7.4 or 2.8.1 to fix package-lock issue
-
-  sorcery@0.11.0:
-    resolution: {integrity: sha512-J69LQ22xrQB1cIFJhPfgtLuI6BpWRiWu1Y3vSsIwK/eAScqJxd/+CJlUuHQRdX2C9NGFamq+KqNywGgaThwfHw==}
-    hasBin: true
 
   source-map-js@1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
@@ -8778,54 +8755,19 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  svelte-check@3.6.4:
-    resolution: {integrity: sha512-mY/dqucqm46p72M8yZmn81WPZx9mN6uuw8UVfR3ZKQeLxQg5HDGO3HHm5AZuWZPYNMLJ+TRMn+TeN53HfQ/vsw==}
+  svelte-check@4.0.0:
+    resolution: {integrity: sha512-QgKO6OQbee9B2dyWZgrGruS3WHKrUZ718Ug53nK45vamsx93Al3on6tOrxyCMVX+OMOLLlrenn7b2VAomePwxQ==}
+    engines: {node: '>= 18.0.0'}
     hasBin: true
     peerDependencies:
-      svelte: ^3.55.0 || ^4.0.0-next.0 || ^4.0.0 || ^5.0.0-next.0
+      svelte: ^4.0.0 || ^5.0.0-next.0
+      typescript: '>=5.0.0'
 
   svelte-hmr@0.15.3:
     resolution: {integrity: sha512-41snaPswvSf8TJUhlkoJBekRrABDXDMdpNpT2tfHIv4JuhgvHqLMhEPGtaQn0BmbNSTkuz2Ed20DF2eHw0SmBQ==}
     engines: {node: ^12.20 || ^14.13.1 || >= 16}
     peerDependencies:
       svelte: ^3.19.0 || ^4.0.0
-
-  svelte-preprocess@5.1.3:
-    resolution: {integrity: sha512-xxAkmxGHT+J/GourS5mVJeOXZzne1FR5ljeOUAMXUkfEhkLEllRreXpbl3dIYJlcJRfL1LO1uIAPpBpBfiqGPw==}
-    engines: {node: '>= 16.0.0', pnpm: ^8.0.0}
-    peerDependencies:
-      '@babel/core': ^7.10.2
-      coffeescript: ^2.5.1
-      less: ^3.11.3 || ^4.0.0
-      postcss: ^7 || ^8
-      postcss-load-config: ^2.1.0 || ^3.0.0 || ^4.0.0 || ^5.0.0
-      pug: ^3.0.0
-      sass: ^1.26.8
-      stylus: ^0.55.0
-      sugarss: ^2.0.0 || ^3.0.0 || ^4.0.0
-      svelte: ^3.23.0 || ^4.0.0-next.0 || ^4.0.0 || ^5.0.0-next.0
-      typescript: '>=3.9.5 || ^4.0.0 || ^5.0.0'
-    peerDependenciesMeta:
-      '@babel/core':
-        optional: true
-      coffeescript:
-        optional: true
-      less:
-        optional: true
-      postcss:
-        optional: true
-      postcss-load-config:
-        optional: true
-      pug:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      typescript:
-        optional: true
 
   svelte@4.2.11:
     resolution: {integrity: sha512-YIQk3J4X89wOLhjsqIW8tqY3JHPuBdtdOIkASP2PZeAMcSW9RsIjQzMesCrxOF3gdWYC0mKknlKF7OqmLM+Zqg==}
@@ -10704,21 +10646,14 @@ snapshots:
   '@jridgewell/source-map@0.3.2':
     dependencies:
       '@jridgewell/gen-mapping': 0.3.2
-      '@jridgewell/trace-mapping': 0.3.17
+      '@jridgewell/trace-mapping': 0.3.25
 
   '@jridgewell/source-map@0.3.5':
     dependencies:
       '@jridgewell/gen-mapping': 0.3.2
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@jridgewell/sourcemap-codec@1.4.14': {}
-
   '@jridgewell/sourcemap-codec@1.4.15': {}
-
-  '@jridgewell/trace-mapping@0.3.17':
-    dependencies:
-      '@jridgewell/resolve-uri': 3.1.0
-      '@jridgewell/sourcemap-codec': 1.4.14
 
   '@jridgewell/trace-mapping@0.3.22':
     dependencies:
@@ -12217,10 +12152,10 @@ snapshots:
       eslint-config-prettier: 9.1.0(eslint@8.57.0)
       eslint-config-xo: 0.44.0(eslint@8.57.0)
       eslint-config-xo-typescript: 4.0.0(@typescript-eslint/eslint-plugin@7.1.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0)(typescript@5.3.3))(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0)(typescript@5.3.3)
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0)
       eslint-plugin-consistent-default-export-name: 0.0.15
       eslint-plugin-eslint-comments: 3.2.0(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       eslint-plugin-n: 17.2.1(eslint@8.57.0)
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-prettier: 5.1.3(eslint-config-prettier@9.1.0(eslint@8.57.0))(eslint@8.57.0)(prettier@3.0.0)
@@ -12567,8 +12502,6 @@ snapshots:
       '@types/express': 4.17.13
 
   '@types/prop-types@15.7.4': {}
-
-  '@types/pug@2.0.10': {}
 
   '@types/qs@6.9.7': {}
 
@@ -13853,8 +13786,6 @@ snapshots:
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.23.0)
 
-  buffer-crc32@0.2.13: {}
-
   buffer-crc32@1.0.0: {}
 
   buffer-from@1.1.2: {}
@@ -14899,8 +14830,6 @@ snapshots:
       is-date-object: 1.0.5
       is-symbol: 1.0.4
 
-  es6-promise@3.3.1: {}
-
   esbuild@0.19.10:
     optionalDependencies:
       '@esbuild/aix-ppc64': 0.19.10
@@ -15047,13 +14976,13 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0):
     dependencies:
       debug: 4.3.4
       enhanced-resolve: 5.15.0
       eslint: 8.57.0
-      eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.5.0
       is-core-module: 2.13.0
@@ -15075,14 +15004,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.8.0(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-module-utils@2.8.0(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 7.1.1(eslint@8.57.0)(typescript@5.3.3)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -15131,7 +15060,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlastindex: 1.2.3
@@ -15141,7 +15070,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.13.1
       is-glob: 4.0.3
@@ -15606,6 +15535,8 @@ snapshots:
   fastq@1.13.0:
     dependencies:
       reusify: 1.0.4
+
+  fdir@6.3.0: {}
 
   file-entry-cache@6.0.1:
     dependencies:
@@ -17057,10 +16988,6 @@ snapshots:
   mitt@3.0.1: {}
 
   mixme@0.5.9: {}
-
-  mkdirp@0.5.6:
-    dependencies:
-      minimist: 1.2.6
 
   mkdirp@1.0.4: {}
 
@@ -18602,10 +18529,6 @@ snapshots:
 
   rfdc@1.3.1: {}
 
-  rimraf@2.7.1:
-    dependencies:
-      glob: 7.2.0
-
   rimraf@3.0.2:
     dependencies:
       glob: 7.2.0
@@ -18721,13 +18644,6 @@ snapshots:
       is-regex: 1.1.4
 
   safer-buffer@2.1.2: {}
-
-  sander@0.5.1:
-    dependencies:
-      es6-promise: 3.3.1
-      graceful-fs: 4.2.11
-      mkdirp: 0.5.6
-      rimraf: 2.7.1
 
   sass@1.58.0:
     dependencies:
@@ -18936,13 +18852,6 @@ snapshots:
     dependencies:
       ip-address: 9.0.5
       smart-buffer: 4.2.0
-
-  sorcery@0.11.0:
-    dependencies:
-      '@jridgewell/sourcemap-codec': 1.4.15
-      buffer-crc32: 0.2.13
-      minimist: 1.2.6
-      sander: 0.5.1
 
   source-map-js@1.0.2: {}
 
@@ -19295,45 +19204,21 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  svelte-check@3.6.4(@babel/core@7.24.4)(postcss@8.4.38)(sass@1.58.0)(svelte@4.2.11):
+  svelte-check@4.0.0(svelte@4.2.11)(typescript@5.3.3):
     dependencies:
-      '@jridgewell/trace-mapping': 0.3.17
-      chokidar: 3.5.3
-      fast-glob: 3.3.2
-      import-fresh: 3.3.0
+      '@jridgewell/trace-mapping': 0.3.25
+      chokidar: 3.6.0
+      fdir: 6.3.0
       picocolors: 1.0.0
       sade: 1.8.1
       svelte: 4.2.11
-      svelte-preprocess: 5.1.3(@babel/core@7.24.4)(postcss@8.4.38)(sass@1.58.0)(svelte@4.2.11)(typescript@5.3.3)
       typescript: 5.3.3
     transitivePeerDependencies:
-      - '@babel/core'
-      - coffeescript
-      - less
-      - postcss
-      - postcss-load-config
-      - pug
-      - sass
-      - stylus
-      - sugarss
+      - picomatch
 
   svelte-hmr@0.15.3(svelte@4.2.11):
     dependencies:
       svelte: 4.2.11
-
-  svelte-preprocess@5.1.3(@babel/core@7.24.4)(postcss@8.4.38)(sass@1.58.0)(svelte@4.2.11)(typescript@5.3.3):
-    dependencies:
-      '@types/pug': 2.0.10
-      detect-indent: 6.1.0
-      magic-string: 0.30.10
-      sorcery: 0.11.0
-      strip-indent: 3.0.0
-      svelte: 4.2.11
-    optionalDependencies:
-      '@babel/core': 7.24.4
-      postcss: 8.4.38
-      sass: 1.58.0
-      typescript: 5.3.3
 
   svelte@4.2.11:
     dependencies:
