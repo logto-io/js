@@ -1,5 +1,5 @@
 // eslint-disable-next-line unused-imports/no-unused-imports -- used in comments
-import type { LogtoConfig, CookieConfig } from '@logto/node';
+import type { LogtoConfig, CookieConfig, SignInOptions } from '@logto/node';
 
 type DeepPartial<T> = T extends Record<string, unknown>
   ? {
@@ -70,6 +70,12 @@ type LogtoModuleOptions = {
      */
     callback: string;
   };
+  /**
+   * The options for the sign-in process.
+   *
+   * @see https://docs.logto.io/docs/references/openid-connect/authentication-parameters
+   */
+  signInOptions?: Omit<SignInOptions, 'redirectUri' | 'postRedirectUri'>;
 };
 
 /** The full runtime configuration for the Logto module. */
