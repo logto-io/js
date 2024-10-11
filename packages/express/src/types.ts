@@ -1,4 +1,4 @@
-import type { GetContextParameters, LogtoConfig } from '@logto/node';
+import type { GetContextParameters, LogtoConfig, SignInOptions } from '@logto/node';
 
 declare module 'http' {
   // Honor module definition
@@ -11,4 +11,5 @@ declare module 'http' {
 export type LogtoExpressConfig = LogtoConfig & {
   baseUrl: string;
   authRoutesPrefix?: string;
+  signInOptions?: Omit<SignInOptions, 'redirectUri' | 'postRedirectUri'>;
 } & GetContextParameters;

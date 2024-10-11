@@ -71,13 +71,20 @@ export const handleAuthRoutes = (config: LogtoExpressConfig): Router => {
 
     switch (action) {
       case 'sign-in': {
-        await nodeClient.signIn(`${config.baseUrl}/${prefix}/sign-in-callback`);
+        await nodeClient.signIn({
+          ...config.signInOptions,
+          redirectUri: `${config.baseUrl}/${prefix}/sign-in-callback`,
+        });
 
         break;
       }
 
       case 'sign-up': {
-        await nodeClient.signIn(`${config.baseUrl}/${prefix}/sign-in-callback`, 'signUp');
+        await nodeClient.signIn({
+          ...config.signInOptions,
+          redirectUri: `${config.baseUrl}/${prefix}/sign-in-callback`,
+          firstScreen: 'register',
+        });
 
         break;
       }
