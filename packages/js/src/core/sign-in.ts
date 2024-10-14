@@ -34,7 +34,7 @@ export type SignInUriParameters = {
    */
   firstScreen?: FirstScreen;
   /**
-   * Specifies identifiers used in the identifier sign-in or identifier register page.
+   * Specifies identifiers used in the identifier sign-in, identifier register, and reset password pages.
    *
    * Available values: `email`, `phone`, `username`.
    *
