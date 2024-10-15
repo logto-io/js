@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.2.2
+
+### Patch Changes
+
+- @logto/next@3.7.2
+
 ## 2.2.1
 
 ### Patch Changes

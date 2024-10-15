@@ -1,5 +1,17 @@
 # @logto/nuxt
 
+## 1.1.0
+
+### Minor Changes
+
+- 4c51e3b: support sign in options
+
+  Add new option `signInOptions`, see https://docs.logto.io/docs/references/openid-connect/authentication-parameters for more details.
+
+### Patch Changes
+
+- @logto/node@2.5.9
+
 ## 1.0.1
 
 ### Patch Changes

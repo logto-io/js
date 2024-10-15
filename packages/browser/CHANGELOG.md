@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.2.19
+
+### Patch Changes
+
+- @logto/client@2.8.2
+
 ## 2.2.18
 
 ### Patch Changes

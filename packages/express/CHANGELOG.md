@@ -1,5 +1,17 @@
 # Change Log
 
+## 2.4.0
+
+### Minor Changes
+
+- 09c5bf9: support sign in options
+
+  Add new option `signInOptions`, see https://docs.logto.io/docs/references/openid-connect/authentication-parameters for more details.
+
+### Patch Changes
+
+- @logto/node@2.5.9
+
 ## 2.3.17
 
 ### Patch Changes
