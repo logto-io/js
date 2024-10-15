@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@logto/js": "workspace:^",
-    "@silverhand/essentials": "^2.8.7",
+    "@silverhand/essentials": "^2.9.2",
     "camelcase-keys": "^7.0.1",
     "jose": "^5.2.2"
   },
