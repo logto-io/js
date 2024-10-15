@@ -2,12 +2,10 @@
   "name": "@logto/express",
   "version": "2.4.0",
   "type": "module",
-  "main": "./lib/index.cjs",
   "module": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "exports": {
     "types": "./lib/index.d.ts",
-    "require": "./lib/index.cjs",
     "import": "./lib/index.js",
     "default": "./lib/index.js"
   },
@@ -27,9 +25,8 @@
     "build": "rm -rf lib/ && tsc -p tsconfig.build.json --noEmit && rollup -c",
     "lint": "eslint --ext .ts src",
     "test": "vitest",
-    "test:coverage": "node test.cjs && vitest --silent --coverage",
-    "prepack": "pnpm build && pnpm test",
-    "postpack": "node test.cjs"
+    "test:coverage": "vitest --silent --coverage",
+    "prepack": "pnpm build && pnpm test"
   },
   "dependencies": {
     "@logto/node": "workspace:^"

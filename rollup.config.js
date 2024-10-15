@@ -9,11 +9,11 @@ const configs = {
   input: ['src/index.ts'],
   output: [
     {
-      format: 'cjs',
+      format: 'esm',
       dir: 'lib',
       preserveModules: true,
       exports: 'named',
-      entryFileNames: '[name].cjs',
+      entryFileNames: '[name].js',
       interop: 'auto',
     },
     { dir: 'lib', preserveModules: true },
