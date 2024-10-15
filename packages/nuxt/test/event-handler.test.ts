@@ -65,7 +65,9 @@ describe('event-handler', async () => {
     const event = createH3Event();
     getRequestURL.mockReturnValueOnce(new URL('http://localhost:3000/sign-in'));
     await handler(event);
-    expect(LogtoClient.prototype.signIn).toHaveBeenCalledWith('http://localhost:3000/callback');
+    expect(LogtoClient.prototype.signIn).toHaveBeenCalledWith({
+      redirectUri: 'http://localhost:3000/callback',
+    });
   });
 
   it('should handle callback with custom callback pathname', async () => {

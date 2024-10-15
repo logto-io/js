@@ -21,6 +21,7 @@ export default defineEventHandler(async (event) => {
     postCallbackRedirectUri,
     postLogoutRedirectUri,
     customRedirectBaseUrl,
+    signInOptions,
     ...clientConfig
   } = logtoConfig;
 
@@ -72,7 +73,10 @@ export default defineEventHandler(async (event) => {
   });
 
   if (url.pathname === pathnames.signIn) {
-    await logto.signIn(new URL(pathnames.callback, url).href);
+    await logto.signIn({
+      ...signInOptions,
+      redirectUri: new URL(pathnames.callback, url).href,
+    });
     return;
   }
 
