@@ -1,5 +1,11 @@
 # @logto/capacitor
 
+## 2.0.5
+
+### Patch Changes
+
+- @logto/browser@2.2.19
+
 ## 2.0.4
 
 ### Patch Changes

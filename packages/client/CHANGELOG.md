@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.8.2
+
+### Patch Changes
+
+- Updated dependencies [7980dec]
+  - @logto/js@4.2.1
+
 ## 2.8.1
 
 ### Patch Changes
