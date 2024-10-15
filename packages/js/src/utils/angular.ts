@@ -1,6 +1,8 @@
+import { conditional } from '@silverhand/essentials';
 import { type OpenIdConfiguration } from 'angular-auth-oidc-client';
 
-import { Prompt } from '../consts/index.js';
+import { Prompt, QueryKey } from '../consts/index.js';
+import { type SignInUriParameters } from '../index.js';
 
 import { withReservedScopes } from './scopes.js';
 
@@ -52,6 +54,41 @@ export type LogtoAngularConfig = {
    * @default true
    */
   includeReservedScopes?: boolean;
+  /**
+   * Login hint indicates the current user (usually an email address or a phone number).
+   *
+   * @link SignInUriParameters.loginHint
+   */
+  loginHint?: SignInUriParameters['loginHint'];
+  /**
+   * The first screen to be shown in the sign-in experience.
+   *
+   * @link SignInUriParameters.firstScreen
+   */
+  firstScreen?: SignInUriParameters['firstScreen'];
+  /**
+   * Identifiers used in the identifier sign-in, identifier register or reset password pages.
+   *
+   * Note: This parameter is applicable only when the `firstScreen` is set to either`identifierSignIn`
+   * or `identifierRegister`.
+   *
+   * @link SignInUriParameters.identifiers
+   */
+  identifiers?: SignInUriParameters['identifiers'];
+  /**
+   * Direct sign-in options.
+   *
+   * @link SignInUriParameters.directSignIn
+   */
+  directSignIn?: SignInUriParameters['directSignIn'];
+  /**
+   * Extra parameters to be appended to the sign-in URI.
+   *
+   * Note: The parameters should be supported by the authorization server.
+   *
+   * @link SignInUriParameters.extraParams
+   */
+  extraParams?: SignInUriParameters['extraParams'];
 };
 
 /**
@@ -88,9 +125,23 @@ export const buildAngularAuthConfig = (logtoConfig: LogtoAngularConfig): OpenIdC
     postLogoutRedirectUri,
     prompt = Prompt.Consent,
     includeReservedScopes = true,
+    loginHint,
+    identifiers,
+    firstScreen,
+    directSignIn,
+    extraParams,
   } = logtoConfig;
   const scope = includeReservedScopes ? withReservedScopes(scopes) : scopes?.join(' ');
-  const customParameters = resource ? { resource } : undefined;
+  const customParameters = {
+    ...conditional(resource && { [QueryKey.Resource]: resource }),
+    ...conditional(loginHint && { [QueryKey.LoginHint]: loginHint }),
+    ...conditional(firstScreen && { [QueryKey.FirstScreen]: firstScreen }),
+    ...conditional(identifiers && { [QueryKey.Identifier]: identifiers.join(' ') }),
+    ...conditional(
+      directSignIn && { [QueryKey.DirectSignIn]: `${directSignIn.method}:${directSignIn.target}` }
+    ),
+    ...extraParams,
+  };
 
   return {
     authority: new URL('/oidc', endpoint).href,

@@ -26,8 +26,6 @@ export type InteractionMode = 'signIn' | 'signUp';
  * standard, but a Logto-specific extension.
  *
  * Note: `signIn` is deprecated, use `sign_in` instead
- *
- * @experimental Don't use this type as it's under development.
  */
 export type FirstScreen =
   | 'signIn'
