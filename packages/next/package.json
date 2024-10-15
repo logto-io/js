@@ -2,7 +2,6 @@
   "name": "@logto/next",
   "version": "3.7.2",
   "type": "module",
-  "main": "./lib/src/index.cjs",
   "module": "./lib/src/index.js",
   "types": "./lib/src/index.d.ts",
   "typesVersions": {
@@ -20,17 +19,14 @@
   },
   "exports": {
     ".": {
-      "require": "./lib/src/index.cjs",
       "import": "./lib/src/index.js",
       "types": "./lib/src/index.d.ts"
     },
     "./edge": {
-      "require": "./lib/edge/index.cjs",
       "import": "./lib/edge/index.js",
       "types": "./lib/edge/index.d.ts"
     },
     "./server-actions": {
-      "require": "./lib/server-actions/index.cjs",
       "import": "./lib/server-actions/index.js",
       "types": "./lib/server-actions/index.d.ts"
     }
@@ -51,9 +47,8 @@
     "build": "rm -rf lib/ && tsc -p tsconfig.build.json --noEmit && rollup -c",
     "lint": "eslint --ext .ts src",
     "test": "vitest",
-    "test:coverage": "node test.cjs && vitest --silent --coverage",
-    "prepack": "pnpm build && pnpm test",
-    "postpack": "node test.cjs"
+    "test:coverage": "vitest --silent --coverage",
+    "prepack": "pnpm build && pnpm test"
   },
   "dependencies": {
     "@edge-runtime/cookies": "^5.0.0",

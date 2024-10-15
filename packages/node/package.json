@@ -2,22 +2,18 @@
   "name": "@logto/node",
   "version": "2.5.9",
   "type": "module",
-  "main": "./lib/src/index.cjs",
   "module": "./lib/src/index.js",
   "types": "./lib/src/index.d.ts",
   "exports": {
     ".": {
-      "require": "./lib/src/index.cjs",
       "import": "./lib/src/index.js",
       "types": "./lib/src/index.d.ts"
     },
     "./edge": {
-      "require": "./lib/edge/index.cjs",
       "import": "./lib/edge/index.js",
       "types": "./lib/edge/index.d.ts"
     },
     "./exports": {
-      "require": "./lib/exports/index.cjs",
       "import": "./lib/exports/index.js",
       "types": "./lib/exports/index.d.ts"
     }
@@ -38,9 +34,8 @@
     "build": "rm -rf lib/ && tsc -p tsconfig.build.json --noEmit && rollup -c",
     "lint": "eslint --ext .ts src",
     "test": "vitest",
-    "test:coverage": "node test.cjs && vitest --silent --coverage",
-    "prepack": "pnpm build && pnpm test",
-    "postpack": "node test.cjs"
+    "test:coverage": "vitest --silent --coverage",
+    "prepack": "pnpm build && pnpm test"
   },
   "dependencies": {
     "@logto/client": "workspace:^",
