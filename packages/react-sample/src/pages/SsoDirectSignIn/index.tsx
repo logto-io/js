@@ -1,27 +1,31 @@
-import { useLogto } from '@logto/react';
+import { Prompt, useLogto } from '@logto/react';
 import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { redirectUrl } from '../../consts';
 
 const SsoDirectSignIn = () => {
   const { isAuthenticated, signIn } = useLogto();
-  const { connectorId } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    if (isAuthenticated || !connectorId) {
-      navigate('/');
-    } else {
+    const connectorId = searchParams.get('ssoConnectorId');
+
+    if (connectorId) {
       void signIn({
         redirectUri: redirectUrl,
+        prompt: Prompt.Login,
         directSignIn: {
           method: 'sso',
           target: connectorId,
         },
       });
+      return;
     }
-  }, [connectorId, isAuthenticated, navigate, signIn]);
+
+    navigate('/');
+  }, [searchParams, isAuthenticated, navigate, signIn]);
 
   return null;
 };

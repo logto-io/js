@@ -15,7 +15,6 @@ export const App = () => {
   const config: LogtoConfig = {
     appId,
     endpoint,
-    resources: ['https://api.auth.logto.gg/'],
     scopes: [
       UserScope.Email,
       UserScope.Phone,
@@ -31,7 +30,7 @@ export const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/callback" element={<Callback />} />
-          <Route path="/sso/:connectorId" element={<SsoDirectSignIn />} />
+          <Route path="/sso/callback" element={<SsoDirectSignIn />} />
           <Route path="/protected" element={<RequireAuth />}>
             <Route index element={<ProtectedResource />} />
             <Route path="react-query" element={<ReactQuery />} />
