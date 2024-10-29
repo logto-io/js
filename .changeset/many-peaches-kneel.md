@@ -11,4 +11,4 @@
 "@logto/js": major
 ---
 
-drop common JS support and become pure ESM
+drop CommonJS support and become pure ESM
