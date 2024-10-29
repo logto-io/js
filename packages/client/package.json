@@ -2,13 +2,11 @@
   "name": "@logto/client",
   "version": "2.8.2",
   "type": "module",
-  "main": "./lib/index.cjs",
   "module": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "react-native": "./lib/shim.js",
   "exports": {
     "types": "./lib/index.d.ts",
-    "require": "./lib/index.cjs",
     "import": "./lib/index.js",
     "default": "./lib/index.js"
   },
@@ -35,7 +33,7 @@
   "dependencies": {
     "@logto/js": "workspace:^",
     "@silverhand/essentials": "^2.9.2",
-    "camelcase-keys": "^7.0.1",
+    "camelcase-keys": "^9.1.3",
     "jose": "^5.2.2"
   },
   "devDependencies": {
