@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.0.20
+
+### Patch Changes
+
+- Updated dependencies [9fa75c6]
+  - @logto/browser@3.0.0
+
 ## 2.0.19
 
 ### Patch Changes

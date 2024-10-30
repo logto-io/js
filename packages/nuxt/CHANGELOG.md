@@ -1,5 +1,16 @@
 # @logto/nuxt
 
+## 1.1.1
+
+### Patch Changes
+
+- 8bc63e0: fix the default value of customRedirectBaseUrl
+
+  Previously, it was set to '<replace-with-custom-redirect-base-url>', which is not a valid value. Now the default value is removed because it's not a required value.
+
+- Updated dependencies [9fa75c6]
+  - @logto/node@3.0.0
+
 ## 1.1.0
 
 ### Minor Changes

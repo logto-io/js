@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.0.0
+
+### Major Changes
+
+- 9fa75c6: drop CommonJS support and become pure ESM
+
 ## 4.2.1
 
 ### Patch Changes
