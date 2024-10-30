@@ -12,5 +12,4 @@ export const defaults = Object.freeze({
   appId: '<replace-with-logto-app-id>',
   appSecret: '<replace-with-logto-app-secret>',
   cookieEncryptionKey: '<replace-with-random-string>',
-  customRedirectBaseUrl: '<replace-with-custom-redirect-base-url>',
 } as const satisfies LogtoRuntimeConfigInput);
