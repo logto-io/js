@@ -1,5 +1,12 @@
 # @logto/chrome-extension
 
+## 0.1.14
+
+### Patch Changes
+
+- Updated dependencies [9fa75c6]
+  - @logto/browser@3.0.0
+
 ## 0.1.13
 
 ### Patch Changes

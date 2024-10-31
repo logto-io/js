@@ -1,5 +1,16 @@
 # Change Log
 
+## 3.0.0
+
+### Major Changes
+
+- 9fa75c6: drop CommonJS support and become pure ESM
+
+### Patch Changes
+
+- Updated dependencies [9fa75c6]
+  - @logto/node@3.0.0
+
 ## 2.2.8
 
 ### Patch Changes
