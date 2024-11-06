@@ -65,13 +65,13 @@ importers:
         version: 6.0.0(typescript@5.3.3)
       '@vitest/coverage-v8':
         specifier: ^1.6.0
-        version: 1.6.0(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2))
+        version: 1.6.0(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2))
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
       happy-dom:
-        specifier: ^15.0.0
-        version: 15.7.4
+        specifier: ^15.10.1
+        version: 15.10.1
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.0
@@ -83,7 +83,7 @@ importers:
         version: 5.3.3
       vitest:
         specifier: ^1.6.0
-        version: 1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2)
+        version: 1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2)
 
   packages/browser-sample:
     dependencies:
@@ -148,13 +148,13 @@ importers:
         version: 6.0.0(typescript@5.3.3)
       '@vitest/coverage-v8':
         specifier: ^1.6.0
-        version: 1.6.0(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2))
+        version: 1.6.0(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2))
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
       happy-dom:
-        specifier: ^15.0.0
-        version: 15.7.4
+        specifier: ^15.10.1
+        version: 15.10.1
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.0
@@ -166,7 +166,7 @@ importers:
         version: 5.3.3
       vitest:
         specifier: ^1.6.0
-        version: 1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2)
+        version: 1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2)
 
   packages/chrome-extension:
     dependencies:
@@ -270,13 +270,13 @@ importers:
         version: 20.11.19
       '@vitest/coverage-v8':
         specifier: ^1.6.0
-        version: 1.6.0(vitest@1.6.0(@types/node@20.11.19)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2))
+        version: 1.6.0(vitest@1.6.0(@types/node@20.11.19)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2))
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
       happy-dom:
-        specifier: ^15.0.0
-        version: 15.7.4
+        specifier: ^15.10.1
+        version: 15.10.1
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.0
@@ -291,7 +291,7 @@ importers:
         version: 5.3.3
       vitest:
         specifier: ^1.6.0
-        version: 1.6.0(@types/node@20.11.19)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2)
+        version: 1.6.0(@types/node@20.11.19)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2)
 
   packages/express:
     dependencies:
@@ -325,7 +325,7 @@ importers:
         version: 6.0.0
       '@vitest/coverage-v8':
         specifier: ^1.6.0
-        version: 1.6.0(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2))
+        version: 1.6.0(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2))
       cookie-parser:
         specifier: ^1.4.6
         version: 1.4.6
@@ -352,7 +352,7 @@ importers:
         version: 5.3.3
       vitest:
         specifier: ^1.6.0
-        version: 1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2)
+        version: 1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2)
 
   packages/express-sample:
     dependencies:
@@ -426,7 +426,7 @@ importers:
         version: 20.11.19
       '@vitest/coverage-v8':
         specifier: ^1.6.0
-        version: 1.6.0(vitest@1.6.0(@types/node@20.11.19)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2))
+        version: 1.6.0(vitest@1.6.0(@types/node@20.11.19)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2))
       angular-auth-oidc-client:
         specifier: ^18.0.0
         version: 18.0.1(@angular/common@17.2.1(@angular/core@17.2.1(rxjs@7.8.1)(zone.js@0.14.4))(rxjs@7.8.1))(@angular/core@17.2.1(rxjs@7.8.1)(zone.js@0.14.4))(@angular/router@17.2.1(@angular/common@17.2.1(@angular/core@17.2.1(rxjs@7.8.1)(zone.js@0.14.4))(rxjs@7.8.1))(@angular/core@17.2.1(rxjs@7.8.1)(zone.js@0.14.4))(@angular/platform-browser@17.2.1(@angular/common@17.2.1(@angular/core@17.2.1(rxjs@7.8.1)(zone.js@0.14.4))(rxjs@7.8.1))(@angular/core@17.2.1(rxjs@7.8.1)(zone.js@0.14.4)))(rxjs@7.8.1))(rxjs@7.8.1)
@@ -434,8 +434,8 @@ importers:
         specifier: ^8.57.0
         version: 8.57.0
       happy-dom:
-        specifier: ^15.0.0
-        version: 15.7.4
+        specifier: ^15.10.1
+        version: 15.10.1
       jose:
         specifier: ^5.2.2
         version: 5.2.2
@@ -453,7 +453,7 @@ importers:
         version: 5.3.3
       vitest:
         specifier: ^1.6.0
-        version: 1.6.0(@types/node@20.11.19)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2)
+        version: 1.6.0(@types/node@20.11.19)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2)
 
   packages/next:
     dependencies:
@@ -481,7 +481,7 @@ importers:
         version: 0.6.0
       '@vitest/coverage-v8':
         specifier: ^1.6.0
-        version: 1.6.0(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2))
+        version: 1.6.0(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2))
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
@@ -508,7 +508,7 @@ importers:
         version: 5.3.3
       vitest:
         specifier: ^1.6.0
-        version: 1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2)
+        version: 1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2)
 
   packages/next-sample:
     dependencies:
@@ -652,7 +652,7 @@ importers:
         version: 20.11.19
       '@vitest/coverage-v8':
         specifier: ^1.6.0
-        version: 1.6.0(vitest@1.6.0(@types/node@20.11.19)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2))
+        version: 1.6.0(vitest@1.6.0(@types/node@20.11.19)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2))
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
@@ -667,7 +667,7 @@ importers:
         version: 5.3.3
       vitest:
         specifier: ^1.6.0
-        version: 1.6.0(@types/node@20.11.19)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2)
+        version: 1.6.0(@types/node@20.11.19)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2)
 
   packages/nuxt:
     dependencies:
@@ -689,13 +689,13 @@ importers:
         version: 0.8.4(@nuxt/kit@3.10.2(rollup@4.22.4)(webpack-sources@3.2.3))(nuxi@3.14.0)(typescript@5.3.3)(webpack-sources@3.2.3)
       '@nuxt/test-utils':
         specifier: ^3.12.1
-        version: 3.12.1(@vue/test-utils@2.4.4(@vue/server-renderer@3.5.11(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3)))(h3@1.11.1)(happy-dom@15.7.4)(rollup@4.22.4)(vite@5.4.8(@types/node@20.12.2)(terser@5.27.2))(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(terser@5.27.2))(vue-router@4.4.5(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3))(webpack-sources@3.2.3)
+        version: 3.12.1(@vue/test-utils@2.4.4(@vue/server-renderer@3.5.11(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3)))(h3@1.11.1)(happy-dom@15.10.1)(rollup@4.22.4)(vite@5.4.8(@types/node@20.12.2)(terser@5.27.2))(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(terser@5.27.2))(vue-router@4.4.5(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3))(webpack-sources@3.2.3)
       '@silverhand/eslint-config':
         specifier: ^6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
       '@vitest/coverage-v8':
         specifier: ^1.6.0
-        version: 1.6.0(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(terser@5.27.2))
+        version: 1.6.0(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(terser@5.27.2))
       '@vue/test-utils':
         specifier: ^2.4.4
         version: 2.4.4(@vue/server-renderer@3.5.11(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3))
@@ -706,8 +706,8 @@ importers:
         specifier: ^1.11.1
         version: 1.11.1
       happy-dom:
-        specifier: ^15.0.0
-        version: 15.7.4
+        specifier: ^15.10.1
+        version: 15.10.1
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.0
@@ -722,7 +722,7 @@ importers:
         version: 5.3.3
       vitest:
         specifier: ^1.6.0
-        version: 1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(terser@5.27.2)
+        version: 1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(terser@5.27.2)
       vue:
         specifier: ^3.4.19
         version: 3.4.19(typescript@5.3.3)
@@ -817,13 +817,13 @@ importers:
         version: 18.2.56
       '@vitest/coverage-v8':
         specifier: ^1.6.0
-        version: 1.6.0(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2))
+        version: 1.6.0(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2))
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
       happy-dom:
-        specifier: ^15.0.0
-        version: 15.7.4
+        specifier: ^15.10.1
+        version: 15.10.1
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.0
@@ -844,7 +844,7 @@ importers:
         version: 5.3.3
       vitest:
         specifier: ^1.6.0
-        version: 1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2)
+        version: 1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2)
 
   packages/react-sample:
     dependencies:
@@ -942,7 +942,7 @@ importers:
         version: 20.11.19
       '@vitest/coverage-v8':
         specifier: ^1.6.0
-        version: 1.6.0(vitest@1.6.0(@types/node@20.11.19)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2))
+        version: 1.6.0(vitest@1.6.0(@types/node@20.11.19)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2))
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
@@ -957,7 +957,7 @@ importers:
         version: 5.3.3
       vitest:
         specifier: ^1.6.0
-        version: 1.6.0(@types/node@20.11.19)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2)
+        version: 1.6.0(@types/node@20.11.19)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2)
 
   packages/sveltekit:
     dependencies:
@@ -985,7 +985,7 @@ importers:
         version: 20.11.19
       '@vitest/coverage-v8':
         specifier: ^1.6.0
-        version: 1.6.0(vitest@1.6.0(@types/node@20.11.19)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2))
+        version: 1.6.0(vitest@1.6.0(@types/node@20.11.19)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2))
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
@@ -1000,7 +1000,7 @@ importers:
         version: 5.3.3
       vitest:
         specifier: ^1.6.0
-        version: 1.6.0(@types/node@20.11.19)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2)
+        version: 1.6.0(@types/node@20.11.19)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2)
 
   packages/sveltekit-sample:
     devDependencies:
@@ -1064,13 +1064,13 @@ importers:
         version: 6.0.0(typescript@5.3.3)
       '@vitest/coverage-v8':
         specifier: ^1.6.0
-        version: 1.6.0(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2))
+        version: 1.6.0(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2))
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
       happy-dom:
-        specifier: ^15.0.0
-        version: 15.7.4
+        specifier: ^15.10.1
+        version: 15.10.1
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.0
@@ -1088,7 +1088,7 @@ importers:
         version: 5.3.3
       vitest:
         specifier: ^1.6.0
-        version: 1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2)
+        version: 1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2)
       vue:
         specifier: ^3.4.19
         version: 3.4.19(typescript@5.3.3)
@@ -5796,8 +5796,8 @@ packages:
   h3@1.13.0:
     resolution: {integrity: sha512-vFEAu/yf8UMUcB4s43OaDaigcqpQd14yanmOsn+NcRX3/guSKncyE2rOYhq8RIchgJrPSs/QiIddnTTR1ddiAg==}
 
-  happy-dom@15.7.4:
-    resolution: {integrity: sha512-r1vadDYGMtsHAAsqhDuk4IpPvr6N8MGKy5ntBo7tSdim+pWDxus2PNqOcOt8LuDZ4t3KJHE+gCuzupcx/GKnyQ==}
+  happy-dom@15.10.1:
+    resolution: {integrity: sha512-FuGnj/qIB4QnBL6fWmD7Wnh6STxevLgOVWB6+nopDGgWG1+t9CXkNB2ldZ+iqwD2UKxD2D0SU8el8A6AX6Q1+g==}
     engines: {node: '>=18.0.0'}
 
   hard-rejection@2.1.0:
@@ -10939,7 +10939,7 @@ snapshots:
       - supports-color
       - webpack-sources
 
-  '@nuxt/test-utils@3.12.1(@vue/test-utils@2.4.4(@vue/server-renderer@3.5.11(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3)))(h3@1.11.1)(happy-dom@15.7.4)(rollup@4.22.4)(vite@5.4.8(@types/node@20.12.2)(terser@5.27.2))(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(terser@5.27.2))(vue-router@4.4.5(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3))(webpack-sources@3.2.3)':
+  '@nuxt/test-utils@3.12.1(@vue/test-utils@2.4.4(@vue/server-renderer@3.5.11(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3)))(h3@1.11.1)(happy-dom@15.10.1)(rollup@4.22.4)(vite@5.4.8(@types/node@20.12.2)(terser@5.27.2))(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(terser@5.27.2))(vue-router@4.4.5(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3))(webpack-sources@3.2.3)':
     dependencies:
       '@nuxt/kit': 3.11.2(rollup@4.22.4)(webpack-sources@3.2.3)
       '@nuxt/schema': 3.11.2(rollup@4.22.4)
@@ -10965,13 +10965,13 @@ snapshots:
       unenv: 1.9.0
       unplugin: 1.10.1
       vite: 5.4.8(@types/node@20.12.2)(terser@5.27.2)
-      vitest-environment-nuxt: 1.0.0(@vue/test-utils@2.4.4(@vue/server-renderer@3.5.11(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3)))(h3@1.11.1)(happy-dom@15.7.4)(rollup@4.22.4)(vite@5.4.8(@types/node@20.12.2)(terser@5.27.2))(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(terser@5.27.2))(vue-router@4.4.5(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3))(webpack-sources@3.2.3)
+      vitest-environment-nuxt: 1.0.0(@vue/test-utils@2.4.4(@vue/server-renderer@3.5.11(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3)))(h3@1.11.1)(happy-dom@15.10.1)(rollup@4.22.4)(vite@5.4.8(@types/node@20.12.2)(terser@5.27.2))(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(terser@5.27.2))(vue-router@4.4.5(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3))(webpack-sources@3.2.3)
       vue: 3.4.19(typescript@5.3.3)
       vue-router: 4.4.5(vue@3.5.11(typescript@5.3.3))
     optionalDependencies:
       '@vue/test-utils': 2.4.4(@vue/server-renderer@3.5.11(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3))
-      happy-dom: 15.7.4
-      vitest: 1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(terser@5.27.2)
+      happy-dom: 15.10.1
+      vitest: 1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(terser@5.27.2)
     transitivePeerDependencies:
       - rollup
       - supports-color
@@ -12017,10 +12017,10 @@ snapshots:
       eslint-config-prettier: 9.1.0(eslint@8.57.0)
       eslint-config-xo: 0.44.0(eslint@8.57.0)
       eslint-config-xo-typescript: 4.0.0(@typescript-eslint/eslint-plugin@7.1.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0)(typescript@5.3.3))(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0)(typescript@5.3.3)
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0)
       eslint-plugin-consistent-default-export-name: 0.0.15
       eslint-plugin-eslint-comments: 3.2.0(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       eslint-plugin-n: 17.2.1(eslint@8.57.0)
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-prettier: 5.1.3(eslint-config-prettier@9.1.0(eslint@8.57.0))(eslint@8.57.0)(prettier@3.0.0)
@@ -12615,7 +12615,7 @@ snapshots:
       vite: 5.4.8(@types/node@20.12.2)(terser@5.27.2)
       vue: 3.5.11(typescript@5.3.3)
 
-  '@vitest/coverage-v8@1.6.0(vitest@1.6.0(@types/node@20.11.19)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2))':
+  '@vitest/coverage-v8@1.6.0(vitest@1.6.0(@types/node@20.11.19)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -12630,11 +12630,11 @@ snapshots:
       std-env: 3.7.0
       strip-literal: 2.1.0
       test-exclude: 6.0.0
-      vitest: 1.6.0(@types/node@20.11.19)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2)
+      vitest: 1.6.0(@types/node@20.11.19)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/coverage-v8@1.6.0(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2))':
+  '@vitest/coverage-v8@1.6.0(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -12649,11 +12649,11 @@ snapshots:
       std-env: 3.7.0
       strip-literal: 2.1.0
       test-exclude: 6.0.0
-      vitest: 1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2)
+      vitest: 1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/coverage-v8@1.6.0(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(terser@5.27.2))':
+  '@vitest/coverage-v8@1.6.0(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(terser@5.27.2))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -12668,7 +12668,7 @@ snapshots:
       std-env: 3.7.0
       strip-literal: 2.1.0
       test-exclude: 6.0.0
-      vitest: 1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(terser@5.27.2)
+      vitest: 1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(terser@5.27.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -14593,7 +14593,7 @@ snapshots:
       debug: 4.3.7
       enhanced-resolve: 5.13.0
       eslint: 8.50.0
-      eslint-module-utils: 2.8.0(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5)(eslint@8.50.0)
+      eslint-module-utils: 2.8.0(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1(eslint@8.50.0))(eslint@8.50.0))(eslint@8.50.0)
       eslint-plugin-import: 2.28.1(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.5.5)(eslint@8.50.0)
       get-tsconfig: 4.5.0
       globby: 13.2.2
@@ -14606,13 +14606,13 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0):
+  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 4.3.4
       enhanced-resolve: 5.15.0
       eslint: 8.57.0
-      eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.5.0
       is-core-module: 2.13.0
@@ -14623,7 +14623,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.8.0(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5)(eslint@8.50.0):
+  eslint-module-utils@2.8.0(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1(eslint@8.50.0))(eslint@8.50.0))(eslint@8.50.0):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
@@ -14634,14 +14634,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.8.0(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0):
+  eslint-module-utils@2.8.0(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 7.1.1(eslint@8.57.0)(typescript@5.3.3)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -14673,7 +14673,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.50.0
       eslint-import-resolver-node: 0.3.7
-      eslint-module-utils: 2.8.0(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5)(eslint@8.50.0)
+      eslint-module-utils: 2.8.0(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@6.7.0(eslint@8.50.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1(eslint@8.50.0))(eslint@8.50.0))(eslint@8.50.0)
       has: 1.0.3
       is-core-module: 2.13.0
       is-glob: 4.0.3
@@ -14690,7 +14690,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlastindex: 1.2.3
@@ -14700,7 +14700,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.3.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.13.1
       is-glob: 4.0.3
@@ -15581,7 +15581,7 @@ snapshots:
     transitivePeerDependencies:
       - uWebSockets.js
 
-  happy-dom@15.7.4:
+  happy-dom@15.10.1:
     dependencies:
       entities: 4.5.0
       webidl-conversions: 7.0.0
@@ -19354,9 +19354,9 @@ snapshots:
     optionalDependencies:
       vite: 5.4.8(@types/node@20.11.19)(sass@1.58.0)(terser@5.27.2)
 
-  vitest-environment-nuxt@1.0.0(@vue/test-utils@2.4.4(@vue/server-renderer@3.5.11(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3)))(h3@1.11.1)(happy-dom@15.7.4)(rollup@4.22.4)(vite@5.4.8(@types/node@20.12.2)(terser@5.27.2))(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(terser@5.27.2))(vue-router@4.4.5(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3))(webpack-sources@3.2.3):
+  vitest-environment-nuxt@1.0.0(@vue/test-utils@2.4.4(@vue/server-renderer@3.5.11(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3)))(h3@1.11.1)(happy-dom@15.10.1)(rollup@4.22.4)(vite@5.4.8(@types/node@20.12.2)(terser@5.27.2))(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(terser@5.27.2))(vue-router@4.4.5(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3))(webpack-sources@3.2.3):
     dependencies:
-      '@nuxt/test-utils': 3.12.1(@vue/test-utils@2.4.4(@vue/server-renderer@3.5.11(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3)))(h3@1.11.1)(happy-dom@15.7.4)(rollup@4.22.4)(vite@5.4.8(@types/node@20.12.2)(terser@5.27.2))(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(terser@5.27.2))(vue-router@4.4.5(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3))(webpack-sources@3.2.3)
+      '@nuxt/test-utils': 3.12.1(@vue/test-utils@2.4.4(@vue/server-renderer@3.5.11(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3)))(h3@1.11.1)(happy-dom@15.10.1)(rollup@4.22.4)(vite@5.4.8(@types/node@20.12.2)(terser@5.27.2))(vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(terser@5.27.2))(vue-router@4.4.5(vue@3.4.19(typescript@5.3.3)))(vue@3.4.19(typescript@5.3.3))(webpack-sources@3.2.3)
     transitivePeerDependencies:
       - '@cucumber/cucumber'
       - '@jest/globals'
@@ -19376,7 +19376,7 @@ snapshots:
       - vue-router
       - webpack-sources
 
-  vitest@1.6.0(@types/node@20.11.19)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2):
+  vitest@1.6.0(@types/node@20.11.19)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2):
     dependencies:
       '@vitest/expect': 1.6.0
       '@vitest/runner': 1.6.0
@@ -19400,7 +19400,7 @@ snapshots:
       why-is-node-running: 2.2.2
     optionalDependencies:
       '@types/node': 20.11.19
-      happy-dom: 15.7.4
+      happy-dom: 15.10.1
     transitivePeerDependencies:
       - less
       - lightningcss
@@ -19410,7 +19410,7 @@ snapshots:
       - supports-color
       - terser
 
-  vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(sass@1.58.0)(terser@5.27.2):
+  vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(sass@1.58.0)(terser@5.27.2):
     dependencies:
       '@vitest/expect': 1.6.0
       '@vitest/runner': 1.6.0
@@ -19434,7 +19434,7 @@ snapshots:
       why-is-node-running: 2.2.2
     optionalDependencies:
       '@types/node': 20.12.2
-      happy-dom: 15.7.4
+      happy-dom: 15.10.1
     transitivePeerDependencies:
       - less
       - lightningcss
@@ -19444,7 +19444,7 @@ snapshots:
       - supports-color
       - terser
 
-  vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.7.4)(terser@5.27.2):
+  vitest@1.6.0(@types/node@20.12.2)(happy-dom@15.10.1)(terser@5.27.2):
     dependencies:
       '@vitest/expect': 1.6.0
       '@vitest/runner': 1.6.0
@@ -19468,7 +19468,7 @@ snapshots:
       why-is-node-running: 2.2.2
     optionalDependencies:
       '@types/node': 20.12.2
-      happy-dom: 15.7.4
+      happy-dom: 15.10.1
     transitivePeerDependencies:
       - less
       - lightningcss
