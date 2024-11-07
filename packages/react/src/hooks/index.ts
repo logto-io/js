@@ -103,7 +103,65 @@ const useHandleSignInCallback = (callback?: () => void) => {
   };
 };
 
+import { useEffect, useRef } from 'react';
+import { decodeIdToken } from '@logto/js/lib/utils/id-token.js';
 const useLogto = (): Logto => {
+  const idTokenRef = useRef<string | undefined>();
+  const refreshTimerRef = useRef<NodeJS.Timeout>();
+
+  const refreshIdToken = useCallback(async () => {
+    if (!client) {
+      return;
+    }
+
+    try {
+      const newIdToken = await client.getIdToken();
+      idTokenRef.current = newIdToken;
+    } catch (error) {
+      handleError(error, 'Failed to refresh IdToken');
+    }
+  }, [client, handleError]);
+
+  const scheduleRefresh = useCallback((expiresIn: number) => {
+    if (refreshTimerRef.current) {
+      clearTimeout(refreshTimerRef.current);
+    }
+
+    // Refresh 5 minutes before expiration
+    const refreshDelay = Math.max((expiresIn - 5 * 60) * 1000, 0);
+    refreshTimerRef.current = setTimeout(refreshIdToken, refreshDelay);
+  }, [refreshIdToken]);
+
+  useEffect(() => {
+    const setupRefresh = async () => {
+      if (!client) {
+        return;
+      }
+
+      try {
+        const idToken = await client.getIdToken();
+        idTokenRef.current = idToken;
+
+        if (idToken) {
+          const { exp } = decodeIdToken(idToken);
+          const now = Math.floor(Date.now() / 1000);
+          const expiresIn = exp - now;
+          scheduleRefresh(expiresIn);
+        }
+      } catch (error) {
+        handleError(error, 'Failed to setup IdToken refresh');
+      }
+    };
+
+    setupRefresh();
+
+    return () => {
+      if (refreshTimerRef.current) {
+        clearTimeout(refreshTimerRef.current);
+      }
+    };
+  }, [client, handleError, scheduleRefresh]);
+
   const { logtoClient, isAuthenticated, error, isLoading, setIsLoading } = useContext(LogtoContext);
   const { handleError } = useErrorHandler();
 
@@ -151,6 +209,17 @@ const useLogto = (): Logto => {
   );
 
   return {
+    isAuthenticated,
+    isLoading,
+    error,
+    ...methods,
+    getIdToken: async () => {
+      if (!idTokenRef.current) {
+        idTokenRef.current = await client.getIdToken();
+      }
+      return idTokenRef.current;
+    },
+  };
     isAuthenticated,
     isLoading,
     error,
