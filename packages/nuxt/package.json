@@ -37,7 +37,7 @@
     "@vue/test-utils": "^2.4.4",
     "eslint": "^8.57.0",
     "h3": "^1.11.1",
-    "happy-dom": "^15.0.0",
+    "happy-dom": "^15.10.2",
     "lint-staged": "^15.0.0",
     "nuxt": "^3.12.4",
     "prettier": "^3.0.0",
