@@ -17,7 +17,7 @@
   "devDependencies": {
     "@silverhand/ts-config": "^6.0.0",
     "@silverhand/ts-config-react": "^6.0.0",
-    "@types/node": "^20.11.19",
+    "@types/node": "^22.0.0",
     "@types/react": "^18.2.56",
     "@types/react-dom": "^18.2.19",
     "eslint": "^8.50.0",
