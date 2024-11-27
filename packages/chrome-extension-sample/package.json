@@ -1,6 +1,6 @@
 {
   "name": "@logto/chrome-extension-sample",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Logto integration example for Chrome extensions.",
   "type": "module",
   "private": true,

@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.1.20
+
+### Patch Changes
+
+- 28bc32e: force bump for republish
+- Updated dependencies [28bc32e]
+  - @logto/react@4.0.1
+
 ## 2.1.19
 
 ### Patch Changes

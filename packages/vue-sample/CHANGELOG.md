@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.1.19
+
+### Patch Changes
+
+- 28bc32e: force bump for republish
+- Updated dependencies [28bc32e]
+  - @logto/vue@3.0.1
+
 ## 2.1.18
 
 ### Patch Changes
