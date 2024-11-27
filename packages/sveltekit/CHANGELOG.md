@@ -1,5 +1,13 @@
 # @logto/sveltekit
 
+## 0.3.10
+
+### Patch Changes
+
+- 28bc32e: force bump for republish
+- Updated dependencies [28bc32e]
+  - @logto/node@3.0.1
+
 ## 0.3.9
 
 ### Patch Changes

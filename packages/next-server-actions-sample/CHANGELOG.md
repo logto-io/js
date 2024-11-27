@@ -1,5 +1,13 @@
 # next-server-actions-sample
 
+## 2.3.7
+
+### Patch Changes
+
+- 28bc32e: force bump for republish
+- Updated dependencies [28bc32e]
+  - @logto/next@4.0.1
+
 ## 2.3.6
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.0.21
+
+### Patch Changes
+
+- 28bc32e: force bump for republish
+- Updated dependencies [28bc32e]
+  - @logto/browser@3.0.1
+
 ## 2.0.20
 
 ### Patch Changes

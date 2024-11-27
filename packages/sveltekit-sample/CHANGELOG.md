@@ -1,5 +1,11 @@
 # @logto/sveltekit-sample
 
+## 0.2.1
+
+### Patch Changes
+
+- 28bc32e: force bump for republish
+
 ## 0.2.0
 
 ### Minor Changes

@@ -1,5 +1,13 @@
 # @logto/capacitor
 
+## 3.0.1
+
+### Patch Changes
+
+- 28bc32e: force bump for republish
+- Updated dependencies [28bc32e]
+  - @logto/browser@3.0.1
+
 ## 3.0.0
 
 ### Major Changes

@@ -1,5 +1,13 @@
 # @logto/nuxt
 
+## 1.1.2
+
+### Patch Changes
+
+- 28bc32e: force bump for republish
+- Updated dependencies [28bc32e]
+  - @logto/node@3.0.1
+
 ## 1.1.1
 
 ### Patch Changes

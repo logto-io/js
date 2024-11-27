@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.2.4
+
+### Patch Changes
+
+- 28bc32e: force bump for republish
+- Updated dependencies [28bc32e]
+  - @logto/next@4.0.1
+
 ## 2.2.3
 
 ### Patch Changes
