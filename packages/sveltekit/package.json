@@ -37,7 +37,7 @@
     "@sveltejs/kit": "^2.0.0",
     "@swc/core": "^1.6.5",
     "@types/cookie": "^0.6.0",
-    "@types/node": "^20.11.19",
+    "@types/node": "^22.0.0",
     "@vitest/coverage-v8": "^1.6.0",
     "eslint": "^8.57.0",
     "lint-staged": "^15.0.0",
