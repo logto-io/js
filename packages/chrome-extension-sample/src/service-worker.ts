@@ -8,7 +8,23 @@ export const client = new LogtoClient({
 /* eslint-enable @typescript-eslint/no-non-null-assertion */
 
 const signIn = async () => {
-  await client.signIn(chrome.identity.getRedirectURL('/callback'));
+  /**
+   * Logto introduces several custom authentication parameters that allow you to tailor the desired sign-in experience for the end-users in addition to standard OIDC authentication parameters.
+   * Ref: https://docs.logto.io/end-user-flows/authentication-parameters
+   */
+  await client.signIn({
+    redirectUri: chrome.identity.getRedirectURL('/callback'),
+    /**
+     * A set of custom authentication parameters that allow you to tailor the desired first screen experience for the end users.
+     * Ref: https://docs.logto.io/end-user-flows/authentication-parameters/first-screen
+     */
+    firstScreen: 'identifier:sign_in',
+    /**
+     * The `identifier` specifies the identifier types that the sign-in or sign-up form will take.
+     * Ref: https://docs.logto.io/end-user-flows/authentication-parameters/first-screen#identifier
+     */
+    identifiers: ['username'],
+  });
 };
 
 const signOut = async () => {
