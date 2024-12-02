@@ -38,14 +38,14 @@ jobs:
           command: pnpm -r --workspace-concurrency=0 test:coverage
 
       - name: Codecov js
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: js
           directory: ./packages/js
 
       - name: Codecov browser
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: browser
