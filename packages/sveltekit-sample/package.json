@@ -17,7 +17,7 @@
 		"@silverhand/eslint-config": "^6.0.1",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/kit": "^2.0.0",
-		"@sveltejs/vite-plugin-svelte": "^3.0.0",
+		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"@types/cookie": "^0.6.0",
 		"eslint": "^8.57.0",
 		"lint-staged": "^15.0.0",
