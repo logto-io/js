@@ -458,8 +458,8 @@ importers:
   packages/next:
     dependencies:
       '@edge-runtime/cookies':
-        specifier: ^5.0.0
-        version: 5.0.0
+        specifier: ^6.0.0
+        version: 6.0.0
       '@logto/node':
         specifier: workspace:^
         version: link:../node
@@ -1561,9 +1561,9 @@ packages:
   '@dual-bundle/import-meta-resolve@4.1.0':
     resolution: {integrity: sha512-+nxncfwHM5SgAtrVzgpzJOI1ol0PkumhVo469KCf9lUi21IGcY90G98VuHm9VRrUypmAzawAHO9bs6hqeADaVg==}
 
-  '@edge-runtime/cookies@5.0.0':
-    resolution: {integrity: sha512-VTTuKiK86cLuLKoLLwkCLN75CrXElmitD6Q+7XAYOMQyDUgsNEF/muorgZWttrvYQBVG+7Pdb8udFqIcLszyLw==}
-    engines: {node: '>=16'}
+  '@edge-runtime/cookies@6.0.0':
+    resolution: {integrity: sha512-VVO/8AwC2qVbygLb2IOkX1zWFx2yWIHzFv4D602CTnoRffd/+cdcXqpSydKaedFrk7a1dRYXbWwjzfV/gwZ2Gw==}
+    engines: {node: '>=18'}
 
   '@esbuild/aix-ppc64@0.19.10':
     resolution: {integrity: sha512-Q+mk96KJ+FZ30h9fsJl+67IjNJm3x2eX+GBWGmocAKgzp27cowCOOqSdscX80s0SpdFXZnIv/+1xD1EctFx96Q==}
@@ -10415,7 +10415,7 @@ snapshots:
 
   '@dual-bundle/import-meta-resolve@4.1.0': {}
 
-  '@edge-runtime/cookies@5.0.0': {}
+  '@edge-runtime/cookies@6.0.0': {}
 
   '@esbuild/aix-ppc64@0.19.10':
     optional: true
