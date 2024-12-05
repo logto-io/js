@@ -1,3 +1,1 @@
-pnpm changeset tag
-git status
-pnpm -r publish
+pnpm changeset tag && pnpm -r publish

@@ -19,6 +19,9 @@ node_modules
 # sample lockfile
 /packages/*-sample/pnpm-lock.yaml
 
+# Next dev/build outputs
+next-env.d.ts
+
 # Nuxt dev/build outputs
 .output
 .data
