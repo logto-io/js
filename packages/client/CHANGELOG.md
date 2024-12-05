@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.0.2
+
+### Patch Changes
+
+- 46b26bd: fix react-native compatibility issues by re-exporting the shim
+
 ## 3.0.1
 
 ### Patch Changes
