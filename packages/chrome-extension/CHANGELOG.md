@@ -1,5 +1,13 @@
 # @logto/chrome-extension
 
+## 0.1.17
+
+### Patch Changes
+
+- 1fb33d0: force bump for republish
+- Updated dependencies [1fb33d0]
+  - @logto/browser@3.0.3
+
 ## 0.1.16
 
 ### Patch Changes

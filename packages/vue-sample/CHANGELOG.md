@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.1.21
+
+### Patch Changes
+
+- 1fb33d0: force bump for republish
+- Updated dependencies [1fb33d0]
+  - @logto/vue@3.0.3
+
 ## 2.1.20
 
 ### Patch Changes
