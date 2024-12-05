@@ -36,7 +36,7 @@
     "@silverhand/ts-config": "^6.0.0",
     "@types/node": "^22.0.0",
     "@vitest/coverage-v8": "^1.6.0",
-    "angular-auth-oidc-client": "^18.0.0",
+    "angular-auth-oidc-client": "^19.0.0",
     "eslint": "^8.57.0",
     "happy-dom": "^15.10.2",
     "jose": "^5.2.2",
