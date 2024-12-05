@@ -1,5 +1,11 @@
 # @logto/passportjs-sample
 
+## 1.0.3
+
+### Patch Changes
+
+- 1fb33d0: force bump for republish
+
 ## 1.0.2
 
 ### Patch Changes

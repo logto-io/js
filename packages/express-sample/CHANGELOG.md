@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.0.22
+
+### Patch Changes
+
+- 1fb33d0: force bump for republish
+- Updated dependencies [1fb33d0]
+  - @logto/express@3.0.3
+
 ## 2.0.21
 
 ### Patch Changes

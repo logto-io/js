@@ -1,5 +1,13 @@
 # @logto/nuxt
 
+## 1.1.4
+
+### Patch Changes
+
+- 1fb33d0: force bump for republish
+- Updated dependencies [1fb33d0]
+  - @logto/node@3.0.3
+
 ## 1.1.3
 
 ### Patch Changes

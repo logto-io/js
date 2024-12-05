@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.0.2
+
+### Patch Changes
+
+- 1fb33d0: force bump for republish
+
 ## 5.0.1
 
 ### Patch Changes

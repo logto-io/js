@@ -1,5 +1,13 @@
 # next-server-actions-sample
 
+## 2.3.9
+
+### Patch Changes
+
+- 1fb33d0: force bump for republish
+- Updated dependencies [1fb33d0]
+  - @logto/next@4.0.3
+
 ## 2.3.8
 
 ### Patch Changes

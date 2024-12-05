@@ -1,5 +1,13 @@
 # @logto/sveltekit
 
+## 0.3.12
+
+### Patch Changes
+
+- 1fb33d0: force bump for republish
+- Updated dependencies [1fb33d0]
+  - @logto/node@3.0.3
+
 ## 0.3.11
 
 ### Patch Changes
