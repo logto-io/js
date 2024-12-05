@@ -36,7 +36,7 @@
     "@silverhand/ts-config": "^6.0.0",
     "@sveltejs/kit": "^2.0.0",
     "@swc/core": "^1.6.5",
-    "@types/cookie": "^0.6.0",
+    "@types/cookie": "^1.0.0",
     "@types/node": "^22.0.0",
     "@vitest/coverage-v8": "^1.6.0",
     "eslint": "^8.57.0",
