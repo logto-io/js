@@ -37,6 +37,10 @@ jobs:
         run: |
           git config --global user.email bot@silverhand.io
           git config --global user.name silverhand-bot
+
+      - name: List uncommitted changes in workspace
+        run: |
+          git status
       
       - name: Create release PR or publish to npm
         uses: changesets/action@v1
