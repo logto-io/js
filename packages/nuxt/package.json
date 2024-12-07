@@ -35,7 +35,7 @@
     "@silverhand/eslint-config": "^6.0.1",
     "@vitest/coverage-v8": "^1.6.0",
     "@vue/test-utils": "^2.4.4",
-    "eslint": "^8.57.0",
+    "eslint": "^9.0.0",
     "h3": "^1.11.1",
     "happy-dom": "^15.10.2",
     "lint-staged": "^15.0.0",
