@@ -2,10 +2,10 @@ import LogtoClient, { CookieStorage } from '@logto/node';
 import { trySafe } from '@silverhand/essentials';
 import { defineEventHandler, getRequestURL, getCookie, setCookie, sendRedirect } from 'h3';
 
+import { useRuntimeConfig } from '#imports';
+
 import { defaults } from '../utils/constants';
 import { type LogtoRuntimeConfig } from '../utils/types';
-
-import { useRuntimeConfig } from '#imports';
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event);
@@ -57,8 +57,8 @@ export default defineEventHandler(async (event) => {
     cookieKey: cookieName,
     encryptionKey: cookieEncryptionKey,
     isSecure: cookieSecure,
-    getCookie: (name) => getCookie(event, name),
-    setCookie: (name, value, options) => {
+    getCookie: async (name) => getCookie(event, name),
+    setCookie: async (name, value, options) => {
       setCookie(event, name, value, options);
     },
   });

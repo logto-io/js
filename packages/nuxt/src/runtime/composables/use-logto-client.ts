@@ -1,6 +1,5 @@
-import type LogtoClient from '@logto/node';
-
 import { useNuxtApp } from '#app';
+import type LogtoClient from '@logto/node';
 
 /**
  * Get the Logto client instance in the current context. Returns `undefined` if the client is not

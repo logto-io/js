@@ -1,8 +1,8 @@
+import { useState, useNuxtApp } from '#app';
 import type { UserInfoResponse } from '@logto/node';
+import { shallowRef } from 'vue';
 
 import { LogtoStateKey } from '../utils/constants';
-
-import { shallowRef as shallowReference, useNuxtApp, useState } from '#imports';
 
 /**
  * Get the Logto user information. If the user is not signed in, this composable will return
@@ -25,7 +25,7 @@ import { shallowRef as shallowReference, useNuxtApp, useState } from '#imports';
 export default function useLogtoUser() {
   const nuxtApp = useNuxtApp();
   const user = useState<UserInfoResponse | undefined>(LogtoStateKey.User, () =>
-    shallowReference(nuxtApp.ssrContext?.event.context.logtoUser)
+    shallowRef(nuxtApp.ssrContext?.event.context.logtoUser)
   );
   return user.value;
 }

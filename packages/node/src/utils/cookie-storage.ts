@@ -14,12 +14,12 @@ export type CookieConfig = {
   cookieKey?: string;
   /** Set to true in https */
   isSecure?: boolean;
-  getCookie: (name: string) => string | undefined;
+  getCookie: (name: string) => Promise<string | undefined> | string | undefined;
   setCookie: (
     name: string,
     value: string,
     options: CookieSerializeOptions & { path: string }
-  ) => void;
+  ) => Promise<void> | void;
 };
 
 /**
@@ -56,7 +56,7 @@ export class CookieStorage implements Storage<PersistKey> {
   async init() {
     const { encryptionKey } = this.config;
     this.sessionData = await unwrapSession(
-      this.config.getCookie(this.cookieKey) ?? '',
+      (await this.config.getCookie(this.cookieKey)) ?? '',
       encryptionKey
     );
   }
@@ -88,6 +88,6 @@ export class CookieStorage implements Storage<PersistKey> {
   protected async write(data = this.sessionData) {
     const { encryptionKey } = this.config;
     const value = await wrapSession(data, encryptionKey);
-    this.config.setCookie(this.cookieKey, value, this.cookieOptions);
+    await this.config.setCookie(this.cookieKey, value, this.cookieOptions);
   }
 }

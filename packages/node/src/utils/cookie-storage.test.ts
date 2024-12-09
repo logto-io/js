@@ -26,8 +26,10 @@ const createCookieConfig = (
   const cookies = new Map(Object.entries(initialCookies));
   return {
     encryptionKey,
-    getCookie: (name: string) => cookies.get(name),
-    setCookie: (name: string, value: string) => cookies.set(name, value),
+    getCookie: async (name: string) => cookies.get(name),
+    setCookie: async (name: string, value: string) => {
+      cookies.set(name, value);
+    },
     ...otherConfigs,
   };
 };
@@ -68,7 +70,8 @@ describe('CookieStorage', () => {
 
     await storage.setItem(PersistKey.AccessToken, 'baz');
     expect(storage.data).toEqual({ [PersistKey.AccessToken]: 'baz' });
-    expect(await unwrapSession(storage.config.getCookie('logtoCookies')!, encryptionKey)).toEqual({
+    const cookie = await storage.config.getCookie('logtoCookies');
+    expect(await unwrapSession(cookie ?? '', encryptionKey)).toEqual({
       [PersistKey.AccessToken]: 'baz',
     });
   });
@@ -85,7 +88,8 @@ describe('CookieStorage', () => {
 
     await storage.removeItem(PersistKey.AccessToken);
     expect(storage.data).toEqual({});
-    expect(await unwrapSession(storage.config.getCookie('foo')!, encryptionKey)).toEqual({});
+    const cookie = await storage.config.getCookie('foo');
+    expect(await unwrapSession(cookie ?? '', encryptionKey)).toEqual({});
   });
 });
 
@@ -137,7 +141,8 @@ describe('CookieStorage concurrency', () => {
     };
     expect(storage.data).toEqual(result);
 
-    const unwrapped = await unwrapSession(storage.config.getCookie('logtoCookies')!, encryptionKey);
+    const cookie = await storage.config.getCookie('logtoCookies');
+    const unwrapped = await unwrapSession(cookie ?? '', encryptionKey);
 
     if (StorageClass === NoQueueTestCookieStorage) {
       expect(unwrapped).not.toEqual(result);
