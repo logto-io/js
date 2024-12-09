@@ -39,7 +39,7 @@
     "@types/cookie": "^0.6.0",
     "@types/node": "^22.0.0",
     "@vitest/coverage-v8": "^1.6.0",
-    "eslint": "^8.57.0",
+    "eslint": "^9.0.0",
     "lint-staged": "^15.0.0",
     "prettier": "^3.0.0",
     "typescript": "^5.3.3",
