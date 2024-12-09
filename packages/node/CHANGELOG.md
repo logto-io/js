@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.1.0
+
+### Minor Changes
+
+- 8c352b5: Support Next.js 15 async cookies
+
 ## 3.0.3
 
 ### Patch Changes

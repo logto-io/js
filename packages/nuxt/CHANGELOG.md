@@ -1,5 +1,12 @@
 # @logto/nuxt
 
+## 1.1.5
+
+### Patch Changes
+
+- Updated dependencies [8c352b5]
+  - @logto/node@3.1.0
+
 ## 1.1.4
 
 ### Patch Changes
@@ -75,7 +82,7 @@
   ```ts
   // nuxt.config.ts
   export default defineNuxtConfig({
-    modules: ["@logto/nuxt"],
+    modules: ['@logto/nuxt'],
     logto: {
       cookieSecure: true, // Enable secure cookie in HTTPS environments
     },

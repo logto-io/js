@@ -1,5 +1,16 @@
 # Change Log
 
+## 4.1.0
+
+### Minor Changes
+
+- 8c352b5: Support Next.js 15 async cookies
+
+### Patch Changes
+
+- Updated dependencies [8c352b5]
+  - @logto/node@3.1.0
+
 ## 4.0.3
 
 ### Patch Changes
