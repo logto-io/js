@@ -108,13 +108,15 @@ export default class LogtoClient extends BaseClient {
       encryptionKey: this.config.cookieSecret,
       cookieKey: `logto_${this.config.appId}`,
       isSecure: this.config.cookieSecure,
-      getCookie: (...args) => {
-        return cookies().get(...args)?.value ?? '';
+      getCookie: async (...args) => {
+        const cookieStore = await cookies();
+        return cookieStore.get(...args)?.value ?? '';
       },
-      setCookie: (...args) => {
+      setCookie: async (...args) => {
         // In server component (RSC), it is not allowed to modify cookies, see https://nextjs.org/docs/app/api-reference/functions/cookies#cookiessetname-value-options.
         if (!ignoreCookieChange) {
-          cookies().set(...args);
+          const cookieStore = await cookies();
+          cookieStore.set(...args);
         }
       },
     });
