@@ -48,6 +48,8 @@ export function handleSignIn(config: LogtoNextConfig, url: URL): Promise<void>;
 
 /**
  * Handle sign in callback from search params or full redirect URL, save tokens to session
+ * @param config The Logto configuration object
+ * @param searchParamsOrUrl Either URLSearchParams from the callback URL or the complete URL object
  */
 export async function handleSignIn(
   config: LogtoNextConfig,
