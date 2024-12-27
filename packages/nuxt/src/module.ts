@@ -10,6 +10,7 @@ export * from '@logto/node';
 export { default as LogtoNodeClient } from '@logto/node';
 export * from './runtime/utils/types';
 export * from './runtime/utils/constants';
+export * from './runtime/utils/handler';
 
 const logtoModule: NuxtModule<LogtoRuntimeConfigInput> = defineNuxtModule<LogtoRuntimeConfigInput>({
   meta: {
