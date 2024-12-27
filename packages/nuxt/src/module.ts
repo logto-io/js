@@ -20,7 +20,8 @@ const logtoModule: NuxtModule<LogtoRuntimeConfigInput> = defineNuxtModule<LogtoR
   setup(options, nuxt) {
     // Merge runtimeConfig with module options (options already merged with defaults)
     const runtimeConfig = defu<LogtoRuntimeConfig, LogtoRuntimeConfigInput[]>(
-      nuxt.options.runtimeConfig.logto,
+      // eslint-disable-next-line no-restricted-syntax
+      nuxt.options.runtimeConfig.logto as LogtoRuntimeConfig,
       options,
       {
         fetchUserInfo: false,

@@ -2,5 +2,7 @@
   "extends": "./.nuxt/tsconfig",
   "compilerOptions": {
     "outDir": "dist",
-  }
+    "skipLibCheck": true
+  },
+  "exclude": ["node_modules", ".nuxt"]
 }
