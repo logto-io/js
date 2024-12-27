@@ -1,5 +1,11 @@
 # @logto/nuxt
 
+## 1.2.0
+
+### Minor Changes
+
+- f583d81: export logtoEventHandler
+
 ## 1.1.5
 
 ### Patch Changes
