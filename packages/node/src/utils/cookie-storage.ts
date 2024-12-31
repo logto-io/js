@@ -7,12 +7,8 @@ import { wrapSession, unwrapSession, type SessionData } from './session.js';
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Nullable<T> = T | null;
 
-export type CookieConfig = {
-  /** The encryption key to encrypt the session data. It should be a random string. */
-  encryptionKey: string;
-  /** The name of the cookie key. Default to `logtoCookies`. */
+export type CookieConfigBase = {
   cookieKey?: string;
-  /** Set to true in https */
   isSecure?: boolean;
   getCookie: (name: string) => Promise<string | undefined> | string | undefined;
   setCookie: (
@@ -21,6 +17,26 @@ export type CookieConfig = {
     options: CookieSerializeOptions & { path: string }
   ) => Promise<void> | void;
 };
+
+export type SessionWrapper = {
+  wrap: (data: SessionData, key: string) => Promise<string>;
+  unwrap: (value: string, key: string) => Promise<SessionData>;
+};
+
+export type CookieConfig = CookieConfigBase &
+  (
+    | {
+        /** Required when using default session wrapper */
+        encryptionKey: string;
+        sessionWrapper?: never;
+      }
+    | {
+        /** Optional when custom sessionWrapper is provided */
+        encryptionKey?: string;
+        /** Custom session wrapper can be used to implement external storage solutions */
+        sessionWrapper: SessionWrapper;
+      }
+  );
 
 /**
  * A storage that persists data in cookies with encryption.
@@ -47,15 +63,29 @@ export class CookieStorage implements Storage<PersistKey> {
   protected sessionData: SessionData = {};
   protected saveQueue = new PromiseQueue();
 
+  /**
+   * Handles the wrapping and unwrapping of session data.
+   * Can be provided via config or defaults to using wrapSession/unwrapSession functions.
+   * Users can implement custom storage solutions by providing their own sessionWrapper.
+   */
+  protected sessionWrapper: SessionWrapper;
+
   constructor(public config: CookieConfig) {
-    if (!config.encryptionKey) {
-      throw new TypeError('The `encryptionKey` string is required for `CookieStorage`');
+    if (!config.sessionWrapper && !config.encryptionKey) {
+      throw new TypeError(
+        'Either `sessionWrapper` or `encryptionKey` must be provided for `CookieStorage`'
+      );
     }
+
+    this.sessionWrapper = config.sessionWrapper ?? {
+      wrap: wrapSession,
+      unwrap: unwrapSession,
+    };
   }
 
   async init() {
-    const { encryptionKey } = this.config;
-    this.sessionData = await unwrapSession(
+    const { encryptionKey = '' } = this.config;
+    this.sessionData = await this.sessionWrapper.unwrap(
       (await this.config.getCookie(this.cookieKey)) ?? '',
       encryptionKey
     );
@@ -86,8 +116,8 @@ export class CookieStorage implements Storage<PersistKey> {
   }
 
   protected async write(data = this.sessionData) {
-    const { encryptionKey } = this.config;
-    const value = await wrapSession(data, encryptionKey);
+    const { encryptionKey = '' } = this.config;
+    const value = await this.sessionWrapper.wrap(data, encryptionKey);
     await this.config.setCookie(this.cookieKey, value, this.cookieOptions);
   }
 }

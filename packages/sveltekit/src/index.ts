@@ -1,6 +1,5 @@
 import LogtoClient, {
   CookieStorage,
-  type CookieConfig,
   type LogtoConfig,
   type PersistKey,
   type Storage,
@@ -121,7 +120,10 @@ export type HookConfig = {
 
 export const handleLogto = (
   config: LogtoConfig,
-  cookieConfig?: Pick<CookieConfig, 'cookieKey' | 'encryptionKey'>,
+  cookieConfig?: {
+    encryptionKey: string;
+    cookieKey?: string;
+  },
   hookConfig?: HookConfig
 ): Handle => {
   const {
@@ -198,7 +200,10 @@ const defaultErrorHandler = (error: unknown, status = 500): Response => {
 
 const buildCookieStorageFromEvent = async (
   event: RequestEvent,
-  cookieConfig?: Pick<CookieConfig, 'cookieKey' | 'encryptionKey'>
+  cookieConfig?: {
+    encryptionKey: string;
+    cookieKey?: string;
+  }
 ): Promise<CookieStorage> => {
   if (!cookieConfig) {
     throw new Error('Missing cookie configuration for the CookieStorage.');

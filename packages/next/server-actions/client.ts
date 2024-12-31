@@ -105,7 +105,8 @@ export default class LogtoClient extends BaseClient {
   async createNodeClient({ ignoreCookieChange }: { ignoreCookieChange?: boolean } = {}) {
     const { cookies } = await import('next/headers');
     this.storage = new CookieStorage({
-      encryptionKey: this.config.cookieSecret,
+      encryptionKey: this.config.cookieSecret ?? '',
+      sessionWrapper: this.config.sessionWrapper,
       cookieKey: `logto_${this.config.appId}`,
       isSecure: this.config.cookieSecure,
       getCookie: async (...args) => {
