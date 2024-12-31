@@ -15,7 +15,6 @@ const configs: LogtoNextConfig = {
   cookieSecure: process.env.NODE_ENV === 'production',
 };
 
-const save = vi.fn();
 const signIn = vi.fn();
 const handleSignInCallback = vi.fn();
 const getIdTokenClaims = vi.fn(() => ({

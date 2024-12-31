@@ -91,6 +91,29 @@ describe('CookieStorage', () => {
     const cookie = await storage.config.getCookie('foo');
     expect(await unwrapSession(cookie ?? '', encryptionKey)).toEqual({});
   });
+
+  it('should support custom sessionWrapper', async () => {
+    // Use JSON.stringify/parse to simulate the sessionWrapper
+    const mockSessionWrapper = {
+      wrap: vi.fn(async (data) => JSON.stringify(data)),
+      unwrap: vi.fn(async (data: string) => (data ? JSON.parse(data) : {})),
+    };
+
+    const storage = new TestCookieStorage({
+      ...createCookieConfig(encryptionKey),
+      sessionWrapper: mockSessionWrapper,
+    });
+
+    await storage.init();
+    await storage.setItem(PersistKey.AccessToken, 'test-token');
+
+    expect(mockSessionWrapper.wrap).toHaveBeenCalled();
+    expect(mockSessionWrapper.unwrap).toHaveBeenCalled();
+    expect(storage.data).toEqual({ [PersistKey.AccessToken]: 'test-token' });
+
+    const cookie = await storage.config.getCookie('logtoCookies');
+    expect(cookie).toBe(JSON.stringify({ [PersistKey.AccessToken]: 'test-token' }));
+  });
 });
 
 describe('CookieStorage concurrency', () => {
