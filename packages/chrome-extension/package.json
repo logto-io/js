@@ -1,6 +1,6 @@
 {
   "name": "@logto/chrome-extension",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "description": "Logto Chrome extension SDK",
   "type": "module",
   "files": [
