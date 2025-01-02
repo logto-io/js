@@ -15,6 +15,11 @@ export class BrowserStorage implements Storage<StorageKey> {
   }
 
   async getItem(key: StorageKey): Promise<Nullable<string>> {
+    // Make it compatible with server side, usually used in SSR, in which `null` is acceptable.
+    if (typeof window === 'undefined') {
+      return null;
+    }
+
     if (key === 'signInSession') {
       // The latter `getItem()` is for backward compatibility. Can be removed when major bump.
       return sessionStorage.getItem(this.getKey(key)) ?? sessionStorage.getItem(this.getKey());
@@ -24,6 +29,11 @@ export class BrowserStorage implements Storage<StorageKey> {
   }
 
   async setItem(key: StorageKey, value: string): Promise<void> {
+    // Make it compatible with server side, ignore it if it's not in browser.
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     if (key === 'signInSession') {
       sessionStorage.setItem(this.getKey(key), value);
       return;
@@ -32,6 +42,11 @@ export class BrowserStorage implements Storage<StorageKey> {
   }
 
   async removeItem(key: StorageKey): Promise<void> {
+    // Make it compatible with server side, ignore it if it's not in browser.
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     if (key === 'signInSession') {
       sessionStorage.removeItem(this.getKey(key));
       return;
