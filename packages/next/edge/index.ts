@@ -113,7 +113,8 @@ export default class LogtoClient extends BaseClient {
     const responseCookies = new ResponseCookies(headers);
 
     this.storage = new CookieStorage({
-      encryptionKey: this.config.cookieSecret,
+      encryptionKey: this.config.cookieSecret ?? '',
+      sessionWrapper: this.config.sessionWrapper,
       cookieKey: `logto_${this.config.appId}`,
       isSecure: this.config.cookieSecure,
       getCookie: (name) => {

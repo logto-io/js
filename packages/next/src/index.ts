@@ -44,6 +44,8 @@ export type {
   InteractionMode,
   LogtoErrorCode,
   UserInfoResponse,
+  SessionWrapper,
+  SessionData,
 } from '@logto/node';
 
 export default class LogtoClient extends LogtoNextBaseClient {
@@ -51,6 +53,10 @@ export default class LogtoClient extends LogtoNextBaseClient {
     super(config, {
       NodeClient,
     });
+
+    if (!config.sessionWrapper && !config.cookieSecret) {
+      throw new Error('cookieSecret is required when using default session wrapper');
+    }
   }
 
   handleSignIn: (
@@ -204,7 +210,9 @@ export default class LogtoClient extends LogtoNextBaseClient {
     response: ServerResponse
   ): Promise<NodeClient> {
     this.storage = new CookieStorage({
-      encryptionKey: this.config.cookieSecret,
+      // The type checking is done in the constructor, encryptionKey is required when using default session wrapper
+      encryptionKey: this.config.cookieSecret ?? '',
+      sessionWrapper: this.config.sessionWrapper,
       cookieKey: `logto_${this.config.appId}`,
       isSecure: this.config.cookieSecure,
       getCookie: (name) => {
