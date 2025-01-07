@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.0.24
+
+### Patch Changes
+
+- Updated dependencies [733e978]
+  - @logto/browser@3.0.4
+
 ## 2.0.23
 
 ### Patch Changes
