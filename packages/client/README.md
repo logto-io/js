@@ -3,7 +3,7 @@
 [![Build Status](https://github.com/logto-io/js/actions/workflows/main.yml/badge.svg)](https://github.com/logto-io/js/actions/workflows/main.yml)
 [![Codecov](https://img.shields.io/codecov/c/github/logto-io/js)](https://app.codecov.io/gh/logto-io/js?branch=master)
 
-The Logto JavaScript Client SDK written in TypeScript. Check out our [docs](https://docs.logto.io/sdk/JavaScript/client/) for more information.
+The Logto JavaScript Client SDK written in TypeScript.
 
 ## Installation
 
@@ -42,7 +42,7 @@ To implement a platform-specific SDK, you should implement the following adapter
 5. generateCodeVerifier: generate code verifier.
 6. generateCodeChallenge: generate code challenge.
 
-See the [adapters.ts](./src/adapter.ts) for more information.
+See the [adapters](./src/adapter/index.ts) for more information.
 
 ## Resources
 
