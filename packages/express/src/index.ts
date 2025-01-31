@@ -116,14 +116,18 @@ export const handleAuthRoutes = (config: LogtoExpressConfig): Router => {
 export const withLogto =
   (config: LogtoExpressConfig): Middleware =>
   async (request: IncomingMessage, response: Response, next: NextFunction) => {
-    const client = createNodeClient(request, response, config);
-    const user = await client.getContext({
-      getAccessToken: config.getAccessToken,
-      resource: config.resource,
-      fetchUserInfo: config.fetchUserInfo,
-      getOrganizationToken: config.getOrganizationToken,
-    });
-    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-    Object.defineProperty(request, 'user', { enumerable: true, get: () => user });
-    next();
+    try {
+      const client = createNodeClient(request, response, config);
+      const user = await client.getContext({
+        getAccessToken: config.getAccessToken,
+        resource: config.resource,
+        fetchUserInfo: config.fetchUserInfo,
+        getOrganizationToken: config.getOrganizationToken,
+      });
+      // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+      Object.defineProperty(request, 'user', { enumerable: true, get: () => user });
+      next();
+    } catch (error) {
+      next(error);
+    }
   };
