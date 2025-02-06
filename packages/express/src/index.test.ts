@@ -22,6 +22,17 @@ const getIdTokenClaims = vi.fn(() => ({
 const signOut = vi.fn();
 const getContext = vi.fn(async () => ({ isAuthenticated: true }));
 
+/**
+ * All the expect function to be called assertions wrapped in the `end` callback
+ * in the following test cases are randomly failing under the vitest --coverage mode.
+ *
+ * So we manually added a delay to wait for the promise to resolve before making the assertions.
+ */
+const delay = async (ms: number) =>
+  new Promise<void>((resolve) => {
+    setTimeout(resolve, ms);
+  });
+
 vi.mock('./storage', () => ({
   default: vi.fn(() => ({
     setItem,
@@ -64,7 +75,8 @@ describe('Express', () => {
         testRouter(handleAuthRoutes(configs))
           .get('/logto/sign-in')
           .expect('Location', signInUrl)
-          .end(() => {
+          .end(async () => {
+            await delay(100);
             expect(signIn).toHaveBeenCalled();
           });
       });
@@ -73,7 +85,8 @@ describe('Express', () => {
         testRouter(handleAuthRoutes({ ...configs, authRoutesPrefix: 'custom' }))
           .get('/logto/sign-in')
           .expect('Location', signInUrl)
-          .end(() => {
+          .end(async () => {
+            await delay(100);
             expect(signIn).toHaveBeenCalled();
           });
       });
@@ -84,7 +97,8 @@ describe('Express', () => {
         testRouter(handleAuthRoutes(configs))
           .get('/logto/sign-up')
           .expect('Location', `${signInUrl}?interactionMode=signUp`)
-          .end(() => {
+          .end(async () => {
+            await delay(100);
             expect(signIn).toHaveBeenCalled();
           });
       });
@@ -95,7 +109,8 @@ describe('Express', () => {
         testRouter(handleAuthRoutes(configs))
           .get('/logto/sign-in-callback')
           .expect('Location', configs.baseUrl)
-          .end(() => {
+          .end(async () => {
+            await delay(100);
             expect(handleSignInCallback).toHaveBeenCalled();
           });
       });
@@ -106,7 +121,8 @@ describe('Express', () => {
         testRouter(handleAuthRoutes(configs))
           .get('/logto/sign-out')
           .expect('Location', configs.baseUrl)
-          .end(() => {
+          .end(async () => {
+            await delay(100);
             expect(signOut).toHaveBeenCalled();
           });
       });
