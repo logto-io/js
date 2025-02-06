@@ -96,9 +96,9 @@ export const idToken = 'id_token_value';
 
 export const currentUnixTimeStamp = Date.now() / 1000;
 
-export const mockFetchOidcConfig: (
-  delay?: number
-) => Mock<unknown[], Promise<OidcConfigResponse>> = (delay = 0) =>
+export const mockFetchOidcConfig: (delay?: number) => Mock<() => Promise<OidcConfigResponse>> = (
+  delay = 0
+) =>
   vi.fn(async () => {
     await new Promise((resolve) => {
       setTimeout(resolve, delay);
@@ -115,7 +115,7 @@ export const mockFetchOidcConfig: (
     };
   });
 
-export const fetchOidcConfig: Mock<unknown[], Promise<OidcConfigResponse>> = mockFetchOidcConfig();
+export const fetchOidcConfig: Mock<() => Promise<OidcConfigResponse>> = mockFetchOidcConfig();
 export const requester = vi.fn();
 export const failingRequester = vi.fn().mockRejectedValue(new Error('Failed request'));
 export const navigate = vi.fn();
