@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.1.23
+
+### Patch Changes
+
+- d6a900c: bump dependencies for security update
+- Updated dependencies [d6a900c]
+  - @logto/react@4.0.4
+
 ## 2.1.22
 
 ### Patch Changes

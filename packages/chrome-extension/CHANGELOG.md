@@ -1,5 +1,14 @@
 # @logto/chrome-extension
 
+## 0.1.18
+
+### Patch Changes
+
+- d6a900c: bump dependencies for security update
+- Updated dependencies [733e978]
+- Updated dependencies [d6a900c]
+  - @logto/browser@3.0.4
+
 ## 0.1.17
 
 ### Patch Changes

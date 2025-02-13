@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.1.22
+
+### Patch Changes
+
+- d6a900c: bump dependencies for security update
+- Updated dependencies [d6a900c]
+  - @logto/vue@3.0.4
+
 ## 2.1.21
 
 ### Patch Changes

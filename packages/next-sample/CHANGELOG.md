@@ -1,5 +1,14 @@
 # Change Log
 
+## 2.2.8
+
+### Patch Changes
+
+- d6a900c: bump dependencies for security update
+- Updated dependencies [d6a900c]
+- Updated dependencies [a0f91a3]
+  - @logto/next@4.2.0
+
 ## 2.2.7
 
 ### Patch Changes
