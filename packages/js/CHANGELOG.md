@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.0.3
+
+### Patch Changes
+
+- d6a900c: bump dependencies for security update
+
 ## 5.0.2
 
 ### Patch Changes
@@ -45,8 +51,8 @@
   ```typescript
   signIn({
     redirectUri,
-    firstScreen: "identifier:sign_in",
-    identifiers: ["email", "phone"],
+    firstScreen: 'identifier:sign_in',
+    identifiers: ['email', 'phone'],
   });
   ```
 

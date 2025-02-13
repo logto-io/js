@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.0.24
+
+### Patch Changes
+
+- d6a900c: bump dependencies for security update
+- Updated dependencies [d6a900c]
+  - @logto/express@3.0.5
+
 ## 2.0.23
 
 ### Patch Changes
