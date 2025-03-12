@@ -43,7 +43,7 @@ describe('LogtoClient', () => {
       );
 
       await expect(logtoClient.getAccessToken()).rejects.toStrictEqual(
-        new LogtoClientError('not_authenticated')
+        new LogtoClientError('not_authenticated', 'Refresh token not found')
       );
     });
 
@@ -314,7 +314,7 @@ describe('LogtoClient', () => {
       const logtoClient = createClient();
 
       await expect(async () => logtoClient.getIdTokenClaims()).rejects.toStrictEqual(
-        new LogtoClientError('not_authenticated')
+        new LogtoClientError('not_authenticated', 'ID token not found')
       );
     });
 
@@ -345,12 +345,15 @@ describe('LogtoClient', () => {
         {
           ...createAdapters(),
           requester,
-          storage: new MockedStorage(),
+          storage: new MockedStorage({
+            idToken: 'id_token_value',
+            refreshToken: 'refresh_token_value',
+          }),
         }
       );
 
       await expect(logtoClient.fetchUserInfo()).rejects.toStrictEqual(
-        new LogtoClientError('not_authenticated')
+        new LogtoClientError('fetch_user_info_failed')
       );
     });
 
