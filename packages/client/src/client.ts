@@ -185,7 +185,7 @@ export class StandardLogtoClient {
     const idToken = await this.getIdToken();
 
     if (!idToken) {
-      throw new LogtoClientError('not_authenticated');
+      throw new LogtoClientError('not_authenticated', 'ID token not found');
     }
 
     return decodeIdToken(idToken);
@@ -433,7 +433,7 @@ export class StandardLogtoClient {
     const currentRefreshToken = await this.getRefreshToken();
 
     if (!currentRefreshToken) {
-      throw new LogtoClientError('not_authenticated');
+      throw new LogtoClientError('not_authenticated', 'Refresh token not found');
     }
 
     const accessTokenKey = buildAccessTokenKey(resource, organizationId);
