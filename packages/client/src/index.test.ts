@@ -348,6 +348,13 @@ describe('LogtoClient', () => {
           storage: new MockedStorage({
             idToken: 'id_token_value',
             refreshToken: 'refresh_token_value',
+            accessToken: JSON.stringify({
+              [buildAccessTokenKey()]: {
+                token: '',
+                scope: '',
+                expiresAt: Date.now() + 1000,
+              },
+            }),
           }),
         }
       );
