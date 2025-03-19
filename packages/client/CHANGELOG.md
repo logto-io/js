@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.0.5
+
+### Patch Changes
+
+- d0fc122: improve error messages in client SDK
+
 ## 3.0.4
 
 ### Patch Changes
