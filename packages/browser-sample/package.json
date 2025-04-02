@@ -19,7 +19,7 @@
     "@parcel/transformer-sass": "^2.9.2",
     "@silverhand/eslint-config": "^6.0.1",
     "@silverhand/eslint-config-react": "^6.0.2",
-    "eslint": "^8.57.0",
+    "eslint": "^9.0.0",
     "lint-staged": "^15.0.0",
     "parcel": "^2.9.2",
     "postcss": "^8.4.31",
