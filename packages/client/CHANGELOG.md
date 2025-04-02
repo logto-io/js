@@ -1,5 +1,21 @@
 # Change Log
 
+## 3.1.0
+
+### Minor Changes
+
+- b7f3d14: add new sign-in option to skip clearing cached tokens from storage on sign-in
+
+  Example usage:
+
+  ```typescript
+  await logtoClient.signIn({ redirectUri, clearTokens: false });
+  ```
+
+### Patch Changes
+
+- d0fc122: improve error messages in client SDK
+
 ## 3.0.4
 
 ### Patch Changes
