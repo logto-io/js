@@ -29,14 +29,17 @@ export enum QueryKey {
   ResponseType = 'response_type',
   Scope = 'scope',
   State = 'state',
+  /** @deprecated */
   Token = 'token',
-  // Need to align with the OIDC extraParams settings in core
+  /** Need to align with the OIDC extraParams settings in core */
   InteractionMode = 'interaction_mode',
   /** The query key for specifying the organization ID. */
   OrganizationId = 'organization_id',
   FirstScreen = 'first_screen',
   Identifier = 'identifier',
   DirectSignIn = 'direct_sign_in',
+  /** @experimental This might change in future development. Please use with caution. */
+  OneTimeToken = 'one_time_token',
 }
 
 /** The prompt parameter to be used for the authorization request. */

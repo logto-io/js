@@ -53,10 +53,14 @@ export type SignInUriParameters = {
   interactionMode?: InteractionMode;
   /**
    * Login hint indicates the current user (usually an email address or a phone number).
-   *
-   * @experimental Don't use this field as it's under development.
    */
   loginHint?: string;
+  /**
+   * One-time token for the sign-in request.
+   *
+   * @experimental This might change in future development. Please use with caution.
+   */
+  oneTimeToken?: string;
   /**
    * Parameters for direct sign-in.
    *
@@ -99,6 +103,7 @@ export const generateSignInUri = ({
   interactionMode,
   loginHint,
   directSignIn,
+  oneTimeToken,
   extraParams,
   includeReservedScopes = true,
 }: SignInUriParameters) => {
@@ -143,6 +148,10 @@ export const generateSignInUri = ({
 
   if (identifier && identifier.length > 0) {
     urlSearchParameters.append(QueryKey.Identifier, identifier.join(' '));
+  }
+
+  if (oneTimeToken) {
+    urlSearchParameters.append(QueryKey.OneTimeToken, oneTimeToken);
   }
 
   if (extraParams) {
