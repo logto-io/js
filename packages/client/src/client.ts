@@ -52,6 +52,10 @@ export type SignInOptions = {
    * Note: If specified, it will override the prompt value in Logto configs.
    */
   prompt?: SignInUriParameters['prompt'];
+  /**
+   * Clear cached tokens from storage before sign-in. Defaults to: `true`
+   */
+  clearTokens?: boolean;
 } & Pick<
   SignInUriParameters,
   'interactionMode' | 'firstScreen' | 'identifiers' | 'loginHint' | 'directSignIn' | 'extraParams'
@@ -298,6 +302,7 @@ export class StandardLogtoClient {
       directSignIn,
       extraParams,
       prompt,
+      clearTokens,
     } = typeof options === 'string' || options instanceof URL
       ? {
           redirectUri: options,
@@ -309,6 +314,7 @@ export class StandardLogtoClient {
           directSignIn: undefined,
           extraParams: undefined,
           prompt: undefined,
+          clearTokens: true,
         }
       : options;
     const redirectUri = redirectUriUrl.toString();
@@ -340,7 +346,7 @@ export class StandardLogtoClient {
 
     await Promise.all([
       this.setSignInSession({ redirectUri, postRedirectUri, codeVerifier, state }),
-      this.clearAllTokens(),
+      clearTokens === false ? undefined : this.clearAllTokens(),
     ]);
     await this.adapter.navigate(signInUri, { redirectUri, for: 'sign-in' });
   }
