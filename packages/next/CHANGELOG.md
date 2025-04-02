@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.2.2
+
+### Patch Changes
+
+- @logto/node@3.1.3
+
 ## 4.2.1
 
 ### Patch Changes
