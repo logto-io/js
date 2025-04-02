@@ -101,6 +101,35 @@ describe('LogtoClient', () => {
       expect(idToken).toBeNull();
     });
 
+    it('should keep the tokens if clearTokens is false', async () => {
+      const storage = new MockedStorage({
+        accessToken: '"resource":{"token":"access_token"}',
+        refreshToken: 'refresh_token',
+        idToken: 'id_token',
+      });
+      const [mockedAccessToken, mockedRefreshToken, mockedIdToken] = await Promise.all([
+        storage.getItem('accessToken'),
+        storage.getItem('refreshToken'),
+        storage.getItem('idToken'),
+      ]);
+      expect(mockedAccessToken).toBe('"resource":{"token":"access_token"}');
+      expect(mockedRefreshToken).toBe('refresh_token');
+      expect(mockedIdToken).toBe('id_token');
+
+      // Sign in
+      const logtoClient = createClient(undefined, storage);
+      await logtoClient.signIn({ redirectUri, clearTokens: false });
+
+      const [accessToken, refreshToken, idToken] = await Promise.all([
+        storage.getItem('accessToken'),
+        storage.getItem('refreshToken'),
+        storage.getItem('idToken'),
+      ]);
+      expect(accessToken).toBe('"resource":{"token":"access_token"}');
+      expect(refreshToken).toBe('refresh_token');
+      expect(idToken).toBe('id_token');
+    });
+
     it('should redirect to signInUri just after calling signIn', async () => {
       const logtoClient = createClient();
       await logtoClient.signIn(redirectUri);
