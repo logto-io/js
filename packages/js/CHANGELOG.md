@@ -1,5 +1,27 @@
 # Change Log
 
+## 5.1.0
+
+### Minor Changes
+
+- 114be86: add one-time token to the sign-in URI parameters type definition.
+
+  Example usage:
+
+  ```typescript
+  signIn({
+    redirectUri: 'your-sign-in-redirect-uri',
+    // ... other params
+    oneTimeToken: 'the-generated-one-time-token',
+  });
+  ```
+
+## 5.0.3
+
+### Patch Changes
+
+- d6a900c: bump dependencies for security update
+
 ## 5.0.2
 
 ### Patch Changes
@@ -45,8 +67,8 @@
   ```typescript
   signIn({
     redirectUri,
-    firstScreen: "identifier:sign_in",
-    identifiers: ["email", "phone"],
+    firstScreen: 'identifier:sign_in',
+    identifiers: ['email', 'phone'],
   });
   ```
 

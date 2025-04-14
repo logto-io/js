@@ -1,5 +1,11 @@
 # @logto/chrome-extension-sample
 
+## 0.1.3
+
+### Patch Changes
+
+- d6a900c: bump dependencies for security update
+
 ## 0.1.2
 
 ### Patch Changes

@@ -1,5 +1,36 @@
 # Change Log
 
+## 3.1.1
+
+### Patch Changes
+
+- Updated dependencies [114be86]
+  - @logto/js@5.1.0
+
+## 3.1.0
+
+### Minor Changes
+
+- b7f3d14: add new sign-in option to skip clearing cached tokens from storage on sign-in
+
+  Example usage:
+
+  ```typescript
+  await logtoClient.signIn({ redirectUri, clearTokens: false });
+  ```
+
+### Patch Changes
+
+- d0fc122: improve error messages in client SDK
+
+## 3.0.4
+
+### Patch Changes
+
+- d6a900c: bump dependencies for security update
+- Updated dependencies [d6a900c]
+  - @logto/js@5.0.3
+
 ## 3.0.3
 
 ### Patch Changes
@@ -73,8 +104,8 @@
   ```typescript
   signIn({
     redirectUri,
-    firstScreen: "identifier:sign_in",
-    identifiers: ["email", "phone"],
+    firstScreen: 'identifier:sign_in',
+    identifiers: ['email', 'phone'],
   });
   ```
 
@@ -118,7 +149,7 @@
   const client = new LogtoClient(
     config,
     adapters,
-    (client) => new DefaultJwtVerifier(client, { clockTolerance: 10 }),
+    (client) => new DefaultJwtVerifier(client, { clockTolerance: 10 })
   );
 
   client.setJwtVerifier(new DefaultJwtVerifier(client, { clockTolerance: 20 }));
@@ -233,7 +264,7 @@
   To use the shim client:
 
   ```ts
-  import { StandardLogtoClient } from "@logto/client/shim";
+  import { StandardLogtoClient } from '@logto/client/shim';
   ```
 
   The `StandardLogtoClient` class is identical to the original `LogtoClient` class, except it doesn't have the default JWT verifier implemented.

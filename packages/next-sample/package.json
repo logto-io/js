@@ -1,6 +1,6 @@
 {
   "name": "@logto/next-sample",
-  "version": "2.2.7",
+  "version": "2.2.10",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@logto/next": "workspace:^",
-    "next": "^15.1.2",
+    "next": "^15.2.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "swr": "^2.0.0"

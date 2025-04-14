@@ -1,5 +1,25 @@
 # @logto/sveltekit
 
+## 0.3.16
+
+### Patch Changes
+
+- @logto/node@3.1.3
+
+## 0.3.15
+
+### Patch Changes
+
+- @logto/node@3.1.2
+
+## 0.3.14
+
+### Patch Changes
+
+- d6a900c: bump dependencies for security update
+- Updated dependencies [d6a900c]
+  - @logto/node@3.1.1
+
 ## 0.3.13
 
 ### Patch Changes

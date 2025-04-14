@@ -1,5 +1,11 @@
 # @logto/sveltekit-sample
 
+## 0.2.3
+
+### Patch Changes
+
+- d6a900c: bump dependencies for security update
+
 ## 0.2.2
 
 ### Patch Changes

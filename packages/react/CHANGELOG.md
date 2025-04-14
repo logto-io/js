@@ -1,5 +1,26 @@
 # Change Log
 
+## 4.0.6
+
+### Patch Changes
+
+- @logto/browser@3.0.6
+
+## 4.0.5
+
+### Patch Changes
+
+- @logto/browser@3.0.5
+
+## 4.0.4
+
+### Patch Changes
+
+- d6a900c: bump dependencies for security update
+- Updated dependencies [733e978]
+- Updated dependencies [d6a900c]
+  - @logto/browser@3.0.4
+
 ## 4.0.3
 
 ### Patch Changes

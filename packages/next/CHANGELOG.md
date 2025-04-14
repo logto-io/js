@@ -1,5 +1,69 @@
 # Change Log
 
+## 4.2.2
+
+### Patch Changes
+
+- @logto/node@3.1.3
+
+## 4.2.1
+
+### Patch Changes
+
+- @logto/node@3.1.2
+
+## 4.2.0
+
+### Minor Changes
+
+- a0f91a3: support custom external session storage
+
+  Add `sessionWrapper` to the config, you can implement your own session wrapper to support custom external session storage.
+
+  Take a look at the example below:
+
+  ```ts
+  import { MemorySessionWrapper } from './storage';
+
+  export const config = {
+    // ...
+    sessionWrapper: new MemorySessionWrapper(),
+  };
+  ```
+
+  ```ts
+  import { randomUUID } from 'node:crypto';
+
+  import { type SessionWrapper, type SessionData } from '@logto/next';
+
+  export class MemorySessionWrapper implements SessionWrapper {
+    private readonly storage = new Map<string, unknown>();
+
+    async wrap(data: unknown, _key: string): Promise<string> {
+      const sessionId = randomUUID();
+      this.storage.set(sessionId, data);
+      return sessionId;
+    }
+
+    async unwrap(value: string, _key: string): Promise<SessionData> {
+      if (!value) {
+        return {};
+      }
+
+      const data = this.storage.get(value);
+      return data ?? {};
+    }
+  }
+  ```
+
+  You can implement your own session wrapper to support custom external session storage like Redis, Memcached, etc.
+
+### Patch Changes
+
+- d6a900c: bump dependencies for security update
+- Updated dependencies [d6a900c]
+  - @logto/node@3.1.1
+
 ## 4.1.0
 
 ### Minor Changes

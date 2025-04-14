@@ -1,5 +1,25 @@
 # Change Log
 
+## 3.0.7
+
+### Patch Changes
+
+- @logto/node@3.1.3
+
+## 3.0.6
+
+### Patch Changes
+
+- @logto/node@3.1.2
+
+## 3.0.5
+
+### Patch Changes
+
+- d6a900c: bump dependencies for security update
+- Updated dependencies [d6a900c]
+  - @logto/node@3.1.1
+
 ## 3.0.4
 
 ### Patch Changes

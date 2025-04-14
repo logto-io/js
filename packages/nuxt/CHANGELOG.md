@@ -1,5 +1,25 @@
 # @logto/nuxt
 
+## 1.2.3
+
+### Patch Changes
+
+- @logto/node@3.1.3
+
+## 1.2.2
+
+### Patch Changes
+
+- @logto/node@3.1.2
+
+## 1.2.1
+
+### Patch Changes
+
+- d6a900c: bump dependencies for security update
+- Updated dependencies [d6a900c]
+  - @logto/node@3.1.1
+
 ## 1.2.0
 
 ### Minor Changes
