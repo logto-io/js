@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.0.8
+
+### Patch Changes
+
+- 728a8a3: catch error in withLogto middleware
+
 ## 3.0.7
 
 ### Patch Changes

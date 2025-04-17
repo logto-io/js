@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.0.27
+
+### Patch Changes
+
+- Updated dependencies [728a8a3]
+  - @logto/express@3.0.8
+
 ## 2.0.26
 
 ### Patch Changes
