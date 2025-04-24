@@ -4,9 +4,11 @@
   "type": "module",
   "module": "./lib/index.js",
   "types": "./lib/index.d.ts",
+  "react-native": "./lib/index.js",
   "exports": {
     "types": "./lib/index.d.ts",
-    "import": "./lib/index.js"
+    "import": "./lib/index.js",
+    "react-native": "./lib/index.js"
   },
   "files": [
     "lib"
