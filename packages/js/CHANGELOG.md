@@ -1,5 +1,17 @@
 # Change Log
 
+## 5.1.1
+
+### Patch Changes
+
+- 049533f: fix: add react-native export delclarations to js package.json
+
+  Add react-native export entries to js package.json to fix the issue with react-native:
+
+  ```
+  Can not resolve module '@logto/js'`from file`@logto/client/lib/shim.js`.
+  ```
+
 ## 5.1.0
 
 ### Minor Changes
