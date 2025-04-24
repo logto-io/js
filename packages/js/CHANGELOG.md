@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- 049533f: fix: add react-native export delclarations to js package.json
+- 049533f: fix: add react-native export declaration to js package.json
 
   Add react-native export entries to js package.json to fix the issue with react-native:
 
