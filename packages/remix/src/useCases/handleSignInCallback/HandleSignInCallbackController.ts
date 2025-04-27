@@ -42,7 +42,7 @@ export class HandleSignInCallbackController {
     const isForwardedHttpsTraffic = request.headers.get('x-forwarded-proto') === 'https';
 
     const callbackUri = isForwardedHttpsTraffic
-      ? request.url.replace('http', 'https')
+      ? request.url.replace('http://', 'https://')
       : request.url;
 
     const result = await this.useCase({
