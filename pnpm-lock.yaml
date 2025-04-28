@@ -151,14 +151,14 @@ importers:
         version: link:../browser
     devDependencies:
       '@capacitor/app':
-        specifier: ^6.0.0
-        version: 6.0.0(@capacitor/core@6.1.0)
+        specifier: ^7.0.0
+        version: 7.0.0
       '@capacitor/browser':
         specifier: ^6.0.0
-        version: 6.0.1(@capacitor/core@6.1.0)
+        version: 6.0.1
       '@capacitor/preferences':
         specifier: ^6.0.0
-        version: 6.0.1(@capacitor/core@6.1.0)
+        version: 6.0.1
       '@silverhand/eslint-config':
         specifier: ^6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
@@ -1446,18 +1446,15 @@ packages:
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  '@capacitor/app@6.0.0':
-    resolution: {integrity: sha512-X5UGd90Jh5p9rmoPyMqFyFWqOypdJgVJhYcM5X1YyDVJJGzmJ5MuYv1+ajj5DW9Qyh+5a3th9WYptdGby8jidA==}
+  '@capacitor/app@7.0.0':
+    resolution: {integrity: sha512-/UFwfPFsw/Jen6vjrV0lfTBOQWSaDDdmrYXKpYg4Xn8hwj0xrrRPXxC43j7VmPoj9AFMVPA+hx94ygqjChPASQ==}
     peerDependencies:
-      '@capacitor/core': ^6.0.0
+      '@capacitor/core': '>=7.0.0'
 
   '@capacitor/browser@6.0.1':
     resolution: {integrity: sha512-KBK0PKfmUj0if+gYWEh0+LG70l1gcLGbDCWJt2Ig3naXHGlrLoWBqVArCgbwBzwJZL+VlwW7iEhAzGOWpg2jhw==}
     peerDependencies:
       '@capacitor/core': ^6.0.0
-
-  '@capacitor/core@6.1.0':
-    resolution: {integrity: sha512-Kt4ONm0X9xxJXn9Q73oBaKdzep5B/VJw3VjXa2eGul4cD2k37mJwgjpXSMRnLH0Aju5bCiRL8J/hMAfTlokO6A==}
 
   '@capacitor/preferences@6.0.1':
     resolution: {integrity: sha512-5UvSK3O/tgPcQ1QyX0zYjb0uujFw+PQgYUSt6i2evf609jAIo7QG1IUZzGb6swEPCpk621wEc6R7Yq/Ywa3GPA==}
@@ -10134,21 +10131,11 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@capacitor/app@6.0.0(@capacitor/core@6.1.0)':
-    dependencies:
-      '@capacitor/core': 6.1.0
+  '@capacitor/app@7.0.0': {}
 
-  '@capacitor/browser@6.0.1(@capacitor/core@6.1.0)':
-    dependencies:
-      '@capacitor/core': 6.1.0
+  '@capacitor/browser@6.0.1': {}
 
-  '@capacitor/core@6.1.0':
-    dependencies:
-      tslib: 2.8.1
-
-  '@capacitor/preferences@6.0.1(@capacitor/core@6.1.0)':
-    dependencies:
-      '@capacitor/core': 6.1.0
+  '@capacitor/preferences@6.0.1': {}
 
   '@changesets/apply-release-plan@7.0.6':
     dependencies:
