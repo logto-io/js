@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.0.9
+
+### Patch Changes
+
+- 4626cc1: fix URL protocol replacement in HandleSignInCallbackController to prevent 'httpss' URLs
+
 ## 3.0.8
 
 ### Patch Changes
