@@ -1,10 +1,6 @@
+import { Prompt, QueryKey, type SignInUriParameters, withReservedScopes } from '@logto/js';
 import { conditional } from '@silverhand/essentials';
 import { type OpenIdConfiguration } from 'angular-auth-oidc-client';
-
-import { Prompt, QueryKey } from '../consts/index.js';
-import { type SignInUriParameters } from '../index.js';
-
-import { withReservedScopes } from './scopes.js';
 
 /** The Logto configuration object for Angular apps. */
 export type LogtoAngularConfig = {
@@ -166,3 +162,6 @@ export const buildAngularAuthConfig = (logtoConfig: LogtoAngularConfig): OpenIdC
     },
   };
 };
+
+export type { UserInfoResponse } from '@logto/js';
+export { UserScope } from '@logto/js';
