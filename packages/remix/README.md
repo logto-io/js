@@ -33,7 +33,7 @@ pnpm add @logto/remix
 Before initializing the SDK, we have to create a `SessionStorage` instance which takes care of the session persistence. In our case, we want to use a cookie-based session:
 
 ```ts
-// service/auth.server.ts
+// services/auth.server.ts
 import { createCookieSessionStorage } from '@remix-run/node';
 import { makeLogtoRemix } from '@logto/remix';
 
@@ -65,7 +65,7 @@ The SDK ships with a convenient function that mounts the authentication routes: 
 ```ts
 // routes/api.logto.$action.ts
 
-import { logto } from '../../service/auth.server';
+import { logto } from '../../services/auth.server';
 
 export const loader = logto.handleAuthRoutes({
   'sign-in': {
@@ -101,7 +101,7 @@ import type { LogtoContext } from '@logto/remix';
 import { LoaderFunction, json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 
-import { logto } from '../../service/auth.server';
+import { logto } from '../../services/auth.server';
 
 type LoaderResponse = {
   readonly context: LogtoContext;
