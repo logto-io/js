@@ -15,8 +15,8 @@
     "@remix-run/react": "^2.16.5",
     "@remix-run/serve": "^2.16.5",
     "isbot": "^4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.16.5",
@@ -24,8 +24,8 @@
     "@silverhand/eslint-config-react": "^6.0.2",
     "@silverhand/ts-config": "^6.0.0",
     "@silverhand/ts-config-react": "^6.0.0",
-    "@types/react": "^18.2.56",
-    "@types/react-dom": "^18.2.19",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "buffer": "^6.0.3",
     "eslint": "^8.57.0",
     "lint-staged": "^15.0.0",
