@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
-import type { UserInfoResponse } from '@logto/js';
+import type { UserInfoResponse } from '@logto/angular';
 
 @Component({
   selector: 'app-root',

@@ -5,7 +5,7 @@ import { provideAuth } from 'angular-auth-oidc-client';
 import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideHttpClient, withFetch } from '@angular/common/http';
-import { UserScope, buildAngularAuthConfig } from '@logto/js';
+import { UserScope, buildAngularAuthConfig } from '@logto/angular';
 
 export const appConfig: ApplicationConfig = {
   providers: [
