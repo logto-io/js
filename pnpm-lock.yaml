@@ -170,7 +170,7 @@ importers:
         version: 15.0.0
       parcel:
         specifier: ^2.9.2
-        version: 2.9.2(@swc/helpers@0.5.15)(postcss@8.4.31)(srcset@4.0.0)(terser@5.39.0)
+        version: 2.9.2(@swc/helpers@0.5.17)(postcss@8.4.31)(srcset@4.0.0)(terser@5.39.0)
       postcss:
         specifier: ^8.4.31
         version: 8.4.31
@@ -369,7 +369,7 @@ importers:
         version: 6.0.0(typescript@5.3.3)
       '@swc/core':
         specifier: ^1.6.5
-        version: 1.6.5(@swc/helpers@0.5.15)
+        version: 1.6.5(@swc/helpers@0.5.17)
       '@types/cookie-parser':
         specifier: ^1.4.3
         version: 1.4.3
@@ -545,11 +545,11 @@ importers:
         specifier: ^15.0.0
         version: 15.0.0
       next:
-        specifier: ^15.2.3
-        version: 15.2.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
+        specifier: ^15.2.4
+        version: 15.2.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
       next-test-api-route-handler:
         specifier: ^4.0.14
-        version: 4.0.14(next@15.2.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))
+        version: 4.0.14(next@15.2.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -569,11 +569,11 @@ importers:
   packages/next-auth-sample:
     dependencies:
       next:
-        specifier: ^15.2.3
-        version: 15.2.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
+        specifier: ^15.2.4
+        version: 15.2.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
       next-auth:
         specifier: 5.0.0-beta.27
-        version: 5.0.0-beta.27(next@15.2.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))(react@19.0.0)
+        version: 5.0.0-beta.27(next@15.2.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))(react@19.0.0)
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -627,8 +627,8 @@ importers:
         specifier: workspace:^
         version: link:../next
       next:
-        specifier: ^15.2.3
-        version: 15.2.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
+        specifier: ^15.2.4
+        version: 15.2.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -688,8 +688,8 @@ importers:
         specifier: workspace:^
         version: link:../next
       next:
-        specifier: ^15.2.3
-        version: 15.2.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
+        specifier: ^15.2.4
+        version: 15.2.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -1016,7 +1016,7 @@ importers:
         version: 15.0.0
       parcel:
         specifier: ^2.9.2
-        version: 2.9.2(@swc/helpers@0.5.15)(postcss@8.4.31)(srcset@4.0.0)(terser@5.39.0)
+        version: 2.9.2(@swc/helpers@0.5.17)(postcss@8.4.31)(srcset@4.0.0)(terser@5.39.0)
       postcss:
         specifier: ^8.4.31
         version: 8.4.31
@@ -1160,7 +1160,7 @@ importers:
         version: 2.20.6(@sveltejs/vite-plugin-svelte@5.0.1(svelte@5.2.9)(vite@6.3.5(@types/node@22.10.0)(jiti@2.4.2)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.1)))(svelte@5.2.9)(vite@6.3.5(@types/node@22.10.0)(jiti@2.4.2)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.1))
       '@swc/core':
         specifier: ^1.6.5
-        version: 1.6.5(@swc/helpers@0.5.15)
+        version: 1.6.5(@swc/helpers@0.5.17)
       '@types/cookie':
         specifier: ^0.6.0
         version: 0.6.0
@@ -1862,8 +1862,8 @@ packages:
   '@emnapi/core@1.4.0':
     resolution: {integrity: sha512-H+N/FqT07NmLmt6OFFtDfwe8PNygprzBikrEMyQfgqSmT0vzE515Pz7R8izwB9q/zsH/MA64AKoul3sA6/CzVg==}
 
-  '@emnapi/runtime@1.4.0':
-    resolution: {integrity: sha512-64WYIf4UYcdLnbKn/umDlNjQDSS8AgZrI/R9+x5ilkUVFxXcA1Ebl+gQLc/6mERA4407Xof0R7wEyEuj091CVw==}
+  '@emnapi/runtime@1.4.3':
+    resolution: {integrity: sha512-pBPWdu6MLKROBX05wSNKcNb++m5Er+KQ9QkB+WVM+pW2Kx9hoSrVTnu3BdkI5eBLZoKu/J6mW/B6i6bJB2ytXQ==}
 
   '@emnapi/wasi-threads@1.0.1':
     resolution: {integrity: sha512-iIBu7mwkq4UQGeMEM8bLwNK962nXdhodeScX4slfQnRhEMMzvYivHhutCIk8uojvmASXXPC2WNEjwxFWk72Oqw==}
@@ -2660,56 +2660,56 @@ packages:
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
 
-  '@next/env@15.2.3':
-    resolution: {integrity: sha512-a26KnbW9DFEUsSxAxKBORR/uD9THoYoKbkpFywMN/AFvboTt94b8+g/07T8J6ACsdLag8/PDU60ov4rPxRAixw==}
+  '@next/env@15.2.4':
+    resolution: {integrity: sha512-+SFtMgoiYP3WoSswuNmxJOCwi06TdWE733D+WPjpXIe4LXGULwEaofiiAy6kbS0+XjM5xF5n3lKuBwN2SnqD9g==}
 
   '@next/eslint-plugin-next@15.0.4':
     resolution: {integrity: sha512-rbsF17XGzHtR7SDWzWpavSfum3/UdnF8bAaisnKwP//si3KWPTedVUsflAdjyK1zW3rweBjbALfKcavFneLGvg==}
 
-  '@next/swc-darwin-arm64@15.2.3':
-    resolution: {integrity: sha512-uaBhA8aLbXLqwjnsHSkxs353WrRgQgiFjduDpc7YXEU0B54IKx3vU+cxQlYwPCyC8uYEEX7THhtQQsfHnvv8dw==}
+  '@next/swc-darwin-arm64@15.2.4':
+    resolution: {integrity: sha512-1AnMfs655ipJEDC/FHkSr0r3lXBgpqKo4K1kiwfUf3iE68rDFXZ1TtHdMvf7D0hMItgDZ7Vuq3JgNMbt/+3bYw==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
 
-  '@next/swc-darwin-x64@15.2.3':
-    resolution: {integrity: sha512-pVwKvJ4Zk7h+4hwhqOUuMx7Ib02u3gDX3HXPKIShBi9JlYllI0nU6TWLbPT94dt7FSi6mSBhfc2JrHViwqbOdw==}
+  '@next/swc-darwin-x64@15.2.4':
+    resolution: {integrity: sha512-3qK2zb5EwCwxnO2HeO+TRqCubeI/NgCe+kL5dTJlPldV/uwCnUgC7VbEzgmxbfrkbjehL4H9BPztWOEtsoMwew==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
 
-  '@next/swc-linux-arm64-gnu@15.2.3':
-    resolution: {integrity: sha512-50ibWdn2RuFFkOEUmo9NCcQbbV9ViQOrUfG48zHBCONciHjaUKtHcYFiCwBVuzD08fzvzkWuuZkd4AqbvKO7UQ==}
+  '@next/swc-linux-arm64-gnu@15.2.4':
+    resolution: {integrity: sha512-HFN6GKUcrTWvem8AZN7tT95zPb0GUGv9v0d0iyuTb303vbXkkbHDp/DxufB04jNVD+IN9yHy7y/6Mqq0h0YVaQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
 
-  '@next/swc-linux-arm64-musl@15.2.3':
-    resolution: {integrity: sha512-2gAPA7P652D3HzR4cLyAuVYwYqjG0mt/3pHSWTCyKZq/N/dJcUAEoNQMyUmwTZWCJRKofB+JPuDVP2aD8w2J6Q==}
+  '@next/swc-linux-arm64-musl@15.2.4':
+    resolution: {integrity: sha512-Oioa0SORWLwi35/kVB8aCk5Uq+5/ZIumMK1kJV+jSdazFm2NzPDztsefzdmzzpx5oGCJ6FkUC7vkaUseNTStNA==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
 
-  '@next/swc-linux-x64-gnu@15.2.3':
-    resolution: {integrity: sha512-ODSKvrdMgAJOVU4qElflYy1KSZRM3M45JVbeZu42TINCMG3anp7YCBn80RkISV6bhzKwcUqLBAmOiWkaGtBA9w==}
+  '@next/swc-linux-x64-gnu@15.2.4':
+    resolution: {integrity: sha512-yb5WTRaHdkgOqFOZiu6rHV1fAEK0flVpaIN2HB6kxHVSy/dIajWbThS7qON3W9/SNOH2JWkVCyulgGYekMePuw==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
 
-  '@next/swc-linux-x64-musl@15.2.3':
-    resolution: {integrity: sha512-ZR9kLwCWrlYxwEoytqPi1jhPd1TlsSJWAc+H/CJHmHkf2nD92MQpSRIURR1iNgA/kuFSdxB8xIPt4p/T78kwsg==}
+  '@next/swc-linux-x64-musl@15.2.4':
+    resolution: {integrity: sha512-Dcdv/ix6srhkM25fgXiyOieFUkz+fOYkHlydWCtB0xMST6X9XYI3yPDKBZt1xuhOytONsIFJFB08xXYsxUwJLw==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
 
-  '@next/swc-win32-arm64-msvc@15.2.3':
-    resolution: {integrity: sha512-+G2FrDcfm2YDbhDiObDU/qPriWeiz/9cRR0yMWJeTLGGX6/x8oryO3tt7HhodA1vZ8r2ddJPCjtLcpaVl7TE2Q==}
+  '@next/swc-win32-arm64-msvc@15.2.4':
+    resolution: {integrity: sha512-dW0i7eukvDxtIhCYkMrZNQfNicPDExt2jPb9AZPpL7cfyUo7QSNl1DjsHjmmKp6qNAqUESyT8YFl/Aw91cNJJg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
 
-  '@next/swc-win32-x64-msvc@15.2.3':
-    resolution: {integrity: sha512-gHYS9tc+G2W0ZC8rBL+H6RdtXIyk40uLiaos0yj5US85FNhbFEndMA2nW3z47nzOWiSvXTZ5kBClc3rD0zJg0w==}
+  '@next/swc-win32-x64-msvc@15.2.4':
+    resolution: {integrity: sha512-SbnWkJmkS7Xl3kre8SdMF6F/XDh1DTFEhp0jRTj/uB8iPKoU2bb2NDfcu+iifv1+mxQEd1g2vvSxcZbXSKyWiQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
@@ -4090,6 +4090,9 @@ packages:
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
 
+  '@swc/helpers@0.5.17':
+    resolution: {integrity: sha512-5IKx/Y13RsYd+sauPb2x+U/xZikHjolzfuDgTAl/Tdf3Q8rslRvC19NKDLgAJQ6wsqADk10ntlv08nPFw/gO/A==}
+
   '@swc/types@0.1.9':
     resolution: {integrity: sha512-qKnCno++jzcJ4lM4NTfYifm1EFSCeIfKiAHAfkENZAV5Kl9PjJIyd2yeeVv6c/2CckuLyv2NmRC5pv6pm2WQBg==}
 
@@ -5131,14 +5134,11 @@ packages:
   caniuse-api@3.0.0:
     resolution: {integrity: sha512-bsTwuIg/BZZK/vreVTYYbSWoe2F+71P7K5QGEX+pT250DZbfU1MQ5prOKpPR+LL6uWKK3KMwMCAS74QB3Um1uw==}
 
-  caniuse-lite@1.0.30001706:
-    resolution: {integrity: sha512-3ZczoTApMAZwPKYWmwVbQMFpXBDds3/0VciVoUwPUbldlYyVLmRVuRs/PcUZtHpbLRpzzDvrvnFuREsGt6lUug==}
-
   caniuse-lite@1.0.30001707:
     resolution: {integrity: sha512-3qtRjw/HQSMlDWf+X79N206fepf4SOOU6SQLMaq/0KkZLmSjPxAkBOQQ+FxbHKfHmYLZFfdWsO3KA90ceHPSnw==}
 
-  caniuse-lite@1.0.30001717:
-    resolution: {integrity: sha512-auPpttCq6BDEG8ZAuHJIplGw6GODhjw+/11e7IjpnYCxZcW/ONgPs0KVBJ0d1bY3e2+7PRe5RCLyP+PfwVgkYw==}
+  caniuse-lite@1.0.30001718:
+    resolution: {integrity: sha512-AflseV1ahcSunK53NfEs9gFWgOEmzr0f+kaMFA4xiLZlr9Hzt7HxcSpIFcnNCUkz6R6dWKa54rUz3HUmI3nVcw==}
 
   ccount@2.0.1:
     resolution: {integrity: sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==}
@@ -5812,8 +5812,8 @@ packages:
     engines: {node: '>=0.10'}
     hasBin: true
 
-  detect-libc@2.0.3:
-    resolution: {integrity: sha512-bwy0MGW55bG41VqxxypOsdSdGqLwXPI/focwgTYCFMbdUiBAxLg9CFzG08sz2aqzknwiX7Hkl0bQENjg8iLByw==}
+  detect-libc@2.0.4:
+    resolution: {integrity: sha512-3UDv+G9CsCKO1WKMGw9fwq/SWJYbI0c5Y7LU1AXYoDdbhE2AHQ6N6Nb34sG8Fj7T5APy8qXDCKuuIHd1BR0tVA==}
     engines: {node: '>=8'}
 
   detective-amd@5.0.2:
@@ -8469,8 +8469,8 @@ packages:
     peerDependencies:
       next: '>=9'
 
-  next@15.2.3:
-    resolution: {integrity: sha512-x6eDkZxk2rPpu46E1ZVUWIBhYCLszmUY6fvHBFcbzJ9dD+qRX6vcHusaqqDlnY+VngKzKbAiG2iRCkPbmi8f7w==}
+  next@15.2.4:
+    resolution: {integrity: sha512-VwL+LAaPSxEkd3lU2xWbgEOtrM8oedmyhBqaVNmgKB+GvZlCy9rgaEc+y2on0wv+l0oSFqLtYD6dcC1eAedUaQ==}
     engines: {node: ^18.18.0 || ^19.8.0 || >= 20.0.0}
     hasBin: true
     peerDependencies:
@@ -10010,6 +10010,11 @@ packages:
 
   semver@7.7.1:
     resolution: {integrity: sha512-hlq8tAfn0m/61p4BVRcPzIGr6LKiMwo4VM6dGi6pt4qcRkmNzTcWq6eCEjEh+qXjkMDvPlOFFSGwQjoEa6gyMA==}
+    engines: {node: '>=10'}
+    hasBin: true
+
+  semver@7.7.2:
+    resolution: {integrity: sha512-RF0Fw+rO5AMf9MAyaRXI4AV0Ulj5lMHqVxxdSgiVbixSCXoEmmX/jk0CuJw4+3SqroYO9VoUh+HcuJivvtJemA==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -12133,7 +12138,7 @@ snapshots:
   '@commitlint/is-ignored@19.0.0':
     dependencies:
       '@commitlint/types': 19.0.0
-      semver: 7.7.1
+      semver: 7.7.2
 
   '@commitlint/lint@19.0.0':
     dependencies:
@@ -12236,7 +12241,7 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
-  '@emnapi/runtime@1.4.0':
+  '@emnapi/runtime@1.4.3':
     dependencies:
       tslib: 2.8.1
     optional: true
@@ -12615,7 +12620,7 @@ snapshots:
 
   '@img/sharp-wasm32@0.33.5':
     dependencies:
-      '@emnapi/runtime': 1.4.0
+      '@emnapi/runtime': 1.4.3
     optional: true
 
   '@img/sharp-win32-ia32@0.33.5':
@@ -12741,14 +12746,14 @@ snapshots:
 
   '@mapbox/node-pre-gyp@1.0.11(encoding@0.1.13)':
     dependencies:
-      detect-libc: 2.0.3
+      detect-libc: 2.0.4
       https-proxy-agent: 5.0.1
       make-dir: 3.1.0
       node-fetch: 2.7.0(encoding@0.1.13)
       nopt: 5.0.0
       npmlog: 5.0.1
       rimraf: 3.0.2
-      semver: 7.7.1
+      semver: 7.7.2
       tar: 6.2.1
     transitivePeerDependencies:
       - encoding
@@ -12757,11 +12762,11 @@ snapshots:
   '@mapbox/node-pre-gyp@2.0.0(encoding@0.1.13)':
     dependencies:
       consola: 3.4.2
-      detect-libc: 2.0.3
+      detect-libc: 2.0.4
       https-proxy-agent: 7.0.6
       node-fetch: 2.7.0(encoding@0.1.13)
       nopt: 8.1.0
-      semver: 7.7.1
+      semver: 7.7.2
       tar: 7.4.3
     transitivePeerDependencies:
       - encoding
@@ -12825,7 +12830,7 @@ snapshots:
   '@napi-rs/wasm-runtime@0.2.9':
     dependencies:
       '@emnapi/core': 1.4.0
-      '@emnapi/runtime': 1.4.0
+      '@emnapi/runtime': 1.4.3
       '@tybys/wasm-util': 0.9.0
     optional: true
 
@@ -12904,7 +12909,7 @@ snapshots:
       precinct: 11.0.5
       require-package-name: 2.0.1
       resolve: 2.0.0-next.5
-      semver: 7.7.1
+      semver: 7.7.2
       tmp-promise: 3.0.3
       toml: 3.0.0
       unixify: 1.0.0
@@ -12916,34 +12921,34 @@ snapshots:
       - rollup
       - supports-color
 
-  '@next/env@15.2.3': {}
+  '@next/env@15.2.4': {}
 
   '@next/eslint-plugin-next@15.0.4':
     dependencies:
       fast-glob: 3.3.1
 
-  '@next/swc-darwin-arm64@15.2.3':
+  '@next/swc-darwin-arm64@15.2.4':
     optional: true
 
-  '@next/swc-darwin-x64@15.2.3':
+  '@next/swc-darwin-x64@15.2.4':
     optional: true
 
-  '@next/swc-linux-arm64-gnu@15.2.3':
+  '@next/swc-linux-arm64-gnu@15.2.4':
     optional: true
 
-  '@next/swc-linux-arm64-musl@15.2.3':
+  '@next/swc-linux-arm64-musl@15.2.4':
     optional: true
 
-  '@next/swc-linux-x64-gnu@15.2.3':
+  '@next/swc-linux-x64-gnu@15.2.4':
     optional: true
 
-  '@next/swc-linux-x64-musl@15.2.3':
+  '@next/swc-linux-x64-musl@15.2.4':
     optional: true
 
-  '@next/swc-win32-arm64-msvc@15.2.3':
+  '@next/swc-win32-arm64-msvc@15.2.4':
     optional: true
 
-  '@next/swc-win32-x64-msvc@15.2.3':
+  '@next/swc-win32-x64-msvc@15.2.4':
     optional: true
 
   '@nodelib/fs.scandir@2.1.5':
@@ -12960,7 +12965,7 @@ snapshots:
 
   '@npmcli/fs@3.1.1':
     dependencies:
-      semver: 7.7.1
+      semver: 7.7.2
 
   '@npmcli/git@4.1.0':
     dependencies:
@@ -12970,7 +12975,7 @@ snapshots:
       proc-log: 3.0.0
       promise-inflight: 1.0.1
       promise-retry: 2.0.1
-      semver: 7.7.1
+      semver: 7.7.2
       which: 3.0.1
     transitivePeerDependencies:
       - bluebird
@@ -13040,7 +13045,7 @@ snapshots:
       pathe: 2.0.3
       pkg-types: 2.1.0
       prompts: 2.4.2
-      semver: 7.7.1
+      semver: 7.7.2
 
   '@nuxt/devtools@2.4.0(vite@6.3.5(@types/node@22.10.0)(jiti@2.4.2)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.1))(vue@3.5.13(typescript@5.7.2))':
     dependencies:
@@ -13342,7 +13347,7 @@ snapshots:
     transitivePeerDependencies:
       - '@parcel/core'
 
-  '@parcel/config-default@2.9.2(@parcel/core@2.9.2)(@swc/helpers@0.5.15)(postcss@8.4.31)(srcset@4.0.0)(terser@5.39.0)':
+  '@parcel/config-default@2.9.2(@parcel/core@2.9.2)(@swc/helpers@0.5.17)(postcss@8.4.31)(srcset@4.0.0)(terser@5.39.0)':
     dependencies:
       '@parcel/bundler-default': 2.9.2(@parcel/core@2.9.2)
       '@parcel/compressor-raw': 2.9.2(@parcel/core@2.9.2)
@@ -13352,7 +13357,7 @@ snapshots:
       '@parcel/optimizer-htmlnano': 2.9.2(@parcel/core@2.9.2)(postcss@8.4.31)(srcset@4.0.0)(terser@5.39.0)
       '@parcel/optimizer-image': 2.9.2(@parcel/core@2.9.2)
       '@parcel/optimizer-svgo': 2.9.2(@parcel/core@2.9.2)
-      '@parcel/optimizer-swc': 2.9.2(@parcel/core@2.9.2)(@swc/helpers@0.5.15)
+      '@parcel/optimizer-swc': 2.9.2(@parcel/core@2.9.2)(@swc/helpers@0.5.17)
       '@parcel/packager-css': 2.9.2(@parcel/core@2.9.2)
       '@parcel/packager-html': 2.9.2(@parcel/core@2.9.2)
       '@parcel/packager-js': 2.9.2(@parcel/core@2.9.2)
@@ -13513,13 +13518,13 @@ snapshots:
     transitivePeerDependencies:
       - '@parcel/core'
 
-  '@parcel/optimizer-swc@2.9.2(@parcel/core@2.9.2)(@swc/helpers@0.5.15)':
+  '@parcel/optimizer-swc@2.9.2(@parcel/core@2.9.2)(@swc/helpers@0.5.17)':
     dependencies:
       '@parcel/diagnostic': 2.9.2
       '@parcel/plugin': 2.9.2(@parcel/core@2.9.2)
       '@parcel/source-map': 2.1.1
       '@parcel/utils': 2.9.2
-      '@swc/core': 1.6.5(@swc/helpers@0.5.15)
+      '@swc/core': 1.6.5(@swc/helpers@0.5.17)
       nullthrows: 1.1.1
     transitivePeerDependencies:
       - '@parcel/core'
@@ -13721,7 +13726,7 @@ snapshots:
       '@parcel/source-map': 2.1.1
       '@parcel/utils': 2.9.2
       '@parcel/workers': 2.9.2(@parcel/core@2.9.2)
-      '@swc/helpers': 0.5.15
+      '@swc/helpers': 0.5.17
       browserslist: 4.23.0
       nullthrows: 1.1.1
       regenerator-runtime: 0.13.11
@@ -14796,7 +14801,7 @@ snapshots:
   '@swc/core-win32-x64-msvc@1.6.5':
     optional: true
 
-  '@swc/core@1.6.5(@swc/helpers@0.5.15)':
+  '@swc/core@1.6.5(@swc/helpers@0.5.17)':
     dependencies:
       '@swc/counter': 0.1.3
       '@swc/types': 0.1.9
@@ -14811,11 +14816,15 @@ snapshots:
       '@swc/core-win32-arm64-msvc': 1.6.5
       '@swc/core-win32-ia32-msvc': 1.6.5
       '@swc/core-win32-x64-msvc': 1.6.5
-      '@swc/helpers': 0.5.15
+      '@swc/helpers': 0.5.17
 
   '@swc/counter@0.1.3': {}
 
   '@swc/helpers@0.5.15':
+    dependencies:
+      tslib: 2.8.1
+
+  '@swc/helpers@0.5.17':
     dependencies:
       tslib: 2.8.1
 
@@ -15225,7 +15234,7 @@ snapshots:
       debug: 4.4.0
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.7.1
+      semver: 7.7.2
       tsutils: 3.21.0(typescript@5.8.3)
     optionalDependencies:
       typescript: 5.8.3
@@ -16104,7 +16113,7 @@ snapshots:
   autoprefixer@10.4.21(postcss@8.5.3):
     dependencies:
       browserslist: 4.24.4
-      caniuse-lite: 1.0.30001707
+      caniuse-lite: 1.0.30001718
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.1.1
@@ -16217,21 +16226,21 @@ snapshots:
 
   browserslist@4.23.0:
     dependencies:
-      caniuse-lite: 1.0.30001706
+      caniuse-lite: 1.0.30001718
       electron-to-chromium: 1.4.673
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.23.0)
 
   browserslist@4.24.4:
     dependencies:
-      caniuse-lite: 1.0.30001707
+      caniuse-lite: 1.0.30001718
       electron-to-chromium: 1.5.129
       node-releases: 2.0.19
       update-browserslist-db: 1.1.3(browserslist@4.24.4)
 
   browserslist@4.24.5:
     dependencies:
-      caniuse-lite: 1.0.30001717
+      caniuse-lite: 1.0.30001718
       electron-to-chromium: 1.5.150
       node-releases: 2.0.19
       update-browserslist-db: 1.1.3(browserslist@4.24.5)
@@ -16327,15 +16336,13 @@ snapshots:
   caniuse-api@3.0.0:
     dependencies:
       browserslist: 4.24.4
-      caniuse-lite: 1.0.30001707
+      caniuse-lite: 1.0.30001718
       lodash.memoize: 4.1.2
       lodash.uniq: 4.5.0
 
-  caniuse-lite@1.0.30001706: {}
-
   caniuse-lite@1.0.30001707: {}
 
-  caniuse-lite@1.0.30001717: {}
+  caniuse-lite@1.0.30001718: {}
 
   ccount@2.0.1: {}
 
@@ -16985,7 +16992,7 @@ snapshots:
 
   detect-libc@1.0.3: {}
 
-  detect-libc@2.0.3: {}
+  detect-libc@2.0.4: {}
 
   detective-amd@5.0.2:
     dependencies:
@@ -17125,7 +17132,7 @@ snapshots:
       '@one-ini/wasm': 0.1.1
       commander: 10.0.1
       minimatch: 9.0.1
-      semver: 7.7.1
+      semver: 7.7.2
 
   ee-first@1.1.1: {}
 
@@ -17522,7 +17529,7 @@ snapshots:
   eslint-compat-utils@0.5.0(eslint@8.57.0):
     dependencies:
       eslint: 8.57.0
-      semver: 7.6.0
+      semver: 7.7.2
 
   eslint-config-next@15.0.4(eslint@8.50.0)(typescript@5.3.3):
     dependencies:
@@ -20480,39 +20487,39 @@ snapshots:
       p-wait-for: 5.0.2
       qs: 6.13.0
 
-  next-auth@5.0.0-beta.27(next@15.2.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))(react@19.0.0):
+  next-auth@5.0.0-beta.27(next@15.2.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))(react@19.0.0):
     dependencies:
       '@auth/core': 0.39.0
-      next: 15.2.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
+      next: 15.2.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
       react: 19.0.0
 
-  next-test-api-route-handler@4.0.14(next@15.2.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)):
+  next-test-api-route-handler@4.0.14(next@15.2.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)):
     dependencies:
       '@whatwg-node/server': 0.9.60
       cookie: 1.0.1
       core-js: 3.39.0
-      next: 15.2.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
+      next: 15.2.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
 
-  next@15.2.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0):
+  next@15.2.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0):
     dependencies:
-      '@next/env': 15.2.3
+      '@next/env': 15.2.4
       '@swc/counter': 0.1.3
       '@swc/helpers': 0.5.15
       busboy: 1.6.0
-      caniuse-lite: 1.0.30001707
+      caniuse-lite: 1.0.30001718
       postcss: 8.4.31
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
       styled-jsx: 5.1.6(react@19.0.0)
     optionalDependencies:
-      '@next/swc-darwin-arm64': 15.2.3
-      '@next/swc-darwin-x64': 15.2.3
-      '@next/swc-linux-arm64-gnu': 15.2.3
-      '@next/swc-linux-arm64-musl': 15.2.3
-      '@next/swc-linux-x64-gnu': 15.2.3
-      '@next/swc-linux-x64-musl': 15.2.3
-      '@next/swc-win32-arm64-msvc': 15.2.3
-      '@next/swc-win32-x64-msvc': 15.2.3
+      '@next/swc-darwin-arm64': 15.2.4
+      '@next/swc-darwin-x64': 15.2.4
+      '@next/swc-linux-arm64-gnu': 15.2.4
+      '@next/swc-linux-arm64-musl': 15.2.4
+      '@next/swc-linux-x64-gnu': 15.2.4
+      '@next/swc-linux-x64-musl': 15.2.4
+      '@next/swc-win32-arm64-msvc': 15.2.4
+      '@next/swc-win32-x64-msvc': 15.2.4
       sass: 1.85.0
       sharp: 0.33.5
     transitivePeerDependencies:
@@ -20693,13 +20700,13 @@ snapshots:
     dependencies:
       hosted-git-info: 6.1.3
       is-core-module: 2.16.1
-      semver: 7.7.1
+      semver: 7.7.2
       validate-npm-package-license: 3.0.4
 
   normalize-package-data@6.0.2:
     dependencies:
       hosted-git-info: 7.0.2
-      semver: 7.7.1
+      semver: 7.7.2
       validate-npm-package-license: 3.0.4
 
   normalize-path@2.1.1:
@@ -20712,7 +20719,7 @@ snapshots:
 
   npm-install-checks@6.3.0:
     dependencies:
-      semver: 7.7.1
+      semver: 7.7.2
 
   npm-normalize-package-bin@3.0.1: {}
 
@@ -20720,7 +20727,7 @@ snapshots:
     dependencies:
       hosted-git-info: 6.1.3
       proc-log: 3.0.0
-      semver: 7.7.1
+      semver: 7.7.2
       validate-npm-package-name: 5.0.1
 
   npm-pick-manifest@8.0.2:
@@ -20728,7 +20735,7 @@ snapshots:
       npm-install-checks: 6.3.0
       npm-normalize-package-bin: 3.0.1
       npm-package-arg: 10.1.0
-      semver: 7.7.1
+      semver: 7.7.2
 
   npm-run-path@4.0.1:
     dependencies:
@@ -21111,9 +21118,9 @@ snapshots:
 
   pako@0.2.9: {}
 
-  parcel@2.9.2(@swc/helpers@0.5.15)(postcss@8.4.31)(srcset@4.0.0)(terser@5.39.0):
+  parcel@2.9.2(@swc/helpers@0.5.17)(postcss@8.4.31)(srcset@4.0.0)(terser@5.39.0):
     dependencies:
-      '@parcel/config-default': 2.9.2(@parcel/core@2.9.2)(@swc/helpers@0.5.15)(postcss@8.4.31)(srcset@4.0.0)(terser@5.39.0)
+      '@parcel/config-default': 2.9.2(@parcel/core@2.9.2)(@swc/helpers@0.5.17)(postcss@8.4.31)(srcset@4.0.0)(terser@5.39.0)
       '@parcel/core': 2.9.2
       '@parcel/diagnostic': 2.9.2
       '@parcel/events': 2.9.2
@@ -22371,6 +22378,8 @@ snapshots:
 
   semver@7.7.1: {}
 
+  semver@7.7.2: {}
+
   send@0.19.0:
     dependencies:
       debug: 2.6.9
@@ -22462,8 +22471,8 @@ snapshots:
   sharp@0.33.5:
     dependencies:
       color: 4.2.3
-      detect-libc: 2.0.3
-      semver: 7.7.1
+      detect-libc: 2.0.4
+      semver: 7.7.2
     optionalDependencies:
       '@img/sharp-darwin-arm64': 0.33.5
       '@img/sharp-darwin-x64': 0.33.5
