@@ -625,8 +625,8 @@ importers:
   packages/next-sample:
     dependencies:
       '@logto/next':
-        specifier: workspace:^
-        version: link:../next
+        specifier: ^4.2.3
+        version: 4.2.3(next@15.3.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))
       next:
         specifier: ^15.2.4
         version: 15.3.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
@@ -686,8 +686,8 @@ importers:
   packages/next-server-actions-sample:
     dependencies:
       '@logto/next':
-        specifier: workspace:^
-        version: link:../next
+        specifier: ^4.2.3
+        version: 4.2.3(next@15.3.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))
       next:
         specifier: ^15.2.4
         version: 15.3.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
@@ -2433,6 +2433,20 @@ packages:
     resolution: {integrity: sha512-BJwkHlSUgtB+Ei52Ai32M1AOMerSlzyIGA/KC4dAGL+GGwVMdwG8HGCOA2TxP3KjhbgDPMYkv7bt/NmOmRIFng==}
     cpu: [x64]
     os: [win32]
+
+  '@logto/client@3.1.2':
+    resolution: {integrity: sha512-HRu6qO4QYQn5ckO5wHi8On/C4Nsp/5qYDbf6zrFjymSVlJlXmDft+OW/AQ9jdPl1kAgZJIlQzjvpM9YFy/7c6Q==}
+
+  '@logto/js@5.1.1':
+    resolution: {integrity: sha512-HMK9AFQ+mzJQ2WuKrJJ2apjoTjGbbu45vIhAl31t0JbSi++3IcPp3/oIhsS+VJ7AOs8x5P+fjWJO2AIwhQe3Vg==}
+
+  '@logto/next@4.2.3':
+    resolution: {integrity: sha512-7suHBlJeKVW3tZHNFaj33Ck/2PO8Jr008/vHjMPYG/d6JHfhsfaLx/uxYPEbZYNkntt7QzZQmmCnpp74g4YBbg==}
+    peerDependencies:
+      next: '>=12'
+
+  '@logto/node@3.1.4':
+    resolution: {integrity: sha512-VJKXIFQoa3xCaf9jli7dWS795FZill6v97373yc/MvPJBWJvEVU4GdyrZNd3TwCuyRUHNmi4CHRthuwT+nWF2Q==}
 
   '@manypkg/find-root@1.1.0':
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
@@ -12390,6 +12404,31 @@ snapshots:
 
   '@lmdb/lmdb-win32-x64@2.7.11':
     optional: true
+
+  '@logto/client@3.1.2':
+    dependencies:
+      '@logto/js': 5.1.1
+      '@silverhand/essentials': 2.9.2
+      camelcase-keys: 9.1.3
+      jose: 5.2.2
+
+  '@logto/js@5.1.1':
+    dependencies:
+      '@silverhand/essentials': 2.9.2
+      camelcase-keys: 9.1.3
+
+  '@logto/next@4.2.3(next@15.3.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))':
+    dependencies:
+      '@edge-runtime/cookies': 5.0.0
+      '@logto/node': 3.1.4
+      cookie: 1.0.2
+      next: 15.3.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
+
+  '@logto/node@3.1.4':
+    dependencies:
+      '@logto/client': 3.1.2
+      '@silverhand/essentials': 2.9.2
+      js-base64: 3.7.4
 
   '@manypkg/find-root@1.1.0':
     dependencies:
