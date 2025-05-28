@@ -2,4 +2,4 @@
 "@logto/capacitor": major
 ---
 
-bump @capacitor pacakges to v7
+bump @capacitor packages to v7
