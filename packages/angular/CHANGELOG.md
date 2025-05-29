@@ -1,5 +1,11 @@
 # @logto/angular
 
+## 1.0.1
+
+### Patch Changes
+
+- 8391b57: fix angular build script. Remove the `&& pnpm test` operation in the build script to avoid running tests during the build process.
+
 ## 1.0.0
 
 ### Major Changes
