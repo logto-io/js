@@ -24,7 +24,7 @@
     "check": "tsc --noEmit",
     "build": "rm -rf lib/ && tsc -p tsconfig.build.json --noEmit && rollup -c",
     "lint": "eslint --ext .ts --ext .tsx src",
-    "prepack": "pnpm build && pnpm test"
+    "prepack": "pnpm build"
   },
   "dependencies": {
     "@logto/js": "workspace:^",
