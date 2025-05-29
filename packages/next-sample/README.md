@@ -2,7 +2,7 @@
 
 This is a sample project for Logto's Next.js SDK.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flogto-io%2Fjs%2Ftree%2Fmaster%2Fpackages%2Fnext-sample&env=APP_ID,APP_SECRET,ENDPOINT,BASE_URL,COOKIE_SECRET,RESOURCES,SCOPES&envDescription=Configuration%20needed%20to%20init%20Logto%20client&envLink=https%3A%2F%2Fgithub.com%2Flogto-io%2Fjs%2Ftree%2Fmaster%2Fpackages%2Fnext-sample%2FREADME.md&project-name=logto-js&repository-name=logto-js)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flogto-io%2Fjs%2Fblob%2Fmaster%2Fpackages%2Fnext-sample&env=APP_ID,APP_SECRET,ENDPOINT,BASE_URL,COOKIE_SECRET&envDescription=Configuration%20needed%20to%20init%20Logto%20client&envLink=https%3A%2F%2Fgithub.com%2Flogto-io%2Fjs%2Fblob%2Fmaster%2Fpackages%2Fnext-sample%2FREADME.md%23configuration)
 
 ## Configuration
 
