@@ -1,5 +1,15 @@
 # @logto/capacitor
 
+## 4.0.0
+
+### Major Changes
+
+- c9453b8: bump @capacitor packages to v7
+
+### Patch Changes
+
+- @logto/browser@3.0.8
+
 ## 3.0.7
 
 ### Patch Changes
