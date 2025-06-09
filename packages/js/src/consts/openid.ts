@@ -55,6 +55,12 @@ export enum UserScope {
    */
   Phone = 'phone',
   /**
+   * Scope for user address.
+   *
+   * See {@link idTokenClaims} for mapped claims in ID Token and {@link userinfoClaims} for additional claims in Userinfo Endpoint.
+   */
+  Address = 'address',
+  /**
    * Scope for user's custom data.
    *
    * See {@link idTokenClaims} for mapped claims in ID Token and {@link userinfoClaims} for additional claims in Userinfo Endpoint.
@@ -93,6 +99,7 @@ export const idTokenClaims: Readonly<Record<UserScope, UserClaim[]>> = Object.fr
   [UserScope.Profile]: ['name', 'picture', 'username'],
   [UserScope.Email]: ['email', 'email_verified'],
   [UserScope.Phone]: ['phone_number', 'phone_number_verified'],
+  [UserScope.Address]: [],
   [UserScope.Roles]: ['roles'],
   [UserScope.Organizations]: ['organizations'],
   [UserScope.OrganizationRoles]: ['organization_roles'],
@@ -107,6 +114,7 @@ export const userinfoClaims: Readonly<Record<UserScope, UserClaim[]>> = Object.f
   [UserScope.Profile]: [],
   [UserScope.Email]: [],
   [UserScope.Phone]: [],
+  [UserScope.Address]: [],
   [UserScope.Roles]: [],
   [UserScope.Organizations]: [],
   [UserScope.OrganizationRoles]: [],
