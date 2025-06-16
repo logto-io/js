@@ -1,10 +1,10 @@
-# Logto Remix SDK
+# Logto React Router SDK
 
-[![Version](https://img.shields.io/npm/v/@logto/remix)](https://www.npmjs.com/package/@logto/remix)
+[![Version](https://img.shields.io/npm/v/@logto/react-router)](https://www.npmjs.com/package/@logto/react-router)
 [![Build Status](https://github.com/logto-io/js/actions/workflows/main.yml/badge.svg)](https://github.com/logto-io/js/actions/workflows/main.yml)
 [![Codecov](https://img.shields.io/codecov/c/github/logto-io/js)](https://app.codecov.io/gh/logto-io/js?branch=master)
 
-The Logto Remix SDK written in TypeScript.
+The Logto React Router SDK written in TypeScript.
 
 > **Note:** This SDK has been migrated from Remix to React Router. For detailed migration guide, please refer to the [official React Router migration documentation](https://reactrouter.com/upgrading/remix).
 
@@ -15,19 +15,19 @@ The Logto Remix SDK written in TypeScript.
 ### Using npm
 
 ```bash
-npm install @logto/remix
+npm install @logto/react-router
 ```
 
 ### Using yarn
 
 ```bash
-yarn add @logto/remix
+yarn add @logto/react-router
 ```
 
 ### Using pnpm
 
 ```bash
-pnpm add @logto/remix
+pnpm add @logto/react-router
 ```
 
 ## Usage
@@ -36,8 +36,8 @@ Before initializing the SDK, we have to create a `SessionStorage` instance which
 
 ```ts
 // services/auth.server.ts
-import { createCookieSessionStorage } from '@remix-run/node';
-import { makeLogtoRemix } from '@logto/remix';
+import { makeLogtoReactRouter } from '@logto/react-router';
+import { createCookieSessionStorage } from 'react-router';
 
 const sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -47,7 +47,7 @@ const sessionStorage = createCookieSessionStorage({
   },
 });
 
-export const logto = makeLogtoRemix(
+export const logto = makeLogtoReactRouter(
   {
     endpoint: process.env.LOGTO_ENDPOINT!,
     appId: process.env.LOGTO_APP_ID!,
@@ -59,6 +59,18 @@ export const logto = makeLogtoRemix(
 ```
 
 Whereas the environment variables reflect the respective configuration of the application in Logto.
+
+### Setup file-based routing
+
+```ts
+// app/routes.ts
+import { type RouteConfig } from '@react-router/dev/routes';
+import { flatRoutes } from '@react-router/fs-routes';
+
+export default flatRoutes() satisfies RouteConfig;
+```
+
+This will generate the routes for you based on the files in the `app/routes` directory.
 
 ### Mounting the authentication route handlers
 
@@ -95,13 +107,12 @@ When mounting the routes as described above, you can navigate your browser to `/
 
 ### Get the authentication context
 
-A typical use case is to fetch the _authentication context_ which contains information about the respective user. With that information, it is possible to decide if the user is authenticated or not. The SDK exposes a function that can be used in a Remix `loader` function:
+A typical use case is to fetch the _authentication context_ which contains information about the respective user. With that information, it is possible to decide if the user is authenticated or not. The SDK exposes a function that can be used in a React Router `loader` function:
 
 ```ts
-// app/routes/index.tsx
-import type { LogtoContext } from '@logto/remix';
-import { LoaderFunction, json } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+// app/routes/_index.tsx
+import { type LogtoContext } from '@logto/react-router';
+import { Link, type LoaderFunctionArgs } from 'react-router';
 
 import { logto } from '../../services/auth.server';
 
@@ -109,18 +120,19 @@ type LoaderResponse = {
   readonly context: LogtoContext;
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const context = await logto.getContext({ getAccessToken: false })(request);
 
   if (!context.isAuthenticated) {
     return redirect('/api/logto/sign-in');
   }
 
-  return json<LoaderResponse>({ context });
+  return { context };
 };
 
-const Home = () => {
-  const data = useLoaderData<LoaderResponse>();
+const Home = ({ loaderData }: { readonly loaderData: LoaderResponse }) => {
+  const { context } = loaderData;
+  const { isAuthenticated, claims } = context;
 
   return <div>Protected Route.</div>;
 };
