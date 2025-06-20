@@ -1,6 +1,6 @@
 {
   "name": "@logto/react-router",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "module": "./lib/index.js",
   "types": "./lib/index.d.ts",

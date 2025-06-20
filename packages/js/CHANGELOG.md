@@ -1,5 +1,15 @@
 # Change Log
 
+## 6.1.0
+
+### Minor Changes
+
+- 1a57720: add address to user scope enum
+
+  You can now use the `UserScope.Address` to request the `address` scope and manage the address info in profile using Account API.
+
+  Check the doc for more details: https://docs.logto.io/end-user-flows/account-settings/by-account-api#update-basic-account-information.
+
 ## 6.0.0
 
 ### Major Changes

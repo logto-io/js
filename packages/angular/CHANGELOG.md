@@ -1,5 +1,12 @@
 # @logto/angular
 
+## 1.0.2
+
+### Patch Changes
+
+- Updated dependencies [1a57720]
+  - @logto/js@6.1.0
+
 ## 1.0.1
 
 ### Patch Changes
