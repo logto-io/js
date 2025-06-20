@@ -1,5 +1,12 @@
 # Change Log
 
+## 3.1.4
+
+### Patch Changes
+
+- Updated dependencies [1a57720]
+  - @logto/js@6.1.0
+
 ## 3.1.3
 
 ### Patch Changes

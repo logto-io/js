@@ -1,5 +1,11 @@
 # @logto/capacitor
 
+## 4.0.1
+
+### Patch Changes
+
+- @logto/browser@3.0.9
+
 ## 4.0.0
 
 ### Major Changes

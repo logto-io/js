@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.0.9
+
+### Patch Changes
+
+- @logto/client@3.1.4
+
 ## 3.0.8
 
 ### Patch Changes
