@@ -9,6 +9,7 @@ import Organizations from './pages/Organizations';
 import ProtectedResource from './pages/ProtectedResource';
 import './App.module.scss';
 import ReactQuery from './pages/ReactQuery';
+import SsoDirectSignIn from './pages/SsoDirectSignIn';
 
 export const App = () => {
   const config: LogtoConfig = {
@@ -29,6 +30,7 @@ export const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/callback" element={<Callback />} />
+          <Route path="/sso/callback" element={<SsoDirectSignIn />} />
           <Route path="/protected" element={<RequireAuth />}>
             <Route index element={<ProtectedResource />} />
             <Route path="react-query" element={<ReactQuery />} />
