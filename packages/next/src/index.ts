@@ -99,7 +99,13 @@ export default class LogtoClient extends LogtoNextBaseClient {
 
       if (request.url) {
         await nodeClient.handleSignInCallback(`${this.config.baseUrl}${request.url}`);
-        response.redirect(redirectTo);
+
+        // Check if there's a stored navigation URL (from postRedirectUri) first
+        if (this.navigateUrl) {
+          response.redirect(this.navigateUrl);
+        } else {
+          response.redirect(redirectTo);
+        }
       }
     }, onError);
 

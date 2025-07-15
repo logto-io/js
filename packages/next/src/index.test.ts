@@ -110,6 +110,29 @@ describe('Next', () => {
       });
       expect(handleSignInCallback).toHaveBeenCalled();
     });
+
+    it('should redirect to navigateUrl when postRedirectUri is set', async () => {
+      const customRedirectUrl = 'http://localhost:3000/dashboard';
+      const client = new LogtoClient(configs);
+
+      // Mock handleSignInCallback to simulate the navigate callback setting navigateUrl
+      // In the real implementation, the NodeClient calls navigate() during callback processing
+      // which sets this.navigateUrl. We directly set it here to test the postRedirectUri logic
+      handleSignInCallback.mockImplementationOnce(() => {
+        // eslint-disable-next-line @silverhand/fp/no-mutation, @typescript-eslint/no-explicit-any
+        (client as unknown as any).navigateUrl = customRedirectUrl;
+      });
+
+      await testApiHandler({
+        pagesHandler: client.handleSignInCallback(),
+        url: '/api/logto/sign-in-callback',
+        test: async ({ fetch }) => {
+          const { headers } = await fetch({ method: 'GET', redirect: 'manual' });
+          expect(headers.get('location')).toEqual(customRedirectUrl);
+        },
+      });
+      expect(handleSignInCallback).toHaveBeenCalled();
+    });
   });
 
   describe('getAccessToken', () => {
