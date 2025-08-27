@@ -45,7 +45,7 @@
     "eslint": "^8.57.0",
     "happy-dom": "^16.0.0",
     "lint-staged": "^15.0.0",
-    "nock": "14.0.0-beta.19",
+    "nock": "14.0.10",
     "prettier": "^3.0.0",
     "typescript": "^5.3.3",
     "vitest": "^2.1.9"
