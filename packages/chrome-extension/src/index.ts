@@ -9,10 +9,10 @@ import {
   generateState,
 } from '@logto/browser';
 
-import { ChromeExtensionStorage } from './storage';
+import { ChromeExtensionStorage } from './storage.js';
 
 export * from '@logto/browser';
-export { ChromeExtensionStorage } from './storage';
+export { ChromeExtensionStorage } from './storage.js';
 
 export default class LogtoClient extends BaseClient {
   /**
