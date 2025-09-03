@@ -1343,8 +1343,8 @@ importers:
         specifier: ^13.0.0
         version: 13.0.0(eslint-plugin-vue@9.10.0(eslint@8.57.0))(eslint@8.57.0)(typescript@5.3.3)
       '@vue/tsconfig':
-        specifier: ^0.7.0
-        version: 0.7.0(typescript@5.3.3)(vue@3.4.19(typescript@5.3.3))
+        specifier: ^0.8.0
+        version: 0.8.1(typescript@5.3.3)(vue@3.4.19(typescript@5.3.3))
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
@@ -4267,8 +4267,8 @@ packages:
       '@vue/server-renderer':
         optional: true
 
-  '@vue/tsconfig@0.7.0':
-    resolution: {integrity: sha512-ku2uNz5MaZ9IerPPUyOHzyjhXoX2kVJaVf7hL315DC17vS6IiZRmmCPfggNbU16QTvM80+uYYy3eYJB59WCtvg==}
+  '@vue/tsconfig@0.8.1':
+    resolution: {integrity: sha512-aK7feIWPXFSUhsCP9PFqPyFOcz4ENkb8hZ2pneL6m2UjCkccvaOhC/5KCKluuBufvp2KzkbdA2W2pk20vLzu3g==}
     peerDependencies:
       typescript: 5.x
       vue: ^3.4.0
@@ -14628,7 +14628,7 @@ snapshots:
     optionalDependencies:
       '@vue/server-renderer': 3.5.13(vue@3.5.13(typescript@5.7.2))
 
-  '@vue/tsconfig@0.7.0(typescript@5.3.3)(vue@3.4.19(typescript@5.3.3))':
+  '@vue/tsconfig@0.8.1(typescript@5.3.3)(vue@3.4.19(typescript@5.3.3))':
     optionalDependencies:
       typescript: 5.3.3
       vue: 3.4.19(typescript@5.3.3)
