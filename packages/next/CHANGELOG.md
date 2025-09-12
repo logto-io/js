@@ -1,5 +1,13 @@
 # Change Log
 
+## 4.2.6
+
+### Patch Changes
+
+- 0cc845a: fix function withLogtoSsr
+
+  It can be called in getServerSideProps now.
+
 ## 4.2.5
 
 ### Patch Changes
