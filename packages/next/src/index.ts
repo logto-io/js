@@ -200,13 +200,21 @@ export default class LogtoClient extends LogtoNextBaseClient {
       onError?: (error: unknown) => unknown
     ) =>
     async (context: GetServerSidePropsContext) => {
-      return this.withLogtoApiRoute(
-        async () => {
-          return handler(context);
-        },
-        configs,
-        onError
-      );
+      try {
+        const nodeClient = await this.createNodeClientFromNextApi(context.req, context.res);
+        const user = await nodeClient.getContext(configs);
+
+        // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+        Object.defineProperty(context.req, 'user', { enumerable: true, get: () => user });
+
+        return await handler(context);
+      } catch (error: unknown) {
+        if (onError) {
+          return onError(error);
+        }
+
+        throw error;
+      }
     };
 
   async createNodeClientFromNextApi(
