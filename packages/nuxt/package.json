@@ -2,8 +2,10 @@
   "name": "@logto/nuxt",
   "version": "1.2.6",
   "type": "module",
+  "types": "./dist/types.d.mts",
   "exports": {
     ".": {
+      "types": "./dist/types.d.mts",
       "import": "./dist/module.mjs"
     }
   },
