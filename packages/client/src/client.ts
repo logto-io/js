@@ -443,7 +443,7 @@ export class StandardLogtoClient {
     }
 
     const accessTokenKey = buildAccessTokenKey(resource, organizationId);
-    const { appId: clientId } = this.logtoConfig;
+    const { appId: clientId, scopes } = this.logtoConfig;
     const { tokenEndpoint } = await this.getOidcConfig();
     const requestedAt = Math.round(Date.now() / 1000);
     const { accessToken, refreshToken, idToken, scope, expiresIn } = await fetchTokenByRefreshToken(
@@ -453,6 +453,7 @@ export class StandardLogtoClient {
         refreshToken: currentRefreshToken,
         resource,
         organizationId,
+        scopes,
       },
       this.adapter.requester
     );
