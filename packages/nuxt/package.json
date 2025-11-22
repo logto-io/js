@@ -4,9 +4,11 @@
   "type": "module",
   "exports": {
     ".": {
+      "types": "./dist/module.d.mts",
       "import": "./dist/module.mjs"
     }
   },
+  "types": "./dist/module.d.mts",
   "files": [
     "dist"
   ],
@@ -20,7 +22,7 @@
     "precommit": "lint-staged",
     "dev": "nuxi dev playground",
     "dev:prepare": "nuxt-module-build prepare && nuxi prepare playground",
-    "build": "nuxt-module-build prepare && nuxt-module-build build",
+    "build": "nuxt-module-build prepare && nuxt-module-build build && tsc -p tsconfig.build.json",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
     "check": "tsc --noEmit",
