@@ -73,6 +73,41 @@ describe('LogtoClient', () => {
           client_id: 'app_id_value',
           refresh_token: 'refresh_token_value',
           grant_type: 'refresh_token',
+          scope: 'openid offline_access profile',
+        }).toString(),
+      });
+      expect(accessToken).toEqual('access_token_value');
+    });
+
+    it('should include custom scopes in refresh token request', async () => {
+      requester.mockClear().mockImplementation(async () => {
+        return {
+          accessToken: 'access_token_value',
+          expiresIn: 3600,
+        };
+      });
+
+      const logtoClient = createClient(
+        undefined,
+        new MockedStorage({
+          idToken: 'id_token_value',
+          refreshToken: 'refresh_token_value',
+        }),
+        false,
+        ['custom', 'item']
+      );
+      const accessToken = await logtoClient.getAccessToken();
+
+      expect(requester).toHaveBeenCalledWith(tokenEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          client_id: 'app_id_value',
+          refresh_token: 'refresh_token_value',
+          grant_type: 'refresh_token',
+          scope: 'openid offline_access profile custom item',
         }).toString(),
       });
       expect(accessToken).toEqual('access_token_value');
@@ -107,6 +142,7 @@ describe('LogtoClient', () => {
           refresh_token: 'refresh_token_value',
           grant_type: 'refresh_token',
           organization_id: 'organization_id',
+          scope: 'openid offline_access profile urn:logto:scope:organizations',
         }).toString(),
       });
       expect(organizationToken).toEqual('organization_token_value');
