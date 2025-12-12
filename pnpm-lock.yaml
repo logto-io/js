@@ -29,6 +29,11 @@ overrides:
   js-yaml@<3.14.2: ^3.14.2
   js-yaml@>=4.0.0 <4.1.1: ^4.1.1
   glob@>=10.2.0 <10.5.0: ^10.5.0
+  valibot@>=0.31.0 <1.2.0: ^1.2.0
+  node-forge@<1.3.2: ^1.3.2
+  '@angular/common@<19.2.16': ^19.2.16
+  next@>=15.4.0-canary.0 <15.4.8: ^15.4.8
+  next@>=15.4.0-canary.0 <15.4.9: ^15.4.9
 
 importers:
 
@@ -552,11 +557,11 @@ importers:
         specifier: ^15.0.0
         version: 15.0.0
       next:
-        specifier: ^15.4.7
-        version: 15.4.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
+        specifier: ^15.4.9
+        version: 15.5.9(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
       next-test-api-route-handler:
         specifier: ^4.0.14
-        version: 4.0.14(next@15.4.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))
+        version: 4.0.14(next@15.5.9(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -576,11 +581,11 @@ importers:
   packages/next-auth-sample:
     dependencies:
       next:
-        specifier: ^15.4.7
-        version: 15.4.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
+        specifier: ^15.4.9
+        version: 15.5.9(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
       next-auth:
         specifier: ^5.0.0-beta.30
-        version: 5.0.0-beta.30(next@15.4.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))(react@19.0.0)
+        version: 5.0.0-beta.30(next@15.5.9(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))(react@19.0.0)
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -632,10 +637,10 @@ importers:
     dependencies:
       '@logto/next':
         specifier: ^4.2.6
-        version: 4.2.6(next@15.4.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))
+        version: 4.2.6(next@15.5.9(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))
       next:
-        specifier: ^15.4.7
-        version: 15.4.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
+        specifier: ^15.4.9
+        version: 15.5.9(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -693,10 +698,10 @@ importers:
     dependencies:
       '@logto/next':
         specifier: ^4.2.6
-        version: 4.2.6(next@15.4.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))
+        version: 4.2.6(next@15.5.9(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))
       next:
-        specifier: ^15.4.7
-        version: 15.4.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
+        specifier: ^15.4.9
+        version: 15.5.9(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -1393,7 +1398,7 @@ packages:
     resolution: {integrity: sha512-LlH6mt0D8+MI0LV8QNx9/rqLLv0WCfYPS/5iXSGpIyfsflLoO5dRGhtS4pdQbu5gqmnLdf9i7r4ldRJjf7wb+g==}
     engines: {node: ^18.19.1 || ^20.11.1 || >=22.0.0}
     peerDependencies:
-      '@angular/common': 19.2.10
+      '@angular/common': ^19.2.16
       '@angular/core': 19.2.10
 
   '@angular/common@19.2.10':
@@ -1415,7 +1420,7 @@ packages:
     engines: {node: ^18.19.1 || ^20.11.1 || >=22.0.0}
     peerDependencies:
       '@angular/animations': 19.2.10
-      '@angular/common': 19.2.10
+      '@angular/common': ^19.2.16
       '@angular/core': 19.2.10
     peerDependenciesMeta:
       '@angular/animations':
@@ -1425,7 +1430,7 @@ packages:
     resolution: {integrity: sha512-bmt3ws3L4pYTlI8FW5L1ShyOeUQobXA7wy6TbcIToEonZk+i8uj3xlTD9Ymnjkb9wbNXrD1qoNSpP86c7C1rWQ==}
     engines: {node: ^18.19.1 || ^20.11.1 || >=22.0.0}
     peerDependencies:
-      '@angular/common': 19.2.10
+      '@angular/common': ^19.2.16
       '@angular/core': 19.2.10
       '@angular/platform-browser': 19.2.10
       rxjs: ^6.5.3 || ^7.4.0
@@ -2324,7 +2329,7 @@ packages:
   '@logto/next@4.2.6':
     resolution: {integrity: sha512-EE+z23hiH+MqWZ2sXcB01iHyVL74Dz15IMYA+jQ1x4Oj+0nu+J2hi+w+Zwnxeq2Cu+sfxc+mT4NU6nsFARYNqQ==}
     peerDependencies:
-      next: '>=12'
+      next: ^15.4.9
 
   '@logto/node@3.1.6':
     resolution: {integrity: sha512-X/y49goHwbsVRqZmeD0fmw2XepOGFKvJpE6ZXBg995y+zBz+W/QcrZVsg9wUH2L80Z3xLbxoTCOf02IBKGk2qg==}
@@ -2400,56 +2405,56 @@ packages:
     resolution: {integrity: sha512-iTWkuINC7O8AqthMzbF9/OAnz3ubVPn8ycSD5ZO7vtnlaQiYu/L8mZ7Nez1eZu4WxWgpNBwS79YgAK6x0RBWUQ==}
     engines: {node: '>=16.0.0'}
 
-  '@next/env@15.4.7':
-    resolution: {integrity: sha512-PrBIpO8oljZGTOe9HH0miix1w5MUiGJ/q83Jge03mHEE0E3pyqzAy2+l5G6aJDbXoobmxPJTVhbCuwlLtjSHwg==}
+  '@next/env@15.5.9':
+    resolution: {integrity: sha512-4GlTZ+EJM7WaW2HEZcyU317tIQDjkQIyENDLxYJfSWlfqguN+dHkZgyQTV/7ykvobU7yEH5gKvreNrH4B6QgIg==}
 
   '@next/eslint-plugin-next@15.0.4':
     resolution: {integrity: sha512-rbsF17XGzHtR7SDWzWpavSfum3/UdnF8bAaisnKwP//si3KWPTedVUsflAdjyK1zW3rweBjbALfKcavFneLGvg==}
 
-  '@next/swc-darwin-arm64@15.4.7':
-    resolution: {integrity: sha512-2Dkb+VUTp9kHHkSqtws4fDl2Oxms29HcZBwFIda1X7Ztudzy7M6XF9HDS2dq85TmdN47VpuhjE+i6wgnIboVzQ==}
+  '@next/swc-darwin-arm64@15.5.7':
+    resolution: {integrity: sha512-IZwtxCEpI91HVU/rAUOOobWSZv4P2DeTtNaCdHqLcTJU4wdNXgAySvKa/qJCgR5m6KI8UsKDXtO2B31jcaw1Yw==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
 
-  '@next/swc-darwin-x64@15.4.7':
-    resolution: {integrity: sha512-qaMnEozKdWezlmh1OGDVFueFv2z9lWTcLvt7e39QA3YOvZHNpN2rLs/IQLwZaUiw2jSvxW07LxMCWtOqsWFNQg==}
+  '@next/swc-darwin-x64@15.5.7':
+    resolution: {integrity: sha512-UP6CaDBcqaCBuiq/gfCEJw7sPEoX1aIjZHnBWN9v9qYHQdMKvCKcAVs4OX1vIjeE+tC5EIuwDTVIoXpUes29lg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
 
-  '@next/swc-linux-arm64-gnu@15.4.7':
-    resolution: {integrity: sha512-ny7lODPE7a15Qms8LZiN9wjNWIeI+iAZOFDOnv2pcHStncUr7cr9lD5XF81mdhrBXLUP9yT9RzlmSWKIazWoDw==}
+  '@next/swc-linux-arm64-gnu@15.5.7':
+    resolution: {integrity: sha512-NCslw3GrNIw7OgmRBxHtdWFQYhexoUCq+0oS2ccjyYLtcn1SzGzeM54jpTFonIMUjNbHmpKpziXnpxhSWLcmBA==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
 
-  '@next/swc-linux-arm64-musl@15.4.7':
-    resolution: {integrity: sha512-4SaCjlFR/2hGJqZLLWycccy1t+wBrE/vyJWnYaZJhUVHccpGLG5q0C+Xkw4iRzUIkE+/dr90MJRUym3s1+vO8A==}
+  '@next/swc-linux-arm64-musl@15.5.7':
+    resolution: {integrity: sha512-nfymt+SE5cvtTrG9u1wdoxBr9bVB7mtKTcj0ltRn6gkP/2Nu1zM5ei8rwP9qKQP0Y//umK+TtkKgNtfboBxRrw==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
 
-  '@next/swc-linux-x64-gnu@15.4.7':
-    resolution: {integrity: sha512-2uNXjxvONyRidg00VwvlTYDwC9EgCGNzPAPYbttIATZRxmOZ3hllk/YYESzHZb65eyZfBR5g9xgCZjRAl9YYGg==}
+  '@next/swc-linux-x64-gnu@15.5.7':
+    resolution: {integrity: sha512-hvXcZvCaaEbCZcVzcY7E1uXN9xWZfFvkNHwbe/n4OkRhFWrs1J1QV+4U1BN06tXLdaS4DazEGXwgqnu/VMcmqw==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
 
-  '@next/swc-linux-x64-musl@15.4.7':
-    resolution: {integrity: sha512-ceNbPjsFgLscYNGKSu4I6LYaadq2B8tcK116nVuInpHHdAWLWSwVK6CHNvCi0wVS9+TTArIFKJGsEyVD1H+4Kg==}
+  '@next/swc-linux-x64-musl@15.5.7':
+    resolution: {integrity: sha512-4IUO539b8FmF0odY6/SqANJdgwn1xs1GkPO5doZugwZ3ETF6JUdckk7RGmsfSf7ws8Qb2YB5It33mvNL/0acqA==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
 
-  '@next/swc-win32-arm64-msvc@15.4.7':
-    resolution: {integrity: sha512-pZyxmY1iHlZJ04LUL7Css8bNvsYAMYOY9JRwFA3HZgpaNKsJSowD09Vg2R9734GxAcLJc2KDQHSCR91uD6/AAw==}
+  '@next/swc-win32-arm64-msvc@15.5.7':
+    resolution: {integrity: sha512-CpJVTkYI3ZajQkC5vajM7/ApKJUOlm6uP4BknM3XKvJ7VXAvCqSjSLmM0LKdYzn6nBJVSjdclx8nYJSa3xlTgQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
 
-  '@next/swc-win32-x64-msvc@15.4.7':
-    resolution: {integrity: sha512-HjuwPJ7BeRzgl3KrjKqD2iDng0eQIpIReyhpF5r4yeAHFwWRuAhfW92rWv/r3qeQHEwHsLRzFDvMqRjyM5DI6A==}
+  '@next/swc-win32-x64-msvc@15.5.7':
+    resolution: {integrity: sha512-gMzgBX164I6DN+9/PGA+9dQiwmTkE4TloBNx8Kv9UiGARsr9Nba7IpcBRA1iTV9vwlYnrE3Uy6I7Aj6qLjQuqw==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
@@ -4616,7 +4621,7 @@ packages:
   angular-auth-oidc-client@19.0.0:
     resolution: {integrity: sha512-CloBjmHjG6CxbFFjYB1Ei+e172JUY1V3cK/v9pdbVuUz3OhiMC6CxBr331oB3Em2eWMmLi23jecl10lfiy9WUQ==}
     peerDependencies:
-      '@angular/common': '>=15.0.0'
+      '@angular/common': ^19.2.16
       '@angular/core': '>=15.0.0'
       '@angular/router': '>=15.0.0'
       rxjs: ^6.5.3 || ^7.4.0
@@ -7818,7 +7823,7 @@ packages:
     peerDependencies:
       '@simplewebauthn/browser': ^9.0.1
       '@simplewebauthn/server': ^9.0.2
-      next: ^14.0.0-0 || ^15.0.0 || ^16.0.0
+      next: ^15.4.9
       nodemailer: ^7.0.7
       react: ^18.2.0 || ^19.0.0
     peerDependenciesMeta:
@@ -7833,10 +7838,10 @@ packages:
     resolution: {integrity: sha512-2nYhLyzLXNFtuYWjkKIW90Z1htjDQKKCLXQBqa2pMsChwxUb/5P954dMBudpLjebQ7Uv7tj6G79Etr25eJYHLw==}
     engines: {node: ^18.18.2 || ^20.10.0 || >=21.2.0}
     peerDependencies:
-      next: '>=9'
+      next: ^15.4.9
 
-  next@15.4.7:
-    resolution: {integrity: sha512-OcqRugwF7n7mC8OSYjvsZhhG1AYSvulor1EIUsIkbbEbf1qoE5EbH36Swj8WhF4cHqmDgkiam3z1c1W0J1Wifg==}
+  next@15.5.9:
+    resolution: {integrity: sha512-agNLK89seZEtC5zUHwtut0+tNrc0Xw4FT/Dg+B/VLEo9pAcS9rtTKpek3V6kVcVwsB2YlqMaHdfZL4eLEVYuCg==}
     engines: {node: ^18.18.0 || ^19.8.0 || >= 20.0.0}
     hasBin: true
     peerDependencies:
@@ -7907,8 +7912,8 @@ packages:
     resolution: {integrity: sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
-  node-forge@1.3.1:
-    resolution: {integrity: sha512-dPEtOeMvF9VMcYV/1Wb8CPoVAXtp6MKMlcbAt4ddqmGqUJ6fQZFXkNZNkNlfevtNkGtaSoXf/vNNNSvgrdXwtA==}
+  node-forge@1.3.3:
+    resolution: {integrity: sha512-rLvcdSyRCyouf6jcOIPe/BgwG/d7hKjzMKOas33/pHEr6gbq18IK9zV7DiPvzsz0oBJPme6qr6H6kGZuI9/DZg==}
     engines: {node: '>= 6.13.0'}
 
   node-gyp-build-optional-packages@5.0.6:
@@ -10007,8 +10012,8 @@ packages:
     resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
     hasBin: true
 
-  valibot@0.41.0:
-    resolution: {integrity: sha512-igDBb8CTYr8YTQlOKgaN9nSS0Be7z+WRuaeYqGf3Cjz3aKmSnqEmYnkfVjzIuumGqfHpa3fLIvMEAfhrpqN8ng==}
+  valibot@1.2.0:
+    resolution: {integrity: sha512-mm1rxUsmOxzrwnX5arGS+U4T25RdvpPjPN4yR0u9pUBov9+zGVtO84tif1eY4r6zWxVxu3KzIyknJy3rxfRZZg==}
     peerDependencies:
       typescript: '>=5'
     peerDependenciesMeta:
@@ -11603,12 +11608,12 @@ snapshots:
       '@silverhand/essentials': 2.9.2
       camelcase-keys: 9.1.3
 
-  '@logto/next@4.2.6(next@15.4.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))':
+  '@logto/next@4.2.6(next@15.5.9(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))':
     dependencies:
       '@edge-runtime/cookies': 5.0.0
       '@logto/node': 3.1.6
       cookie: 1.0.2
-      next: 15.4.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
+      next: 15.5.9(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
 
   '@logto/node@3.1.6':
     dependencies:
@@ -11714,34 +11719,34 @@ snapshots:
   '@netlify/runtime-utils@1.2.0':
     optional: true
 
-  '@next/env@15.4.7': {}
+  '@next/env@15.5.9': {}
 
   '@next/eslint-plugin-next@15.0.4':
     dependencies:
       fast-glob: 3.3.1
 
-  '@next/swc-darwin-arm64@15.4.7':
+  '@next/swc-darwin-arm64@15.5.7':
     optional: true
 
-  '@next/swc-darwin-x64@15.4.7':
+  '@next/swc-darwin-x64@15.5.7':
     optional: true
 
-  '@next/swc-linux-arm64-gnu@15.4.7':
+  '@next/swc-linux-arm64-gnu@15.5.7':
     optional: true
 
-  '@next/swc-linux-arm64-musl@15.4.7':
+  '@next/swc-linux-arm64-musl@15.5.7':
     optional: true
 
-  '@next/swc-linux-x64-gnu@15.4.7':
+  '@next/swc-linux-x64-gnu@15.5.7':
     optional: true
 
-  '@next/swc-linux-x64-musl@15.4.7':
+  '@next/swc-linux-x64-musl@15.5.7':
     optional: true
 
-  '@next/swc-win32-arm64-msvc@15.4.7':
+  '@next/swc-win32-arm64-msvc@15.5.7':
     optional: true
 
-  '@next/swc-win32-x64-msvc@15.4.7':
+  '@next/swc-win32-x64-msvc@15.5.7':
     optional: true
 
   '@noble/hashes@1.8.0': {}
@@ -12968,7 +12973,7 @@ snapshots:
       react-router: 7.6.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       semver: 7.7.2
       set-cookie-parser: 2.7.1
-      valibot: 0.41.0(typescript@5.8.3)
+      valibot: 1.2.0(typescript@5.8.3)
       vite: 6.4.1(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.8.1)
       vite-node: 3.2.3(@types/node@22.10.0)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)
     optionalDependencies:
@@ -18412,7 +18417,7 @@ snapshots:
       http-shutdown: 1.2.2
       jiti: 2.5.1
       mlly: 1.8.0
-      node-forge: 1.3.1
+      node-forge: 1.3.3
       pathe: 1.1.2
       std-env: 3.9.0
       ufo: 1.6.1
@@ -18802,37 +18807,37 @@ snapshots:
       qs: 6.14.0
     optional: true
 
-  next-auth@5.0.0-beta.30(next@15.4.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))(react@19.0.0):
+  next-auth@5.0.0-beta.30(next@15.5.9(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))(react@19.0.0):
     dependencies:
       '@auth/core': 0.41.0
-      next: 15.4.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
+      next: 15.5.9(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
       react: 19.0.0
 
-  next-test-api-route-handler@4.0.14(next@15.4.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)):
+  next-test-api-route-handler@4.0.14(next@15.5.9(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)):
     dependencies:
       '@whatwg-node/server': 0.9.60
       cookie: 1.0.1
       core-js: 3.39.0
-      next: 15.4.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
+      next: 15.5.9(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
 
-  next@15.4.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0):
+  next@15.5.9(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0):
     dependencies:
-      '@next/env': 15.4.7
+      '@next/env': 15.5.9
       '@swc/helpers': 0.5.15
-      caniuse-lite: 1.0.30001737
+      caniuse-lite: 1.0.30001743
       postcss: 8.4.31
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
       styled-jsx: 5.1.6(react@19.0.0)
     optionalDependencies:
-      '@next/swc-darwin-arm64': 15.4.7
-      '@next/swc-darwin-x64': 15.4.7
-      '@next/swc-linux-arm64-gnu': 15.4.7
-      '@next/swc-linux-arm64-musl': 15.4.7
-      '@next/swc-linux-x64-gnu': 15.4.7
-      '@next/swc-linux-x64-musl': 15.4.7
-      '@next/swc-win32-arm64-msvc': 15.4.7
-      '@next/swc-win32-x64-msvc': 15.4.7
+      '@next/swc-darwin-arm64': 15.5.7
+      '@next/swc-darwin-x64': 15.5.7
+      '@next/swc-linux-arm64-gnu': 15.5.7
+      '@next/swc-linux-arm64-musl': 15.5.7
+      '@next/swc-linux-x64-gnu': 15.5.7
+      '@next/swc-linux-x64-musl': 15.5.7
+      '@next/swc-win32-arm64-msvc': 15.5.7
+      '@next/swc-win32-x64-msvc': 15.5.7
       sass: 1.85.0
       sharp: 0.34.3
     transitivePeerDependencies:
@@ -18973,7 +18978,7 @@ snapshots:
       formdata-polyfill: 4.0.10
     optional: true
 
-  node-forge@1.3.1: {}
+  node-forge@1.3.3: {}
 
   node-gyp-build-optional-packages@5.0.6: {}
 
@@ -19113,7 +19118,7 @@ snapshots:
       unctx: 2.4.1
       unimport: 5.2.0
       unplugin: 2.3.10
-      unplugin-vue-router: 0.15.0(@vue/compiler-sfc@3.5.21)(typescript@5.7.2)(vue-router@4.5.1(vue@3.5.13(typescript@5.7.2)))(vue@3.5.21(typescript@5.7.2))
+      unplugin-vue-router: 0.15.0(@vue/compiler-sfc@3.5.21)(typescript@5.7.2)(vue-router@4.5.1(vue@3.5.21(typescript@5.7.2)))(vue@3.5.21(typescript@5.7.2))
       unstorage: 1.17.1(@capacitor/preferences@7.0.1(@capacitor/core@6.1.0))(@netlify/blobs@9.0.1)(db0@0.3.2)(ioredis@5.7.0)
       untyped: 2.0.0
       vue: 3.5.21(typescript@5.7.2)
@@ -20531,7 +20536,7 @@ snapshots:
     dependencies:
       color: 4.2.3
       detect-libc: 2.0.4
-      semver: 7.7.2
+      semver: 7.7.3
     optionalDependencies:
       '@img/sharp-darwin-arm64': 0.34.3
       '@img/sharp-darwin-x64': 0.34.3
@@ -21508,7 +21513,7 @@ snapshots:
       pathe: 2.0.3
       picomatch: 4.0.3
 
-  unplugin-vue-router@0.15.0(@vue/compiler-sfc@3.5.21)(typescript@5.7.2)(vue-router@4.5.1(vue@3.5.13(typescript@5.7.2)))(vue@3.5.21(typescript@5.7.2)):
+  unplugin-vue-router@0.15.0(@vue/compiler-sfc@3.5.21)(typescript@5.7.2)(vue-router@4.5.1(vue@3.5.21(typescript@5.7.2)))(vue@3.5.21(typescript@5.7.2)):
     dependencies:
       '@vue-macros/common': 3.0.0-beta.16(vue@3.5.21(typescript@5.7.2))
       '@vue/compiler-sfc': 3.5.21
@@ -21653,7 +21658,7 @@ snapshots:
   uuid@11.1.0:
     optional: true
 
-  valibot@0.41.0(typescript@5.8.3):
+  valibot@1.2.0(typescript@5.8.3):
     optionalDependencies:
       typescript: 5.8.3
 
