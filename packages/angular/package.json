@@ -35,12 +35,18 @@
     "@silverhand/eslint-config-react": "^6.0.2",
     "@silverhand/ts-config": "^6.0.0",
     "@silverhand/ts-config-react": "^6.0.0",
-    "angular-auth-oidc-client": "^19.0.2",
+    "angular-auth-oidc-client": "^20.0.3",
     "eslint": "^8.57.0",
     "lint-staged": "^15.0.0",
     "prettier": "^3.0.0",
     "typescript": "^5.3.3",
     "vitest": "^2.1.9"
+  },
+  "peerDependencies": {
+    "rxjs": "^6.5.3 || ^7.4.0",
+    "@angular/core": "^20.0.0",
+    "@angular/common": "^20.0.0",
+    "@angular/router": "^20.0.0"
   },
   "eslintConfig": {
     "extends": "@silverhand"
