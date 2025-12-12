@@ -10,9 +10,9 @@
   },
   "dependencies": {
     "@logto/next": "^4.2.6",
-    "next": "^15.4.7",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "next": "^15.5.9",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
   },
   "devDependencies": {
     "@silverhand/ts-config": "^6.0.0",
