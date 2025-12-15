@@ -1,5 +1,13 @@
-// eslint-disable-next-line unused-imports/no-unused-imports -- used in comments
-import type { LogtoConfig, CookieConfig, SignInOptions } from '@logto/node';
+import type LogtoClient from '@logto/node';
+import type { LogtoConfig, SignInOptions, IdTokenClaims, UserInfoResponse } from '@logto/node';
+
+declare module 'h3' {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- interface required for module augmentation
+  interface H3EventContext {
+    logtoUser: UserInfoResponse | IdTokenClaims | undefined;
+    logtoClient: LogtoClient;
+  }
+}
 
 type DeepPartial<T> = T extends Record<string, unknown>
   ? {
