@@ -25,6 +25,7 @@ import {
   mockedSignUpUri,
   mockedUserHint,
   mockedSignInUriWithLoginHint,
+  mockedSignInUriWithoutReservedScopes,
 } from './mock.js';
 
 describe('LogtoClient', () => {
@@ -164,6 +165,15 @@ describe('LogtoClient', () => {
       const logtoClient = createClient(Prompt.Consent);
       await logtoClient.signIn({ redirectUri, prompt: Prompt.Login });
       expect(navigate).toHaveBeenCalledWith(mockedSignInUriWithLoginPrompt, {
+        redirectUri,
+        for: 'sign-in',
+      });
+    });
+
+    it('should pass includeReservedScopes to generateSignInUri', async () => {
+      const logtoClient = createClient(undefined, undefined, false, ['custom_scope'], false);
+      await logtoClient.signIn(redirectUri);
+      expect(navigate).toHaveBeenCalledWith(mockedSignInUriWithoutReservedScopes, {
         redirectUri,
         for: 'sign-in',
       });

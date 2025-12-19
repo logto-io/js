@@ -52,4 +52,26 @@ describe('normalizeLogtoConfigs', () => {
     });
     expect(normalized.scopes).toEqual(['openid']);
   });
+
+  it('should preserve `includeReservedScopes` in the returned config', () => {
+    const normalizedWithFalse = normalizeLogtoConfig({
+      appId: '123',
+      endpoint: 'https://example.com',
+      includeReservedScopes: false,
+    });
+    expect(normalizedWithFalse.includeReservedScopes).toBe(false);
+
+    const normalizedWithTrue = normalizeLogtoConfig({
+      appId: '123',
+      endpoint: 'https://example.com',
+      includeReservedScopes: true,
+    });
+    expect(normalizedWithTrue.includeReservedScopes).toBe(true);
+
+    const normalizedWithDefault = normalizeLogtoConfig({
+      appId: '123',
+      endpoint: 'https://example.com',
+    });
+    expect(normalizedWithDefault.includeReservedScopes).toBe(true);
+  });
 });

@@ -77,6 +77,7 @@ export const normalizeLogtoConfig = (config: LogtoConfig): LogtoConfig => {
     resources: scopes.includes(UserScope.Organizations)
       ? deduplicate([...(resources ?? []), ReservedResource.Organization])
       : resources,
+    includeReservedScopes,
   };
 };
 

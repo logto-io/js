@@ -90,6 +90,16 @@ export const mockedSignInUriWithLoginHint = generateSignInUri({
   loginHint: mockedUserHint,
 });
 
+export const mockedSignInUriWithoutReservedScopes = generateSignInUri({
+  authorizationEndpoint,
+  clientId: appId,
+  redirectUri,
+  codeChallenge: mockCodeChallenge,
+  state: mockedState,
+  scopes: ['custom_scope'],
+  includeReservedScopes: false,
+});
+
 export const accessToken = 'access_token_value';
 export const refreshToken = 'new_refresh_token_value';
 export const idToken = 'id_token_value';
@@ -138,10 +148,11 @@ export const createClient = (
   prompt?: Prompt,
   storage = new MockedStorage(),
   withCache = false,
-  scopes?: string[]
+  scopes?: string[],
+  includeReservedScopes?: boolean
 ) => {
   const client = new LogtoClientWithAccessors(
-    { endpoint, appId, prompt, scopes },
+    { endpoint, appId, prompt, scopes, includeReservedScopes },
     {
       ...createAdapters(withCache),
       storage,

@@ -319,7 +319,13 @@ export class StandardLogtoClient {
       : options;
     const redirectUri = redirectUriUrl.toString();
     const postRedirectUri = postRedirectUriUrl?.toString();
-    const { appId: clientId, prompt: promptViaConfig, resources, scopes } = this.logtoConfig;
+    const {
+      appId: clientId,
+      prompt: promptViaConfig,
+      resources,
+      scopes,
+      includeReservedScopes,
+    } = this.logtoConfig;
     const { authorizationEndpoint } = await this.getOidcConfig();
     const [codeVerifier, state] = await Promise.all([
       this.adapter.generateCodeVerifier(),
@@ -342,6 +348,7 @@ export class StandardLogtoClient {
       loginHint,
       directSignIn,
       extraParams,
+      includeReservedScopes,
     });
 
     await Promise.all([
