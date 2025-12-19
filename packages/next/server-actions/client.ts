@@ -82,11 +82,14 @@ export default class LogtoClient extends BaseClient {
    * Handle sign-in callback from Logto.
    *
    * @param callbackUrl the uri (callbackUri) to redirect to after sign in, should match the one used in handleSignIn
+   * @returns the postRedirectUri if configured, otherwise undefined
    */
-  async handleSignInCallback(callbackUrl: string) {
+  async handleSignInCallback(callbackUrl: string): Promise<string | undefined> {
     const nodeClient = await this.createNodeClient();
 
     await nodeClient.handleSignInCallback(callbackUrl);
+
+    return this.navigateUrl;
   }
 
   /**

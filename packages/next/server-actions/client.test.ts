@@ -4,6 +4,7 @@ import LogtoClient from './client.js';
 
 const signInUrl = 'http://mock-logto-server.com/sign-in';
 const callbackUrl = 'http://localhost:3000/callback';
+const postRedirectUri = 'http://localhost:3000/dashboard';
 
 const configs: LogtoNextConfig = {
   appId: 'app_id_value',
@@ -40,7 +41,10 @@ vi.mock('@logto/node/edge', () => ({
       navigate(signInUrl);
       signIn();
     },
-    handleSignInCallback,
+    handleSignInCallback: (url: string) => {
+      handleSignInCallback(url);
+      navigate(postRedirectUri);
+    },
     getContext,
     getIdTokenClaims,
     signOut: () => {
@@ -65,10 +69,11 @@ describe('Next (server actions)', () => {
   });
 
   describe('handleSignInCallback', () => {
-    it('should call nodClient.handleSignInCallback', async () => {
+    it('should call nodClient.handleSignInCallback and return postRedirectUri', async () => {
       const client = new LogtoClient(configs);
-      await client.handleSignInCallback(callbackUrl);
+      const result = await client.handleSignInCallback(callbackUrl);
       expect(handleSignInCallback).toHaveBeenCalledWith(callbackUrl);
+      expect(result).toEqual(postRedirectUri);
     });
   });
 
