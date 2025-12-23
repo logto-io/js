@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.0.31
+
+### Patch Changes
+
+- @logto/express@3.0.12
+
 ## 2.0.30
 
 ### Patch Changes

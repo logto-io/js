@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.1.29
+
+### Patch Changes
+
+- @logto/react@4.0.10
+
 ## 2.1.28
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@logto/sveltekit",
-  "version": "0.3.19",
+  "version": "0.3.20",
   "type": "module",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
