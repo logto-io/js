@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.1.5
+
+### Patch Changes
+
+- 5d8936b: pass `includeReservedScopes` to `generateSignInUri` to fix the issue where the option was not being respected
+
 ## 3.1.4
 
 ### Patch Changes

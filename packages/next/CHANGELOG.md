@@ -1,5 +1,12 @@
 # Change Log
 
+## 4.2.7
+
+### Patch Changes
+
+- 2e73e58: use `postRedirectUri` in server-actions `handleSignIn` callback to properly redirect users after sign-in
+  - @logto/node@3.1.7
+
 ## 4.2.6
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @logto/nuxt
 
+## 1.2.7
+
+### Patch Changes
+
+- 4f27436: fix an issue where can't import `logtoEventHandler` in server middleware, which is an type error
+  - @logto/node@3.1.7
+
 ## 1.2.6
 
 ### Patch Changes
