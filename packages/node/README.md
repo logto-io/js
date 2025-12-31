@@ -86,10 +86,16 @@ But the cookie size is limited, so you may need to use external storage like Red
 import { CookieStorage } from '@logto/node';
 
 class RedisSessionWrapper implements SessionWrapper {
+  private currentSessionId?: string;
+
   constructor(private readonly redis: Redis) {}
 
   async wrap(data: unknown, _key: string): Promise<string> {
-    const sessionId = randomUUID();
+    // Reuse existing session ID if available, only generate new one for first-time users.
+    // This is important for environments where cookies cannot be updated (e.g. React Server Components),
+    // as the session ID in the cookie must remain stable while the data in Redis can be updated.
+    const sessionId = this.currentSessionId ?? randomUUID();
+    this.currentSessionId = sessionId;
     await this.redis.set(`logto_session_${sessionId}`, JSON.stringify(data));
     return sessionId;
   }
@@ -99,8 +105,10 @@ class RedisSessionWrapper implements SessionWrapper {
       return {};
     }
 
+    // Store the session ID for potential reuse in wrap()
+    this.currentSessionId = value;
     const data = await this.redis.get(`logto_session_${value}`);
-    return JSON.parse(data);
+    return data ? JSON.parse(data) : {};
   }
 }
 
