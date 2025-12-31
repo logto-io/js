@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.1.6
+
+### Patch Changes
+
+- 8fc4c4e: fix discovery endpoint resolution when endpoint includes a tenant path
+
 ## 3.1.5
 
 ### Patch Changes
