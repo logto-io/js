@@ -1,5 +1,5 @@
 import { discoveryPath } from '@logto/js';
-import { conditionalString } from '@silverhand/essentials';
+import { appendPath, conditionalString } from '@silverhand/essentials';
 
 export * from './requester.js';
 
@@ -12,7 +12,5 @@ export const buildAccessTokenKey = (
     organizationId && `#${organizationId}`
   )}`;
 
-export const getDiscoveryEndpoint = (endpoint: string): string => {
-  const baseUrl = endpoint.endsWith('/') ? endpoint : `${endpoint}/`;
-  return new URL(discoveryPath, baseUrl).toString();
-};
+export const getDiscoveryEndpoint = (endpoint: string): string =>
+  appendPath(new URL(endpoint), discoveryPath).toString();
