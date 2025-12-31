@@ -6,6 +6,13 @@ describe('client utilities', () => {
     expect(endpoint).toEqual('https://example.com/oidc/.well-known/openid-configuration');
   });
 
+  test('get discovery endpoint with tenant path', () => {
+    const endpoint = getDiscoveryEndpoint('https://cloud.logto.io/tenantId');
+    expect(endpoint).toEqual(
+      'https://cloud.logto.io/tenantId/oidc/.well-known/openid-configuration'
+    );
+  });
+
   test('build access token key for resource', () => {
     const key = buildAccessTokenKey('resource', undefined, ['scope1', 'scope2']);
     expect(key).toEqual('scope1 scope2@resource');
