@@ -12,5 +12,7 @@ export const buildAccessTokenKey = (
     organizationId && `#${organizationId}`
   )}`;
 
-export const getDiscoveryEndpoint = (endpoint: string): string =>
-  new URL(discoveryPath, endpoint).toString();
+export const getDiscoveryEndpoint = (endpoint: string): string => {
+  const baseUrl = endpoint.endsWith('/') ? endpoint : `${endpoint}/`;
+  return new URL(discoveryPath, baseUrl).toString();
+};
