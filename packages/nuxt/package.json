@@ -36,7 +36,7 @@
     "@vitest/coverage-v8": "^2.1.9",
     "@vue/test-utils": "^2.4.4",
     "eslint": "^8.57.0",
-    "h3": "^1.13.0",
+    "h3": "^1.15.5",
     "happy-dom": "^20.0.8",
     "lint-staged": "^15.0.0",
     "nuxt": "^3.17.2",
