@@ -40,7 +40,8 @@
       "tmp@<=0.2.3": "^0.2.4",
       "send@<0.19.0": "^0.19.0",
       "valibot@>=0.31.0 <1.2.0": "^1.2.0",
-      "@angular/common@<19.2.16": "^19.2.16"
+      "@angular/common@<19.2.16": "^19.2.16",
+      "@react-router/node@<7.9.5": "^7.9.5"
     },
     "peerDependencyRules": {
       "allowedVersions": {
