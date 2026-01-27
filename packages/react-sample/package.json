@@ -14,8 +14,8 @@
   "dependencies": {
     "@logto/react": "workspace:^",
     "@tanstack/react-query": "^5.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-router-dom": "^6.2.2"
   },
   "devDependencies": {
@@ -25,8 +25,8 @@
     "@silverhand/eslint-config-react": "^6.0.2",
     "@silverhand/ts-config": "^6.0.0",
     "@silverhand/ts-config-react": "^6.0.0",
-    "@types/react": "^18.2.56",
-    "@types/react-dom": "^18.2.19",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "@types/react-router-dom": "^5.3.3",
     "buffer": "^6.0.3",
     "eslint": "^8.57.0",
