@@ -120,19 +120,20 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
     }
 
     return new Promise((resolve, reject) => {
+      // eslint-disable-next-line @silverhand/fp/no-let
+      let redirectionHandled = false;
+
       const run = async () => {
         const [browserHandle, appHandle] = await Promise.all([
-          // Handle the case where the user closes the browser during the sign-in.
-          Browser.addListener('browserFinished', async () => {
-            await Promise.all([browserHandle.remove(), appHandle.remove()]);
-            reject(new LogtoClientError('user_cancelled'));
-          }),
           // Handle the case where the user completes the sign-in and is redirected
           // back to the app.
           App.addListener('appUrlOpen', async ({ url }) => {
             if (!url.startsWith(redirectUri.toString())) {
               return;
             }
+
+            // eslint-disable-next-line @silverhand/fp/no-mutation
+            redirectionHandled = true;
 
             await Promise.all([
               // One last step of the sign-in flow
@@ -143,6 +144,23 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
               appHandle.remove(),
             ]);
             resolve();
+          }),
+          // Handle the case where the user closes the browser during the sign-in.
+          Browser.addListener('browserFinished', async () => {
+            // On Android, the browserFinished event will be triggered on deep link redirection,
+            // and may arrive before the appUrlOpen event. We need to wait for a short period
+            // to ensure the appUrlOpen event is handled first.
+            const BROWSER_FINISHED_GRACE_PERIOD_MS = 150;
+            await new Promise((resolve) => {
+              setTimeout(resolve, BROWSER_FINISHED_GRACE_PERIOD_MS);
+            });
+
+            if (redirectionHandled) {
+              return;
+            }
+
+            await Promise.all([browserHandle.remove(), appHandle.remove()]);
+            reject(new LogtoClientError('user_cancelled'));
           }),
           // Open the in-app browser to start the sign-in flow
           super.signIn(redirectUri, interactionMode),

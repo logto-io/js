@@ -53,8 +53,8 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@capacitor/app": "^7.0.0",
-    "@capacitor/browser": "^7.0.0",
-    "@capacitor/preferences": "^7.0.0"
+    "@capacitor/app": "^7.0.0 || ^8.0.0",
+    "@capacitor/browser": "^7.0.0 || ^8.0.0",
+    "@capacitor/preferences": "^7.0.0 || ^8.0.0"
   }
 }

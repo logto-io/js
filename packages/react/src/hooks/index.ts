@@ -55,7 +55,8 @@ const useHandleSignInCallback = (callback?: () => void) => {
   const { logtoClient, isAuthenticated, error, setIsAuthenticated, isLoading, setIsLoading } =
     useContext(LogtoContext);
   const { handleError } = useErrorHandler();
-  const callbackRef = useRef<() => void>();
+  // eslint-disable-next-line unicorn/no-useless-undefined
+  const callbackRef = useRef<Optional<() => void>>(undefined);
 
   useEffect(() => {
     // eslint-disable-next-line @silverhand/fp/no-mutation

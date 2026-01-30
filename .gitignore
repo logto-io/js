@@ -28,6 +28,10 @@ next-env.d.ts
 .nuxt
 .nitro
 
+# capacitor platforms
+/packages/capacitor-sample/android
+/packages/capacitor-sample/ios
+
 # logs
 logs
 *.log
