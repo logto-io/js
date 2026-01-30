@@ -150,8 +150,9 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
             // On Android, the browserFinished event will be triggered on deep link redirection,
             // and may arrive before the appUrlOpen event. We need to wait for a short period
             // to ensure the appUrlOpen event is handled first.
+            const BROWSER_FINISHED_GRACE_PERIOD_MS = 150;
             await new Promise((resolve) => {
-              setTimeout(resolve, 150);
+              setTimeout(resolve, BROWSER_FINISHED_GRACE_PERIOD_MS);
             });
 
             if (redirectionHandled) {
