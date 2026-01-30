@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getUserClaims, logtoClient, signIn, signOut } from "./logtoClient";
+import { getUserClaims, logtoClient, signIn, signOut } from "./logtoClient.js";
 
 type Claims = Awaited<ReturnType<typeof getUserClaims>>;
 
