@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.1.31
+
+### Patch Changes
+
+- d6eedf8: align sample apps to React 19 while keeping @logto/react compatible with React 18 and 19
+- Updated dependencies [d6eedf8]
+  - @logto/react@4.0.12
+
 ## 2.1.30
 
 ### Patch Changes
