@@ -36,7 +36,7 @@
     "@silverhand/ts-config": "^6.0.0",
     "@silverhand/ts-config-react": "^6.0.0",
     "angular-auth-oidc-client": "^20.0.3",
-    "eslint": "^8.57.0",
+    "eslint": "^9.26.0",
     "lint-staged": "^15.0.0",
     "prettier": "^3.0.0",
     "typescript": "^5.3.3",
