@@ -23,7 +23,7 @@
     "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/eslint-config-typescript": "^13.0.0",
     "@vue/tsconfig": "^0.7.0",
-    "eslint": "^8.57.0",
+    "eslint": "^9.0.0",
     "eslint-plugin-vue": "^9.10.0",
     "lint-staged": "^15.0.0",
     "prettier": "^3.0.0",
