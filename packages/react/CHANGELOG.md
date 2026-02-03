@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.0.12
+
+### Patch Changes
+
+- d6eedf8: align sample apps to React 19 while keeping @logto/react compatible with React 18 and 19
+
 ## 4.0.11
 
 ### Patch Changes

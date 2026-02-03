@@ -1,5 +1,11 @@
 # @logto/react-router-sample
 
+## 1.0.3
+
+### Patch Changes
+
+- d6eedf8: align sample apps to React 19 while keeping @logto/react compatible with React 18 and 19
+
 ## 1.0.2
 
 ### Patch Changes
