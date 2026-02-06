@@ -63,7 +63,7 @@
     "@vitest/coverage-v8": "^2.1.9",
     "eslint": "^8.57.0",
     "lint-staged": "^15.0.0",
-    "next": "^15.5.9",
+    "next": "^15.5.10",
     "next-test-api-route-handler": "^4.0.14",
     "prettier": "^3.0.0",
     "react": "19.2.3",
