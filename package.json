@@ -46,7 +46,8 @@
       "tar@<=7.5.3": "^7.5.4",
       "devalue@<5.6.2": "^5.6.2",
       "@angular/core@<20.3.16": "^20.3.16",
-      "@remix-run/router@<1.23.2": "^1.23.2"
+      "@remix-run/router@<1.23.2": "^1.23.2",
+      "@parcel/reporter-dev-server@<=2.16.3": "^2.16.4"
     },
     "peerDependencyRules": {
       "allowedVersions": {
