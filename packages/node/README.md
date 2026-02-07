@@ -83,38 +83,16 @@ But the cookie size is limited, so you may need to use external storage like Red
 
 ```typescript
 // storage.ts
-import { CookieStorage } from '@logto/node';
+import { CookieStorage, createKVSessionWrapper } from '@logto/node';
 
-class RedisSessionWrapper implements SessionWrapper {
-  private currentSessionId?: string;
-
-  constructor(private readonly redis: Redis) {}
-
-  async wrap(data: unknown, _key: string): Promise<string> {
-    // Reuse existing session ID if available, only generate new one for first-time users.
-    // This is important for environments where cookies cannot be updated (e.g. React Server Components),
-    // as the session ID in the cookie must remain stable while the data in Redis can be updated.
-    const sessionId = this.currentSessionId ?? randomUUID();
-    this.currentSessionId = sessionId;
-    await this.redis.set(`logto_session_${sessionId}`, JSON.stringify(data));
-    return sessionId;
-  }
-
-  async unwrap(value: string, _key: string): Promise<SessionData> {
-    if (!value) {
-      return {};
-    }
-
-    // Store the session ID for potential reuse in wrap()
-    this.currentSessionId = value;
-    const data = await this.redis.get(`logto_session_${value}`);
-    return data ? JSON.parse(data) : {};
-  }
-}
+const sessionWrapper = createKVSessionWrapper({
+  get: (key) => redis.get(key),
+  set: (key, value, ttl) => redis.set(key, value, 'EX', ttl),
+});
 
 export const storage = new CookieStorage({
   cookieKey: `<logto_app_xxx>`,
-  sessionWrapper: new RedisSessionWrapper(redis),
+  sessionWrapper,
   isSecure: false, // Set to true if you are using HTTPS
   getCookie: (name) => {
     // Example usage, get cookie from the request, depends on your framework
