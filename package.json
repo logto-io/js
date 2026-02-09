@@ -47,7 +47,15 @@
       "devalue@<5.6.2": "^5.6.2",
       "@angular/core@<20.3.16": "^20.3.16",
       "@remix-run/router@<1.23.2": "^1.23.2",
-      "@parcel/reporter-dev-server@<=2.16.3": "^2.16.4"
+      "@parcel/reporter-dev-server@<=2.16.3": "^2.16.4",
+      "@remix-run/server-runtime@<=2.17.2": ">=2.17.3",
+      "react-router@>=6.0.0 <6.30.2": ">=6.30.2",
+      "lodash@>=4.0.0 <=4.17.22": ">=4.17.23",
+      "next@>=10.0.0 <15.5.10": ">=15.5.10",
+      "next@>=15.5.1-canary.0 <15.5.10": ">=15.5.10",
+      "tar@<7.5.7": ">=7.5.7",
+      "diff@>=6.0.0 <8.0.3": ">=8.0.3",
+      "@isaacs/brace-expansion@<=5.0.0": ">=5.0.1"
     },
     "peerDependencyRules": {
       "allowedVersions": {
