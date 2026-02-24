@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.1.30
+
+### Patch Changes
+
+- Updated dependencies [e8d8c44]
+  - @logto/vue@3.0.12
+
 ## 2.1.29
 
 ### Patch Changes

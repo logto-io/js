@@ -1,5 +1,12 @@
 # @logto/capacitor
 
+## 4.0.5
+
+### Patch Changes
+
+- Updated dependencies [e8d8c44]
+  - @logto/browser@3.0.12
+
 ## 4.0.4
 
 ### Patch Changes
