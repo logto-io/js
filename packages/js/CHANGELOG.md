@@ -1,5 +1,11 @@
 # Change Log
 
+## 6.1.1
+
+### Patch Changes
+
+- e8d8c44: bump @silverhand/essentials dependency to v2.9.3, which supports more Node.js versions (18, 20, 22, 24 and 25).
+
 ## 6.1.0
 
 ### Minor Changes

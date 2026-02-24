@@ -1,5 +1,12 @@
 # @logto/sveltekit
 
+## 0.3.22
+
+### Patch Changes
+
+- Updated dependencies [e8d8c44]
+  - @logto/node@3.1.9
+
 ## 0.3.21
 
 ### Patch Changes

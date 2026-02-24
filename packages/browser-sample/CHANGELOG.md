@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.0.32
+
+### Patch Changes
+
+- Updated dependencies [e8d8c44]
+  - @logto/browser@3.0.12
+
 ## 2.0.31
 
 ### Patch Changes

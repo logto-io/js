@@ -1,5 +1,13 @@
 # Change Log
 
+## 3.1.7
+
+### Patch Changes
+
+- e8d8c44: bump @silverhand/essentials dependency to v2.9.3, which supports more Node.js versions (18, 20, 22, 24 and 25).
+- Updated dependencies [e8d8c44]
+  - @logto/js@6.1.1
+
 ## 3.1.6
 
 ### Patch Changes
