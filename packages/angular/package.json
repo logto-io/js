@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@logto/js": "workspace:^",
-    "@silverhand/essentials": "^2.9.2"
+    "@silverhand/essentials": "^2.9.3"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "^6.0.1",
