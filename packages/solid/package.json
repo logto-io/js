@@ -1,0 +1,46 @@
+{
+  "name": "@logto/solid",
+  "version": "0.0.0",
+  "type": "module",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    "types": "./dist/types/index.d.ts",
+    "import": "./dist/esm/index.js",
+    "default": "./dist/source/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/logto-io/js.git",
+    "directory": "packages/solid"
+  },
+  "scripts": {
+    "dev:tsc": "tsc -p tsconfig.build.json -w --preserveWatchOutput",
+    "precommit": "lint-staged",
+    "check": "tsc --noEmit",
+    "build": "rm -rf lib/ && tsc -p tsconfig.build.json --noEmit && rollup -c",
+    "lint": "eslint --ext .ts --ext .tsx src",
+    "test": "vitest",
+    "test:coverage": "vitest --silent --coverage",
+    "prepack": "pnpm build && pnpm test"
+  },
+  "dependencies": {
+    "@logto/browser": "workspace:^",
+    "@silverhand/essentials": "^2.9.2",
+    "solid-js": "^1.9.5"
+  },
+  "devDependencies": {
+    "rollup-preset-solid": "^3.0.0",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "solid-js": ">=1.9.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

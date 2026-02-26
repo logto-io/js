@@ -1,0 +1,22 @@
+{
+  "name": "@logto/solid-sample",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "vite"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@logto/solid": "workspace:^",
+    "solid-js": "^1.9.5",
+    "@solidjs/router": "^0.15.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "vite": "^6.0.9",
+    "vite-plugin-solid": "^2.11.2"
+  }
+}
