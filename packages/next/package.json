@@ -51,7 +51,7 @@
     "prepack": "pnpm build && pnpm test"
   },
   "dependencies": {
-    "@edge-runtime/cookies": "^5.0.0",
+    "@edge-runtime/cookies": "^6.0.0",
     "@logto/node": "workspace:^",
     "cookie": "^1.0.0"
   },
