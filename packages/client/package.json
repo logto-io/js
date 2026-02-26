@@ -42,7 +42,7 @@
     "@silverhand/ts-config": "^6.0.0",
     "@types/node": "^22.0.0",
     "@vitest/coverage-v8": "^2.1.9",
-    "eslint": "^8.57.0",
+    "eslint": "^9.26.0",
     "happy-dom": "^20.0.8",
     "lint-staged": "^15.0.0",
     "nock": "14.0.10",

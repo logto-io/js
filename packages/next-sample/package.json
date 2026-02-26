@@ -23,7 +23,7 @@
     "@types/react": "^19.2.3",
     "@types/react-dom": "^19.2.3",
     "@types/react-router-dom": "^5.3.3",
-    "eslint": "^8.57.0",
+    "eslint": "^9.26.0",
     "lint-staged": "^15.0.0",
     "postcss": "^8.4.31",
     "postcss-modules": "^6.0.0",
