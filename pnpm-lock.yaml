@@ -1283,8 +1283,8 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0(typescript@5.3.3)
       '@sveltejs/kit':
-        specifier: ^2.52.2
-        version: 2.53.2(@sveltejs/vite-plugin-svelte@5.0.1(svelte@5.53.5)(vite@7.2.2(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1)))(svelte@5.53.5)(typescript@5.3.3)(vite@7.2.2(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1))
+        specifier: ^2.53.3
+        version: 2.53.3(@sveltejs/vite-plugin-svelte@5.0.1(svelte@5.53.5)(vite@7.2.2(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1)))(svelte@5.53.5)(typescript@5.3.3)(vite@7.2.2(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1))
       '@swc/core':
         specifier: ^1.6.5
         version: 1.6.5(@swc/helpers@0.5.19)
@@ -1323,10 +1323,10 @@ importers:
         version: 6.0.1(@types/eslint@9.6.1)(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
       '@sveltejs/adapter-auto':
         specifier: ^3.0.0
-        version: 3.1.1(@sveltejs/kit@2.53.2(@sveltejs/vite-plugin-svelte@5.0.1(svelte@5.53.5)(vite@6.4.1(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1)))(svelte@5.53.5)(typescript@5.3.3)(vite@6.4.1(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1)))
+        version: 3.1.1(@sveltejs/kit@2.53.3(@sveltejs/vite-plugin-svelte@5.0.1(svelte@5.53.5)(vite@6.4.1(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1)))(svelte@5.53.5)(typescript@5.3.3)(vite@6.4.1(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1)))
       '@sveltejs/kit':
-        specifier: ^2.52.2
-        version: 2.53.2(@sveltejs/vite-plugin-svelte@5.0.1(svelte@5.53.5)(vite@6.4.1(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1)))(svelte@5.53.5)(typescript@5.3.3)(vite@6.4.1(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1))
+        specifier: ^2.53.3
+        version: 2.53.3(@sveltejs/vite-plugin-svelte@5.0.1(svelte@5.53.5)(vite@6.4.1(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1)))(svelte@5.53.5)(typescript@5.3.3)(vite@6.4.1(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1))
       '@sveltejs/vite-plugin-svelte':
         specifier: ^5.0.0
         version: 5.0.1(svelte@5.53.5)(vite@6.4.1(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1))
@@ -3962,13 +3962,18 @@ packages:
     peerDependencies:
       acorn: ^8.9.0
 
+  '@sveltejs/acorn-typescript@1.0.9':
+    resolution: {integrity: sha512-lVJX6qEgs/4DOcRTpo56tmKzVPtoWAaVbL4hfO7t7NVwl9AAXzQR6cihesW1BmNMPl+bK6dreu2sOKBP2Q9CIA==}
+    peerDependencies:
+      acorn: ^8.9.0
+
   '@sveltejs/adapter-auto@3.1.1':
     resolution: {integrity: sha512-6LeZft2Fo/4HfmLBi5CucMYmgRxgcETweQl/yQoZo/895K3S9YWYN4Sfm/IhwlIpbJp3QNvhKmwCHbsqQNYQpw==}
     peerDependencies:
       '@sveltejs/kit': '>=2.52.2'
 
-  '@sveltejs/kit@2.53.2':
-    resolution: {integrity: sha512-M+MqAvFve12T1HWws/2npP/s3hFtyjw3GB/OXW/8a1jZBk48qnvPJrtgE+VOMc3RnjUMxc4mv/vQ73nvj2uNMg==}
+  '@sveltejs/kit@2.53.3':
+    resolution: {integrity: sha512-tshOeBUid2v5LAblUpatIdFm5Cyykbw2EiKWOunAAX0A/oJaR7DOdC9wLR5Qqh9zUf3QUISA2m9A3suBdQSYQg==}
     engines: {node: '>=18.13'}
     hasBin: true
     peerDependencies:
@@ -4798,6 +4803,11 @@ packages:
 
   acorn@8.15.0:
     resolution: {integrity: sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg==}
+    engines: {node: '>=0.4.0'}
+    hasBin: true
+
+  acorn@8.16.0:
+    resolution: {integrity: sha512-UVJyE9MttOsBQIDKw1skb9nAwQuR5wuGD3+82K6JgJlm/Y+KI92oNsMNGZCYdDsVtRHSak0pcV5Dno5+4jh9sw==}
     engines: {node: '>=0.4.0'}
     hasBin: true
 
@@ -6744,6 +6754,7 @@ packages:
   git-raw-commits@4.0.0:
     resolution: {integrity: sha512-ICsMM1Wk8xSGMowkOmPrzo2Fgmfo4bMHLNX6ytHjajRJUqvHOw/TFapQ+QG75c3X/tTDDhOSRPGC52dDbNM8FQ==}
     engines: {node: '>=16'}
+    deprecated: This package is no longer maintained. For the JavaScript API, please use @conventional-changelog/git-client instead.
     hasBin: true
 
   git-up@8.0.1:
@@ -6762,6 +6773,7 @@ packages:
 
   glob@10.5.0:
     resolution: {integrity: sha512-DfXN8DfhJ7NH3Oe7cFmu3NCu1wKbkReJ8TorzSAFbSKrlNaQSKfIzqYqVY8zlbs2NLBbWpRiU52GX2PbaBVNkg==}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   glob@13.0.6:
@@ -6770,7 +6782,7 @@ packages:
 
   glob@7.2.0:
     resolution: {integrity: sha512-lmLf6gtyrPq8tTjSmrO94wBeQbFR3HbLHbuyD69wuyQkImp2hWqMGB47OX65FBkPffO641IP9jWa1z4ivqG26Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   global-directory@4.0.1:
     resolution: {integrity: sha512-wHTUcDUoZ1H5/0iVqEudYW4/kAlN5cZ3j/bXn0Dpbizl9iaUVeWSHqiOjsgk6OW2bkLclbBjzewBz6weQ1zA2Q==}
@@ -9266,6 +9278,10 @@ packages:
     resolution: {integrity: sha512-1n3r/tGXO6b6VXMdFT54SHzT9ytu9yr7TaELowdYpMqY/Ao7EnlQGmAQ1+RatX7Tkkdm6hONI2owqNx2aZj5Sw==}
     engines: {node: '>=11.0.0'}
 
+  sax@1.5.0:
+    resolution: {integrity: sha512-21IYA3Q5cQf089Z6tgaUTr7lDAyzoTPx5HRtbhsME8Udispad8dC/+sziTNugOEx54ilvatQ9YCzl4KQLPcRHA==}
+    engines: {node: '>=11.0.0'}
+
   scheduler@0.27.0:
     resolution: {integrity: sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==}
 
@@ -10018,6 +10034,7 @@ packages:
 
   unplugin-vue-router@0.15.0:
     resolution: {integrity: sha512-PyGehCjd9Ny9h+Uer4McbBjjib3lHihcyUEILa7pHKl6+rh8N7sFyw4ZkV+N30Oq2zmIUG7iKs3qpL0r+gXAaQ==}
+    deprecated: 'Merged into vuejs/router. Migrate: https://router.vuejs.org/guide/migration/v4-to-v5.html'
     peerDependencies:
       '@vue/compiler-sfc': ^3.5.17
       vue-router: ^4.5.1
@@ -13925,18 +13942,22 @@ snapshots:
     dependencies:
       acorn: 8.15.0
 
-  '@sveltejs/adapter-auto@3.1.1(@sveltejs/kit@2.53.2(@sveltejs/vite-plugin-svelte@5.0.1(svelte@5.53.5)(vite@6.4.1(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1)))(svelte@5.53.5)(typescript@5.3.3)(vite@6.4.1(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1)))':
+  '@sveltejs/acorn-typescript@1.0.9(acorn@8.16.0)':
     dependencies:
-      '@sveltejs/kit': 2.53.2(@sveltejs/vite-plugin-svelte@5.0.1(svelte@5.53.5)(vite@6.4.1(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1)))(svelte@5.53.5)(typescript@5.3.3)(vite@6.4.1(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1))
+      acorn: 8.16.0
+
+  '@sveltejs/adapter-auto@3.1.1(@sveltejs/kit@2.53.3(@sveltejs/vite-plugin-svelte@5.0.1(svelte@5.53.5)(vite@6.4.1(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1)))(svelte@5.53.5)(typescript@5.3.3)(vite@6.4.1(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1)))':
+    dependencies:
+      '@sveltejs/kit': 2.53.3(@sveltejs/vite-plugin-svelte@5.0.1(svelte@5.53.5)(vite@6.4.1(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1)))(svelte@5.53.5)(typescript@5.3.3)(vite@6.4.1(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1))
       import-meta-resolve: 4.0.0
 
-  '@sveltejs/kit@2.53.2(@sveltejs/vite-plugin-svelte@5.0.1(svelte@5.53.5)(vite@6.4.1(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1)))(svelte@5.53.5)(typescript@5.3.3)(vite@6.4.1(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1))':
+  '@sveltejs/kit@2.53.3(@sveltejs/vite-plugin-svelte@5.0.1(svelte@5.53.5)(vite@6.4.1(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1)))(svelte@5.53.5)(typescript@5.3.3)(vite@6.4.1(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1))':
     dependencies:
       '@standard-schema/spec': 1.1.0
-      '@sveltejs/acorn-typescript': 1.0.8(acorn@8.15.0)
+      '@sveltejs/acorn-typescript': 1.0.9(acorn@8.16.0)
       '@sveltejs/vite-plugin-svelte': 5.0.1(svelte@5.53.5)(vite@6.4.1(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1))
       '@types/cookie': 0.6.0
-      acorn: 8.15.0
+      acorn: 8.16.0
       cookie: 0.7.2
       devalue: 5.6.3
       esm-env: 1.2.2
@@ -13950,13 +13971,13 @@ snapshots:
     optionalDependencies:
       typescript: 5.3.3
 
-  '@sveltejs/kit@2.53.2(@sveltejs/vite-plugin-svelte@5.0.1(svelte@5.53.5)(vite@7.2.2(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1)))(svelte@5.53.5)(typescript@5.3.3)(vite@7.2.2(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1))':
+  '@sveltejs/kit@2.53.3(@sveltejs/vite-plugin-svelte@5.0.1(svelte@5.53.5)(vite@7.2.2(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1)))(svelte@5.53.5)(typescript@5.3.3)(vite@7.2.2(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1))':
     dependencies:
       '@standard-schema/spec': 1.1.0
-      '@sveltejs/acorn-typescript': 1.0.8(acorn@8.15.0)
+      '@sveltejs/acorn-typescript': 1.0.9(acorn@8.16.0)
       '@sveltejs/vite-plugin-svelte': 5.0.1(svelte@5.53.5)(vite@7.2.2(@types/node@22.10.0)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.8.1))
       '@types/cookie': 0.6.0
-      acorn: 8.15.0
+      acorn: 8.16.0
       cookie: 0.7.2
       devalue: 5.6.3
       esm-env: 1.2.2
@@ -14756,8 +14777,8 @@ snapshots:
     dependencies:
       '@mapbox/node-pre-gyp': 2.0.0(encoding@0.1.13)
       '@rollup/pluginutils': 5.1.4(rollup@4.59.0)
-      acorn: 8.15.0
-      acorn-import-attributes: 1.9.5(acorn@8.15.0)
+      acorn: 8.16.0
+      acorn-import-attributes: 1.9.5(acorn@8.16.0)
       async-sema: 3.1.1
       bindings: 1.5.0
       estree-walker: 2.0.2
@@ -15291,23 +15312,25 @@ snapshots:
       mime-types: 2.1.35
       negotiator: 0.6.3
 
-  acorn-import-attributes@1.9.5(acorn@8.15.0):
+  acorn-import-attributes@1.9.5(acorn@8.16.0):
     dependencies:
-      acorn: 8.15.0
+      acorn: 8.16.0
 
   acorn-jsx@5.3.2(acorn@8.12.1):
     dependencies:
       acorn: 8.12.1
 
-  acorn-jsx@5.3.2(acorn@8.15.0):
+  acorn-jsx@5.3.2(acorn@8.16.0):
     dependencies:
-      acorn: 8.15.0
+      acorn: 8.16.0
 
   acorn@8.12.1: {}
 
   acorn@8.14.1: {}
 
   acorn@8.15.0: {}
+
+  acorn@8.16.0: {}
 
   agent-base@7.1.3: {}
 
@@ -17650,8 +17673,8 @@ snapshots:
 
   espree@10.3.0:
     dependencies:
-      acorn: 8.15.0
-      acorn-jsx: 5.3.2(acorn@8.15.0)
+      acorn: 8.16.0
+      acorn-jsx: 5.3.2(acorn@8.16.0)
       eslint-visitor-keys: 4.2.0
 
   espree@9.6.1:
@@ -19334,7 +19357,7 @@ snapshots:
   needle@3.3.1:
     dependencies:
       iconv-lite: 0.6.3
-      sax: 1.4.4
+      sax: 1.5.0
     optional: true
 
   negotiator@0.6.3: {}
@@ -20891,6 +20914,9 @@ snapshots:
 
   sax@1.4.4: {}
 
+  sax@1.5.0:
+    optional: true
+
   scheduler@0.27.0: {}
 
   scule@1.3.0: {}
@@ -21646,14 +21672,14 @@ snapshots:
   terser@5.36.0:
     dependencies:
       '@jridgewell/source-map': 0.3.5
-      acorn: 8.15.0
+      acorn: 8.16.0
       commander: 2.20.3
       source-map-support: 0.5.21
 
   terser@5.39.0:
     dependencies:
       '@jridgewell/source-map': 0.3.6
-      acorn: 8.15.0
+      acorn: 8.16.0
       commander: 2.20.3
       source-map-support: 0.5.21
 
@@ -22001,7 +22027,7 @@ snapshots:
 
   unplugin@1.16.1:
     dependencies:
-      acorn: 8.15.0
+      acorn: 8.16.0
       webpack-virtual-modules: 0.6.2
 
   unplugin@2.3.10:
