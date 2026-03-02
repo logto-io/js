@@ -90,6 +90,13 @@ export enum UserScope {
    * See {@link idTokenClaims} for mapped claims in ID Token and {@link userinfoClaims} for additional claims in Userinfo Endpoint.
    */
   OrganizationRoles = 'urn:logto:scope:organization_roles',
+  /**
+   * Scope for user's sessions.
+   *
+   * Only used for session management via account API.
+   * Not included in user claims, even when the scope is requested, as it's not meant for ID token or userinfo endpoint.
+   */
+  Sessions = 'urn:logto:scope:sessions',
 }
 
 /**
@@ -105,6 +112,7 @@ export const idTokenClaims: Readonly<Record<UserScope, UserClaim[]>> = Object.fr
   [UserScope.OrganizationRoles]: ['organization_roles'],
   [UserScope.CustomData]: [],
   [UserScope.Identities]: [],
+  [UserScope.Sessions]: [],
 });
 
 /**
@@ -120,6 +128,7 @@ export const userinfoClaims: Readonly<Record<UserScope, UserClaim[]>> = Object.f
   [UserScope.OrganizationRoles]: [],
   [UserScope.CustomData]: ['custom_data'],
   [UserScope.Identities]: ['identities'],
+  [UserScope.Sessions]: [],
 });
 
 export const userClaims: Readonly<Record<UserScope, UserClaim[]>> = Object.freeze(
