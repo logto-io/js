@@ -31,6 +31,14 @@ const useApi = () => {
 
 const queryClient = new QueryClient();
 
+const getErrorMessage = (data: unknown, status: number) => {
+  if (typeof data === 'object' && data && 'message' in data && typeof data.message === 'string') {
+    return data.message;
+  }
+
+  return `Failed to fetch user info: ${status}`;
+};
+
 const ReactQuery = () => {
   return (
     <QueryClientProvider client={queryClient}>
@@ -45,7 +53,13 @@ const Content = () => {
     queryKey: ['userinfo'],
     queryFn: async () => {
       const response = await api(new URL('/oidc/me', endpoint));
-      return response.json();
+      const data: unknown = await response.json();
+
+      if (!response.ok) {
+        throw new Error(getErrorMessage(data, response.status));
+      }
+
+      return data;
     },
   });
 
@@ -57,7 +71,7 @@ const Content = () => {
     return (
       <div>
         <h1>Error</h1>
-        <p>{JSON.stringify(query.error)}</p>
+        <p>{query.error instanceof Error ? query.error.message : JSON.stringify(query.error)}</p>
       </div>
     );
   }
