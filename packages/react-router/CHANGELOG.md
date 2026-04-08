@@ -1,5 +1,11 @@
 # @logto/react-router
 
+## 1.0.4
+
+### Patch Changes
+
+- @logto/node@3.1.10
+
 ## 1.0.3
 
 ### Patch Changes
