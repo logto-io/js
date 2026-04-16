@@ -16,7 +16,7 @@
     "@tanstack/react-query": "^5.0.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "react-router-dom": "^6.2.2"
+    "react-router-dom": "^7.0.0"
   },
   "devDependencies": {
     "@parcel/core": "^2.16.4",
