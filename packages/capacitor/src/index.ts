@@ -39,6 +39,14 @@ export type CapacitorConfig = {
   openOptions?: OpenOptions;
 };
 
+const toError = (value: unknown): Error =>
+  value instanceof Error ? value : new Error(String(value));
+
+const swallowError = (): void => {
+  // Intentionally empty: listener-removal failures during cleanup must not override
+  // the resolve/reject outcome the caller actually cares about.
+};
+
 export default class CapacitorLogtoClient extends LogtoBaseClient {
   constructor(config: LogtoConfig, capacitorConfig: CapacitorConfig = {}) {
     const { openOptions } = capacitorConfig;
@@ -89,7 +97,8 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
    * @param redirectUri The redirect URI that the user will be redirected to after the sign-in flow is completed.
    * @param interactionMode The interaction mode to be used for the authorization request. Note it's not
    * a part of the OIDC standard, but a Logto-specific extension. Defaults to `signIn`.
-   * @throws `LogtoClientError` If error happens during the sign-in flow or the user cancels the sign-in.
+   * @throws `LogtoClientError('user_cancelled')` when the user closes the browser before completing
+   * sign-in. Errors raised by the underlying sign-in request or callback handler are propagated as-is.
    *
    * @example
    * ```ts
@@ -122,52 +131,76 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line @silverhand/fp/no-let
       let redirectionHandled = false;
+      // eslint-disable-next-line @silverhand/fp/no-let, prefer-const
+      let appHandlePromise: Promise<{ remove: () => Promise<void> }> | undefined;
+      // eslint-disable-next-line @silverhand/fp/no-let, prefer-const
+      let browserHandlePromise: Promise<{ remove: () => Promise<void> }> | undefined;
+      // eslint-disable-next-line @silverhand/fp/no-let
+      let cleanupPromise: Promise<void> | undefined;
 
-      const run = async () => {
-        const [browserHandle, appHandle] = await Promise.all([
-          // Handle the case where the user completes the sign-in and is redirected
-          // back to the app.
-          App.addListener('appUrlOpen', async ({ url }) => {
-            if (!url.startsWith(redirectUri.toString())) {
-              return;
-            }
-
-            // eslint-disable-next-line @silverhand/fp/no-mutation
-            redirectionHandled = true;
-
-            await Promise.all([
-              // One last step of the sign-in flow
-              this.handleSignInCallback(url),
-              // Close the browser and remove the listeners
-              Browser.close(),
-              browserHandle.remove(),
-              appHandle.remove(),
-            ]);
-            resolve();
-          }),
-          // Handle the case where the user closes the browser during the sign-in.
-          Browser.addListener('browserFinished', async () => {
-            // On Android, the browserFinished event will be triggered on deep link redirection,
-            // and may arrive before the appUrlOpen event. We need to wait for a short period
-            // to ensure the appUrlOpen event is handled first.
-            const BROWSER_FINISHED_GRACE_PERIOD_MS = 150;
-            await new Promise((resolve) => {
-              setTimeout(resolve, BROWSER_FINISHED_GRACE_PERIOD_MS);
-            });
-
-            if (redirectionHandled) {
-              return;
-            }
-
-            await Promise.all([browserHandle.remove(), appHandle.remove()]);
-            reject(new LogtoClientError('user_cancelled'));
-          }),
-          // Open the in-app browser to start the sign-in flow
-          super.signIn(redirectUri, interactionMode),
-        ]);
+      // Memoize the cleanup so concurrent kickoffs share the same in-flight work
+      // and every caller can `await` actual completion — not just an idempotency flag.
+      const cleanup = async (): Promise<void> => {
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        cleanupPromise ??= (async () => {
+          await Promise.all([
+            appHandlePromise?.then(async (handle) => handle.remove()).catch(swallowError),
+            browserHandlePromise?.then(async (handle) => handle.remove()).catch(swallowError),
+          ]);
+        })();
+        return cleanupPromise;
       };
 
-      void run();
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      appHandlePromise = App.addListener('appUrlOpen', async ({ url }) => {
+        if (!url.startsWith(redirectUri.toString())) {
+          return;
+        }
+
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        redirectionHandled = true;
+
+        try {
+          // Kick off listener removal alongside the token exchange and browser dismiss
+          // (matches the original parallelism); the awaited Promise.all guarantees all
+          // three are done before resolve().
+          await Promise.all([this.handleSignInCallback(url), Browser.close(), cleanup()]);
+          resolve();
+        } catch (error: unknown) {
+          await cleanup();
+          reject(toError(error));
+        }
+      });
+
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      browserHandlePromise = Browser.addListener('browserFinished', async () => {
+        // On Android, the browserFinished event will be triggered on deep link redirection,
+        // and may arrive before the appUrlOpen event. We need to wait for a short period
+        // to ensure the appUrlOpen event is handled first.
+        const BROWSER_FINISHED_GRACE_PERIOD_MS = 150;
+        await new Promise((resolve) => {
+          setTimeout(resolve, BROWSER_FINISHED_GRACE_PERIOD_MS);
+        });
+
+        if (redirectionHandled) {
+          // `appUrlOpen` has already removed both listeners and settled the outer
+          // promise — nothing for this handler to do.
+          return;
+        }
+
+        await cleanup();
+        reject(new LogtoClientError('user_cancelled'));
+      });
+
+      void (async () => {
+        try {
+          await Promise.all([appHandlePromise, browserHandlePromise]);
+          await super.signIn(redirectUri, interactionMode);
+        } catch (error: unknown) {
+          await cleanup();
+          reject(toError(error));
+        }
+      })();
     });
   }
 
@@ -186,6 +219,9 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
    * to ensure the app can be opened from the redirect URI.
    *
    * @param postLogoutRedirectUri The URI that the user will be redirected to after the sign-out flow is completed.
+   * @throws Propagates errors from OIDC discovery, token-storage operations, or the in-app
+   * browser navigation. Refresh-token revocation failures are swallowed by the base client
+   * and do not surface to the caller.
    *
    * @example
    * ```ts
@@ -193,26 +229,53 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
    * ```
    */
   async signOut(postLogoutRedirectUri?: string): Promise<void> {
-    return new Promise((resolve) => {
-      const run = async () => {
-        const [handle] = await Promise.all([
-          postLogoutRedirectUri
-            ? App.addListener('appUrlOpen', async ({ url }) => {
-                if (postLogoutRedirectUri && !url.startsWith(postLogoutRedirectUri)) {
-                  return;
-                }
-                await Promise.all([Browser.close(), handle.remove()]);
-                resolve();
-              })
-            : Browser.addListener('browserFinished', async () => {
-                await handle.remove();
-                resolve();
-              }),
-          super.signOut(postLogoutRedirectUri),
-        ]);
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line @silverhand/fp/no-let, prefer-const
+      let listenerPromise: Promise<{ remove: () => Promise<void> }> | undefined;
+      // eslint-disable-next-line @silverhand/fp/no-let
+      let cleanupPromise: Promise<void> | undefined;
+
+      const cleanup = async (): Promise<void> => {
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        cleanupPromise ??= (async () => {
+          await listenerPromise?.then(async (handle) => handle.remove()).catch(swallowError);
+        })();
+        return cleanupPromise;
       };
 
-      void run();
+      // Match the original conditional shape: a single listener per flow. When a redirect
+      // URI is configured we listen for the deep link; otherwise we listen for the user
+      // closing the browser.
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      listenerPromise = postLogoutRedirectUri
+        ? App.addListener('appUrlOpen', async ({ url }) => {
+            if (!url.startsWith(postLogoutRedirectUri)) {
+              return;
+            }
+            try {
+              // Run listener removal in parallel with the browser dismiss (matches the
+              // original) — Promise.all still waits for both before resolve().
+              await Promise.all([Browser.close(), cleanup()]);
+              resolve();
+            } catch (error: unknown) {
+              await cleanup();
+              reject(toError(error));
+            }
+          })
+        : Browser.addListener('browserFinished', async () => {
+            await cleanup();
+            resolve();
+          });
+
+      void (async () => {
+        try {
+          await listenerPromise;
+          await super.signOut(postLogoutRedirectUri);
+        } catch (error: unknown) {
+          await cleanup();
+          reject(toError(error));
+        }
+      })();
     });
   }
 }
