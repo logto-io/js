@@ -85,14 +85,12 @@ But the cookie size is limited, so you may need to use external storage like Red
 // storage.ts
 import { CookieStorage, createKVSessionWrapper } from '@logto/node';
 
-const sessionWrapper = createKVSessionWrapper({
-  get: (key) => redis.get(key),
-  set: (key, value, ttl) => redis.set(key, value, 'EX', ttl),
-});
-
-export const storage = new CookieStorage({
+export const createStorage = () => new CookieStorage({
   cookieKey: `<logto_app_xxx>`,
-  sessionWrapper,
+  sessionWrapper: createKVSessionWrapper({
+    get: (key) => redis.get(key),
+    set: (key, value, ttl) => redis.set(key, value, 'EX', ttl),
+  }),
   isSecure: false, // Set to true if you are using HTTPS
   getCookie: (name) => {
     // Example usage, get cookie from the request, depends on your framework

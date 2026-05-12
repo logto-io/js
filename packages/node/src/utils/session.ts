@@ -12,8 +12,11 @@ export type Session = SessionData & {
   getValues?: () => Promise<string>;
 };
 
+// eslint-disable-next-line @typescript-eslint/ban-types
+type NullableKVValue = string | null | undefined;
+
 export type KVAdapter = {
-  get: (key: string) => Promise<string | undefined>;
+  get: (key: string) => Promise<NullableKVValue>;
   set: (key: string, value: string, ttlSeconds?: number) => Promise<void>;
 };
 
@@ -110,23 +113,23 @@ export const wrapSession = async (session: SessionData, secret: string): Promise
   return `${ciphertext}.${iv}`;
 };
 
+const isSessionData = (data: unknown): data is SessionData =>
+  typeof data === 'object' && data !== null && !Array.isArray(data);
+
 export const createKVSessionWrapper = (
   kv: KVAdapter,
   options: KVSessionWrapperOptions = {}
 ): {
-  wrap: (data: SessionData, key: string) => Promise<string>;
+  wrap: (data: SessionData, key: string, currentValue?: string) => Promise<string>;
   unwrap: (value: string, key: string) => Promise<SessionData>;
 } => {
-  // eslint-disable-next-line @silverhand/fp/no-let
-  let currentSessionId: string | undefined;
   const prefix = options.keyPrefix ?? 'logto_session_';
   const ttl = options.ttl ?? 14 * 24 * 3600;
 
   return {
-    async wrap(data: SessionData, _key: string): Promise<string> {
-      const sessionId = currentSessionId ?? crypto.randomUUID();
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      currentSessionId = sessionId;
+    async wrap(data: SessionData, _key: string, currentValue?: string): Promise<string> {
+      const sessionId =
+        currentValue === undefined || currentValue === '' ? crypto.randomUUID() : currentValue;
       await kv.set(`${prefix}${sessionId}`, JSON.stringify(data), ttl);
       return sessionId;
     },
@@ -135,8 +138,6 @@ export const createKVSessionWrapper = (
         return {};
       }
 
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      currentSessionId = value;
       const data = await kv.get(`${prefix}${value}`);
 
       if (!data) {
@@ -145,7 +146,8 @@ export const createKVSessionWrapper = (
 
       try {
         // eslint-disable-next-line no-restricted-syntax
-        return JSON.parse(data) as SessionData;
+        const sessionData = JSON.parse(data) as unknown;
+        return isSessionData(sessionData) ? sessionData : {};
       } catch {
         return {};
       }

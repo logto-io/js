@@ -38,4 +38,58 @@ describe('session', () => {
 
     expect(session[PersistKey.IdToken]).toEqual('idToken');
   });
+
+  it('should reuse the current kv session id and pass options to the adapter', async () => {
+    const store = new Map<string, string>();
+    const set = vi.fn(async (key: string, value: string, ttl?: number) => {
+      store.set(key, value);
+    });
+    const sessionWrapper = createKVSessionWrapper(
+      {
+        get: async (key) => store.get(key) ?? null,
+        set,
+      },
+      {
+        keyPrefix: 'custom_prefix_',
+        ttl: 123,
+      }
+    );
+    const existingSessionId = 'session-id';
+    store.set(
+      `custom_prefix_${existingSessionId}`,
+      JSON.stringify({ [PersistKey.IdToken]: 'idToken' })
+    );
+
+    const session = await sessionWrapper.unwrap(existingSessionId, '');
+    const cookieValue = await sessionWrapper.wrap(
+      { ...session, [PersistKey.AccessToken]: 'accessToken' },
+      '',
+      existingSessionId
+    );
+
+    expect(cookieValue).toBe(existingSessionId);
+    expect(set).toHaveBeenCalledWith(
+      `custom_prefix_${existingSessionId}`,
+      JSON.stringify({
+        [PersistKey.IdToken]: 'idToken',
+        [PersistKey.AccessToken]: 'accessToken',
+      }),
+      123
+    );
+    expect(JSON.parse(store.get(`custom_prefix_${existingSessionId}`) ?? '')).toEqual({
+      [PersistKey.IdToken]: 'idToken',
+      [PersistKey.AccessToken]: 'accessToken',
+    });
+  });
+
+  it.each(['null', '1', '[]'])('should ignore invalid kv session data: %s', async (value) => {
+    const sessionWrapper = createKVSessionWrapper({
+      get: async () => value,
+      set: async () => {
+        await Promise.resolve();
+      },
+    });
+
+    await expect(sessionWrapper.unwrap('session-id', '')).resolves.toEqual({});
+  });
 });

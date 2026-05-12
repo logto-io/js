@@ -114,6 +114,32 @@ describe('CookieStorage', () => {
     const cookie = await storage.config.getCookie('logtoCookies');
     expect(cookie).toBe(JSON.stringify({ [PersistKey.AccessToken]: 'test-token' }));
   });
+
+  it('should pass current session value to custom sessionWrapper when saving', async () => {
+    const mockSessionWrapper = {
+      wrap: vi.fn(
+        async (_data: unknown, _key: string, currentValue?: string) => currentValue ?? ''
+      ),
+      unwrap: vi.fn(async () => ({ [PersistKey.AccessToken]: 'test-token' })),
+    };
+    const storage = new TestCookieStorage({
+      ...createCookieConfig(encryptionKey, {
+        logtoCookies: 'existing-session',
+      }),
+      sessionWrapper: mockSessionWrapper,
+    });
+
+    await storage.init();
+    await storage.setItem(PersistKey.AccessToken, 'updated-token');
+
+    expect(mockSessionWrapper.unwrap).toHaveBeenCalledWith('existing-session', encryptionKey);
+    expect(mockSessionWrapper.wrap).toHaveBeenCalledWith(
+      { [PersistKey.AccessToken]: 'updated-token' },
+      encryptionKey,
+      'existing-session'
+    );
+    await expect(storage.config.getCookie('logtoCookies')).resolves.toBe('existing-session');
+  });
 });
 
 describe('CookieStorage concurrency', () => {
