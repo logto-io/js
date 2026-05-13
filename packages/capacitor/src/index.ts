@@ -98,7 +98,8 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
    * @param interactionMode The interaction mode to be used for the authorization request. Note it's not
    * a part of the OIDC standard, but a Logto-specific extension. Defaults to `signIn`.
    * @throws `LogtoClientError('user_cancelled')` when the user closes the browser before completing
-   * sign-in. Errors raised by the underlying sign-in request or callback handler are propagated as-is.
+   * sign-in. Errors raised by the underlying sign-in request or callback handler are rethrown if
+   * they are `Error` instances; other thrown values are normalized to `Error` objects.
    *
    * @example
    * ```ts
