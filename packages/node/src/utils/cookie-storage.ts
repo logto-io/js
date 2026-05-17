@@ -19,7 +19,7 @@ export type CookieConfigBase = {
 };
 
 export type SessionWrapper = {
-  wrap: (data: SessionData, key: string) => Promise<string>;
+  wrap: (data: SessionData, key: string, currentValue?: string) => Promise<string>;
   unwrap: (value: string, key: string) => Promise<SessionData>;
 };
 
@@ -61,6 +61,7 @@ export class CookieStorage implements Storage<PersistKey> {
   }
 
   protected sessionData: SessionData = {};
+  protected sessionValue = '';
   protected saveQueue = new PromiseQueue();
 
   /**
@@ -85,10 +86,9 @@ export class CookieStorage implements Storage<PersistKey> {
 
   async init() {
     const { encryptionKey = '' } = this.config;
-    this.sessionData = await this.sessionWrapper.unwrap(
-      (await this.config.getCookie(this.cookieKey)) ?? '',
-      encryptionKey
-    );
+    const sessionValue = (await this.config.getCookie(this.cookieKey)) ?? '';
+    this.sessionValue = sessionValue;
+    this.sessionData = await this.sessionWrapper.unwrap(sessionValue, encryptionKey);
   }
 
   async getItem(key: PersistKey): Promise<Nullable<string>> {
@@ -117,7 +117,8 @@ export class CookieStorage implements Storage<PersistKey> {
 
   protected async write(data = this.sessionData) {
     const { encryptionKey = '' } = this.config;
-    const value = await this.sessionWrapper.wrap(data, encryptionKey);
+    const value = await this.sessionWrapper.wrap(data, encryptionKey, this.sessionValue);
+    this.sessionValue = value;
     await this.config.setCookie(this.cookieKey, value, this.cookieOptions);
   }
 }
