@@ -11,6 +11,8 @@ import {
   type InferStorageKey,
 } from './types.js';
 
+// Track in-flight cache writes per cache storage instance. A WeakMap keeps this helper from
+// extending the lifetime of adapter-provided cache stores.
 const runningCacheGetters = new WeakMap<Storage<CacheKey>, Map<CacheKey, Promise<unknown>>>();
 
 const getRunningCacheGetterMap = (cache: Storage<CacheKey>) => {
@@ -97,6 +99,8 @@ export class ClientAdapterInstance implements ClientAdapter {
     const runningGetter = runningGetterMap.get(key);
 
     if (runningGetter) {
+      // Another client sharing the same cache storage is already populating this key. Wait for it
+      // instead of issuing a duplicate discovery request.
       await runningGetter;
 
       const cachedResult = await this.getCachedObject<T>(key);
@@ -105,6 +109,8 @@ export class ClientAdapterInstance implements ClientAdapter {
         return cachedResult;
       }
 
+      // The in-flight getter may fail before writing to cache. Fall back to the current caller's
+      // getter so a transient failure does not poison future calls.
       return getter();
     }
 
