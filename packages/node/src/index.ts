@@ -4,6 +4,7 @@ import { createRequester } from '@logto/client';
 import { generateCodeChallenge, generateCodeVerifier, generateState } from '../edge/generators.js';
 
 import BaseClient from './client.js';
+import { createMemoryCache } from './utils/cache.js';
 
 export * from './exports.js';
 
@@ -37,6 +38,7 @@ export default class LogtoClient extends BaseClient {
         generateCodeChallenge,
         generateCodeVerifier,
         generateState,
+        unstable_cache: createMemoryCache(config.endpoint),
         ...adapter,
       },
       buildJwtVerifier

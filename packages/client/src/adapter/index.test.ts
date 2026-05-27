@@ -47,4 +47,25 @@ describe('ClientAdapterInstance', () => {
     expect(spy).toHaveBeenCalledTimes(2);
     expect(getter).toHaveBeenCalledTimes(1);
   });
+
+  it('should deduplicate concurrent cache misses for the same cache storage', async () => {
+    const adapters = createAdapters(true);
+    const firstAdapterInstance = new ClientAdapterInstance(adapters);
+    const secondAdapterInstance = new ClientAdapterInstance(adapters);
+    const getter = vi.fn(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 10);
+      });
+
+      return { test: 'test' };
+    });
+
+    await expect(
+      Promise.all([
+        firstAdapterInstance.getWithCache(CacheKey.OpenidConfig, getter),
+        secondAdapterInstance.getWithCache(CacheKey.OpenidConfig, getter),
+      ])
+    ).resolves.toEqual([{ test: 'test' }, { test: 'test' }]);
+    expect(getter).toHaveBeenCalledTimes(1);
+  });
 });

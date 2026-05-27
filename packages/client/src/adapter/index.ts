@@ -11,6 +11,20 @@ import {
   type InferStorageKey,
 } from './types.js';
 
+const runningCacheGetters = new WeakMap<Storage<CacheKey>, Map<CacheKey, Promise<unknown>>>();
+
+const getRunningCacheGetterMap = (cache: Storage<CacheKey>) => {
+  const runningGetterMap = runningCacheGetters.get(cache);
+
+  if (runningGetterMap) {
+    return runningGetterMap;
+  }
+
+  const newRunningGetterMap = new Map<CacheKey, Promise<unknown>>();
+  runningCacheGetters.set(cache, newRunningGetterMap);
+  return newRunningGetterMap;
+};
+
 export class ClientAdapterInstance implements ClientAdapter {
   /*
    * Implement `ClientAdapter`. Its properties are assigned by
@@ -73,9 +87,39 @@ export class ClientAdapterInstance implements ClientAdapter {
       return cached;
     }
 
-    const result = await getter();
-    await this.unstable_cache?.setItem(key, JSON.stringify(result));
-    return result;
+    const { unstable_cache: cache } = this;
+
+    if (!cache) {
+      return getter();
+    }
+
+    const runningGetterMap = getRunningCacheGetterMap(cache);
+    const runningGetter = runningGetterMap.get(key);
+
+    if (runningGetter) {
+      await runningGetter;
+
+      const cachedResult = await this.getCachedObject<T>(key);
+
+      if (cachedResult) {
+        return cachedResult;
+      }
+
+      return getter();
+    }
+
+    const newRunningGetter = (async () => {
+      const result = await getter();
+      await cache.setItem(key, JSON.stringify(result));
+      return result;
+    })();
+    runningGetterMap.set(key, newRunningGetter);
+
+    try {
+      return await newRunningGetter;
+    } finally {
+      runningGetterMap.delete(key);
+    }
   }
 }
 
