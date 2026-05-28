@@ -101,7 +101,12 @@ export class ClientAdapterInstance implements ClientAdapter {
     if (runningGetter) {
       // Another client sharing the same cache storage is already populating this key. Wait for it
       // instead of issuing a duplicate discovery request.
-      await runningGetter;
+      try {
+        await runningGetter;
+      } catch {
+        // The in-flight getter rejected before writing to cache. Fall through to the cache check
+        // and the current caller's getter below.
+      }
 
       const cachedResult = await this.getCachedObject<T>(key);
 

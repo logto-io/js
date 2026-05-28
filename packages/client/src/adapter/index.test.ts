@@ -48,6 +48,26 @@ describe('ClientAdapterInstance', () => {
     expect(getter).toHaveBeenCalledTimes(1);
   });
 
+  it('should fall back to the current caller getter when the in-flight getter rejects', async () => {
+    const adapters = createAdapters(true);
+    const firstAdapterInstance = new ClientAdapterInstance(adapters);
+    const secondAdapterInstance = new ClientAdapterInstance(adapters);
+    const firstGetter = vi.fn(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50);
+      });
+      throw new Error('transient failure');
+    });
+    const secondGetter = vi.fn().mockResolvedValue({ test: 'recovered' });
+
+    const firstCall = firstAdapterInstance.getWithCache(CacheKey.OpenidConfig, firstGetter);
+    const secondCall = secondAdapterInstance.getWithCache(CacheKey.OpenidConfig, secondGetter);
+
+    await expect(firstCall).rejects.toThrow('transient failure');
+    await expect(secondCall).resolves.toEqual({ test: 'recovered' });
+    expect(secondGetter).toHaveBeenCalledTimes(1);
+  });
+
   it('should deduplicate concurrent cache misses for the same cache storage', async () => {
     const adapters = createAdapters(true);
     const firstAdapterInstance = new ClientAdapterInstance(adapters);
