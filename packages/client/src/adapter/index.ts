@@ -114,9 +114,9 @@ export class ClientAdapterInstance implements ClientAdapter {
         return cachedResult;
       }
 
-      // The in-flight getter may fail before writing to cache. Fall back to the current caller's
-      // getter so a transient failure does not poison future calls.
-      return getter();
+      // The in-flight getter may fail before writing to cache. Retry through the same population
+      // path so a successful recovery is stored for later callers.
+      return this.getWithCache(key, getter);
     }
 
     const newRunningGetter = (async () => {

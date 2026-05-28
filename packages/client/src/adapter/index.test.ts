@@ -66,6 +66,17 @@ describe('ClientAdapterInstance', () => {
     await expect(firstCall).rejects.toThrow('transient failure');
     await expect(secondCall).resolves.toEqual({ test: 'recovered' });
     expect(secondGetter).toHaveBeenCalledTimes(1);
+    expect(await adapters.unstable_cache?.getItem(CacheKey.OpenidConfig)).toBe(
+      JSON.stringify({ test: 'recovered' })
+    );
+
+    const thirdGetter = vi.fn().mockResolvedValue({ test: 'should not run' });
+    const thirdAdapterInstance = new ClientAdapterInstance(adapters);
+
+    expect(await thirdAdapterInstance.getWithCache(CacheKey.OpenidConfig, thirdGetter)).toEqual({
+      test: 'recovered',
+    });
+    expect(thirdGetter).not.toHaveBeenCalled();
   });
 
   it('should deduplicate concurrent cache misses for the same cache storage', async () => {
