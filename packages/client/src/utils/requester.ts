@@ -14,7 +14,19 @@ export const createRequester = (fetchFunction: typeof fetch): Requester => {
 
     if (!response.ok) {
       const cloned = response.clone();
-      const responseJson = await response.json();
+      const responseJson: unknown = await response
+        .clone()
+        .json()
+        .catch(async () => {
+          const responseText = await response.text();
+          console.error(`Logto requester error: [status=${response.status}]`, responseText);
+          throw new LogtoRequestError(
+            response.status === 429 ? 'rate_limited' : `http_error_${response.status}`,
+            responseText || response.statusText,
+            cloned
+          );
+        });
+
       console.error(`Logto requester error: [status=${response.status}]`, responseJson);
 
       if (!isLogtoRequestErrorJson(responseJson)) {

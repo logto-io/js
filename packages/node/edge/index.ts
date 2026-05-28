@@ -1,7 +1,9 @@
 import type { LogtoConfig, ClientAdapter } from '@logto/client';
 import { createRequester } from '@logto/client';
+import { encode } from 'js-base64';
 
 import BaseClient from '../src/client.js';
+import { createMemoryCache } from '../src/utils/cache.js';
 
 import { generateCodeChallenge, generateCodeVerifier, generateState } from './generators.js';
 
@@ -17,8 +19,7 @@ export default class LogtoClient extends BaseClient {
           ? async (...args: Parameters<typeof fetch>) => {
               const [input, init] = args;
 
-              // Encode to base64 using btoa
-              const base64Credentials = btoa(`${config.appId}:${config.appSecret ?? ''}`);
+              const base64Credentials = encode(`${config.appId}:${config.appSecret ?? ''}`);
 
               return fetch(input, {
                 ...init,
@@ -33,6 +34,7 @@ export default class LogtoClient extends BaseClient {
       generateCodeChallenge,
       generateCodeVerifier,
       generateState,
+      unstable_cache: createMemoryCache(config.endpoint),
     });
   }
 }

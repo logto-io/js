@@ -11,6 +11,22 @@ import {
   type InferStorageKey,
 } from './types.js';
 
+// Track in-flight cache writes per cache storage instance. A WeakMap keeps this helper from
+// extending the lifetime of adapter-provided cache stores.
+const runningCacheGetters = new WeakMap<Storage<CacheKey>, Map<CacheKey, Promise<unknown>>>();
+
+const getRunningCacheGetterMap = (cache: Storage<CacheKey>) => {
+  const runningGetterMap = runningCacheGetters.get(cache);
+
+  if (runningGetterMap) {
+    return runningGetterMap;
+  }
+
+  const newRunningGetterMap = new Map<CacheKey, Promise<unknown>>();
+  runningCacheGetters.set(cache, newRunningGetterMap);
+  return newRunningGetterMap;
+};
+
 export class ClientAdapterInstance implements ClientAdapter {
   /*
    * Implement `ClientAdapter`. Its properties are assigned by
@@ -73,9 +89,48 @@ export class ClientAdapterInstance implements ClientAdapter {
       return cached;
     }
 
-    const result = await getter();
-    await this.unstable_cache?.setItem(key, JSON.stringify(result));
-    return result;
+    const { unstable_cache: cache } = this;
+
+    if (!cache) {
+      return getter();
+    }
+
+    const runningGetterMap = getRunningCacheGetterMap(cache);
+    const runningGetter = runningGetterMap.get(key);
+
+    if (runningGetter) {
+      // Another client sharing the same cache storage is already populating this key. Wait for it
+      // instead of issuing a duplicate discovery request.
+      try {
+        await runningGetter;
+      } catch {
+        // The in-flight getter rejected before writing to cache. Fall through to the cache check
+        // and the current caller's getter below.
+      }
+
+      const cachedResult = await this.getCachedObject<T>(key);
+
+      if (cachedResult) {
+        return cachedResult;
+      }
+
+      // The in-flight getter may fail before writing to cache. Retry through the same population
+      // path so a successful recovery is stored for later callers.
+      return this.getWithCache(key, getter);
+    }
+
+    const newRunningGetter = (async () => {
+      const result = await getter();
+      await cache.setItem(key, JSON.stringify(result));
+      return result;
+    })();
+    runningGetterMap.set(key, newRunningGetter);
+
+    try {
+      return await newRunningGetter;
+    } finally {
+      runningGetterMap.delete(key);
+    }
   }
 }
 

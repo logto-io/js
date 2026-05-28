@@ -1,3 +1,5 @@
+import BaseClient, { type ClientAdapter } from '@logto/client';
+
 import LogtoClient from './index.js';
 
 const appId = 'app_id_value';
@@ -28,10 +30,48 @@ vi.mock('@logto/client', () => ({
   createRequester: vi.fn(),
 }));
 
+const getLatestBaseClientAdapter = (): ClientAdapter => {
+  const { calls } = vi.mocked(BaseClient).mock;
+  const [, adapter] = calls.at(-1)!;
+  return adapter;
+};
+
 describe('LogtoClient', () => {
   describe('constructor', () => {
+    beforeEach(() => {
+      vi.mocked(BaseClient).mockClear();
+    });
+
     it('constructor should not throw', () => {
       expect(() => new LogtoClient({ endpoint, appId }, { navigate, storage })).not.toThrow();
+    });
+
+    it('should provide endpoint-scoped cache storage by default', () => {
+      expect(
+        new LogtoClient({ endpoint: `${endpoint}/`, appId }, { navigate, storage })
+      ).toBeDefined();
+      const cache = getLatestBaseClientAdapter().unstable_cache;
+
+      expect(new LogtoClient({ endpoint, appId }, { navigate, storage })).toBeDefined();
+      expect(getLatestBaseClientAdapter().unstable_cache).toBe(cache);
+
+      expect(
+        new LogtoClient({ endpoint: 'https://another.logto.dev', appId }, { navigate, storage })
+      ).toBeDefined();
+      expect(getLatestBaseClientAdapter().unstable_cache).not.toBe(cache);
+    });
+
+    it('should allow overriding the default cache storage', () => {
+      const unstableCache = {
+        setItem: vi.fn(),
+        getItem: vi.fn(),
+        removeItem: vi.fn(),
+      };
+
+      expect(
+        new LogtoClient({ endpoint, appId }, { navigate, storage, unstable_cache: unstableCache })
+      ).toBeDefined();
+      expect(getLatestBaseClientAdapter().unstable_cache).toBe(unstableCache);
     });
   });
 
