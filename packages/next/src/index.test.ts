@@ -47,7 +47,10 @@ vi.mock('@logto/node', async (importOriginal) => ({
       );
       signIn();
     },
-    handleSignInCallback,
+    // Delegate to the spy and hand it `navigate` so a test can simulate the NodeClient
+    // navigating during callback processing (e.g. a configured postRedirectUri). The URL flows
+    // back through this per-request callback, never via shared client instance state.
+    handleSignInCallback: (url: string) => handleSignInCallback(url, navigate),
     getContext,
     getAccessToken,
     getOrganizationToken,
@@ -115,13 +118,14 @@ describe('Next', () => {
       const customRedirectUrl = 'http://localhost:3000/dashboard';
       const client = new LogtoClient(configs);
 
-      // Mock handleSignInCallback to simulate the navigate callback setting navigateUrl
-      // In the real implementation, the NodeClient calls navigate() during callback processing
-      // which sets this.navigateUrl. We directly set it here to test the postRedirectUri logic
-      handleSignInCallback.mockImplementationOnce(() => {
-        // eslint-disable-next-line @silverhand/fp/no-mutation, @typescript-eslint/no-explicit-any
-        (client as unknown as any).navigateUrl = customRedirectUrl;
-      });
+      // Simulate the NodeClient calling navigate() during callback processing (e.g. a configured
+      // postRedirectUri). The navigation URL flows back through the per-request adapter callback,
+      // not via shared instance state.
+      handleSignInCallback.mockImplementationOnce(
+        (_url: string, navigate: (url: string) => void) => {
+          navigate(customRedirectUrl);
+        }
+      );
 
       await testApiHandler({
         pagesHandler: client.handleSignInCallback(),
@@ -316,6 +320,36 @@ describe('Next', () => {
           await expect(fetch({ method: 'GET' })).resolves.not.toThrow();
         },
       });
+    });
+
+    // Regression test for the singleton-storage race: concurrent requests must not share
+    // per-request state. Two clients are created before either is awaited, so request B's
+    // setup interleaves through request A's `await storage.init()` yield point. When state was
+    // stored on the client instance, both requests ended up with the same (last-assigned)
+    // storage, causing authenticated users to intermittently report `isAuthenticated: false`.
+    it('keeps storage isolated across concurrent requests', async () => {
+      const client = new LogtoClient(configs);
+
+      const makeRequestAndResponse = (cookieValue: string) => ({
+        request: {
+          cookies: { [`logto_${configs.appId}`]: cookieValue },
+          headers: {},
+        } as unknown as Parameters<typeof client.createNodeClientFromNextApi>[0],
+        response: { setHeader: vi.fn() } as unknown as Parameters<
+          typeof client.createNodeClientFromNextApi
+        >[1],
+      });
+
+      const first = makeRequestAndResponse('cookie-a');
+      const second = makeRequestAndResponse('cookie-b');
+
+      const [resultA, resultB] = await Promise.all([
+        client.createNodeClientFromNextApi(first.request, first.response),
+        client.createNodeClientFromNextApi(second.request, second.response),
+      ]);
+
+      expect(resultA.storage).not.toBe(resultB.storage);
+      expect(resultA.nodeClient).not.toBe(resultB.nodeClient);
     });
   });
 });

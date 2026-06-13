@@ -113,7 +113,7 @@ export const getOrganizationTokens = async (config: LogtoNextConfig) => {
   }
 
   const client = new LogtoClient(config);
-  const nodeClient = await client.createNodeClient();
+  const { nodeClient } = await client.createNodeClient();
 
   const { organizations = [] } = await nodeClient.getIdTokenClaims();
 
@@ -135,7 +135,7 @@ export const getAccessToken = async (
   organizationId?: string
 ): Promise<string> => {
   const client = new LogtoClient(config);
-  const nodeClient = await client.createNodeClient();
+  const { nodeClient } = await client.createNodeClient();
   const accessToken = await nodeClient.getAccessToken(resource, organizationId);
 
   return accessToken;
@@ -164,7 +164,7 @@ export const getAccessTokenRSC = async (
   organizationId?: string
 ): Promise<string> => {
   const client = new LogtoClient(config);
-  const nodeClient = await client.createNodeClient({ ignoreCookieChange: true });
+  const { nodeClient } = await client.createNodeClient({ ignoreCookieChange: true });
   return nodeClient.getAccessToken(resource, organizationId);
 };
 
