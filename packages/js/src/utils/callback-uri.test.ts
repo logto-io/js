@@ -30,7 +30,10 @@ describe('verifyAndParseCodeFromCallbackUri', () => {
   test('callback uri, containing error and error_description parameters, should throw', () => {
     const callbackUrl = `http://localhost:3000/callback?code=${code}&state=${state}&error=${error}&error_description=${errorDescription}`;
     expect(() => verifyAndParseCodeFromCallbackUri(callbackUrl, redirectUri, state)).toThrow(
-      new LogtoError('callback_uri_verification.error_found', { error, errorDescription })
+      new LogtoError(
+        'callback_uri_verification.error_found',
+        new OidcError(error, errorDescription)
+      )
     );
   });
 

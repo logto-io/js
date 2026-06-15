@@ -1,4 +1,4 @@
-import { LogtoError, LogtoRequestError } from '@logto/js';
+import { LogtoError } from '@logto/js';
 
 import { createRequester } from './requester.js';
 
@@ -27,7 +27,11 @@ describe('createRequester', () => {
         })
       );
       const requester = createRequester(fetchFunction);
-      await expect(requester('foo')).rejects.toMatchObject(new LogtoRequestError(code, message));
+      await expect(requester('foo')).rejects.toMatchObject({
+        name: 'LogtoRequestError',
+        code,
+        message,
+      });
     });
 
     test('failing response json with more than code and message should throw LogtoRequestError with same code and message', async () => {
@@ -38,7 +42,11 @@ describe('createRequester', () => {
         })
       );
       const requester = createRequester(fetchFunction);
-      await expect(requester('foo')).rejects.toMatchObject(new LogtoRequestError(code, message));
+      await expect(requester('foo')).rejects.toMatchObject({
+        name: 'LogtoRequestError',
+        code,
+        message,
+      });
     });
 
     test('failing response json with only code should throw LogtoError', async () => {
@@ -90,9 +98,11 @@ describe('createRequester', () => {
         })
       );
       const requester = createRequester(fetchFunction);
-      await expect(requester('foo')).rejects.toMatchObject(
-        new LogtoRequestError('http_error_400', 'not json content')
-      );
+      await expect(requester('foo')).rejects.toMatchObject({
+        name: 'LogtoRequestError',
+        code: 'http_error_400',
+        message: 'not json content',
+      });
     });
 
     test('rate limited response with non-json text should throw LogtoRequestError', async () => {
@@ -103,9 +113,11 @@ describe('createRequester', () => {
         })
       );
       const requester = createRequester(fetchFunction);
-      await expect(requester('foo')).rejects.toMatchObject(
-        new LogtoRequestError('rate_limited', 'Too many requests')
-      );
+      await expect(requester('foo')).rejects.toMatchObject({
+        name: 'LogtoRequestError',
+        code: 'rate_limited',
+        message: 'Too many requests',
+      });
     });
   });
 });
