@@ -13,7 +13,8 @@ another request's not-yet-initialized storage, making `getContext()` return
 `navigate` callback had the same problem, so a sign-in/sign-out could redirect to another
 concurrent request's target.
 
-Per-request state is now kept in local variables and threaded through the return value of the
-internal `createNodeClient*` helpers, so concurrent requests are fully isolated. This affects
-the Pages Router (`@logto/next`), Edge runtime (`@logto/next/edge`), and server-actions
-(`@logto/next/server-actions`) entry points.
+Per-request state is now kept in local variables and threaded through a private request-scoped
+helper, so concurrent requests are fully isolated. The public `createNodeClientFromNextApi`,
+`createNodeClient`, and `createNodeClientFromEdgeRequest` methods keep their original return
+types, so this is a backward-compatible fix. This affects the Pages Router (`@logto/next`), Edge
+runtime (`@logto/next/edge`), and server-actions (`@logto/next/server-actions`) entry points.

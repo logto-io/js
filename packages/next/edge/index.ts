@@ -51,8 +51,9 @@ export default class LogtoClient extends BaseClient {
   handleSignOut =
     (redirectUri = this.config.baseUrl) =>
     async (request: NextRequest) => {
-      const { nodeClient, storage, headers, getNavigateUrl } =
-        await this.createNodeClientFromEdgeRequest(request);
+      const { nodeClient, storage, headers, getNavigateUrl } = await this.createRequestScopedClient(
+        request
+      );
       await nodeClient.signOut(redirectUri);
       await storage.destroy();
 
@@ -111,12 +112,24 @@ export default class LogtoClient extends BaseClient {
   };
 
   /**
-   * Create a request-scoped Node client.
+   * Create a Node client for the current edge request.
+   *
+   * The public return shape is intentionally kept as `{ nodeClient, headers }` (unchanged from
+   * previous versions) so existing callers keep working. The extra per-request state (storage,
+   * navigation URL) needed internally is produced by {@link createRequestScopedClient}.
+   */
+  async createNodeClientFromEdgeRequest(request: Request) {
+    const { nodeClient, headers } = await this.createRequestScopedClient(request);
+    return { nodeClient, headers };
+  }
+
+  /**
+   * Create a request-scoped Node client together with its per-request state.
    *
    * Storage and the navigation URL are kept local to this call rather than on the (typically
    * singleton) client instance, so concurrent requests can never clobber each other's state.
    */
-  async createNodeClientFromEdgeRequest(request: Request) {
+  private async createRequestScopedClient(request: Request) {
     const cookies = new RequestCookies(request.headers);
     const headers = new Headers();
     const responseCookies = new ResponseCookies(headers);
@@ -148,9 +161,7 @@ export default class LogtoClient extends BaseClient {
   private readonly handleSignInImplementation =
     (options: SignInOptions) =>
     async (request: Request): Promise<Response> => {
-      const { nodeClient, headers, getNavigateUrl } = await this.createNodeClientFromEdgeRequest(
-        request
-      );
+      const { nodeClient, headers, getNavigateUrl } = await this.createRequestScopedClient(request);
       await nodeClient.signIn(options);
 
       const response = new Response(null, {

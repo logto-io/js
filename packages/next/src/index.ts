@@ -95,7 +95,7 @@ export default class LogtoClient extends LogtoNextBaseClient {
     onError?: ErrorHandler
   ): NextApiHandler =>
     buildHandler(async (request, response) => {
-      const { nodeClient, getNavigateUrl } = await this.createNodeClientFromNextApi(
+      const { nodeClient, getNavigateUrl } = await this.createRequestScopedClient(
         request,
         response
       );
@@ -115,7 +115,7 @@ export default class LogtoClient extends LogtoNextBaseClient {
 
   handleSignOut = (redirectUri = this.config.baseUrl, onError?: ErrorHandler): NextApiHandler =>
     buildHandler(async (request, response) => {
-      const { nodeClient, storage, getNavigateUrl } = await this.createNodeClientFromNextApi(
+      const { nodeClient, storage, getNavigateUrl } = await this.createRequestScopedClient(
         request,
         response
       );
@@ -171,7 +171,7 @@ export default class LogtoClient extends LogtoNextBaseClient {
     response: NextApiResponse,
     resource: string
   ): Promise<string> => {
-    const { nodeClient } = await this.createNodeClientFromNextApi(request, response);
+    const nodeClient = await this.createNodeClientFromNextApi(request, response);
     return nodeClient.getAccessToken(resource);
   };
 
@@ -180,7 +180,7 @@ export default class LogtoClient extends LogtoNextBaseClient {
     response: NextApiResponse,
     organizationId: string
   ): Promise<string> => {
-    const { nodeClient } = await this.createNodeClientFromNextApi(request, response);
+    const nodeClient = await this.createNodeClientFromNextApi(request, response);
     return nodeClient.getOrganizationToken(organizationId);
   };
 
@@ -190,7 +190,7 @@ export default class LogtoClient extends LogtoNextBaseClient {
     onError?: ErrorHandler
   ): NextApiHandler =>
     buildHandler(async (request, response) => {
-      const { nodeClient } = await this.createNodeClientFromNextApi(request, response);
+      const nodeClient = await this.createNodeClientFromNextApi(request, response);
       const user = await nodeClient.getContext(config);
 
       // eslint-disable-next-line @silverhand/fp/no-mutating-methods
@@ -209,7 +209,7 @@ export default class LogtoClient extends LogtoNextBaseClient {
     ) =>
     async (context: GetServerSidePropsContext) => {
       try {
-        const { nodeClient } = await this.createNodeClientFromNextApi(context.req, context.res);
+        const nodeClient = await this.createNodeClientFromNextApi(context.req, context.res);
         const user = await nodeClient.getContext(configs);
 
         // eslint-disable-next-line @silverhand/fp/no-mutating-methods
@@ -226,13 +226,31 @@ export default class LogtoClient extends LogtoNextBaseClient {
     };
 
   /**
-   * Create a request-scoped Node client.
+   * Create a Node client for the current request.
+   *
+   * The public return type is intentionally kept as `NodeClient` (unchanged from previous
+   * versions) so existing callers — including the documented "fetch organization tokens"
+   * pattern — keep working. The per-request state (storage, navigation URL) needed internally
+   * is produced by {@link createRequestScopedClient}.
+   */
+  async createNodeClientFromNextApi(
+    request: IncomingMessage & {
+      cookies: NextApiRequestCookies;
+    },
+    response: ServerResponse
+  ): Promise<NodeClient> {
+    const { nodeClient } = await this.createRequestScopedClient(request, response);
+    return nodeClient;
+  }
+
+  /**
+   * Create a request-scoped Node client together with its per-request state.
    *
    * Every piece of mutable state here (storage, the navigation URL) is kept local to this
    * call instead of being stored on the (typically singleton) client instance, so concurrent
    * requests can never clobber each other's storage or redirect target.
    */
-  async createNodeClientFromNextApi(
+  private async createRequestScopedClient(
     request: IncomingMessage & {
       cookies: NextApiRequestCookies;
     },
@@ -273,7 +291,7 @@ export default class LogtoClient extends LogtoNextBaseClient {
     }
   ): NextApiHandler =>
     buildHandler(async (request, response) => {
-      const { nodeClient, getNavigateUrl } = await this.createNodeClientFromNextApi(
+      const { nodeClient, getNavigateUrl } = await this.createRequestScopedClient(
         request,
         response
       );

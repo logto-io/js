@@ -43,7 +43,7 @@ export default class LogtoClient extends BaseClient {
     options: SignInOptions | string | URL,
     interactionMode?: InteractionMode
   ): Promise<{ url: string; newCookie?: string }> {
-    const { nodeClient, getNavigateUrl } = await this.createNodeClient();
+    const { nodeClient, getNavigateUrl } = await this.createRequestScopedClient();
     const finalOptions: SignInOptions =
       typeof options === 'string' || options instanceof URL
         ? { redirectUri: options, interactionMode }
@@ -68,7 +68,7 @@ export default class LogtoClient extends BaseClient {
    * @returns the url to redirect to
    */
   async handleSignOut(redirectUri = this.config.baseUrl): Promise<string> {
-    const { nodeClient, storage, getNavigateUrl } = await this.createNodeClient();
+    const { nodeClient, storage, getNavigateUrl } = await this.createRequestScopedClient();
     await nodeClient.signOut(redirectUri);
     await storage.destroy();
 
@@ -88,7 +88,7 @@ export default class LogtoClient extends BaseClient {
    * @returns the postRedirectUri if configured, otherwise undefined
    */
   async handleSignInCallback(callbackUrl: string): Promise<string | undefined> {
-    const { nodeClient, getNavigateUrl } = await this.createNodeClient();
+    const { nodeClient, getNavigateUrl } = await this.createRequestScopedClient();
 
     await nodeClient.handleSignInCallback(callbackUrl);
 
@@ -102,19 +102,33 @@ export default class LogtoClient extends BaseClient {
    * @returns LogtoContext
    */
   async getLogtoContext(config: GetContextParameters = {}) {
-    const { nodeClient } = await this.createNodeClient({ ignoreCookieChange: true });
+    const nodeClient = await this.createNodeClient({ ignoreCookieChange: true });
     const context = await nodeClient.getContext(config);
 
     return context;
   }
 
   /**
-   * Create a request-scoped Node client.
+   * Create a Node client for the current request.
+   *
+   * The public return type is intentionally kept as `NodeClient` (unchanged from previous
+   * versions) so existing callers keep working. The per-request state (storage, navigation URL)
+   * needed internally is produced by {@link createRequestScopedClient}.
+   */
+  async createNodeClient({ ignoreCookieChange }: { ignoreCookieChange?: boolean } = {}) {
+    const { nodeClient } = await this.createRequestScopedClient({ ignoreCookieChange });
+    return nodeClient;
+  }
+
+  /**
+   * Create a request-scoped Node client together with its per-request state.
    *
    * Storage and the navigation URL are kept local to this call rather than on the client
    * instance, so concurrent invocations can never clobber each other's state.
    */
-  async createNodeClient({ ignoreCookieChange }: { ignoreCookieChange?: boolean } = {}) {
+  private async createRequestScopedClient({
+    ignoreCookieChange,
+  }: { ignoreCookieChange?: boolean } = {}) {
     const { cookies } = await import('next/headers');
     const storage = new CookieStorage({
       encryptionKey: this.config.cookieSecret ?? '',

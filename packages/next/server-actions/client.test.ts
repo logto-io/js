@@ -96,7 +96,7 @@ describe('Next (server actions)', () => {
   describe('createNodeClient', () => {
     it('should get node client', async () => {
       const client = new LogtoClient(configs);
-      const { nodeClient } = await client.createNodeClient();
+      const nodeClient = await client.createNodeClient();
       expect(nodeClient).toBeDefined();
     });
   });

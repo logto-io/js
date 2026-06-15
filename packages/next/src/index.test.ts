@@ -343,9 +343,20 @@ describe('Next', () => {
       const first = makeRequestAndResponse('cookie-a');
       const second = makeRequestAndResponse('cookie-b');
 
+      // The public `createNodeClientFromNextApi` only exposes the node client, so reach the
+      // private request-scoped helper (which also returns the storage) to assert isolation.
+      const createRequestScopedClient = (
+        client as unknown as {
+          createRequestScopedClient: (
+            request: Parameters<typeof client.createNodeClientFromNextApi>[0],
+            response: Parameters<typeof client.createNodeClientFromNextApi>[1]
+          ) => Promise<{ nodeClient: unknown; storage: unknown }>;
+        }
+      ).createRequestScopedClient.bind(client);
+
       const [resultA, resultB] = await Promise.all([
-        client.createNodeClientFromNextApi(first.request, first.response),
-        client.createNodeClientFromNextApi(second.request, second.response),
+        createRequestScopedClient(first.request, first.response),
+        createRequestScopedClient(second.request, second.response),
       ]);
 
       expect(resultA.storage).not.toBe(resultB.storage);
