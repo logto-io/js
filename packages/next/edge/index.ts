@@ -10,6 +10,7 @@ import { type NextRequest } from 'next/server';
 
 import BaseClient from '../src/client';
 import type { LogtoNextConfig } from '../src/types.js';
+import { NavigationStore } from '../src/utils.js';
 
 export type {
   AccessTokenClaims,
@@ -50,17 +51,20 @@ export default class LogtoClient extends BaseClient {
   handleSignOut =
     (redirectUri = this.config.baseUrl) =>
     async (request: NextRequest) => {
-      const { nodeClient, headers } = await this.createNodeClientFromEdgeRequest(request);
+      const { nodeClient, storage, headers, getNavigateUrl } = await this.createRequestScopedClient(
+        request
+      );
       await nodeClient.signOut(redirectUri);
-      await this.storage?.destroy();
+      await storage.destroy();
 
       const response = new Response(null, {
         headers,
         status: 307,
       });
 
-      if (this.navigateUrl) {
-        response.headers.append('Location', this.navigateUrl);
+      const navigateUrl = getNavigateUrl();
+      if (navigateUrl) {
+        response.headers.append('Location', navigateUrl);
       }
 
       return response;
@@ -107,12 +111,30 @@ export default class LogtoClient extends BaseClient {
     return context;
   };
 
+  /**
+   * Create a Node client for the current edge request.
+   *
+   * The public return shape is intentionally kept as `{ nodeClient, headers }` (unchanged from
+   * previous versions) so existing callers keep working. The extra per-request state (storage,
+   * navigation URL) needed internally is produced by {@link createRequestScopedClient}.
+   */
   async createNodeClientFromEdgeRequest(request: Request) {
+    const { nodeClient, headers } = await this.createRequestScopedClient(request);
+    return { nodeClient, headers };
+  }
+
+  /**
+   * Create a request-scoped Node client together with its per-request state.
+   *
+   * Storage and the navigation URL are kept local to this call rather than on the (typically
+   * singleton) client instance, so concurrent requests can never clobber each other's state.
+   */
+  private async createRequestScopedClient(request: Request) {
     const cookies = new RequestCookies(request.headers);
     const headers = new Headers();
     const responseCookies = new ResponseCookies(headers);
 
-    this.storage = new CookieStorage({
+    const storage = new CookieStorage({
       encryptionKey: this.config.cookieSecret ?? '',
       sessionWrapper: this.config.sessionWrapper,
       cookieKey: `logto_${this.config.appId}`,
@@ -125,22 +147,21 @@ export default class LogtoClient extends BaseClient {
       },
     });
 
-    await this.storage.init();
+    await storage.init();
 
+    const navigation = new NavigationStore();
     const nodeClient = new this.adapters.NodeClient(this.config, {
-      storage: this.storage,
-      navigate: (url) => {
-        this.navigateUrl = url;
-      },
+      storage,
+      navigate: navigation.navigate,
     });
 
-    return { nodeClient, headers };
+    return { nodeClient, storage, headers, getNavigateUrl: () => navigation.url };
   }
 
   private readonly handleSignInImplementation =
     (options: SignInOptions) =>
     async (request: Request): Promise<Response> => {
-      const { nodeClient, headers } = await this.createNodeClientFromEdgeRequest(request);
+      const { nodeClient, headers, getNavigateUrl } = await this.createRequestScopedClient(request);
       await nodeClient.signIn(options);
 
       const response = new Response(null, {
@@ -148,8 +169,9 @@ export default class LogtoClient extends BaseClient {
         status: 307,
       });
 
-      if (this.navigateUrl) {
-        response.headers.append('Location', this.navigateUrl);
+      const navigateUrl = getNavigateUrl();
+      if (navigateUrl) {
+        response.headers.append('Location', navigateUrl);
       }
 
       return response;

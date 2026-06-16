@@ -10,6 +10,7 @@ import NodeClient from '@logto/node/edge';
 
 import BaseClient from '../src/client';
 import type { LogtoNextConfig } from '../src/types.js';
+import { NavigationStore } from '../src/utils.js';
 
 export type { LogtoContext, InteractionMode } from '@logto/node';
 
@@ -42,20 +43,21 @@ export default class LogtoClient extends BaseClient {
     options: SignInOptions | string | URL,
     interactionMode?: InteractionMode
   ): Promise<{ url: string; newCookie?: string }> {
-    const nodeClient = await this.createNodeClient();
+    const { nodeClient, getNavigateUrl } = await this.createRequestScopedClient();
     const finalOptions: SignInOptions =
       typeof options === 'string' || options instanceof URL
         ? { redirectUri: options, interactionMode }
         : options;
     await nodeClient.signIn(finalOptions);
 
-    if (!this.navigateUrl) {
+    const navigateUrl = getNavigateUrl();
+    if (!navigateUrl) {
       // Not expected to happen
       throw new Error('navigateUrl is not set');
     }
 
     return {
-      url: this.navigateUrl,
+      url: navigateUrl,
     };
   }
 
@@ -66,16 +68,17 @@ export default class LogtoClient extends BaseClient {
    * @returns the url to redirect to
    */
   async handleSignOut(redirectUri = this.config.baseUrl): Promise<string> {
-    const nodeClient = await this.createNodeClient();
+    const { nodeClient, storage, getNavigateUrl } = await this.createRequestScopedClient();
     await nodeClient.signOut(redirectUri);
-    await this.storage?.destroy();
+    await storage.destroy();
 
-    if (!this.navigateUrl) {
+    const navigateUrl = getNavigateUrl();
+    if (!navigateUrl) {
       // Not expected to happen
       throw new Error('navigateUrl is not set');
     }
 
-    return this.navigateUrl;
+    return navigateUrl;
   }
 
   /**
@@ -85,11 +88,11 @@ export default class LogtoClient extends BaseClient {
    * @returns the postRedirectUri if configured, otherwise undefined
    */
   async handleSignInCallback(callbackUrl: string): Promise<string | undefined> {
-    const nodeClient = await this.createNodeClient();
+    const { nodeClient, getNavigateUrl } = await this.createRequestScopedClient();
 
     await nodeClient.handleSignInCallback(callbackUrl);
 
-    return this.navigateUrl;
+    return getNavigateUrl();
   }
 
   /**
@@ -105,9 +108,29 @@ export default class LogtoClient extends BaseClient {
     return context;
   }
 
+  /**
+   * Create a Node client for the current request.
+   *
+   * The public return type is intentionally kept as `NodeClient` (unchanged from previous
+   * versions) so existing callers keep working. The per-request state (storage, navigation URL)
+   * needed internally is produced by {@link createRequestScopedClient}.
+   */
   async createNodeClient({ ignoreCookieChange }: { ignoreCookieChange?: boolean } = {}) {
+    const { nodeClient } = await this.createRequestScopedClient({ ignoreCookieChange });
+    return nodeClient;
+  }
+
+  /**
+   * Create a request-scoped Node client together with its per-request state.
+   *
+   * Storage and the navigation URL are kept local to this call rather than on the client
+   * instance, so concurrent invocations can never clobber each other's state.
+   */
+  private async createRequestScopedClient({
+    ignoreCookieChange,
+  }: { ignoreCookieChange?: boolean } = {}) {
     const { cookies } = await import('next/headers');
-    this.storage = new CookieStorage({
+    const storage = new CookieStorage({
       encryptionKey: this.config.cookieSecret ?? '',
       sessionWrapper: this.config.sessionWrapper,
       cookieKey: `logto_${this.config.appId}`,
@@ -125,13 +148,14 @@ export default class LogtoClient extends BaseClient {
       },
     });
 
-    await this.storage.init();
+    await storage.init();
 
-    return new this.adapters.NodeClient(this.config, {
-      storage: this.storage,
-      navigate: (url) => {
-        this.navigateUrl = url;
-      },
+    const navigation = new NavigationStore();
+    const nodeClient = new this.adapters.NodeClient(this.config, {
+      storage,
+      navigate: navigation.navigate,
     });
+
+    return { nodeClient, storage, getNavigateUrl: () => navigation.url };
   }
 }

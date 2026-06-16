@@ -18,7 +18,7 @@ import { type NextApiRequestCookies } from 'next/dist/server/api-utils/index.js'
 
 import LogtoNextBaseClient from './client.js';
 import type { ErrorHandler, LogtoNextConfig } from './types.js';
-import { buildHandler } from './utils.js';
+import { buildHandler, NavigationStore } from './utils.js';
 
 export type { LogtoNextConfig } from './types.js';
 
@@ -95,14 +95,18 @@ export default class LogtoClient extends LogtoNextBaseClient {
     onError?: ErrorHandler
   ): NextApiHandler =>
     buildHandler(async (request, response) => {
-      const nodeClient = await this.createNodeClientFromNextApi(request, response);
+      const { nodeClient, getNavigateUrl } = await this.createRequestScopedClient(
+        request,
+        response
+      );
 
       if (request.url) {
         await nodeClient.handleSignInCallback(`${this.config.baseUrl}${request.url}`);
 
-        // Check if there's a stored navigation URL (from postRedirectUri) first
-        if (this.navigateUrl) {
-          response.redirect(this.navigateUrl);
+        // Check if there's a navigation URL (from postRedirectUri) first
+        const navigateUrl = getNavigateUrl();
+        if (navigateUrl) {
+          response.redirect(navigateUrl);
         } else {
           response.redirect(redirectTo);
         }
@@ -111,13 +115,17 @@ export default class LogtoClient extends LogtoNextBaseClient {
 
   handleSignOut = (redirectUri = this.config.baseUrl, onError?: ErrorHandler): NextApiHandler =>
     buildHandler(async (request, response) => {
-      const nodeClient = await this.createNodeClientFromNextApi(request, response);
+      const { nodeClient, storage, getNavigateUrl } = await this.createRequestScopedClient(
+        request,
+        response
+      );
       await nodeClient.signOut(redirectUri);
 
-      await this.storage?.destroy();
+      await storage.destroy();
 
-      if (this.navigateUrl) {
-        response.redirect(this.navigateUrl);
+      const navigateUrl = getNavigateUrl();
+      if (navigateUrl) {
+        response.redirect(navigateUrl);
       }
     }, onError);
 
@@ -217,13 +225,42 @@ export default class LogtoClient extends LogtoNextBaseClient {
       }
     };
 
+  /**
+   * Create a Node client for the current request.
+   *
+   * The public return type is intentionally kept as `NodeClient` (unchanged from previous
+   * versions) so existing callers — including the documented "fetch organization tokens"
+   * pattern — keep working. The per-request state (storage, navigation URL) needed internally
+   * is produced by {@link createRequestScopedClient}.
+   */
   async createNodeClientFromNextApi(
     request: IncomingMessage & {
       cookies: NextApiRequestCookies;
     },
     response: ServerResponse
   ): Promise<NodeClient> {
-    this.storage = new CookieStorage({
+    const { nodeClient } = await this.createRequestScopedClient(request, response);
+    return nodeClient;
+  }
+
+  /**
+   * Create a request-scoped Node client together with its per-request state.
+   *
+   * Every piece of mutable state here (storage, the navigation URL) is kept local to this
+   * call instead of being stored on the (typically singleton) client instance, so concurrent
+   * requests can never clobber each other's storage or redirect target.
+   */
+  private async createRequestScopedClient(
+    request: IncomingMessage & {
+      cookies: NextApiRequestCookies;
+    },
+    response: ServerResponse
+  ): Promise<{
+    nodeClient: NodeClient;
+    storage: CookieStorage;
+    getNavigateUrl: () => string | undefined;
+  }> {
+    const storage = new CookieStorage({
       // The type checking is done in the constructor, encryptionKey is required when using default session wrapper
       encryptionKey: this.config.cookieSecret ?? '',
       sessionWrapper: this.config.sessionWrapper,
@@ -237,14 +274,15 @@ export default class LogtoClient extends LogtoNextBaseClient {
       },
     });
 
-    await this.storage.init();
+    await storage.init();
 
-    return new this.adapters.NodeClient(this.config, {
-      storage: this.storage,
-      navigate: (url) => {
-        this.navigateUrl = url;
-      },
+    const navigation = new NavigationStore();
+    const nodeClient = new this.adapters.NodeClient(this.config, {
+      storage,
+      navigate: navigation.navigate,
     });
+
+    return { nodeClient, storage, getNavigateUrl: () => navigation.url };
   }
 
   private readonly handleSignInImplementation = (
@@ -253,11 +291,15 @@ export default class LogtoClient extends LogtoNextBaseClient {
     }
   ): NextApiHandler =>
     buildHandler(async (request, response) => {
-      const nodeClient = await this.createNodeClientFromNextApi(request, response);
+      const { nodeClient, getNavigateUrl } = await this.createRequestScopedClient(
+        request,
+        response
+      );
       await nodeClient.signIn(options);
 
-      if (this.navigateUrl) {
-        response.redirect(this.navigateUrl);
+      const navigateUrl = getNavigateUrl();
+      if (navigateUrl) {
+        response.redirect(navigateUrl);
       }
     }, options.onError);
 }
