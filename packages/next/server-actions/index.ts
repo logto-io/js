@@ -2,6 +2,7 @@
 
 import {
   type LogtoContext,
+  type GetAccessTokenOptions,
   type GetContextParameters,
   type InteractionMode,
   type SignInOptions,
@@ -12,7 +13,7 @@ import type { LogtoNextConfig } from '../src/types.js';
 
 import LogtoClient from './client';
 
-export type { LogtoContext, InteractionMode } from '@logto/node';
+export type { LogtoContext, InteractionMode, GetAccessTokenOptions } from '@logto/node';
 
 /**
  * Init sign in process and redirect to the Logto sign-in page
@@ -128,15 +129,19 @@ export const getOrganizationTokens = async (config: LogtoNextConfig) => {
 /**
  * Get access token for the specified resource or organization,
  * this function can be used in server actions or API routes
+ *
+ * @param options See {@link GetAccessTokenOptions}. Pass `{ forceRefresh: true }` to skip the
+ * cached token and exchange a new one using the Refresh Token.
  */
 export const getAccessToken = async (
   config: LogtoNextConfig,
   resource?: string,
-  organizationId?: string
+  organizationId?: string,
+  options?: GetAccessTokenOptions
 ): Promise<string> => {
   const client = new LogtoClient(config);
   const nodeClient = await client.createNodeClient();
-  const accessToken = await nodeClient.getAccessToken(resource, organizationId);
+  const accessToken = await nodeClient.getAccessToken(resource, organizationId, options);
 
   return accessToken;
 };
@@ -144,12 +149,40 @@ export const getAccessToken = async (
 /**
  * Get organization token from session,
  * this function can be used in server actions or API routes
+ *
+ * @param options See {@link GetAccessTokenOptions}. Pass `{ forceRefresh: true }` to skip the
+ * cached token and exchange a new one using the Refresh Token. This is useful right after the
+ * user's organization roles have changed, so the updated organization scopes take effect
+ * immediately without a re-login.
  */
 export const getOrganizationToken = async (
   config: LogtoNextConfig,
-  organizationId?: string
+  organizationId?: string,
+  options?: GetAccessTokenOptions
 ): Promise<string> => {
-  return getAccessToken(config, undefined, organizationId);
+  return getAccessToken(config, undefined, organizationId, options);
+};
+
+/**
+ * Clear the cached access tokens in the session.
+ *
+ * - When neither `resource` nor `organizationId` is given, all the cached access tokens will be
+ *   cleared.
+ * - Otherwise, only the matching cached access token will be cleared.
+ *
+ * The next `getAccessToken()` / `getOrganizationToken()` call will then exchange a fresh token
+ * using the Refresh Token.
+ *
+ * This function can be used in server actions or API routes, where cookies are writable.
+ */
+export const clearAccessToken = async (
+  config: LogtoNextConfig,
+  resource?: string,
+  organizationId?: string
+): Promise<void> => {
+  const client = new LogtoClient(config);
+  const nodeClient = await client.createNodeClient();
+  await nodeClient.clearAccessToken(resource, organizationId);
 };
 
 /**
@@ -161,11 +194,12 @@ export const getOrganizationToken = async (
 export const getAccessTokenRSC = async (
   config: LogtoNextConfig,
   resource?: string,
-  organizationId?: string
+  organizationId?: string,
+  options?: GetAccessTokenOptions
 ): Promise<string> => {
   const client = new LogtoClient(config);
   const nodeClient = await client.createNodeClient({ ignoreCookieChange: true });
-  return nodeClient.getAccessToken(resource, organizationId);
+  return nodeClient.getAccessToken(resource, organizationId, options);
 };
 
 /**
@@ -176,9 +210,10 @@ export const getAccessTokenRSC = async (
  */
 export const getOrganizationTokenRSC = async (
   config: LogtoNextConfig,
-  organizationId?: string
+  organizationId?: string,
+  options?: GetAccessTokenOptions
 ): Promise<string> => {
-  return getAccessTokenRSC(config, undefined, organizationId);
+  return getAccessTokenRSC(config, undefined, organizationId, options);
 };
 
 export { default } from './client';

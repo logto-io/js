@@ -19,6 +19,7 @@ export type {
   InteractionMode,
   LogtoErrorCode,
   UserInfoResponse,
+  GetAccessTokenOptions,
 } from '@logto/node';
 
 export default class LogtoClient extends BaseClient {

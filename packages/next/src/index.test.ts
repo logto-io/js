@@ -24,6 +24,7 @@ const signOut = vi.fn();
 const getContext = vi.fn(async () => true);
 const getAccessToken = vi.fn();
 const getOrganizationToken = vi.fn();
+const clearAccessToken = vi.fn();
 
 const mockResponse = (_: unknown, response: NextApiResponse) => {
   response.status(200).end();
@@ -54,6 +55,7 @@ vi.mock('@logto/node', async (importOriginal) => ({
     getContext,
     getAccessToken,
     getOrganizationToken,
+    clearAccessToken,
     getIdTokenClaims,
     signOut: () => {
       navigate(configs.baseUrl);
@@ -150,7 +152,24 @@ describe('Next', () => {
         url: '/api/logto/get-access-token',
         test: async ({ fetch }) => {
           await fetch({ method: 'GET' });
-          expect(getAccessToken).toHaveBeenCalledWith('resource');
+          expect(getAccessToken).toHaveBeenCalledWith('resource', undefined, undefined);
+        },
+      });
+    });
+
+    it('should pass the `forceRefresh` option through', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        pagesHandler: async (request, response) => {
+          await client.getAccessToken(request, response, 'resource', { forceRefresh: true });
+          response.end();
+        },
+        url: '/api/logto/get-access-token',
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET' });
+          expect(getAccessToken).toHaveBeenCalledWith('resource', undefined, {
+            forceRefresh: true,
+          });
         },
       });
     });
@@ -167,7 +186,58 @@ describe('Next', () => {
         url: '/api/logto/get-access-token',
         test: async ({ fetch }) => {
           await fetch({ method: 'GET' });
-          expect(getOrganizationToken).toHaveBeenCalledWith('organization_id');
+          expect(getOrganizationToken).toHaveBeenCalledWith('organization_id', undefined);
+        },
+      });
+    });
+
+    it('should pass the `forceRefresh` option through', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        pagesHandler: async (request, response) => {
+          await client.getOrganizationToken(request, response, 'organization_id', {
+            forceRefresh: true,
+          });
+          response.end();
+        },
+        url: '/api/logto/get-access-token',
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET' });
+          expect(getOrganizationToken).toHaveBeenCalledWith('organization_id', {
+            forceRefresh: true,
+          });
+        },
+      });
+    });
+  });
+
+  describe('clearAccessToken', () => {
+    it('should clear all the cached access tokens by default', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        pagesHandler: async (request, response) => {
+          await client.clearAccessToken(request, response);
+          response.end();
+        },
+        url: '/api/logto/clear-access-token',
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET' });
+          expect(clearAccessToken).toHaveBeenCalledWith(undefined, undefined);
+        },
+      });
+    });
+
+    it('should clear the cached token of the given organization', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        pagesHandler: async (request, response) => {
+          await client.clearAccessToken(request, response, undefined, 'organization_id');
+          response.end();
+        },
+        url: '/api/logto/clear-access-token',
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET' });
+          expect(clearAccessToken).toHaveBeenCalledWith(undefined, 'organization_id');
         },
       });
     });
