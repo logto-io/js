@@ -1,4 +1,7 @@
 import { defineNuxtModule, addServerHandler, addImportsDir, createResolver } from '@nuxt/kit';
+// Load @nuxt/nitro-server's Nuxt hook type augmentations.
+// eslint-disable-next-line import/no-unassigned-import
+import type {} from '@nuxt/nitro-server';
 import { defu } from 'defu';
 import { type NuxtModule } from 'nuxt/schema';
 
