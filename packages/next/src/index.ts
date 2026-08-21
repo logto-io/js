@@ -3,6 +3,7 @@ import { type IncomingMessage, type ServerResponse } from 'node:http';
 import NodeClient, {
   CookieStorage,
   type SignInOptions,
+  type GetAccessTokenOptions,
   type GetContextParameters,
   type InteractionMode,
 } from '@logto/node';
@@ -46,6 +47,7 @@ export type {
   UserInfoResponse,
   SessionWrapper,
   SessionData,
+  GetAccessTokenOptions,
 } from '@logto/node';
 
 export default class LogtoClient extends LogtoNextBaseClient {
@@ -166,22 +168,57 @@ export default class LogtoClient extends LogtoNextBaseClient {
       response.status(404).end();
     };
 
+  /**
+   * Get an access token for the given resource.
+   *
+   * @param options See {@link GetAccessTokenOptions}. Pass `{ forceRefresh: true }` to bypass the
+   * cached token and exchange a new one using the Refresh Token.
+   */
   getAccessToken = async (
     request: NextApiRequest,
     response: NextApiResponse,
-    resource: string
+    resource: string,
+    options?: GetAccessTokenOptions
   ): Promise<string> => {
     const nodeClient = await this.createNodeClientFromNextApi(request, response);
-    return nodeClient.getAccessToken(resource);
+    return nodeClient.getAccessToken(resource, undefined, options);
   };
 
+  /**
+   * Get an organization token for the given organization.
+   *
+   * @param options See {@link GetAccessTokenOptions}. Pass `{ forceRefresh: true }` to bypass the
+   * cached token and exchange a new one using the Refresh Token. This is useful right after the
+   * user's organization roles have changed, so the updated scopes take effect immediately.
+   */
   getOrganizationToken = async (
     request: NextApiRequest,
     response: NextApiResponse,
-    organizationId: string
+    organizationId: string,
+    options?: GetAccessTokenOptions
   ): Promise<string> => {
     const nodeClient = await this.createNodeClientFromNextApi(request, response);
-    return nodeClient.getOrganizationToken(organizationId);
+    return nodeClient.getOrganizationToken(organizationId, options);
+  };
+
+  /**
+   * Clear the cached access tokens in the session.
+   *
+   * - When neither `resource` nor `organizationId` is given, all the cached access tokens will
+   *   be cleared.
+   * - Otherwise, only the matching cached access token will be cleared.
+   *
+   * The next `getAccessToken()` / `getOrganizationToken()` call will then exchange a fresh token
+   * using the Refresh Token.
+   */
+  clearAccessToken = async (
+    request: NextApiRequest,
+    response: NextApiResponse,
+    resource?: string,
+    organizationId?: string
+  ): Promise<void> => {
+    const nodeClient = await this.createNodeClientFromNextApi(request, response);
+    await nodeClient.clearAccessToken(resource, organizationId);
   };
 
   withLogtoApiRoute = (

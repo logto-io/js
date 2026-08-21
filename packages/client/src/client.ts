@@ -61,6 +61,23 @@ export type SignInOptions = {
   'interactionMode' | 'firstScreen' | 'identifiers' | 'loginHint' | 'directSignIn' | 'extraParams'
 >;
 
+export type GetAccessTokenOptions = {
+  /**
+   * Bypass the cached access token and always exchange a new one using the Refresh Token.
+   *
+   * This is useful when the user's permissions have changed on the Logto side (e.g. the user
+   * has been promoted or demoted in an organization) and the application wants the change to
+   * take effect immediately instead of waiting for the cached token to expire.
+   *
+   * Note that a token can only carry the scopes that were requested in the original
+   * authorization request. If a brand new scope needs to be introduced, a new authorization
+   * request (e.g. `signIn()` with `prompt: 'consent'`) is still required.
+   *
+   * @default false
+   */
+  forceRefresh?: boolean;
+};
+
 /**
  * The Logto base client class that provides the essential methods for
  * interacting with the Logto server.
@@ -91,6 +108,9 @@ export class StandardLogtoClient {
    * @param resource The resource that the access token is granted for. If not
    * specified, the access token will be used for OpenID Connect or the default
    * resource, as specified in the Logto Console.
+   * @param organizationId The optional organization ID that the access token is granted for.
+   * @param options See {@link GetAccessTokenOptions}. Use `{ forceRefresh: true }` to skip the
+   * cache and always exchange a new access token using the Refresh Token.
    * @returns The access token string.
    * @throws LogtoClientError if the user is not authenticated.
    */
@@ -103,6 +123,10 @@ export class StandardLogtoClient {
    * methods.
    *
    * @param organizationId The ID of the organization that the access token is granted for.
+   * @param options See {@link GetAccessTokenOptions}. Use `{ forceRefresh: true }` to skip the
+   * cache and always exchange a new organization token using the Refresh Token. This is handy
+   * when the user's organization roles have just changed and the new scopes should take effect
+   * immediately.
    * @returns The access token string.
    * @throws LogtoClientError if the user is not authenticated.
    * @remarks
@@ -111,7 +135,14 @@ export class StandardLogtoClient {
   readonly getOrganizationToken = memoize(this.#getOrganizationToken);
 
   /**
-   * Clear the access token from the cache storage.
+   * Clear the cached access tokens from the storage.
+   *
+   * - When called without arguments, all the cached access tokens will be cleared.
+   * - When called with `resource` and/or `organizationId`, only the matching cached access
+   *   token will be cleared, and other cached tokens will be kept intact.
+   *
+   * @param resource The resource that the access token was granted for.
+   * @param organizationId The organization ID that the access token was granted for.
    */
   readonly clearAccessToken = memoize(this.#clearAccessToken);
 
@@ -531,7 +562,11 @@ export class StandardLogtoClient {
     });
   }
 
-  async #getAccessToken(resource?: string, organizationId?: string): Promise<string> {
+  async #getAccessToken(
+    resource?: string,
+    organizationId?: string,
+    options?: GetAccessTokenOptions
+  ): Promise<string> {
     if (!(await this.isAuthenticated())) {
       throw new LogtoClientError('not_authenticated');
     }
@@ -539,11 +574,11 @@ export class StandardLogtoClient {
     const accessTokenKey = buildAccessTokenKey(resource, organizationId);
     const accessToken = this.accessTokenMap.get(accessTokenKey);
 
-    if (accessToken && accessToken.expiresAt > Date.now() / 1000) {
+    if (!options?.forceRefresh && accessToken && accessToken.expiresAt > Date.now() / 1000) {
       return accessToken.token;
     }
 
-    // Since the access token has expired, delete it from the map.
+    // Since the access token has expired (or a refresh is forced), delete it from the map.
     if (accessToken) {
       this.accessTokenMap.delete(accessTokenKey);
     }
@@ -554,17 +589,26 @@ export class StandardLogtoClient {
     return this.getAccessTokenByRefreshToken(resource, organizationId);
   }
 
-  async #getOrganizationToken(organizationId: string): Promise<string> {
+  async #getOrganizationToken(
+    organizationId: string,
+    options?: GetAccessTokenOptions
+  ): Promise<string> {
     if (!this.logtoConfig.scopes?.includes(UserScope.Organizations)) {
       throw new LogtoClientError('missing_scope_organizations');
     }
 
-    return this.getAccessToken(undefined, organizationId);
+    return this.getAccessToken(undefined, organizationId, options);
   }
 
-  async #clearAccessToken(): Promise<void> {
-    this.accessTokenMap.clear();
-    await this.adapter.storage.removeItem('accessToken');
+  async #clearAccessToken(resource?: string, organizationId?: string): Promise<void> {
+    if (resource === undefined && organizationId === undefined) {
+      this.accessTokenMap.clear();
+      await this.adapter.storage.removeItem('accessToken');
+      return;
+    }
+
+    this.accessTokenMap.delete(buildAccessTokenKey(resource, organizationId));
+    await this.saveAccessTokenMap();
   }
 
   async #clearAllTokens(): Promise<void> {
