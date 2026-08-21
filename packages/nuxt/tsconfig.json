@@ -4,5 +4,6 @@
     "outDir": "dist",
     "skipLibCheck": true
   },
-  "exclude": ["node_modules", ".nuxt"]
+  "include": ["src/**/*.ts", "test/**/*.ts", "vitest.config.ts"],
+  "exclude": ["node_modules", ".nuxt", "playground"]
 }
