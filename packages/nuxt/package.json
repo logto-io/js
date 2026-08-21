@@ -34,7 +34,7 @@
     "@nuxt/nitro-server": "^3.21.10",
     "@nuxt/test-utils": "^3.18.0",
     "@silverhand/eslint-config": "^6.0.1",
-    "@vitest/coverage-v8": "^2.1.9",
+    "@vitest/coverage-v8": "3.2.6",
     "@vue/test-utils": "^2.4.4",
     "eslint": "^8.57.0",
     "h3": "^1.15.5",
@@ -43,7 +43,7 @@
     "nuxt": "^3.21.10",
     "prettier": "^3.0.0",
     "typescript": "^5.3.3",
-    "vitest": "^2.1.9",
+    "vitest": "^3.2.6",
     "vue": "^3.5.13"
   },
   "eslintConfig": {
