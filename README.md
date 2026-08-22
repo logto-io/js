@@ -1,9 +1,11 @@
 <p align="center">
   <a href="https://logto.io" target="_blank" align="center" alt="Logto Logo">
-      <img src="https://github.com/logto-io.png" width="100">
+    <picture>
+      <source width="200" media="(prefers-color-scheme: dark)" srcset="https://github.com/logto-io/.github/raw/master/profile/logto-lockup-brand-on-dark.svg">
+      <source width="200" media="(prefers-color-scheme: light)" srcset="https://github.com/logto-io/.github/raw/master/profile/logto-lockup-brand-on-light.svg">
+      <img width="200" src="https://github.com/logto-io/.github/raw/master/profile/logto-lockup-brand-on-light.svg" alt="Logto logo">
+    </picture>
   </a>
-  <br/>
-  <span><i><a href="https://logto.io" target="_blank">Logto</a> is an open-source Auth0 alternative designed for modern apps and SaaS products.</i></span>
 </p>
 
 # Logto JavaScript SDKs
