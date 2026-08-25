@@ -190,6 +190,11 @@ export const clearAccessToken = async (
  * this function can be used in React Server Components (RSC)
  * Note: You can't write to the cookie in a React Server Component, so if the access token is refreshed, it won't be persisted in the session.
  * When using server actions or API routes, we highly recommand to use the getAccessToken method
+ *
+ * @param options See {@link GetAccessTokenOptions}. Pass `{ forceRefresh: true }` to skip the
+ * cached token and exchange a new one using the Refresh Token. Since the session is not writable
+ * here, the refreshed token will not be cached, so every call with `forceRefresh` performs a token
+ * exchange. Prefer server actions or API routes when you need the result to be persisted.
  */
 export const getAccessTokenRSC = async (
   config: LogtoNextConfig,
@@ -207,6 +212,11 @@ export const getAccessTokenRSC = async (
  * this function can be used in React Server Components (RSC)
  * Note: You can't write to the cookie in a React Server Component, so if the access token is refreshed, it won't be persisted in the session.
  * When using server actions or API routes, we highly recommand to use the getOrganizationToken method
+ *
+ * @param options See {@link GetAccessTokenOptions}. Pass `{ forceRefresh: true }` to skip the
+ * cached token and exchange a new one using the Refresh Token. Since the session is not writable
+ * here, the refreshed token will not be cached, so every call with `forceRefresh` performs a token
+ * exchange. Prefer server actions or API routes when you need the result to be persisted.
  */
 export const getOrganizationTokenRSC = async (
   config: LogtoNextConfig,
