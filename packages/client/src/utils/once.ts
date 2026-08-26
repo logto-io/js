@@ -1,19 +1,33 @@
-type Procedure<T> = (...args: unknown[]) => T;
-
-// TODO @sijie move to essentials
 /* eslint-disable @silverhand/fp/no-let */
 /* eslint-disable @silverhand/fp/no-mutation */
-export function once<T>(function_: Procedure<T>): Procedure<T> {
-  let called = false;
-  let result: T;
+/**
+ * Run the given async function at most once and cache its promise, so that all callers share the
+ * same result.
+ *
+ * Unlike a plain `once()`, the cache is cleared when the promise rejects. Otherwise a single
+ * failure (e.g. the device was offline when the function was first called) would be replayed to
+ * every later caller for the lifetime of the cache, with no way to recover.
+ */
+export function onceAsync<Args extends unknown[], Return>(
+  run: (...args: Args) => Promise<Return>
+): (...args: Args) => Promise<Return> {
+  let cached: Promise<Return> | undefined;
 
-  return function (this: unknown, ...args: unknown[]) {
-    if (!called) {
-      called = true;
-      result = function_.apply(this, args);
+  return async function (this: unknown, ...args: Args): Promise<Return> {
+    const promise = cached ?? run.apply(this, args);
+    cached = promise;
+
+    try {
+      return await promise;
+    } catch (error: unknown) {
+      // Allow the next caller to retry instead of replaying this failure forever. The identity
+      // check keeps a newer promise (started by another caller) intact.
+      if (cached === promise) {
+        cached = undefined;
+      }
+
+      throw error;
     }
-
-    return result;
   };
 }
 /* eslint-enable @silverhand/fp/no-mutation */

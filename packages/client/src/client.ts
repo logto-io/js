@@ -35,7 +35,7 @@ import {
 } from './types/index.js';
 import { buildAccessTokenKey, getDiscoveryEndpoint } from './utils/index.js';
 import { memoize } from './utils/memoize.js';
-import { once } from './utils/once.js';
+import { onceAsync } from './utils/once.js';
 
 export type SignInOptions = {
   /**
@@ -77,9 +77,10 @@ export class StandardLogtoClient {
   readonly logtoConfig: LogtoConfig;
   /**
    * Get the OIDC configuration from the discovery endpoint. This method will
-   * only fetch the configuration once and cache the result.
+   * only fetch the configuration once and cache the result. If the fetch fails, the next call will
+   * retry it.
    */
-  readonly getOidcConfig: () => Promise<OidcConfigResponse> = once(this.#getOidcConfig);
+  readonly getOidcConfig: () => Promise<OidcConfigResponse> = onceAsync(this.#getOidcConfig);
   /**
    * Get the access token from the storage with refresh strategy.
    *
