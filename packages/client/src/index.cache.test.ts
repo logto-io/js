@@ -21,4 +21,17 @@ describe('LogtoClient cache', () => {
     expect(fetchOidcConfig).toHaveBeenCalledTimes(1);
     expect(config3).toBe(config4);
   });
+
+  it('should retry fetching OpenID config after a failure', async () => {
+    fetchOidcConfig.mockClear();
+    fetchOidcConfig.mockRejectedValueOnce(new TypeError('Failed to fetch'));
+
+    const logtoClient = createClient();
+
+    await expect(logtoClient.runGetOidcConfig()).rejects.toThrow('Failed to fetch');
+    expect(fetchOidcConfig).toHaveBeenCalledTimes(1);
+
+    await expect(logtoClient.runGetOidcConfig()).resolves.toHaveProperty('tokenEndpoint');
+    expect(fetchOidcConfig).toHaveBeenCalledTimes(2);
+  });
 });
