@@ -28,6 +28,8 @@ jobs:
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v5
         with:
+          # Changesets v3 requires Node.js >= 22.11
+          node-version: 22
           pnpm-version: 10
 
       - name: Build
