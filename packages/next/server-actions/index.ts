@@ -191,20 +191,18 @@ export const clearAccessToken = async (
  * Note: You can't write to the cookie in a React Server Component, so if the access token is refreshed, it won't be persisted in the session.
  * When using server actions or API routes, we highly recommand to use the getAccessToken method
  *
- * @param options See {@link GetAccessTokenOptions}. Pass `{ forceRefresh: true }` to skip the
- * cached token and exchange a new one using the Refresh Token. Since the session is not writable
- * here, the refreshed token will not be cached, so every call with `forceRefresh` performs a token
- * exchange. Prefer server actions or API routes when you need the result to be persisted.
+ * To force-refresh the token (e.g. to pick up updated organization scopes), use the
+ * {@link getAccessToken} server action or an API route instead. An RSC cannot write cookies, so a
+ * forced exchange here would drop the refreshed tokens and any rotated Refresh Token.
  */
 export const getAccessTokenRSC = async (
   config: LogtoNextConfig,
   resource?: string,
-  organizationId?: string,
-  options?: GetAccessTokenOptions
+  organizationId?: string
 ): Promise<string> => {
   const client = new LogtoClient(config);
   const nodeClient = await client.createNodeClient({ ignoreCookieChange: true });
-  return nodeClient.getAccessToken(resource, organizationId, options);
+  return nodeClient.getAccessToken(resource, organizationId);
 };
 
 /**
@@ -213,17 +211,16 @@ export const getAccessTokenRSC = async (
  * Note: You can't write to the cookie in a React Server Component, so if the access token is refreshed, it won't be persisted in the session.
  * When using server actions or API routes, we highly recommand to use the getOrganizationToken method
  *
- * @param options See {@link GetAccessTokenOptions}. Pass `{ forceRefresh: true }` to skip the
- * cached token and exchange a new one using the Refresh Token. Since the session is not writable
- * here, the refreshed token will not be cached, so every call with `forceRefresh` performs a token
- * exchange. Prefer server actions or API routes when you need the result to be persisted.
+ * To force-refresh the token (e.g. to pick up updated organization scopes), use the
+ * {@link getOrganizationToken} server action or an API route instead. An RSC cannot write
+ * cookies, so a forced exchange here would drop the refreshed tokens and any rotated Refresh
+ * Token.
  */
 export const getOrganizationTokenRSC = async (
   config: LogtoNextConfig,
-  organizationId?: string,
-  options?: GetAccessTokenOptions
+  organizationId?: string
 ): Promise<string> => {
-  return getAccessTokenRSC(config, undefined, organizationId, options);
+  return getAccessTokenRSC(config, undefined, organizationId);
 };
 
 export { default } from './client';

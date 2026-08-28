@@ -24,6 +24,11 @@ Both are exposed through `@logto/next` for the Pages Router, the Edge runtime, a
 actions, where `clearAccessToken(config, resource?, organizationId?)` is now exported from
 `@logto/next/server-actions`.
 
+The RSC helpers (`getAccessTokenRSC()` / `getOrganizationTokenRSC()`) intentionally do not accept
+`forceRefresh`: an RSC cannot write cookies, so a forced exchange there would drop the refreshed
+tokens and any rotated Refresh Token, which can break subsequent requests. Use a server action or
+API route when you need a forced refresh.
+
 Note that a token can still only carry scopes that were requested in the original authorization
 request. Introducing a brand new scope continues to require a new authorization request, e.g.
 `signIn({ prompt: 'consent' })`.
