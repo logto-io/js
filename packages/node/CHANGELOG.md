@@ -1,5 +1,14 @@
 # Change Log
 
+## 3.1.11
+
+### Patch Changes
+
+- f09212f: cache OIDC discovery metadata across server-side client instances and normalize non-JSON request failures
+- Updated dependencies [f09212f]
+- Updated dependencies [bbd291f]
+  - @logto/client@3.1.9
+
 ## 3.1.10
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # Change Log
 
+## 3.0.14
+
+### Patch Changes
+
+- Updated dependencies [f09212f]
+- Updated dependencies [bbd291f]
+  - @logto/client@3.1.9
+
 ## 3.0.13
 
 ### Patch Changes

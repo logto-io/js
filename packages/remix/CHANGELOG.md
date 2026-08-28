@@ -1,5 +1,12 @@
 # Change Log
 
+## 3.0.15
+
+### Patch Changes
+
+- Updated dependencies [f09212f]
+  - @logto/node@3.1.11
+
 ## 3.0.14
 
 ### Patch Changes
