@@ -103,43 +103,28 @@ importers:
 
   packages/angular:
     dependencies:
-      '@angular/common':
-        specifier: ^20.3.27
-        version: 20.3.29(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/core':
         specifier: ^20.3.27
         version: 20.3.29(rxjs@7.8.1)(zone.js@0.15.0)
-      '@angular/router':
-        specifier: ^20.0.0
-        version: 20.3.15(@angular/common@20.3.29(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@20.3.15(@angular/common@20.3.29(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1)
-      '@logto/js':
+      '@logto/browser':
         specifier: workspace:^
-        version: link:../js
-      '@silverhand/essentials':
-        specifier: ^2.9.3
-        version: 2.9.3
-      rxjs:
-        specifier: ^6.5.3 || ^7.4.0
-        version: 7.8.1
+        version: link:../browser
     devDependencies:
       '@silverhand/eslint-config':
         specifier: ^6.0.1
         version: 6.0.1(@types/eslint@9.6.1)(eslint@8.57.0)(prettier@3.0.0)(typescript@5.7.2)
-      '@silverhand/eslint-config-react':
-        specifier: ^6.0.2
-        version: 6.0.2(@types/eslint@9.6.1)(eslint@8.57.0)(postcss@8.5.26)(prettier@3.0.0)(typescript@5.7.2)
       '@silverhand/ts-config':
         specifier: ^6.0.0
         version: 6.0.0(typescript@5.7.2)
-      '@silverhand/ts-config-react':
-        specifier: ^6.0.0
-        version: 6.0.0(typescript@5.7.2)
-      angular-auth-oidc-client:
-        specifier: ^20.0.3
-        version: 20.0.3(@angular/common@20.3.29(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(@angular/router@20.3.15(@angular/common@20.3.29(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@20.3.15(@angular/common@20.3.29(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1))(rxjs@7.8.1)
+      '@vitest/coverage-v8':
+        specifier: 3.2.6
+        version: 3.2.6(vitest@3.2.6(@types/node@22.10.0)(happy-dom@20.8.9)(jiti@2.7.0)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.9.0))
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
+      happy-dom:
+        specifier: ^20.0.8
+        version: 20.8.9
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.0
@@ -1489,13 +1474,6 @@ packages:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
 
-  '@angular/common@20.3.29':
-    resolution: {integrity: sha512-tlX353N11Uu9Cqn7EssfQNh7zjML9ddHRzhlo+3rsaxd+ngqsFpXieogBUSoo5yDhY3ACam/Bls9aGMfklr2SA==}
-    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
-    peerDependencies:
-      '@angular/core': 20.3.29
-      rxjs: ^6.5.3 || ^7.4.0
-
   '@angular/core@20.3.29':
     resolution: {integrity: sha512-aOgEd1+YxC1bcn6Mju0rfz/2/yJyOGd38qY+DEaRDIS24nB6Epr6i0fY6OUW2uDG/nQUyY9kt1L7xjg+1aVitQ==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
@@ -1508,26 +1486,6 @@ packages:
         optional: true
       zone.js:
         optional: true
-
-  '@angular/platform-browser@20.3.15':
-    resolution: {integrity: sha512-TxRM/wTW/oGXv/3/Iohn58yWoiYXOaeEnxSasiGNS1qhbkcKtR70xzxW6NjChBUYAixz2ERkLURkpx3pI8Q6Dw==}
-    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
-    peerDependencies:
-      '@angular/animations': 20.3.15
-      '@angular/common': ^20.3.27
-      '@angular/core': ^20.3.27
-    peerDependenciesMeta:
-      '@angular/animations':
-        optional: true
-
-  '@angular/router@20.3.15':
-    resolution: {integrity: sha512-6+qgk8swGSoAu7ISSY//GatAyCP36hEvvUgvjbZgkXLLH9yUQxdo77ij05aJ5s0OyB25q/JkqS8VTY0z1yE9NQ==}
-    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
-    peerDependencies:
-      '@angular/common': ^20.3.27
-      '@angular/core': ^20.3.27
-      '@angular/platform-browser': 20.3.15
-      rxjs: ^6.5.3 || ^7.4.0
 
   '@auth/core@0.41.3':
     resolution: {integrity: sha512-sJ3JMHHkXMD3aOjopv7mOBTO1Ocw4b0fAEXJBz6k7YHLpYQI6C40jCUPc5fNvUKxXRXNE1/sRISA15UrwWJBTw==}
@@ -5114,14 +5072,6 @@ packages:
 
   alien-signals@3.2.1:
     resolution: {integrity: sha512-I8FjmltrfnDFoZedi5CG8DghVYNhzb/Ijluz7tCSJH0xpd0484Kowhbb1XDYOxfJpU1p5wnM2X54dA+IfGyD1g==}
-
-  angular-auth-oidc-client@20.0.3:
-    resolution: {integrity: sha512-JwYdFWRz8/Bya8NLFiynKD3Znit5JCxKrlCYZqAgIPiaWZIsh5SMtvEZnjFF27GIStD26NegRsevZs8OOlsrag==}
-    peerDependencies:
-      '@angular/common': ^20.3.27
-      '@angular/core': ^20.3.27
-      '@angular/router': '>=20.0.0'
-      rxjs: ^6.5.3 || ^7.4.0
 
   ansi-escapes@5.0.0:
     resolution: {integrity: sha512-5GFMVX8HqE/TB+FuBJGuO5XG0WrsA6ptUqoODaT/n9mmUaZFkqnBueB4leqGBCmrUHnCnC4PCZTCd0E7QQ83bA==}
@@ -9566,9 +9516,6 @@ packages:
     resolution: {integrity: sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==}
     engines: {iojs: '>=1.0.0', node: '>=0.10.0'}
 
-  rfc4648@1.5.3:
-    resolution: {integrity: sha512-MjOWxM065+WswwnmNONOT+bD1nXzY9Km6u3kzvnx8F8/HXGZdz3T6e6vZJ8Q/RIMUSp/nxqjH3GwvJDy8ijeQQ==}
-
   rfdc@1.4.1:
     resolution: {integrity: sha512-q1b3N5QkRUWUl7iyylaaj3kOpIT0N2i9MqIEQXP73GVsN9cw3fdx8X63cEmWhJGi2PPCF23Ijp7ktmd39rawIA==}
 
@@ -11187,32 +11134,12 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.13
       '@jridgewell/trace-mapping': 0.3.31
 
-  '@angular/common@20.3.29(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)':
-    dependencies:
-      '@angular/core': 20.3.29(rxjs@7.8.1)(zone.js@0.15.0)
-      rxjs: 7.8.1
-      tslib: 2.8.1
-
   '@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0)':
     dependencies:
       rxjs: 7.8.1
       tslib: 2.8.1
     optionalDependencies:
       zone.js: 0.15.0
-
-  '@angular/platform-browser@20.3.15(@angular/common@20.3.29(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))':
-    dependencies:
-      '@angular/common': 20.3.29(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
-      '@angular/core': 20.3.29(rxjs@7.8.1)(zone.js@0.15.0)
-      tslib: 2.8.1
-
-  '@angular/router@20.3.15(@angular/common@20.3.29(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@20.3.15(@angular/common@20.3.29(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1)':
-    dependencies:
-      '@angular/common': 20.3.29(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
-      '@angular/core': 20.3.29(rxjs@7.8.1)(zone.js@0.15.0)
-      '@angular/platform-browser': 20.3.15(@angular/common@20.3.29(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))
-      rxjs: 7.8.1
-      tslib: 2.8.1
 
   '@auth/core@0.41.3':
     dependencies:
@@ -14302,26 +14229,6 @@ snapshots:
       - supports-color
       - typescript
 
-  '@silverhand/eslint-config-react@6.0.2(@types/eslint@9.6.1)(eslint@8.57.0)(postcss@8.5.26)(prettier@3.0.0)(typescript@5.7.2)':
-    dependencies:
-      '@silverhand/eslint-config': 6.0.1(@types/eslint@9.6.1)(eslint@8.57.0)(prettier@3.0.0)(typescript@5.7.2)
-      eslint-config-xo-react: 0.27.0(eslint-plugin-react-hooks@4.6.0(eslint@8.57.0))(eslint-plugin-react@7.34.1(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-jsx-a11y: 6.8.0(eslint@8.57.0)
-      eslint-plugin-react: 7.34.1(eslint@8.57.0)
-      eslint-plugin-react-hooks: 4.6.0(eslint@8.57.0)
-      postcss-scss: 4.0.9(postcss@8.5.26)
-      stylelint-config-xo: 0.22.0
-      stylelint-scss: 6.2.1
-    transitivePeerDependencies:
-      - '@types/eslint'
-      - eslint
-      - eslint-import-resolver-node
-      - eslint-import-resolver-webpack
-      - postcss
-      - prettier
-      - supports-color
-      - typescript
-
   '@silverhand/eslint-config@6.0.1(@types/eslint@9.6.1)(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)':
     dependencies:
       '@silverhand/eslint-plugin-fp': 2.5.0(eslint@8.57.0)
@@ -15897,15 +15804,6 @@ snapshots:
   alien-signals@0.2.2: {}
 
   alien-signals@3.2.1: {}
-
-  angular-auth-oidc-client@20.0.3(@angular/common@20.3.29(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(@angular/router@20.3.15(@angular/common@20.3.29(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@20.3.15(@angular/common@20.3.29(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1))(rxjs@7.8.1):
-    dependencies:
-      '@angular/common': 20.3.29(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
-      '@angular/core': 20.3.29(rxjs@7.8.1)(zone.js@0.15.0)
-      '@angular/router': 20.3.15(@angular/common@20.3.29(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@20.3.15(@angular/common@20.3.29(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@20.3.29(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1)
-      rfc4648: 1.5.3
-      rxjs: 7.8.1
-      tslib: 2.8.1
 
   ansi-escapes@5.0.0:
     dependencies:
@@ -21359,8 +21257,6 @@ snapshots:
 
   reusify@1.0.4: {}
 
-  rfc4648@1.5.3: {}
-
   rfdc@1.4.1: {}
 
   rimraf@3.0.2:
@@ -21963,11 +21859,6 @@ snapshots:
       postcss: 8.5.26
       postcss-selector-parser: 7.1.0
 
-  stylelint-config-xo@0.22.0:
-    dependencies:
-      stylelint-declaration-block-no-ignored-properties: 2.8.0
-      stylelint-order: 6.0.4
-
   stylelint-config-xo@0.22.0(stylelint@16.9.0(typescript@5.3.3)):
     dependencies:
       stylelint: 16.9.0(typescript@5.3.3)
@@ -21980,8 +21871,6 @@ snapshots:
       stylelint-declaration-block-no-ignored-properties: 2.8.0(stylelint@16.9.0(typescript@5.8.3))
       stylelint-order: 6.0.4(stylelint@16.9.0(typescript@5.8.3))
 
-  stylelint-declaration-block-no-ignored-properties@2.8.0: {}
-
   stylelint-declaration-block-no-ignored-properties@2.8.0(stylelint@16.9.0(typescript@5.3.3)):
     dependencies:
       stylelint: 16.9.0(typescript@5.3.3)
@@ -21989,11 +21878,6 @@ snapshots:
   stylelint-declaration-block-no-ignored-properties@2.8.0(stylelint@16.9.0(typescript@5.8.3)):
     dependencies:
       stylelint: 16.9.0(typescript@5.8.3)
-
-  stylelint-order@6.0.4:
-    dependencies:
-      postcss: 8.5.26
-      postcss-sorting: 8.0.2(postcss@8.5.26)
 
   stylelint-order@6.0.4(stylelint@16.9.0(typescript@5.3.3)):
     dependencies:
@@ -22006,14 +21890,6 @@ snapshots:
       postcss: 8.5.26
       postcss-sorting: 8.0.2(postcss@8.5.26)
       stylelint: 16.9.0(typescript@5.8.3)
-
-  stylelint-scss@6.2.1:
-    dependencies:
-      known-css-properties: 0.29.0
-      postcss-media-query-parser: 0.2.3
-      postcss-resolve-nested-selector: 0.1.1
-      postcss-selector-parser: 6.0.16
-      postcss-value-parser: 4.2.0
 
   stylelint-scss@6.2.1(stylelint@16.9.0(typescript@5.3.3)):
     dependencies:
