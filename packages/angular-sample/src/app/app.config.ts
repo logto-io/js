@@ -1,27 +1,17 @@
-import { ApplicationConfig } from '@angular/core';
-import { provideRouter } from '@angular/router';
-import { provideAuth } from 'angular-auth-oidc-client';
+import { provideHttpClient, withFetch } from "@angular/common/http";
+import { type ApplicationConfig } from "@angular/core";
+import { provideClientHydration } from "@angular/platform-browser";
+import { provideRouter } from "@angular/router";
+import { provideLogto } from "@logto/angular";
 
-import { routes } from './app.routes';
-import { provideClientHydration } from '@angular/platform-browser';
-import { provideHttpClient, withFetch } from '@angular/common/http';
-import { UserScope, buildAngularAuthConfig } from '@logto/angular';
+import { routes } from "./app.routes";
+import { logtoConfig } from "./logto.config";
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(withFetch()),
-    provideAuth({
-      config: buildAngularAuthConfig({
-        endpoint: '<your-logto-endpoint>',
-        appId: '<your-app-id>',
-        scopes: [UserScope.Email], // Replace with your scopes
-        redirectUri: '<your-app-redirect-uri>',
-        postLogoutRedirectUri: '<your-app-post-logout-redirect-uri>',
-        // See https://docs.logto.io/sdk/angular/ for more information
-        // resource: 'https://default.logto.app/api'
-      })
-    }),
+    provideLogto(logtoConfig),
     provideRouter(routes),
-    provideClientHydration()
-  ]
+    provideClientHydration(),
+  ],
 };

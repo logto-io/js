@@ -1,9 +1,56 @@
 <h1>Hello, {{ title }}</h1>
-<p>Congratulations! Your app is running. 🎉</p>
-<button *ngIf="!isAuthenticated" (click)="signIn()">Sign in</button>
-<ng-container *ngIf="isAuthenticated">
-  <pre>{{ userData | json }}</pre>
-  <p>Access token: {{ accessToken }}</p>
-  <button (click)="signOut()">Sign out</button>
-</ng-container>
+
+@if (logto.error(); as error) {
+<p role="alert">{{ error.message }}</p>
+} @if (logto.isLoading()) {
+<p>Loading authentication state…</p>
+} @else if (logto.isAuthenticated()) {
+<p>You are signed in.</p>
+<button type="button" (click)="loadUserInfo()">Load user info</button>
+<button type="button" (click)="loadIdTokenClaims()">
+  Load ID token claims
+</button>
+<label>
+  API resource
+  <select #resource>
+    @for (value of apiResources; track value) {
+    <option [value]="value">{{ value }}</option>
+    }
+  </select>
+</label>
+<button type="button" (click)="loadAccessTokenClaims(resource.value)">
+  Load selected API token claims
+</button>
+
+<label>
+  Organization ID
+  <input #organizationId type="text" placeholder="organization-id" />
+</label>
+<button
+  type="button"
+  [disabled]="!organizationId.value"
+  (click)="loadOrganizationTokenClaims(organizationId.value)"
+>
+  Load organization token claims
+</button>
+
+@if (userInfo(); as value) {
+<h2>User info</h2>
+<pre>{{ value | json }}</pre>
+} @if (idTokenClaims(); as value) {
+<h2>ID token claims</h2>
+<pre>{{ value | json }}</pre>
+} @if (accessTokenClaims(); as value) {
+<h2>API token claims</h2>
+<pre>{{ value | json }}</pre>
+} @if (organizationTokenClaims(); as value) {
+<h2>Organization token claims</h2>
+<pre>{{ value | json }}</pre>
+}
+
+<button type="button" (click)="signOut()">Sign out</button>
+} @else {
+<button type="button" (click)="signIn()">Sign in</button>
+}
+
 <router-outlet />

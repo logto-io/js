@@ -1,43 +1,59 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
-import type { UserInfoResponse } from '@logto/angular';
+import { JsonPipe } from "@angular/common";
+import { Component, inject, signal } from "@angular/core";
+import { RouterOutlet } from "@angular/router";
+import {
+  LogtoService,
+  type AccessTokenClaims,
+  type IdTokenClaims,
+  type UserInfoResponse,
+} from "@logto/angular";
+
+import { apiResources } from "./logto.config";
 
 @Component({
-  selector: 'app-root',
+  selector: "app-root",
   standalone: true,
-  imports: [RouterOutlet, CommonModule],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  imports: [JsonPipe, RouterOutlet],
+  templateUrl: "./app.component.html",
+  styleUrl: "./app.component.scss",
 })
-export class AppComponent implements OnInit {
-  title = '@logto/angular-sample';
-  isAuthenticated = false;
-  userData?: UserInfoResponse;
-  idToken?: string;
-  accessToken?: string;
+export class AppComponent {
+  readonly title = "@logto/angular-sample";
+  readonly apiResources = apiResources;
+  readonly logto = inject(LogtoService);
+  readonly userInfo = signal<UserInfoResponse | undefined>(undefined);
+  readonly idTokenClaims = signal<IdTokenClaims | undefined>(undefined);
+  readonly accessTokenClaims = signal<AccessTokenClaims | undefined>(undefined);
+  readonly organizationTokenClaims = signal<AccessTokenClaims | undefined>(
+    undefined,
+  );
 
-  constructor(public oidcSecurityService: OidcSecurityService) { }
-
-  ngOnInit() {
-    this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated, userData, idToken, accessToken }) => {
-      console.log('app authenticated', isAuthenticated, userData);
-      this.isAuthenticated = isAuthenticated;
-      this.userData = userData;
-      this.idToken = idToken;
-      this.accessToken = accessToken;
+  async signIn() {
+    await this.logto.signIn({
+      redirectUri: `${window.location.origin}/callback`,
+      postRedirectUri: window.location.origin,
     });
   }
 
-  signIn() {
-    this.oidcSecurityService.authorize();
+  async signOut() {
+    await this.logto.signOut(window.location.origin);
   }
 
-  signOut() {
-    this.oidcSecurityService.logoff().subscribe((result) => {
-      console.log('app sign-out', result);
-      this.isAuthenticated = false;
-    });
+  async loadUserInfo() {
+    this.userInfo.set(await this.logto.fetchUserInfo());
+  }
+
+  async loadIdTokenClaims() {
+    this.idTokenClaims.set(await this.logto.getIdTokenClaims());
+  }
+
+  async loadAccessTokenClaims(resource: string) {
+    this.accessTokenClaims.set(await this.logto.getAccessTokenClaims(resource));
+  }
+
+  async loadOrganizationTokenClaims(organizationId: string) {
+    this.organizationTokenClaims.set(
+      await this.logto.getOrganizationTokenClaims(organizationId),
+    );
   }
 }
