@@ -1,42 +1,59 @@
 # Logto Angular sample
 
-A sample Angular application that demonstrates how to integrate Logto with `angular-auth-oidc-client`.
+A sample Angular application demonstrating the first-party `@logto/angular` v2 SDK with browser rendering, hydration, and SSR.
 
-- **Configuration**: See [app.config.ts](src/app/app.config.ts).
-- **Usage**: See [app.component.ts](src/app/app.component.ts).
+The sample covers:
 
-For more information about `angular-auth-oidc-client`, see its [repository](https://github.com/damienbod/angular-auth-oidc-client) and official [documentation](https://angular-auth-oidc-client.com/).
+- Angular provider and Signal-based authentication state
+- A dedicated `/callback` route
+- Sign-in and sign-out redirects
+- Userinfo and ID-token claims
+- Multiple API resources and organization token claims
+- SSR-safe post-render callback handling
+
+## Configure Logto
+
+Update the endpoint, app ID, API resources, and scopes in [`src/app/logto.config.ts`](src/app/logto.config.ts). The v2 SDK accepts multiple resources through the `resources` array.
+
+Register these redirect URIs in the Logto Console:
+
+- Sign-in redirect URI: `http://localhost:4200/callback`
+- Post sign-out redirect URI: `http://localhost:4200`
+
+If you want to request an organization token, enter an organization ID in the running sample. The `urn:logto:scope:organizations` scope is included by `UserScope.Organizations`.
 
 ## Install dependencies
 
-This project is excluded from the workspace. To run the sample, you need to manually install project dependencies.
-
-For PNPM users, run:
+This project is excluded from the workspace. Install its dependencies separately:
 
 ```sh
 pnpm install --ignore-workspace
 ```
 
----
-
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.2.0.
+The sample depends on `@logto/angular` v2.
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+```sh
+pnpm start
+```
 
-## Code scaffolding
+Open `http://localhost:4200/`.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Production and SSR build
 
-## Build
+```sh
+pnpm build
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Serve the generated SSR application with:
 
-## Running unit tests
+```sh
+pnpm serve:ssr:@logto/angular-sample
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Unit tests
 
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+```sh
+pnpm test --watch=false --browsers=ChromeHeadless
+```

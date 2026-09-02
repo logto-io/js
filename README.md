@@ -34,7 +34,7 @@ The monorepo for SDKs and working samples written in JavaScript (Well, mostly in
 
 | Name                                                                 | Description                                                              |
 | -------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| [angular-sample](./packages/angular-sample/)                         | A sample of using `angular-auth-oidc-client` to integrate with Logto.    |
+| [angular-sample](./packages/angular-sample/)                         | Angular sample using the first-party `@logto/angular` SDK.               |
 | [browser-sample](./packages/browser-sample/)                         | A sample of using Logto browser SDK.                                     |
 | [chrome-extension-sample](./packages/chrome-extension-sample/)       | A sample Chrome extension that demonstrates how to integrate Logto.      |
 | [express-sample](./packages/express-sample/)                         | A sample of using Logto Express SDK.                                     |
