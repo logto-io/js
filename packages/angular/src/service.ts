@@ -68,7 +68,7 @@ export class LogtoService {
     this.initializationPromise = initializationPromise;
     const isInitialized = await initializationPromise;
 
-    if (!isInitialized && this.initializationPromise === initializationPromise) {
+    if (!isInitialized) {
       this.initializationPromise = undefined;
     }
   }
