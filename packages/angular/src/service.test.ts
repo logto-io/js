@@ -22,6 +22,7 @@ const createClient = () => {
   };
   const methods = {
     isAuthenticated: vi.fn(async () => false),
+    isSignInRedirected: vi.fn(async () => false),
     handleSignInCallback: vi.fn(async () => {
       await Promise.resolve();
     }),
@@ -85,6 +86,30 @@ describe('LogtoService', () => {
     expect(service.isAuthenticated()).toBe(false);
     expect(service.isLoading()).toBe(false);
     expect(service.error()).toBe(error);
+  });
+
+  it('retries initialization after a failure and caches the successful result', async () => {
+    const { client, methods } = createClient();
+    const error = new Error('Storage unavailable');
+    methods.isAuthenticated.mockRejectedValueOnce(error).mockResolvedValueOnce(true);
+    const service = new LogtoService(client);
+
+    await Promise.all([service.initialize(), service.initialize()]);
+
+    expect(methods.isAuthenticated).toHaveBeenCalledTimes(1);
+    expect(service.error()).toBe(error);
+    expect(service.isLoading()).toBe(false);
+
+    const retry = service.initialize();
+
+    expect(service.isLoading()).toBe(true);
+    await retry;
+    await service.initialize();
+
+    expect(methods.isAuthenticated).toHaveBeenCalledTimes(2);
+    expect(service.isAuthenticated()).toBe(true);
+    expect(service.error()).toBeUndefined();
+    expect(service.isLoading()).toBe(false);
   });
 
   it('keeps loading until all concurrent operations settle', async () => {
@@ -183,6 +208,21 @@ describe('LogtoService', () => {
     expect(service.isAuthenticated()).toBe(true);
   });
 
+  it('checks whether the current URL is a sign-in redirect', async () => {
+    const { client, methods } = createClient();
+    methods.isSignInRedirected.mockResolvedValue(true);
+    const service = new LogtoService(client);
+    await service.initialize();
+
+    await expect(service.isSignInRedirected('https://app.example/callback?code=foo')).resolves.toBe(
+      true
+    );
+
+    expect(methods.isSignInRedirected).toHaveBeenCalledWith(
+      'https://app.example/callback?code=foo'
+    );
+  });
+
   it('updates authentication only after all tokens are cleared successfully', async () => {
     const { client, methods } = createClient();
     methods.isAuthenticated.mockResolvedValue(true);
@@ -238,7 +278,7 @@ describe('LogtoService', () => {
     expect(service.error()).toBe(error);
   });
 
-  it('delegates sign-out and keeps loading active for navigation', async () => {
+  it('delegates sign-out and settles loading after starting navigation', async () => {
     const { client, methods } = createClient();
     const service = new LogtoService(client);
     await service.initialize();
@@ -246,6 +286,6 @@ describe('LogtoService', () => {
     await service.signOut('https://app.example/');
 
     expect(methods.signOut).toHaveBeenCalledWith('https://app.example/');
-    expect(service.isLoading()).toBe(true);
+    expect(service.isLoading()).toBe(false);
   });
 });

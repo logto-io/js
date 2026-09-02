@@ -22,18 +22,19 @@ export class LogtoService {
   /** Whether initialization or one or more SDK operations are pending. */
   readonly isLoading: Signal<boolean>;
 
-  /** The latest SDK operation error, if any. */
+  /** The latest SDK operation error, cleared when another operation starts or by {@link clearError}. */
   readonly error: Signal<Error | undefined>;
 
   private readonly authenticatedState = signal(false);
-  private readonly loadingCount = signal(1);
+  private readonly initializationStarted = signal(false);
+  private readonly loadingCount = signal(0);
   // eslint-disable-next-line unicorn/no-useless-undefined -- Angular signal requires an initial value
   private readonly errorState = signal<Error | undefined>(undefined);
-  private initializationPromise?: Promise<void>;
+  private initializationPromise?: Promise<boolean>;
 
   constructor(private readonly client: LogtoClient) {
     this.isAuthenticated = this.authenticatedState.asReadonly();
-    this.isLoading = computed(() => this.loadingCount() > 0);
+    this.isLoading = computed(() => !this.initializationStarted() || this.loadingCount() > 0);
     this.error = this.errorState.asReadonly();
   }
 
@@ -45,22 +46,31 @@ export class LogtoService {
    */
   async initialize(): Promise<void> {
     if (this.initializationPromise) {
-      return this.initializationPromise;
+      await this.initializationPromise;
+      return;
     }
 
     this.clearError();
+    this.initializationStarted.set(true);
+    this.startLoading();
     const initializationPromise = (async () => {
       try {
         this.authenticatedState.set(await this.client.isAuthenticated());
+        return true;
       } catch (error: unknown) {
         this.errorState.set(toError(error));
+        return false;
       } finally {
         this.stopLoading();
       }
     })();
 
     this.initializationPromise = initializationPromise;
-    return initializationPromise;
+    const isInitialized = await initializationPromise;
+
+    if (!isInitialized && this.initializationPromise === initializationPromise) {
+      this.initializationPromise = undefined;
+    }
   }
 
   /** Start the Logto sign-in redirect flow. */
@@ -83,6 +93,7 @@ export class LogtoService {
     interactionMode?: SignInOptions['interactionMode'],
     loginHint?: SignInOptions['loginHint']
   ): Promise<void> {
+    // Keep authentication state stable while the redirect starts to avoid an intermediate UI state.
     return this.run(async () => {
       if (typeof options === 'string' || options instanceof URL) {
         return this.client.signIn(options, interactionMode, loginHint);
@@ -94,7 +105,13 @@ export class LogtoService {
 
   /** Revoke local credentials and start the Logto sign-out redirect flow. */
   async signOut(postLogoutRedirectUri?: string): Promise<void> {
-    return this.run(async () => this.client.signOut(postLogoutRedirectUri), true);
+    // Keep authentication state stable while the redirect starts to avoid an intermediate UI state.
+    return this.run(async () => this.client.signOut(postLogoutRedirectUri));
+  }
+
+  /** Check whether the current URL is the redirect URI for an active sign-in session. */
+  async isSignInRedirected(url: string): Promise<boolean> {
+    return this.run(async () => this.client.isSignInRedirected(url));
   }
 
   /** Exchange the authorization callback for tokens and mark the session as authenticated. */
