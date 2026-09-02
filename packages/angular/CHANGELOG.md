@@ -1,5 +1,11 @@
 # @logto/angular
 
+## 2.0.0
+
+### Major Changes
+
+- db682e2: rebuild the Angular SDK on the Logto Browser client
+
 ## 1.0.4
 
 ### Patch Changes
