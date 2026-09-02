@@ -19,9 +19,13 @@ export class CallbackComponent {
 
   constructor() {
     afterNextRender(() => {
-      void this.logto
-        .handleSignInCallback(window.location.href)
-        .catch(() => undefined);
+      void (async () => {
+        const callbackUri = window.location.href;
+
+        if (await this.logto.isSignInRedirected(callbackUri)) {
+          await this.logto.handleSignInCallback(callbackUri);
+        }
+      })().catch(() => undefined);
     });
   }
 }
