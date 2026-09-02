@@ -94,13 +94,17 @@ export class LogtoService {
     loginHint?: SignInOptions['loginHint']
   ): Promise<void> {
     // Keep authentication state stable while the redirect starts to avoid an intermediate UI state.
-    return this.run(async () => {
-      if (typeof options === 'string' || options instanceof URL) {
-        return this.client.signIn(options, interactionMode, loginHint);
-      }
+    return this.run(
+      async () => {
+        if (typeof options === 'string' || options instanceof URL) {
+          return this.client.signIn(options, interactionMode, loginHint);
+        }
 
-      return this.client.signIn(options);
-    }, true);
+        return this.client.signIn(options);
+      },
+      // Keep loading active while the redirect navigates away.
+      true
+    );
   }
 
   /** Revoke local credentials and start the Logto sign-out redirect flow. */
@@ -111,7 +115,7 @@ export class LogtoService {
 
   /** Check whether the current URL is the redirect URI for an active sign-in session. */
   async isSignInRedirected(url: string): Promise<boolean> {
-    return this.run(async () => this.client.isSignInRedirected(url));
+    return this.client.isSignInRedirected(url);
   }
 
   /** Exchange the authorization callback for tokens and mark the session as authenticated. */

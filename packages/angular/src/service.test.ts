@@ -208,11 +208,14 @@ describe('LogtoService', () => {
     expect(service.isAuthenticated()).toBe(true);
   });
 
-  it('checks whether the current URL is a sign-in redirect', async () => {
+  it('checks whether the current URL is a sign-in redirect without changing operation state', async () => {
     const { client, methods } = createClient();
     methods.isSignInRedirected.mockResolvedValue(true);
     const service = new LogtoService(client);
     await service.initialize();
+    const error = new Error('Not authenticated');
+    methods.getAccessToken.mockRejectedValueOnce(error);
+    await expect(service.getAccessToken()).rejects.toBe(error);
 
     await expect(service.isSignInRedirected('https://app.example/callback?code=foo')).resolves.toBe(
       true
@@ -221,6 +224,8 @@ describe('LogtoService', () => {
     expect(methods.isSignInRedirected).toHaveBeenCalledWith(
       'https://app.example/callback?code=foo'
     );
+    expect(service.error()).toBe(error);
+    expect(service.isLoading()).toBe(false);
   });
 
   it('updates authentication only after all tokens are cleared successfully', async () => {

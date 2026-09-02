@@ -2,8 +2,12 @@ import {
   APP_INITIALIZER,
   createEnvironmentInjector,
   platformCore,
+  provideZonelessChangeDetection,
+  runInInjectionContext,
   type EnvironmentInjector,
   type Provider,
+  ɵAfterRenderManager,
+  ɵINJECTOR_SCOPE,
 } from '@angular/core';
 import LogtoClient from '@logto/browser';
 
@@ -19,7 +23,12 @@ const platform = platformCore();
 const platformInjector = platform.injector as EnvironmentInjector;
 const createInjector = (additionalProviders: Provider[] = []) =>
   createEnvironmentInjector(
-    [provideLogto(config, { unstable_enableCache: true }), ...additionalProviders],
+    [
+      { provide: ɵINJECTOR_SCOPE, useValue: 'root' },
+      provideZonelessChangeDetection(),
+      provideLogto(config, { unstable_enableCache: true }),
+      ...additionalProviders,
+    ],
     platformInjector
   );
 
@@ -60,16 +69,28 @@ describe('provideLogto', () => {
     injector.destroy();
   });
 
-  it('registers non-blocking browser initialization with Angular', () => {
+  it('initializes after the first browser render without blocking app initialization', async () => {
     const isAuthenticated = vi.fn(async () => true);
     const client = { isAuthenticated } as unknown as LogtoClient;
     const injector = createInjector([{ provide: LOGTO_CLIENT, useValue: client }]);
 
     const initializers = injector.get(APP_INITIALIZER);
+    const service = injector.get(LogtoService);
 
     expect(initializers).toHaveLength(1);
     expect(isAuthenticated).not.toHaveBeenCalled();
-    expect(injector.get(LogtoService).isLoading()).toBe(true);
+    expect(service.isLoading()).toBe(true);
+
+    await runInInjectionContext(injector, async () => initializers[0]?.());
+
+    expect(isAuthenticated).not.toHaveBeenCalled();
+    injector.get(ɵAfterRenderManager).execute();
+
+    await vi.waitFor(() => {
+      expect(isAuthenticated).toHaveBeenCalledTimes(1);
+      expect(service.isAuthenticated()).toBe(true);
+      expect(service.isLoading()).toBe(false);
+    });
     injector.destroy();
   });
 });
