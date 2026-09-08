@@ -33,20 +33,22 @@ export const createLogtoRequestContext = (
   runtime: SessionRuntime,
   createClient: CreateLogtoRequestClient
 ): LogtoRequestContext => {
-  const getContext = async (options: GetLogtoContextOptions = {}) => {
-    if (!options.fetchUserInfo) {
-      return createClient(runtime.session).getContext();
-    }
-
-    return runtime.checkpoint(async (session) =>
-      createClient(session).getContext({ fetchUserInfo: true })
-    );
-  };
-
   const getAccessToken = async ({ resource, organizationId }: GetAccessTokenOptions = {}) =>
     runtime.checkpoint(async (session) =>
       createClient(session).getAccessToken(resource, organizationId)
     );
+
+  const getContext = async (options: GetLogtoContextOptions = {}) => {
+    const context = await createClient(runtime.session).getContext();
+
+    if (!options.fetchUserInfo || !context.isAuthenticated) {
+      return context;
+    }
+
+    await getAccessToken();
+
+    return createClient(runtime.session).getContext({ fetchUserInfo: true });
+  };
 
   const getOrganizationToken = async (organizationId: string) =>
     runtime.checkpoint(async (session) =>

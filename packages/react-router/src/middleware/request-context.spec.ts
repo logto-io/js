@@ -79,7 +79,7 @@ describe('middleware:createLogtoRequestContext', () => {
     expect(store.commitSession).not.toHaveBeenCalled();
   });
 
-  it('checkpoints context reads that fetch user info', async () => {
+  it('commits token acquisition before fetching user info', async () => {
     const store = createTestSessionStorage({ refreshToken: 'old' });
     const runtime = await SessionRuntime.create({
       cookieHeader: sessionCookie,
@@ -89,12 +89,13 @@ describe('middleware:createLogtoRequestContext', () => {
     const getContext = vi.fn(
       async (_options?: { fetchUserInfo?: boolean }) => authenticatedContext
     );
+    const getAccessToken = vi.fn(async () => 'access-token');
     const createClient: CreateLogtoRequestClient = (session) => ({
-      getContext: async (options) => {
+      getContext,
+      getAccessToken: async () => {
         session.set('refreshToken', 'rotated');
-        return getContext(options);
+        return getAccessToken();
       },
-      getAccessToken: async () => 'access-token',
       getOrganizationToken: async () => 'organization-token',
     });
     const context = createLogtoRequestContext(runtime, createClient);
@@ -102,7 +103,38 @@ describe('middleware:createLogtoRequestContext', () => {
     await expect(context.getContext({ fetchUserInfo: true })).resolves.toEqual(
       authenticatedContext
     );
+    expect(getContext).toHaveBeenNthCalledWith(1);
     expect(getContext).toHaveBeenCalledWith({ fetchUserInfo: true });
+    expect(getAccessToken).toHaveBeenCalledOnce();
+    expect(store.getData()).toEqual({ refreshToken: 'rotated' });
+    expect(store.commitSession).toHaveBeenCalledOnce();
+  });
+
+  it('preserves rotated tokens when fetching user info fails', async () => {
+    const store = createTestSessionStorage({ refreshToken: 'old' });
+    const runtime = await SessionRuntime.create({
+      cookieHeader: sessionCookie,
+      sessionStorage: store.sessionStorage,
+      sessionCoordinator: createProcessLocalSessionCoordinator(),
+    });
+    const userInfoError = new Error('userinfo unavailable');
+    const createClient: CreateLogtoRequestClient = (session) => ({
+      getContext: async (options) => {
+        if (options?.fetchUserInfo) {
+          throw userInfoError;
+        }
+
+        return authenticatedContext;
+      },
+      getAccessToken: async () => {
+        session.set('refreshToken', 'rotated');
+        return 'access-token';
+      },
+      getOrganizationToken: async () => 'organization-token',
+    });
+    const context = createLogtoRequestContext(runtime, createClient);
+
+    await expect(context.getContext({ fetchUserInfo: true })).rejects.toBe(userInfoError);
     expect(store.getData()).toEqual({ refreshToken: 'rotated' });
     expect(store.commitSession).toHaveBeenCalledOnce();
   });
