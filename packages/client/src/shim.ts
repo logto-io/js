@@ -6,6 +6,7 @@
 
 export type {
   AccessTokenClaims,
+  FirstScreen,
   IdTokenClaims,
   LogtoErrorCode,
   UserInfoResponse,
