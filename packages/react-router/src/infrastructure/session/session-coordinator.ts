@@ -7,42 +7,39 @@
  */
 export type SessionCoordinator = {
   /** Runs an operation exclusively from other operations using the same session key. */
-  readonly runExclusive: <Result>(
-    sessionKey: string,
-    operation: () => Promise<Result>
-  ) => Promise<Result>;
+  runExclusive<Result>(sessionKey: string, operation: () => Promise<Result>): Promise<Result>;
 };
 
 type ReleaseSessionLock = () => boolean;
 type SessionLockWaiter = (release: ReleaseSessionLock) => void;
 
-class SessionLock {
+class ProcessLocalSessionLock {
   private locked = false;
   private readonly waiters = new Set<SessionLockWaiter>();
 
-  public readonly acquire = async (): Promise<ReleaseSessionLock> => {
+  public async acquire(): Promise<ReleaseSessionLock> {
     if (!this.locked) {
       this.locked = true;
-      return this.release;
+      return this.release.bind(this);
     }
 
     return new Promise<ReleaseSessionLock>((resolve) => {
       this.waiters.add(resolve);
     });
-  };
+  }
 
-  private readonly release = () => {
+  private release() {
     const nextWaiter = this.waiters.values().next();
 
     if (!nextWaiter.done) {
       this.waiters.delete(nextWaiter.value);
-      nextWaiter.value(this.release);
+      nextWaiter.value(this.release.bind(this));
       return false;
     }
 
     this.locked = false;
     return true;
-  };
+  }
 }
 
 /**
@@ -51,14 +48,14 @@ class SessionLock {
  * order is not part of this coordinator's contract.
  */
 export class ProcessLocalSessionCoordinator implements SessionCoordinator {
-  private readonly sessionLocks = new Map<string, SessionLock>();
+  private readonly sessionLocks = new Map<string, ProcessLocalSessionLock>();
 
-  public readonly runExclusive = async <Result>(
+  public async runExclusive<Result>(
     sessionKey: string,
     operation: () => Promise<Result>
-  ): Promise<Result> => {
+  ): Promise<Result> {
     const existingLock = this.sessionLocks.get(sessionKey);
-    const sessionLock = existingLock ?? new SessionLock();
+    const sessionLock = existingLock ?? new ProcessLocalSessionLock();
 
     if (!existingLock) {
       this.sessionLocks.set(sessionKey, sessionLock);
@@ -73,7 +70,7 @@ export class ProcessLocalSessionCoordinator implements SessionCoordinator {
         this.sessionLocks.delete(sessionKey);
       }
     }
-  };
+  }
 }
 
 export const createProcessLocalSessionCoordinator = (): SessionCoordinator =>

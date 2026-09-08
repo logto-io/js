@@ -62,12 +62,10 @@ export class SessionRuntime<
   FlashData extends SessionData = Data,
 > {
   /** Creates a request-scoped runtime from the incoming request cookie. */
-  public static readonly create = async <
+  public static async create<
     Data extends SessionData = SessionData,
     FlashData extends SessionData = Data,
-  >(
-    options: SessionRuntimeOptions<Data, FlashData>
-  ) => {
+  >(options: SessionRuntimeOptions<Data, FlashData>) {
     const session = await options.sessionStorage.getSession(options.cookieHeader);
 
     return new SessionRuntime({
@@ -75,7 +73,7 @@ export class SessionRuntime<
       session,
       sessionKey: createSessionKey(session),
     });
-  };
+  }
 
   /** The current session view. Its mutations remain pending until checkpoint or finalization. */
   public readonly session: TrackedSession<Data, FlashData>;
@@ -96,15 +94,17 @@ export class SessionRuntime<
   }
 
   /** Returns the latest response `Set-Cookie` header produced by this runtime. */
-  public readonly getResponseCookieHeader = () => this.responseCookieHeader;
+  public getResponseCookieHeader() {
+    return this.responseCookieHeader;
+  }
 
   /**
    * Reloads and updates the session under coordination, then persists the resulting state.
    * Mutations recorded on {@link session} while the operation is in flight remain pending.
    */
-  public readonly checkpoint = async <Result>(
+  public async checkpoint<Result>(
     operation: SessionOperation<Result, Data, FlashData>
-  ): Promise<Result> => {
+  ): Promise<Result> {
     this.assertActive();
 
     const { sessionCoordinator, sessionStorage, sessionKey } = this.options;
@@ -136,15 +136,15 @@ export class SessionRuntime<
 
       return result;
     });
-  };
+  }
 
   /**
    * Runs an operation against the latest session, then destroys it under coordination. Once
    * destroyed, further checkpoints and destruction fail and finalization performs no commit.
    */
-  public readonly destroy = async <Result>(
+  public async destroy<Result>(
     operation: SessionOperation<Result, Data, FlashData>
-  ): Promise<Result> => {
+  ): Promise<Result> {
     this.assertActive();
 
     const { sessionCoordinator, sessionStorage, sessionKey } = this.options;
@@ -164,10 +164,10 @@ export class SessionRuntime<
 
       return result;
     });
-  };
+  }
 
   /** Commits remaining mutations once and returns the latest response `Set-Cookie` header. */
-  public readonly finalize = async () => {
+  public async finalize() {
     if (this.destroyed || !this.session.hasPendingMutations) {
       return this.responseCookieHeader;
     }
@@ -175,11 +175,11 @@ export class SessionRuntime<
     await this.checkpoint(async () => true);
 
     return this.responseCookieHeader;
-  };
+  }
 
-  private readonly assertActive = () => {
+  private assertActive() {
     if (this.destroyed) {
       throw new Error('Cannot update a destroyed session.');
     }
-  };
+  }
 }
