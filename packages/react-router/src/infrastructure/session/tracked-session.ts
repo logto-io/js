@@ -11,6 +11,10 @@ const applySessionMutations = <Data, FlashData>(
   }
 };
 
+/**
+ * Wraps a React Router session and records mutations so they can be replayed onto freshly loaded
+ * session state before persistence.
+ */
 export class TrackedSession<Data = SessionData, FlashData = Data>
   implements Session<Data, FlashData>
 {
@@ -86,6 +90,7 @@ export class TrackedSession<Data = SessionData, FlashData = Data>
     ];
   }
 
+  /** Replays pending mutations in the half-open range `[startIndex, endIndex)`. */
   public readonly applyPendingMutations = (
     session: Session<Data, FlashData>,
     startIndex = 0,
@@ -94,6 +99,10 @@ export class TrackedSession<Data = SessionData, FlashData = Data>
     applySessionMutations(session, this.mutations.slice(startIndex, endIndex));
   };
 
+  /**
+   * Replaces the backing session, removes the applied mutation prefix, and replays the remaining
+   * tail so the current view still includes every pending mutation.
+   */
   public readonly adopt = (
     session: Session<Data, FlashData>,
     appliedMutationCount = this.mutations.length

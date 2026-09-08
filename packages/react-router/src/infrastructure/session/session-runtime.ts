@@ -4,18 +4,29 @@ import { createSession } from 'react-router';
 import type { SessionCoordinator } from './session-coordinator.js';
 import { TrackedSession } from './tracked-session.js';
 
+/**
+ * Work performed against the latest coordinated session state. The provided session must not be
+ * retained after the operation settles.
+ */
 export type SessionOperation<
   Result,
   Data extends SessionData = SessionData,
   FlashData extends SessionData = Data,
 > = (session: TrackedSession<Data, FlashData>) => Promise<Result>;
 
+/** Inputs for creating a request-scoped session runtime. */
 export type SessionRuntimeOptions<
   Data extends SessionData = SessionData,
   FlashData extends SessionData = Data,
 > = Readonly<{
+  /** The incoming request's `Cookie` header. */
   cookieHeader: string | undefined;
+  /**
+   * React Router session storage. Cross-request coordination requires stable session IDs;
+   * multi-instance coordination also requires shared server-side storage.
+   */
   sessionStorage: SessionStorage<Data, FlashData>;
+  /** Serializes persistence operations that share a session identifier. */
   sessionCoordinator: SessionCoordinator;
 }>;
 
@@ -39,14 +50,18 @@ const getRequestCookieHeader = (setCookieHeader: string) => {
 };
 
 /**
+ * Tracks one request's session mutations and coordinates persistence against the latest stored
+ * state. Create one runtime per request and finalize it before producing the response.
+ *
  * Cross-request coordination requires storage that returns a stable session ID. Cookie-only
- * sessions receive request-local keys because their state cannot be reloaded after another
- * response commits it.
+ * sessions receive request-local keys because they cannot reload state committed by another
+ * response.
  */
 export class SessionRuntime<
   Data extends SessionData = SessionData,
   FlashData extends SessionData = Data,
 > {
+  /** Creates a request-scoped runtime from the incoming request cookie. */
   public static readonly create = async <
     Data extends SessionData = SessionData,
     FlashData extends SessionData = Data,
@@ -62,6 +77,7 @@ export class SessionRuntime<
     });
   };
 
+  /** The current session view. Its mutations remain pending until checkpoint or finalization. */
   public readonly session: TrackedSession<Data, FlashData>;
 
   private currentCookieHeader: string | undefined;
@@ -79,8 +95,13 @@ export class SessionRuntime<
     this.session = new TrackedSession(options.session);
   }
 
+  /** Returns the latest response `Set-Cookie` header produced by this runtime. */
   public readonly getResponseCookieHeader = () => this.responseCookieHeader;
 
+  /**
+   * Reloads and updates the session under coordination, then persists the resulting state.
+   * Mutations recorded on {@link session} while the operation is in flight remain pending.
+   */
   public readonly checkpoint = async <Result>(
     operation: SessionOperation<Result, Data, FlashData>
   ): Promise<Result> => {
@@ -117,6 +138,10 @@ export class SessionRuntime<
     });
   };
 
+  /**
+   * Runs an operation against the latest session, then destroys it under coordination. Once
+   * destroyed, further checkpoints and destruction fail and finalization performs no commit.
+   */
   public readonly destroy = async <Result>(
     operation: SessionOperation<Result, Data, FlashData>
   ): Promise<Result> => {
@@ -141,6 +166,7 @@ export class SessionRuntime<
     });
   };
 
+  /** Commits remaining mutations once and returns the latest response `Set-Cookie` header. */
   public readonly finalize = async () => {
     if (this.destroyed || !this.session.hasPendingMutations) {
       return this.responseCookieHeader;

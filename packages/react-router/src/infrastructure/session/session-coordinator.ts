@@ -1,4 +1,12 @@
+/**
+ * Serializes asynchronous session operations by a stable session key.
+ *
+ * Implementations must invoke each operation once, hold exclusivity until it settles, and
+ * propagate its result or error. A slow operation must not be force-released because it may
+ * still commit stale state; the operation owns its timeout and cancellation policy.
+ */
 export type SessionCoordinator = {
+  /** Runs an operation exclusively from other operations using the same session key. */
   readonly runExclusive: <Result>(
     sessionKey: string,
     operation: () => Promise<Result>
@@ -39,7 +47,8 @@ class SessionLock {
 
 /**
  * Serializes operations only within the current JavaScript process. Multi-instance deployments
- * need a distributed coordinator together with shared server-side session storage.
+ * need a distributed coordinator together with shared server-side session storage. Acquisition
+ * order is not part of this coordinator's contract.
  */
 export class ProcessLocalSessionCoordinator implements SessionCoordinator {
   private readonly sessionLocks = new Map<string, SessionLock>();
