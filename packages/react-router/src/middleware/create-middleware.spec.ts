@@ -94,7 +94,8 @@ const stubTokenRefresh = () => {
 const runRoute = async (
   middleware: MiddlewareFunction<Response>,
   handler: RouteHandler,
-  method = 'GET'
+  method = 'GET',
+  path = '/'
 ) => {
   // `createStaticHandler` uses the Data Mode middleware type even when its response generator
   // supplies the Framework Mode response pipeline exercised here.
@@ -111,13 +112,13 @@ const runRoute = async (
   const staticHandler = createStaticHandler([
     {
       id: 'root',
-      path: '/',
+      path: '*',
       middleware: [dataMiddleware],
       loader: handler,
       action: handler,
     },
   ]);
-  const request = new Request('https://app.example.com/', {
+  const request = new Request(`${config.baseUrl}${path}`, {
     method,
     headers: { Cookie: sessionCookie },
   });
@@ -197,6 +198,52 @@ describe('middleware:createLogtoMiddleware', () => {
     expect(response.status).toBe(302);
     expect(response.headers.get('Location')).toBe('https://app.example.com/next');
     expect(response.headers.get('Set-Cookie')).toContain('logto-session=session-id');
+  });
+
+  it('runs an authentication route through the request middleware runtime', async () => {
+    const store = createTestSessionStorage();
+    const fetchRequest = vi.fn(async (input: string | URL | Request) => {
+      const url = String(input);
+
+      if (url.endsWith('/oidc/.well-known/openid-configuration')) {
+        return Response.json({
+          authorization_endpoint: `${config.endpoint}/oidc/auth`,
+          token_endpoint: `${config.endpoint}/oidc/token`,
+          userinfo_endpoint: `${config.endpoint}/oidc/me`,
+          end_session_endpoint: `${config.endpoint}/oidc/session/end`,
+          revocation_endpoint: `${config.endpoint}/oidc/token/revocation`,
+          jwks_uri: `${config.endpoint}/oidc/jwks`,
+          issuer: `${config.endpoint}/oidc`,
+        });
+      }
+
+      return new Response('Not found', { status: 404 });
+    });
+    vi.stubGlobal('fetch', fetchRequest);
+    const logto = createLogtoReactRouter(config, { sessionStorage: store.sessionStorage });
+    const authRoutes = logto.authRoutes({
+      paths: {
+        signIn: '/api/logto/sign-in',
+        signUp: '/api/logto/sign-up',
+        callback: '/api/logto/callback',
+        signOut: '/api/logto/sign-out',
+      },
+      postCallbackRedirectUri: '/',
+      postSignOutRedirectUri: '/',
+    });
+    const response = await runRoute(
+      logto.middleware,
+      authRoutes.action,
+      'POST',
+      '/api/logto/sign-in'
+    );
+    const location = new URL(response.headers.get('Location') ?? '');
+
+    expect(location.origin + location.pathname).toBe(`${config.endpoint}/oidc/auth`);
+    expect(location.searchParams.get('redirect_uri')).toBe(`${config.baseUrl}/api/logto/callback`);
+    expect(response.headers.get('Set-Cookie')).toContain('logto-session=session-id');
+    expect(store.getData()).toHaveProperty('signInSession');
+    expect(store.commitSession).toHaveBeenCalledOnce();
   });
 
   it('coordinates access-token refreshes across concurrent requests', async () => {

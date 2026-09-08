@@ -1,6 +1,7 @@
 import type { LogtoConfig } from '@logto/node';
 import type { MiddlewareFunction, RouterContext, Session, SessionStorage } from 'react-router';
 
+import type { LogtoAuthRequestRuntime } from '../auth-routes/request-runtime.js';
 import { getCookieHeaderFromRequest } from '../framework/get-cookie-header-from-request.js';
 import { makeLogtoClient } from '../infrastructure/logto/create-client.js';
 import { createStorage } from '../infrastructure/logto/create-storage.js';
@@ -13,6 +14,7 @@ import { createLogtoRequestContext } from './request-context.js';
 type CreateLogtoMiddlewareOptions = Readonly<{
   config: LogtoConfig;
   context: RouterContext<LogtoRequestContext>;
+  requestRuntimeContext: RouterContext<LogtoAuthRequestRuntime>;
   sessionStorage: SessionStorage;
   sessionCoordinator: SessionCoordinator;
 }>;
@@ -32,12 +34,14 @@ const appendSessionCookie = (response: Response, cookieHeader: string | undefine
   });
 };
 
-const createLogtoRequestClientFactory = (config: LogtoConfig) => (session: Session) =>
-  makeLogtoClient(config, createStorage(session))();
+const createLogtoRequestClientFactory =
+  (config: LogtoConfig) => (session: Session, navigate?: (url: string) => void) =>
+    makeLogtoClient(config, createStorage(session))(navigate);
 
 export const createLogtoMiddleware = ({
   config,
   context: logtoContext,
+  requestRuntimeContext,
   sessionStorage,
   sessionCoordinator,
 }: CreateLogtoMiddlewareOptions): MiddlewareFunction<Response> => {
@@ -50,6 +54,10 @@ export const createLogtoMiddleware = ({
       sessionCoordinator,
     });
     context.set(logtoContext, createLogtoRequestContext(runtime, createClient));
+    context.set(requestRuntimeContext, {
+      sessionRuntime: runtime,
+      createClient,
+    });
 
     const response = await next();
     const cookieHeader = await runtime.finalize();

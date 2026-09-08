@@ -1,5 +1,16 @@
 /* eslint-disable consistent-default-export-name/default-export-match-filename */
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
+import {
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  type MiddlewareFunction,
+} from 'react-router';
+
+import { logto } from './services/auth.server';
+
+export const middleware = [logto.middleware] satisfies Array<MiddlewareFunction<Response>>;
 
 const App = () => {
   return (

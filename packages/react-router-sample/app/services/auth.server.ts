@@ -1,12 +1,15 @@
-import { makeLogtoReactRouter } from '@logto/react-router';
+import { createLogtoReactRouter } from '@logto/react-router';
 import { createCookieSessionStorage } from 'react-router';
 
 const sessionStorage = createCookieSessionStorage({
   cookie: {
     name: 'logto-session',
+    httpOnly: true,
     maxAge: 14 * 24 * 60 * 60,
+    sameSite: 'lax',
     // Remember to change this secret in production
     secrets: [process.env.SESSION_SECRET ?? 'secr3tSession'],
+    secure: process.env.NODE_ENV === 'production',
   },
 });
 
@@ -14,7 +17,7 @@ if (!process.env.LOGTO_ENDPOINT || !process.env.LOGTO_APP_ID || !process.env.LOG
   throw new Error('Missing Logto environment variables');
 }
 
-export const logto = makeLogtoReactRouter(
+export const logto = createLogtoReactRouter(
   {
     endpoint: process.env.LOGTO_ENDPOINT,
     appId: process.env.LOGTO_APP_ID,

@@ -1,20 +1,15 @@
 import { logto } from '../services/auth.server';
 
-export const loader = logto.handleAuthRoutes({
-  'sign-in': {
-    path: '/api/logto/sign-in',
-    redirectBackTo: '/api/logto/callback',
+const authRoutes = logto.authRoutes({
+  paths: {
+    signIn: '/api/logto/sign-in',
+    signUp: '/api/logto/sign-up',
+    callback: '/api/logto/callback',
+    signOut: '/api/logto/sign-out',
   },
-  'sign-in-callback': {
-    path: '/api/logto/callback',
-    redirectBackTo: '/',
-  },
-  'sign-out': {
-    path: '/api/logto/sign-out',
-    redirectBackTo: '/',
-  },
-  'sign-up': {
-    path: '/api/logto/sign-up',
-    redirectBackTo: '/api/logto/callback',
-  },
+  postCallbackRedirectUri: '/',
+  postSignOutRedirectUri: '/',
 });
+
+export const loader = authRoutes.loader;
+export const action = authRoutes.action;

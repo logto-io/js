@@ -1,9 +1,8 @@
 {
   "extends": "@silverhand/ts-config-react/tsconfig.base",
   "compilerOptions": {
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    "rootDirs": [".", "./.react-router/types"]
   },
-  "include": [
-    "app"
-  ]
+  "include": [".react-router/types/**/*", "app"]
 }
