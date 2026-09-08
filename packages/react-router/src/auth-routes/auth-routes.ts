@@ -15,13 +15,20 @@ export type AuthRoutePaths = Readonly<{
   signOut: string;
 }>;
 
+/**
+ * Called with the POST action request that starts sign-in or sign-up. Return a same-origin path to
+ * persist through the sign-in session and use after the callback.
+ */
+export type ResolvePostCallbackRedirectUri = (signInRequest: Request) => string | Promise<string>;
+
 export type ValidateAuthActionRequest = (
   request: Request
 ) => Response | void | Promise<Response | void>;
 
 export type AuthRoutesOptions = Readonly<{
   paths: AuthRoutePaths;
-  postCallbackRedirectUri: string;
+  /** The post-callback destination or a resolver that runs when sign-in or sign-up starts. */
+  postCallbackRedirectUri: string | ResolvePostCallbackRedirectUri;
   postSignOutRedirectUri: string;
   /** Runs before sign-in, sign-up, or sign-out. Return a Response to reject the request. */
   validateActionRequest?: ValidateAuthActionRequest;
@@ -66,9 +73,24 @@ class NavigationCapture {
 
     return this.target;
   };
+
+  public readonly getOptionalTarget = () => this.target;
 }
 
 const resolveUri = (baseUrl: string, uri: string) => new URL(uri, baseUrl).toString();
+
+const resolveReturnUri = (baseUrl: string, uri: string) => {
+  const base = new URL(baseUrl);
+  const resolved = new URL(uri, base);
+
+  if (!uri.startsWith('/') || uri.startsWith('//') || resolved.origin !== base.origin) {
+    throw new TypeError(
+      'The resolved post-callback redirect URI must be a same-origin path beginning with "/".'
+    );
+  }
+
+  return resolved.toString();
+};
 
 const createMethodNotAllowedResponse = (allowedMethod: 'GET' | 'POST') =>
   new Response(null, {
@@ -119,6 +141,15 @@ export const createAuthRoutes = ({ baseUrl, requestRuntimeContext }: CreateAuthR
     postSignOutRedirectUri,
     validateActionRequest,
   }: AuthRoutesOptions): AuthRoutes => {
+    const getPostCallbackRedirectUri = async (signInRequest: Request) => {
+      if (typeof postCallbackRedirectUri === 'string') {
+        // Static values are trusted configuration. Resolver output may derive from request input.
+        return resolveUri(baseUrl, postCallbackRedirectUri);
+      }
+
+      return resolveReturnUri(baseUrl, await postCallbackRedirectUri(signInRequest));
+    };
+
     const loader: AuthRouteLoader = async ({ request, context, url }) => {
       const { pathname } = url;
 
@@ -129,13 +160,15 @@ export const createAuthRoutes = ({ baseUrl, requestRuntimeContext }: CreateAuthR
 
         const requestRuntime = context.get(requestRuntimeContext);
 
+        const navigation = new NavigationCapture();
+
         await requestRuntime.sessionRuntime.checkpoint(async (session) =>
           requestRuntime
-            .createClient(session)
+            .createClient(session, navigation.navigate)
             .handleSignInCallback(getCallbackUri(baseUrl, paths.callback, request))
         );
 
-        return redirect(resolveUri(baseUrl, postCallbackRedirectUri));
+        return redirect(navigation.getOptionalTarget() ?? resolveUri(baseUrl, '/'));
       }
 
       if (
@@ -177,9 +210,11 @@ export const createAuthRoutes = ({ baseUrl, requestRuntimeContext }: CreateAuthR
       const requestRuntime = context.get(requestRuntimeContext);
 
       if (pathname === paths.signIn) {
+        const postRedirectUri = await getPostCallbackRedirectUri(request);
         const navigateTo = await checkpointWithNavigation(requestRuntime, async (client) =>
           client.signIn({
             redirectUri: resolveUri(baseUrl, paths.callback),
+            postRedirectUri,
           })
         );
 
@@ -187,9 +222,11 @@ export const createAuthRoutes = ({ baseUrl, requestRuntimeContext }: CreateAuthR
       }
 
       if (paths.signUp && pathname === paths.signUp) {
+        const postRedirectUri = await getPostCallbackRedirectUri(request);
         const navigateTo = await checkpointWithNavigation(requestRuntime, async (client) =>
           client.signIn({
             redirectUri: resolveUri(baseUrl, paths.callback),
+            postRedirectUri,
             firstScreen: 'register',
           })
         );
