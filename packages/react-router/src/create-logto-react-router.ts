@@ -1,6 +1,9 @@
 import type { MiddlewareFunction, RouterContext, SessionStorage } from 'react-router';
 import { createContext } from 'react-router';
 
+import type { AuthRoutes, AuthRoutesOptions } from './auth-routes/auth-routes.js';
+import { createAuthRoutes } from './auth-routes/auth-routes.js';
+import type { LogtoAuthRequestRuntime } from './auth-routes/request-runtime.js';
 import {
   createProcessLocalSessionCoordinator,
   type SessionCoordinator,
@@ -17,6 +20,7 @@ type CreateLogtoReactRouterDependencies = Readonly<{
 export type LogtoReactRouter = Readonly<{
   context: RouterContext<LogtoRequestContext>;
   middleware: MiddlewareFunction<Response>;
+  authRoutes: (options: AuthRoutesOptions) => AuthRoutes;
 }>;
 
 /**
@@ -27,16 +31,20 @@ export const createLogtoReactRouter = (
   config: LogtoReactRouterConfig,
   { sessionStorage, sessionCoordinator }: CreateLogtoReactRouterDependencies
 ): LogtoReactRouter => {
+  const { baseUrl, ...logtoConfig } = config;
   const context = createContext<LogtoRequestContext>();
+  const requestRuntimeContext = createContext<LogtoAuthRequestRuntime>();
   const coordinator = sessionCoordinator ?? createProcessLocalSessionCoordinator();
 
   return Object.freeze({
     context,
     middleware: createLogtoMiddleware({
-      config,
+      config: logtoConfig,
       context,
+      requestRuntimeContext,
       sessionStorage,
       sessionCoordinator: coordinator,
     }),
+    authRoutes: createAuthRoutes({ baseUrl, requestRuntimeContext }),
   });
 };

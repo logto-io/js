@@ -1,20 +1,22 @@
-import { logto } from '../services/auth.server';
+import { applicationOrigin, logto } from '../services/auth.server';
 
-export const loader = logto.handleAuthRoutes({
-  'sign-in': {
-    path: '/api/logto/sign-in',
-    redirectBackTo: '/api/logto/callback',
+const validateActionRequest = (request: Request) => {
+  if (request.headers.get('Origin') !== applicationOrigin) {
+    return new Response(null, { status: 403, statusText: 'Forbidden' });
+  }
+};
+
+const authRoutes = logto.authRoutes({
+  paths: {
+    signIn: '/api/logto/sign-in',
+    signUp: '/api/logto/sign-up',
+    callback: '/api/logto/callback',
+    signOut: '/api/logto/sign-out',
   },
-  'sign-in-callback': {
-    path: '/api/logto/callback',
-    redirectBackTo: '/',
-  },
-  'sign-out': {
-    path: '/api/logto/sign-out',
-    redirectBackTo: '/',
-  },
-  'sign-up': {
-    path: '/api/logto/sign-up',
-    redirectBackTo: '/api/logto/callback',
-  },
+  postCallbackRedirectUri: '/',
+  postSignOutRedirectUri: '/',
+  validateActionRequest,
 });
+
+export const loader = authRoutes.loader;
+export const action = authRoutes.action;

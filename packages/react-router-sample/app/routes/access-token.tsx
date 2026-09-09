@@ -1,35 +1,29 @@
 // eslint-disable-next-line consistent-default-export-name/default-export-match-filename
-import type { LogtoContext } from '@logto/react-router';
-import { redirect, type LoaderFunctionArgs } from 'react-router';
+import { redirect } from 'react-router';
 
 import { logto } from '../services/auth.server';
 
-type LoaderResponse = {
-  readonly context: LogtoContext;
-};
+import type { Route } from './+types/access-token';
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const context = await logto.getContext({ getAccessToken: true })(request);
+export const loader = async ({ context }: Route.LoaderArgs) => {
+  const logtoContext = context.get(logto.context);
+  const authentication = await logtoContext.getContext();
 
-  if (!context.isAuthenticated) {
-    return redirect('/api/logto/sign-in');
+  if (!authentication.isAuthenticated) {
+    return redirect('/');
   }
 
-  // You can now use the access token here,
-  // for demonstration purposes, we'll just pass it back to the client
+  const accessToken = await logtoContext.getAccessToken();
 
-  return { context };
+  // Use the token in this server loader. This sample returns it only for demonstration.
+  return { accessToken };
 };
 
-const AccessToken = ({ loaderData }: { readonly loaderData: LoaderResponse }) => {
-  const {
-    context: { accessToken },
-  } = loaderData;
-
+const AccessToken = ({ loaderData }: Route.ComponentProps) => {
   return (
     <div>
       <h1>Access Token</h1>
-      <pre>{accessToken}</pre>
+      <pre>{loaderData.accessToken}</pre>
     </div>
   );
 };

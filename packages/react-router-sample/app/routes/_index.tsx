@@ -1,39 +1,35 @@
 /* eslint-disable consistent-default-export-name/default-export-match-filename */
-import { type LogtoContext } from '@logto/react-router';
-import { Link, type LoaderFunctionArgs } from 'react-router';
+import { Form, Link } from 'react-router';
 
 import { logto } from '../services/auth.server';
 
-type LoaderResponse = {
-  readonly context: LogtoContext;
-};
+import type { Route } from './+types/_index';
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const context = await logto.getContext({ getAccessToken: false })(request);
+export const loader = async ({ context }: Route.LoaderArgs) => {
+  const authentication = await context.get(logto.context).getContext();
 
   // You can uncomment this to protect the route and
-  // redirect to the sign-in page if the user is not authenticated
+  // redirect to an application page that contains a POST sign-in form
   //
-  // if (!context.isAuthenticated) {
-  //   return redirect('/api/logto/sign-in');
+  // if (!authentication.isAuthenticated) {
+  //   return redirect('/sign-in');
   // }
 
-  return { context };
+  return { authentication };
 };
 
-const Home = ({ loaderData }: { readonly loaderData: LoaderResponse }) => {
-  const { context } = loaderData;
-  const { isAuthenticated, claims } = context;
+const Home = ({ loaderData }: Route.ComponentProps) => {
+  const { isAuthenticated, claims } = loaderData.authentication;
 
   return (
     <div>
-      <h1>Remix Sample</h1>
+      <h1>React Router Sample</h1>
       {isAuthenticated ? (
         <div>
           <p>Hello {claims?.email ?? claims?.name ?? claims?.sub}</p>
-          <form action="/api/logto/sign-out" method="get">
+          <Form action="/api/logto/sign-out" method="post">
             <button type="submit">Sign Out</button>
-          </form>
+          </Form>
           <p>
             <Link to="/user-info">Example of fetching user info</Link>
           </p>
@@ -42,9 +38,9 @@ const Home = ({ loaderData }: { readonly loaderData: LoaderResponse }) => {
           </p>
         </div>
       ) : (
-        <form action="/api/logto/sign-in" method="get">
+        <Form action="/api/logto/sign-in" method="post">
           <button type="submit">Sign In</button>
-        </form>
+        </Form>
       )}
     </div>
   );

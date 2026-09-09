@@ -1,40 +1,14 @@
-import type { GetContextParameters } from '@logto/node';
-import type { SessionStorage } from 'react-router';
-
-import { makeLogtoAdapter } from './infrastructure/logto/index.js';
-import type { LogtoReactRouterConfig } from './types.js';
-import { makeGetContext } from './useCases/getContext/index.js';
-import { makeHandleAuthRoutes } from './useCases/handleAuthRoutes/index.js';
-
-export const makeLogtoReactRouter = (
-  config: LogtoReactRouterConfig,
-  deps: {
-    sessionStorage: SessionStorage;
-  }
-) => {
-  const { sessionStorage } = deps;
-
-  const { baseUrl } = config;
-
-  const createLogtoAdapter = makeLogtoAdapter(config);
-
-  return Object.freeze({
-    handleAuthRoutes: makeHandleAuthRoutes({
-      baseUrl,
-      createLogtoAdapter,
-      sessionStorage,
-    }),
-
-    getContext: (dto: GetContextParameters) =>
-      makeGetContext(dto, {
-        createLogtoAdapter,
-        sessionStorage,
-      }),
-  });
-};
-
 export { createLogtoReactRouter } from './create-logto-react-router.js';
 export type { LogtoReactRouter } from './create-logto-react-router.js';
+
+export type {
+  AuthRouteAction,
+  AuthRouteLoader,
+  AuthRoutePaths,
+  AuthRoutes,
+  AuthRoutesOptions,
+  ValidateAuthActionRequest,
+} from './auth-routes/auth-routes.js';
 
 export {
   ProcessLocalSessionCoordinator,
