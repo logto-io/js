@@ -146,7 +146,9 @@ export class StandardLogtoClient {
     buildJwtVerifier: (client: StandardLogtoClient) => JwtVerifier
   ) {
     this.logtoConfig = normalizeLogtoConfig(logtoConfig);
-    this.adapter = new ClientAdapterInstance(adapter);
+    this.adapter = new ClientAdapterInstance(adapter, {
+      requestTimeoutMs: this.logtoConfig.requestTimeoutMs,
+    });
     this.jwtVerifierInstance = buildJwtVerifier(this);
 
     void this.loadAccessTokenMap();

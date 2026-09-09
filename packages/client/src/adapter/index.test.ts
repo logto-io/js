@@ -1,8 +1,67 @@
+import type { Requester } from '@logto/js';
+
 import { createAdapters } from '../mock.js';
 
-import { CacheKey, ClientAdapterInstance, PersistKey } from './index.js';
+import { CacheKey, type ClientAdapter, ClientAdapterInstance, PersistKey } from './index.js';
+
+const createAdapterWithoutTransport = (): ClientAdapter => {
+  const adapters = createAdapters();
+
+  return {
+    storage: adapters.storage,
+    navigate: adapters.navigate,
+    generateState: adapters.generateState,
+    generateCodeVerifier: adapters.generateCodeVerifier,
+    generateCodeChallenge: adapters.generateCodeChallenge,
+  };
+};
 
 describe('ClientAdapterInstance', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('uses native fetch when no transport is provided', async () => {
+    const fetchTransport = vi
+      .spyOn(globalThis, 'fetch')
+      .mockResolvedValue(Response.json({ source: 'native' }));
+    const adapterInstance = new ClientAdapterInstance(createAdapterWithoutTransport());
+
+    await expect(adapterInstance.requester('https://logto.example.com')).resolves.toEqual({
+      source: 'native',
+    });
+    expect(fetchTransport).toHaveBeenCalledOnce();
+  });
+
+  it('preserves a legacy requester without applying request options', () => {
+    const legacyRequester = vi.fn() as unknown as Requester;
+    const adapterInstance = new ClientAdapterInstance(
+      {
+        ...createAdapterWithoutTransport(),
+        requester: legacyRequester,
+      },
+      { requestTimeoutMs: 1000 }
+    );
+
+    expect(adapterInstance.requester).toBe(legacyRequester);
+  });
+
+  it('prefers fetch when both fetch and a legacy requester are provided', async () => {
+    const legacyRequester = vi.fn() as unknown as Requester;
+    const fetchTransport = vi.fn(async () => Response.json({ source: 'fetch' }));
+    const adapterInstance = new ClientAdapterInstance({
+      ...createAdapters(),
+      fetch: fetchTransport,
+      requester: legacyRequester,
+    });
+
+    await expect(adapterInstance.requester('https://logto.example.com')).resolves.toEqual({
+      source: 'fetch',
+    });
+    expect(fetchTransport).toHaveBeenCalledOnce();
+    expect(legacyRequester).not.toHaveBeenCalled();
+  });
+
   it('should be able to set storage item', async () => {
     const adapterInstance = new ClientAdapterInstance(createAdapters(true));
     await adapterInstance.setStorageItem(PersistKey.AccessToken, 'value');

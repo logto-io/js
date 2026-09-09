@@ -28,6 +28,6 @@ export {
 export * from './errors.js';
 export type { Storage, StorageKey, ClientAdapter, JwtVerifier } from './adapter/index.js';
 export { PersistKey, CacheKey } from './adapter/index.js';
-export { createRequester } from './utils/index.js';
+export { createRequester, type CreateRequesterOptions } from './utils/index.js';
 export * from './types/index.js';
 export * from './client.js';

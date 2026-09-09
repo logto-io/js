@@ -3,6 +3,19 @@ import { ReservedResource, UserScope } from '@logto/js';
 import { normalizeLogtoConfig } from './index.js';
 
 describe('normalizeLogtoConfigs', () => {
+  it.each([0, -1, 0.5, 2_147_483_648, Number.NaN, Number.POSITIVE_INFINITY])(
+    'rejects invalid request timeout %s',
+    (requestTimeoutMs) => {
+      expect(() =>
+        normalizeLogtoConfig({
+          appId: '123',
+          endpoint: 'https://example.com',
+          requestTimeoutMs,
+        })
+      ).toThrow('requestTimeoutMs must be an integer between 1 and 2147483647.');
+    }
+  );
+
   it('should be able to add missing scopes', () => {
     const normalized = normalizeLogtoConfig({
       appId: '123',

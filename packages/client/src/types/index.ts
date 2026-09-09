@@ -7,6 +7,8 @@ import {
 } from '@logto/js';
 import { deduplicate } from '@silverhand/essentials';
 
+import { assertRequestTimeout } from '../request-timeout.js';
+
 /** The configuration object for the Logto client. */
 export type LogtoConfig = {
   /**
@@ -26,6 +28,16 @@ export type LogtoConfig = {
    * details page of the Logto Console.
    */
   appSecret?: string;
+  /**
+   * The timeout in milliseconds for each request to the Logto server.
+   *
+   * Must be an integer from 1 to 2,147,483,647. The timeout is not applied when an adapter uses
+   * the deprecated custom `requester` transport.
+   *
+   * If omitted, the client does not add a timeout to requests made through the configured fetch
+   * transport. The existing JSON Web Key Set request timeout remains unchanged.
+   */
+  requestTimeoutMs?: number;
   /**
    * The scopes (permissions) that your application needs to access.
    * Scopes that will be added by default: `openid`, `offline_access` and `profile`.
@@ -67,6 +79,8 @@ export type LogtoConfig = {
  * @returns The normalized Logto client configuration.
  */
 export const normalizeLogtoConfig = (config: LogtoConfig): LogtoConfig => {
+  assertRequestTimeout(config.requestTimeoutMs);
+
   const { prompt = Prompt.Consent, scopes = [], resources, ...rest } = config;
   const includeReservedScopes = config.includeReservedScopes ?? true;
 

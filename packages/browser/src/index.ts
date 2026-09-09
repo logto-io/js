@@ -1,5 +1,5 @@
 import type { LogtoConfig } from '@logto/client';
-import BaseClient, { createRequester } from '@logto/client';
+import BaseClient from '@logto/client';
 import { conditional } from '@silverhand/essentials';
 
 import { CacheStorage } from './cache.js';
@@ -11,6 +11,7 @@ export { generateCodeChallenge, generateCodeVerifier, generateState } from './ut
 
 export type {
   AccessTokenClaims,
+  CreateRequesterOptions,
   IdTokenClaims,
   LogtoErrorCode,
   LogtoConfig,
@@ -51,9 +52,7 @@ export default class LogtoClient extends BaseClient {
    * Use sessionStorage by default.
    */
   constructor(config: LogtoConfig, unstable_enableCache = false) {
-    const requester = createRequester(fetch);
     super(config, {
-      requester,
       navigate,
       storage: new BrowserStorage(config.appId),
       unstable_cache: conditional(unstable_enableCache && new CacheStorage(config.appId)),

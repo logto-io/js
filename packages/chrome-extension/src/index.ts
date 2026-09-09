@@ -1,7 +1,6 @@
 import {
   BaseClient,
   LogtoClientError,
-  createRequester,
   type LogtoConfig,
   type ClientAdapter,
   generateCodeChallenge,
@@ -19,7 +18,6 @@ export default class LogtoClient extends BaseClient {
    * @param config The configuration object for the client.
    */
   constructor(config: LogtoConfig) {
-    const requester = createRequester(fetch);
     // eslint-disable-next-line unicorn/consistent-function-scoping -- we use `this` in the function
     const navigate: ClientAdapter['navigate'] = async (url, params) => {
       switch (params.for) {
@@ -50,7 +48,6 @@ export default class LogtoClient extends BaseClient {
     };
 
     super(config, {
-      requester,
       navigate,
       storage: new ChromeExtensionStorage(config.appId),
       generateCodeChallenge,

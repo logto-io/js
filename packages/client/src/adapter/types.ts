@@ -62,21 +62,29 @@ export type JwtVerifier = {
   verifyIdToken(idToken: string): Promise<void>;
 };
 
+type ClientAdapterTransport = {
+  /**
+   * An optional fetch-like transport for network requests. The client uses the runtime's native
+   * `fetch` when this property is omitted and applies shared request policies and response parsing
+   * on top of either function.
+   */
+  fetch?: typeof globalThis.fetch;
+  /**
+   * A fully configured requester for network requests.
+   *
+   * @deprecated Use `fetch` so the client can apply shared request policies. This property is
+   * ignored when `fetch` is provided.
+   */
+  requester?: Requester;
+};
+
 /**
  * The adapter object that allows the customizations of the client behavior
  * for different environments.
  */
-export type ClientAdapter = {
-  /**
-   * The fetch-like function for network requests.
-   *
-   * @see {@link Requester}
-   */
-  requester: Requester;
+export type ClientAdapter = ClientAdapterTransport & {
   /**
    * The storage for storing tokens and sessions. It is usually persistent.
-   *
-   * @see {@link Requester}
    */
   storage: Storage<StorageKey | PersistKey>;
   /**
