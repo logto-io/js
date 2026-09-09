@@ -44,7 +44,7 @@
     "vitest": "^3.2.6"
   },
   "peerDependencies": {
-    "react-router": "^7.9.1"
+    "react-router": "^7.15.0 || ^8.0.0"
   },
   "eslintConfig": {
     "extends": "@silverhand"

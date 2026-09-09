@@ -27,24 +27,15 @@ export type AuthRoutesOptions = Readonly<{
   validateActionRequest?: ValidateAuthActionRequest;
 }>;
 
-type NormalizedRouteUrl = Readonly<{
-  /** The normalized route URL in current React Router versions. */
-  url?: URL;
-  /** The normalized route URL before it was stabilized as `url`. */
-  unstable_url?: URL;
-}>;
-
 type AuthRouteLoaderArgs = Pick<
   LoaderFunctionArgs<Readonly<RouterContextProvider>>,
-  'context' | 'request'
-> &
-  NormalizedRouteUrl;
+  'context' | 'request' | 'url'
+>;
 
 type AuthRouteActionArgs = Pick<
   ActionFunctionArgs<Readonly<RouterContextProvider>>,
-  'context' | 'request'
-> &
-  NormalizedRouteUrl;
+  'context' | 'request' | 'url'
+>;
 
 export type AuthRouteLoader = (args: AuthRouteLoaderArgs) => Promise<Response>;
 export type AuthRouteAction = (args: AuthRouteActionArgs) => Promise<Response>;
@@ -78,9 +69,6 @@ class NavigationCapture {
 }
 
 const resolveUri = (baseUrl: string, uri: string) => new URL(uri, baseUrl).toString();
-
-const getPathname = ({ request, url, unstable_url: unstableUrl }: AuthRouteLoaderArgs) =>
-  (url ?? unstableUrl ?? new URL(request.url)).pathname;
 
 const createMethodNotAllowedResponse = (allowedMethod: 'GET' | 'POST') =>
   new Response(null, {
@@ -131,13 +119,8 @@ export const createAuthRoutes = ({ baseUrl, requestRuntimeContext }: CreateAuthR
     postSignOutRedirectUri,
     validateActionRequest,
   }: AuthRoutesOptions): AuthRoutes => {
-    const loader: AuthRouteLoader = async ({
-      request,
-      context,
-      url,
-      unstable_url: unstableUrl,
-    }) => {
-      const pathname = getPathname({ request, context, url, unstable_url: unstableUrl });
+    const loader: AuthRouteLoader = async ({ request, context, url }) => {
+      const { pathname } = url;
 
       if (pathname === paths.callback) {
         if (request.method !== 'GET') {
@@ -166,13 +149,8 @@ export const createAuthRoutes = ({ baseUrl, requestRuntimeContext }: CreateAuthR
       return createNotFoundResponse();
     };
 
-    const action: AuthRouteAction = async ({
-      request,
-      context,
-      url,
-      unstable_url: unstableUrl,
-    }) => {
-      const pathname = getPathname({ request, context, url, unstable_url: unstableUrl });
+    const action: AuthRouteAction = async ({ request, context, url }) => {
+      const { pathname } = url;
 
       if (pathname === paths.callback) {
         return createMethodNotAllowedResponse('GET');

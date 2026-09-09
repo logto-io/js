@@ -7,8 +7,8 @@
 The Logto SDK for server-rendered React Router applications.
 
 This package uses React Router Framework Mode middleware to keep Logto session state consistent
-across loaders, actions, authentication callbacks, and access-token refreshes. Enable middleware in
-your React Router config:
+across loaders, actions, authentication callbacks, and access-token refreshes. React Router 8
+enables middleware by default. When using React Router 7, enable it in your React Router config:
 
 ```ts
 // react-router.config.ts
@@ -24,7 +24,9 @@ export default {
 
 ## Installation
 
-This package requires Node.js 20 or later and React Router 7.9.1 or later.
+This package supports React Router 7.15 or later and React Router 8. When using React Router 7, it
+requires Node.js 20 or later. React Router 8 requires Node.js 22.22 or later, React 19.2.7 or later,
+and Vite 7 or later in Framework Mode.
 
 ```bash
 pnpm add @logto/react-router

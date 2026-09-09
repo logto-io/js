@@ -8,3 +8,5 @@ Create the integration with `createLogtoReactRouter()`, register `logto.middlewa
 authentication routes with `logto.authRoutes()`. Export its callback `loader` and mutation `action`;
 sign-in, sign-up, and sign-out now require `POST`. Read authentication from `logto.context`; explicit
 token methods now persist refreshed sessions safely.
+
+The new API supports React Router 7.15 and React Router 8.

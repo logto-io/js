@@ -139,21 +139,6 @@ describe('auth-routes:createAuthRoutes', () => {
     expect(store.commitSession).toHaveBeenCalledOnce();
   });
 
-  it('uses the unstable normalized URL for data requests', async () => {
-    const store = createTestSessionStorage();
-    const { context, routes, spies } = await createRequestRuntime(store.sessionStorage);
-    const response = await routes.action({
-      request: new Request(`${baseUrl}${paths.signIn}.data`, { method: 'POST' }),
-      context,
-      unstable_url: new URL(`${baseUrl}${paths.signIn}`),
-    });
-
-    expect(spies.signIn).toHaveBeenCalledWith({
-      redirectUri: `${baseUrl}${paths.callback}`,
-    });
-    expect(response.headers.get('Location')).toBe('https://logto.example.com/oidc/auth');
-  });
-
   it('starts sign-up on the registration screen', async () => {
     const store = createTestSessionStorage();
     const { context, routes, spies } = await createRequestRuntime(store.sessionStorage);
@@ -161,6 +146,7 @@ describe('auth-routes:createAuthRoutes', () => {
     await routes.action({
       request: new Request(`${baseUrl}${paths.signUp}`, { method: 'POST' }),
       context,
+      url: new URL(`${baseUrl}${paths.signUp}`),
     });
 
     expect(spies.signIn).toHaveBeenCalledWith({
@@ -175,6 +161,7 @@ describe('auth-routes:createAuthRoutes', () => {
     const response = await routes.loader({
       request: new Request(`http://internal.example.com${paths.callback}?code=code&state=state`),
       context,
+      url: new URL(`${baseUrl}${paths.callback}?code=code&state=state`),
     });
 
     expect(spies.handleSignInCallback).toHaveBeenCalledWith(
@@ -196,6 +183,7 @@ describe('auth-routes:createAuthRoutes', () => {
     const response = await routes.action({
       request: new Request(`${baseUrl}${paths.signOut}`, { method: 'POST' }),
       context,
+      url: new URL(`${baseUrl}${paths.signOut}`),
     });
 
     expect(spies.signOut).toHaveBeenCalledWith(`${baseUrl}/`);
@@ -215,6 +203,7 @@ describe('auth-routes:createAuthRoutes', () => {
     const response = await routes.loader({
       request: new Request(`${baseUrl}${path}`),
       context,
+      url: new URL(`${baseUrl}${path}`),
     });
 
     expect(response.status).toBe(405);
@@ -229,6 +218,7 @@ describe('auth-routes:createAuthRoutes', () => {
     const response = await routes.action({
       request: new Request(`${baseUrl}${paths.callback}`, { method: 'POST' }),
       context,
+      url: new URL(`${baseUrl}${paths.callback}`),
     });
 
     expect(response.status).toBe(405);
@@ -242,6 +232,7 @@ describe('auth-routes:createAuthRoutes', () => {
     const response = await routes.action({
       request: new Request(`${baseUrl}${paths.signIn}`, { method: 'DELETE' }),
       context,
+      url: new URL(`${baseUrl}${paths.signIn}`),
     });
 
     expect(response.status).toBe(405);
@@ -258,7 +249,9 @@ describe('auth-routes:createAuthRoutes', () => {
     });
     const request = new Request(`${baseUrl}${paths.signIn}`, { method: 'POST' });
 
-    await expect(routes.action({ request, context })).resolves.toBe(forbidden);
+    await expect(
+      routes.action({ request, context, url: new URL(`${baseUrl}${paths.signIn}`) })
+    ).resolves.toBe(forbidden);
     expect(validateActionRequest).toHaveBeenCalledOnce();
     expect(validateActionRequest).toHaveBeenCalledWith(expect.any(Request));
     expect(spies.signIn).not.toHaveBeenCalled();
@@ -272,10 +265,12 @@ describe('auth-routes:createAuthRoutes', () => {
     const loaderResponse = await routes.loader({
       request: new Request(`${baseUrl}/not-an-auth-route`),
       context,
+      url: new URL(`${baseUrl}/not-an-auth-route`),
     });
     const actionResponse = await routes.action({
       request: new Request(`${baseUrl}/not-an-auth-route`, { method: 'POST' }),
       context,
+      url: new URL(`${baseUrl}/not-an-auth-route`),
     });
 
     expect(loaderResponse.status).toBe(404);
@@ -295,6 +290,7 @@ describe('auth-routes:createAuthRoutes', () => {
     const response = await routes.action({
       request: new Request(`${baseUrl}${paths.signUp}`, { method: 'POST' }),
       context,
+      url: new URL(`${baseUrl}${paths.signUp}`),
     });
 
     expect(response.status).toBe(404);
