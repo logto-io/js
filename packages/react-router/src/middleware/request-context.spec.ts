@@ -177,6 +177,29 @@ describe('middleware:createLogtoRequestContext', () => {
     expect(store.commitSession).toHaveBeenCalledTimes(2);
   });
 
+  it('persists token mutations before propagating a token acquisition error', async () => {
+    const store = createTestSessionStorage({ refreshToken: 'old' });
+    const runtime = await SessionRuntime.create({
+      cookieHeader: sessionCookie,
+      sessionStorage: store.sessionStorage,
+      sessionCoordinator: createProcessLocalSessionCoordinator(),
+    });
+    const verificationError = new Error('ID token verification failed');
+    const createClient: CreateLogtoRequestClient = (session) => ({
+      getContext: async () => authenticatedContext,
+      getAccessToken: async () => {
+        session.set('refreshToken', 'rotated');
+        throw verificationError;
+      },
+      getOrganizationToken: async () => 'organization-token',
+    });
+    const context = createLogtoRequestContext(runtime, createClient);
+
+    await expect(context.getAccessToken()).rejects.toBe(verificationError);
+    expect(store.getData()).toEqual({ refreshToken: 'rotated' });
+    expect(store.commitSession).toHaveBeenCalledOnce();
+  });
+
   it('serializes refresh-token rotation across request contexts', async () => {
     vi.useFakeTimers();
 

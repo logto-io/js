@@ -53,6 +53,44 @@ const createTestSessionStorage = (initialData: SessionData = {}) => {
   };
 };
 
+const stubTokenRefresh = () => {
+  const tokenRequest = vi.fn(async () => {
+    await delay(10);
+
+    return Response.json({
+      access_token: 'access-token',
+      refresh_token: 'rotated',
+      scope: 'read',
+      expires_in: 3600,
+    });
+  });
+  const fetchRequest = vi.fn(async (input: string | URL | Request) => {
+    const url = String(input);
+
+    if (url.endsWith('/oidc/.well-known/openid-configuration')) {
+      return Response.json({
+        authorization_endpoint: `${config.endpoint}/oidc/auth`,
+        token_endpoint: `${config.endpoint}/oidc/token`,
+        userinfo_endpoint: `${config.endpoint}/oidc/me`,
+        end_session_endpoint: `${config.endpoint}/oidc/session/end`,
+        revocation_endpoint: `${config.endpoint}/oidc/token/revocation`,
+        jwks_uri: `${config.endpoint}/oidc/jwks`,
+        issuer: `${config.endpoint}/oidc`,
+      });
+    }
+
+    if (url.endsWith('/oidc/token')) {
+      return tokenRequest();
+    }
+
+    return new Response('Not found', { status: 404 });
+  });
+
+  vi.stubGlobal('fetch', fetchRequest);
+
+  return tokenRequest;
+};
+
 const runRoute = async (
   middleware: MiddlewareFunction<Response>,
   handler: RouteHandler,
@@ -107,6 +145,7 @@ const runRoute = async (
 describe('middleware:createLogtoMiddleware', () => {
   afterEach(() => {
     vi.unstubAllGlobals();
+    vi.useRealTimers();
   });
 
   it.each([
@@ -162,38 +201,7 @@ describe('middleware:createLogtoMiddleware', () => {
 
   it('coordinates access-token refreshes across concurrent requests', async () => {
     const store = createTestSessionStorage({ idToken: 'id-token', refreshToken: 'old' });
-    const tokenRequest = vi.fn(async () => {
-      await delay(10);
-
-      return Response.json({
-        access_token: 'access-token',
-        refresh_token: 'rotated',
-        scope: 'read',
-        expires_in: 3600,
-      });
-    });
-    const fetchRequest = vi.fn(async (input: string | URL | Request) => {
-      const url = String(input);
-
-      if (url.endsWith('/oidc/.well-known/openid-configuration')) {
-        return Response.json({
-          authorization_endpoint: `${config.endpoint}/oidc/auth`,
-          token_endpoint: `${config.endpoint}/oidc/token`,
-          userinfo_endpoint: `${config.endpoint}/oidc/me`,
-          end_session_endpoint: `${config.endpoint}/oidc/session/end`,
-          revocation_endpoint: `${config.endpoint}/oidc/token/revocation`,
-          jwks_uri: `${config.endpoint}/oidc/jwks`,
-          issuer: `${config.endpoint}/oidc`,
-        });
-      }
-
-      if (url.endsWith('/oidc/token')) {
-        return tokenRequest();
-      }
-
-      return new Response('Not found', { status: 404 });
-    });
-    vi.stubGlobal('fetch', fetchRequest);
+    const tokenRequest = stubTokenRefresh();
     const logto = createLogtoReactRouter(config, { sessionStorage: store.sessionStorage });
     const handler: RouteHandler = async ({ context }) => {
       const accessToken = await context.get(logto.context).getAccessToken();
@@ -211,6 +219,30 @@ describe('middleware:createLogtoMiddleware', () => {
       'access-token',
     ]);
     expect(tokenRequest).toHaveBeenCalledOnce();
+    expect(store.getData()).toMatchObject({ refreshToken: 'rotated' });
+    expect(store.commitSession).toHaveBeenCalledOnce();
+  });
+
+  it('waits for a started access-token refresh before returning the response', async () => {
+    vi.useFakeTimers();
+
+    const store = createTestSessionStorage({ idToken: 'id-token', refreshToken: 'old' });
+    const tokenRequest = stubTokenRefresh();
+    const logto = createLogtoReactRouter(config, { sessionStorage: store.sessionStorage });
+    const responsePromise = runRoute(logto.middleware, ({ context }) => {
+      void context.get(logto.context).getAccessToken();
+
+      return new Response('streaming response');
+    });
+
+    await vi.advanceTimersByTimeAsync(0);
+    expect(tokenRequest).toHaveBeenCalledOnce();
+
+    await vi.advanceTimersByTimeAsync(10);
+
+    const response = await responsePromise;
+
+    expect(response.headers.get('Set-Cookie')).toContain('logto-session=session-id');
     expect(store.getData()).toMatchObject({ refreshToken: 'rotated' });
     expect(store.commitSession).toHaveBeenCalledOnce();
   });
