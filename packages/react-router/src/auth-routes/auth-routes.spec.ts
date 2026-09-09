@@ -9,7 +9,11 @@ import {
 import { createProcessLocalSessionCoordinator } from '../infrastructure/session/index.js';
 import { SessionRuntime } from '../infrastructure/session/session-runtime.js';
 
-import type { AuthRoutePaths, ValidateAuthActionRequest } from './auth-routes.js';
+import type {
+  AuthRoutePaths,
+  ResolvePostCallbackRedirectUri,
+  ValidateAuthActionRequest,
+} from './auth-routes.js';
 import { createAuthRoutes } from './auth-routes.js';
 import type {
   CreateLogtoAuthClient,
@@ -62,6 +66,7 @@ type ClientSpies = Readonly<{
 type RequestRuntimeOptions = Readonly<{
   paths?: AuthRoutePaths;
   validateActionRequest?: ValidateAuthActionRequest;
+  postCallbackRedirectUri?: string | ResolvePostCallbackRedirectUri;
 }>;
 
 const createRequestRuntime = async (
@@ -83,13 +88,23 @@ const createRequestRuntime = async (
         await signIn(options);
         session.set('signInSession', JSON.stringify(options));
 
+        if (options.postRedirectUri) {
+          session.set('postRedirectUri', options.postRedirectUri.toString());
+        }
+
         navigate?.('https://logto.example.com/oidc/auth');
       },
       handleSignInCallback: async (callbackUri) => {
         await handleSignInCallback(callbackUri);
+        const postRedirectUri: unknown = session.get('postRedirectUri');
 
         session.set('idToken', 'id-token');
         session.set('refreshToken', 'refresh-token');
+        session.unset('postRedirectUri');
+
+        if (typeof postRedirectUri === 'string') {
+          navigate?.(postRedirectUri);
+        }
       },
       signOut: async (postLogoutRedirectUri) => {
         await signOut(postLogoutRedirectUri);
@@ -105,7 +120,7 @@ const createRequestRuntime = async (
 
   const routes = createAuthRoutes({ baseUrl, requestRuntimeContext })({
     paths: options.paths ?? paths,
-    postCallbackRedirectUri: '/auth/provision',
+    postCallbackRedirectUri: options.postCallbackRedirectUri ?? '/auth/provision',
     postSignOutRedirectUri: '/',
     ...(options.validateActionRequest && {
       validateActionRequest: options.validateActionRequest,
@@ -132,6 +147,7 @@ describe('auth-routes:createAuthRoutes', () => {
 
     expect(spies.signIn).toHaveBeenCalledWith({
       redirectUri: `${baseUrl}${paths.callback}`,
+      postRedirectUri: `${baseUrl}/auth/provision`,
     });
     expect(response.status).toBe(302);
     expect(response.headers.get('Location')).toBe('https://logto.example.com/oidc/auth');
@@ -151,12 +167,70 @@ describe('auth-routes:createAuthRoutes', () => {
 
     expect(spies.signIn).toHaveBeenCalledWith({
       redirectUri: `${baseUrl}${paths.callback}`,
+      postRedirectUri: `${baseUrl}/auth/provision`,
       firstScreen: 'register',
     });
   });
 
+  it('uses a resolved same-origin return path after the callback', async () => {
+    const store = createTestSessionStorage();
+    const resolvePostCallbackRedirectUri = vi.fn(
+      (signInRequest: Request) =>
+        new URL(signInRequest.url).searchParams.get('returnTo') ?? '/auth/provision'
+    );
+    const signInRuntime = await createRequestRuntime(store.sessionStorage, {
+      postCallbackRedirectUri: resolvePostCallbackRedirectUri,
+    });
+    const signInRequest = new Request(`${baseUrl}${paths.signIn}?returnTo=/tasks/123`, {
+      method: 'POST',
+    });
+
+    await signInRuntime.routes.action({
+      request: signInRequest,
+      context: signInRuntime.context,
+      url: new URL(signInRequest.url),
+    });
+
+    expect(resolvePostCallbackRedirectUri).toHaveBeenCalledWith(signInRequest);
+    expect(signInRuntime.spies.signIn).toHaveBeenCalledWith({
+      redirectUri: `${baseUrl}${paths.callback}`,
+      postRedirectUri: `${baseUrl}/tasks/123`,
+    });
+
+    const callbackRuntime = await createRequestRuntime(store.sessionStorage);
+    const response = await callbackRuntime.routes.loader({
+      request: new Request(`${baseUrl}${paths.callback}?code=code&state=state`),
+      context: callbackRuntime.context,
+      url: new URL(`${baseUrl}${paths.callback}?code=code&state=state`),
+    });
+
+    expect(response.headers.get('Location')).toBe(`${baseUrl}/tasks/123`);
+  });
+
+  it('rejects invalid resolver output', async () => {
+    const store = createTestSessionStorage();
+    const { context, routes, spies } = await createRequestRuntime(store.sessionStorage, {
+      postCallbackRedirectUri: () => '//attacker.example.com',
+    });
+
+    await expect(
+      routes.action({
+        request: new Request(`${baseUrl}${paths.signIn}`, { method: 'POST' }),
+        context,
+        url: new URL(`${baseUrl}${paths.signIn}`),
+      })
+    ).rejects.toThrow(
+      'The resolved post-callback redirect URI must be a same-origin path beginning with "/".'
+    );
+    expect(spies.signIn).not.toHaveBeenCalled();
+    expect(store.commitSession).not.toHaveBeenCalled();
+  });
+
   it('commits callback tokens before redirecting to the post-callback route', async () => {
-    const store = createTestSessionStorage({ signInSession: 'pending' });
+    const store = createTestSessionStorage({
+      signInSession: 'pending',
+      postRedirectUri: `${baseUrl}/auth/provision`,
+    });
     const { context, routes, spies } = await createRequestRuntime(store.sessionStorage);
     const response = await routes.loader({
       request: new Request(`http://internal.example.com${paths.callback}?code=code&state=state`),
@@ -173,6 +247,18 @@ describe('auth-routes:createAuthRoutes', () => {
     });
     expect(store.commitSession).toHaveBeenCalledOnce();
     expect(response.headers.get('Location')).toBe(`${baseUrl}/auth/provision`);
+  });
+
+  it('redirects to the application root when the callback has no stored destination', async () => {
+    const store = createTestSessionStorage({ signInSession: 'pending' });
+    const { context, routes } = await createRequestRuntime(store.sessionStorage);
+    const response = await routes.loader({
+      request: new Request(`${baseUrl}${paths.callback}?code=code&state=state`),
+      context,
+      url: new URL(`${baseUrl}${paths.callback}?code=code&state=state`),
+    });
+
+    expect(response.headers.get('Location')).toBe(`${baseUrl}/`);
   });
 
   it('destroys the session before redirecting to Logto sign-out', async () => {
@@ -194,51 +280,28 @@ describe('auth-routes:createAuthRoutes', () => {
   });
 
   it.each([
-    ['sign-in', paths.signIn],
-    ['sign-up', paths.signUp],
-    ['sign-out', paths.signOut],
-  ])('rejects GET requests to the %s action route', async (_name, path) => {
-    const store = createTestSessionStorage();
-    const { context, routes, spies } = await createRequestRuntime(store.sessionStorage);
-    const response = await routes.loader({
-      request: new Request(`${baseUrl}${path}`),
-      context,
-      url: new URL(`${baseUrl}${path}`),
-    });
+    ['GET sign-in', ['loader', 'GET', paths.signIn, 405, 'POST']],
+    ['GET sign-up', ['loader', 'GET', paths.signUp, 405, 'POST']],
+    ['GET sign-out', ['loader', 'GET', paths.signOut, 405, 'POST']],
+    ['POST callback', ['action', 'POST', paths.callback, 405, 'GET']],
+    ['DELETE sign-in', ['action', 'DELETE', paths.signIn, 405, 'POST']],
+    ['GET unknown route', ['loader', 'GET', '/not-an-auth-route', 404, null]],
+    ['POST unknown route', ['action', 'POST', '/not-an-auth-route', 404, null]],
+  ] as const)(
+    'returns the expected boundary response for %s',
+    async (_name, [handler, method, path, status, allow]) => {
+      const store = createTestSessionStorage();
+      const { context, routes } = await createRequestRuntime(store.sessionStorage);
+      const response = await routes[handler]({
+        request: new Request(`${baseUrl}${path}`, { method }),
+        context,
+        url: new URL(`${baseUrl}${path}`),
+      });
 
-    expect(response.status).toBe(405);
-    expect(response.headers.get('Allow')).toBe('POST');
-    expect(spies.signIn).not.toHaveBeenCalled();
-    expect(spies.signOut).not.toHaveBeenCalled();
-  });
-
-  it('rejects POST requests to the callback route', async () => {
-    const store = createTestSessionStorage({ signInSession: 'pending' });
-    const { context, routes, spies } = await createRequestRuntime(store.sessionStorage);
-    const response = await routes.action({
-      request: new Request(`${baseUrl}${paths.callback}`, { method: 'POST' }),
-      context,
-      url: new URL(`${baseUrl}${paths.callback}`),
-    });
-
-    expect(response.status).toBe(405);
-    expect(response.headers.get('Allow')).toBe('GET');
-    expect(spies.handleSignInCallback).not.toHaveBeenCalled();
-  });
-
-  it('rejects non-POST methods on action routes', async () => {
-    const store = createTestSessionStorage();
-    const { context, routes, spies } = await createRequestRuntime(store.sessionStorage);
-    const response = await routes.action({
-      request: new Request(`${baseUrl}${paths.signIn}`, { method: 'DELETE' }),
-      context,
-      url: new URL(`${baseUrl}${paths.signIn}`),
-    });
-
-    expect(response.status).toBe(405);
-    expect(response.headers.get('Allow')).toBe('POST');
-    expect(spies.signIn).not.toHaveBeenCalled();
-  });
+      expect(response.status).toBe(status);
+      expect(response.headers.get('Allow')).toBe(allow);
+    }
+  );
 
   it('validates action requests before mutating the session', async () => {
     const store = createTestSessionStorage();
@@ -256,25 +319,6 @@ describe('auth-routes:createAuthRoutes', () => {
     expect(validateActionRequest).toHaveBeenCalledWith(expect.any(Request));
     expect(spies.signIn).not.toHaveBeenCalled();
     expect(store.commitSession).not.toHaveBeenCalled();
-  });
-
-  it('returns 404 for paths that are not configured as authentication routes', async () => {
-    const store = createTestSessionStorage();
-    const { context, routes } = await createRequestRuntime(store.sessionStorage);
-
-    const loaderResponse = await routes.loader({
-      request: new Request(`${baseUrl}/not-an-auth-route`),
-      context,
-      url: new URL(`${baseUrl}/not-an-auth-route`),
-    });
-    const actionResponse = await routes.action({
-      request: new Request(`${baseUrl}/not-an-auth-route`, { method: 'POST' }),
-      context,
-      url: new URL(`${baseUrl}/not-an-auth-route`),
-    });
-
-    expect(loaderResponse.status).toBe(404);
-    expect(actionResponse.status).toBe(404);
   });
 
   it('allows the sign-up route to be omitted', async () => {

@@ -7,6 +7,7 @@ export type {
   AuthRoutePaths,
   AuthRoutes,
   AuthRoutesOptions,
+  ResolvePostCallbackRedirectUri,
   ValidateAuthActionRequest,
 } from './auth-routes/auth-routes.js';
 

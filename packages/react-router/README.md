@@ -136,6 +136,48 @@ redirects. If your app provisions application data after sign-in, set `postCallb
 a dedicated provisioning route. That route can retry provisioning without repeating the code
 exchange.
 
+To return a user to a request-specific path, provide a resolver. It receives the POST action request
+that starts sign-in or sign-up, rather than the later callback request:
+
+```ts
+const resolveReturnTo = (signInRequest: Request) => {
+  const fallback = '/auth/provision';
+  const signInUrl = new URL(signInRequest.url);
+  const returnTo = signInUrl.searchParams.get('returnTo');
+
+  if (!returnTo?.startsWith('/') || returnTo.startsWith('//')) {
+    return fallback;
+  }
+
+  try {
+    return new URL(returnTo, signInUrl).origin === signInUrl.origin ? returnTo : fallback;
+  } catch {
+    return fallback;
+  }
+};
+
+const authRoutes = logto.authRoutes({
+  paths: {
+    signIn: '/api/logto/sign-in',
+    callback: '/api/logto/callback',
+    signOut: '/api/logto/sign-out',
+  },
+  postCallbackRedirectUri: resolveReturnTo,
+  postSignOutRedirectUri: '/',
+});
+
+export const loader = authRoutes.loader;
+export const action = authRoutes.action;
+```
+
+The resolved path is validated and stored in Logto's sign-in session. After code exchange, the
+callback retrieves it from that session and redirects there, so the callback request does not need
+its own `returnTo` parameter. Resolvers must return a same-origin path beginning with `/` and should
+replace missing or unsafe request input with an application fallback. When provisioning is
+required, return the provisioning path with the final destination encoded in its query. A callback
+from an older in-flight sign-in session without a stored destination falls back to the application
+root.
+
 ## Read authentication state
 
 Access the request context from a loader or action:
