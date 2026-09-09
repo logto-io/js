@@ -1,4 +1,5 @@
-import { LogtoError } from '@logto/js';
+import { LogtoError, LogtoRequestError } from '@logto/js';
+import { assert } from '@silverhand/essentials';
 
 import { createRequester } from './requester.js';
 
@@ -20,18 +21,24 @@ describe('createRequester', () => {
     const message = 'some error message';
 
     test('failing response json with code and message should throw LogtoRequestError with same code and message', async () => {
+      const body = { code, message };
       const fetchFunction = vi.fn().mockResolvedValue(
-        new Response(JSON.stringify({ code, message }), {
+        new Response(JSON.stringify(body), {
           status: 400,
           headers: { 'content-type': 'application/json' },
         })
       );
       const requester = createRequester(fetchFunction);
-      await expect(requester('foo')).rejects.toMatchObject({
+      const error: unknown = await requester('foo').catch((error: unknown) => error);
+
+      expect(error).toMatchObject({
         name: 'LogtoRequestError',
         code,
         message,
       });
+
+      assert(error instanceof LogtoRequestError, new TypeError('Expected a LogtoRequestError.'));
+      await expect(error.cause?.json()).resolves.toEqual(body);
     });
 
     test('failing response json with more than code and message should throw LogtoRequestError with same code and message', async () => {
@@ -92,17 +99,23 @@ describe('createRequester', () => {
     });
 
     test('failing response with non-json text should throw LogtoRequestError', async () => {
+      const body = 'not json content';
       const fetchFunction = vi.fn().mockResolvedValue(
-        new Response('not json content', {
+        new Response(body, {
           status: 400,
         })
       );
       const requester = createRequester(fetchFunction);
-      await expect(requester('foo')).rejects.toMatchObject({
+      const error: unknown = await requester('foo').catch((error: unknown) => error);
+
+      expect(error).toMatchObject({
         name: 'LogtoRequestError',
         code: 'http_error_400',
-        message: 'not json content',
+        message: body,
       });
+
+      assert(error instanceof LogtoRequestError, new TypeError('Expected a LogtoRequestError.'));
+      await expect(error.cause?.text()).resolves.toBe(body);
     });
 
     test('rate limited response with non-json text should throw LogtoRequestError', async () => {
