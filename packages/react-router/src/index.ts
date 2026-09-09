@@ -1,16 +1,13 @@
-import type { GetContextParameters, LogtoConfig } from '@logto/node';
+import type { GetContextParameters } from '@logto/node';
 import type { SessionStorage } from 'react-router';
 
 import { makeLogtoAdapter } from './infrastructure/logto/index.js';
+import type { LogtoReactRouterConfig } from './types.js';
 import { makeGetContext } from './useCases/getContext/index.js';
 import { makeHandleAuthRoutes } from './useCases/handleAuthRoutes/index.js';
 
-type Config = Readonly<LogtoConfig> & {
-  readonly baseUrl: string;
-};
-
 export const makeLogtoReactRouter = (
-  config: Config,
+  config: LogtoReactRouterConfig,
   deps: {
     sessionStorage: SessionStorage;
   }
@@ -35,6 +32,22 @@ export const makeLogtoReactRouter = (
       }),
   });
 };
+
+export { createLogtoReactRouter } from './create-logto-react-router.js';
+export type { LogtoReactRouter } from './create-logto-react-router.js';
+
+export {
+  ProcessLocalSessionCoordinator,
+  createProcessLocalSessionCoordinator,
+  type SessionCoordinator,
+} from './infrastructure/session/index.js';
+export type {
+  GetAccessTokenOptions,
+  GetLogtoContextOptions,
+  LogtoAuthenticationContext,
+  LogtoRequestContext,
+} from './middleware/request-context.js';
+export type { LogtoReactRouterConfig } from './types.js';
 
 export type {
   AccessTokenClaims,

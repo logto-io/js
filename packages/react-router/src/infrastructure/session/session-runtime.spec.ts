@@ -177,25 +177,53 @@ describe('infrastructure:session:SessionRuntime', () => {
     expect(store.commitSession).toHaveBeenCalledOnce();
   });
 
-  it('keeps pending mutations when a checkpoint fails', async () => {
+  it('persists completed mutations before rethrowing a checkpoint error', async () => {
     const store = createTestSessionStorage({ refreshToken: 'old' });
     const runtime = await createRuntime(store.sessionStorage);
+    const refreshError = new Error('refresh failed');
 
     runtime.session.set('theme', 'dark');
 
     await expect(
       runtime.checkpoint(async (session) => {
-        session.set('refreshToken', 'not-committed');
-        throw new Error('refresh failed');
+        session.set('refreshToken', 'rotated');
+        throw refreshError;
       })
-    ).rejects.toThrow('refresh failed');
+    ).rejects.toBe(refreshError);
 
-    expect(store.getData()).toEqual({ refreshToken: 'old' });
+    expect(store.getData()).toEqual({ refreshToken: 'rotated', theme: 'dark' });
     expect(runtime.session.get('theme')).toBe('dark');
+    expect(runtime.session.get('refreshToken')).toBe('rotated');
+    expect(runtime.session.hasPendingMutations).toBe(false);
 
     await runtime.finalize();
 
-    expect(store.getData()).toEqual({ refreshToken: 'old', theme: 'dark' });
+    expect(store.commitSession).toHaveBeenCalledOnce();
+  });
+
+  it('waits for an active checkpoint before finalizing', async () => {
+    vi.useFakeTimers();
+
+    const store = createTestSessionStorage({ refreshToken: 'old' });
+    const runtime = await createRuntime(store.sessionStorage);
+    const checkpoint = runtime.checkpoint(async (session) => {
+      await delay(25);
+      session.set('refreshToken', 'rotated');
+    });
+
+    const finalization = runtime.finalize();
+
+    await vi.advanceTimersByTimeAsync(0);
+    expect(store.commitSession).not.toHaveBeenCalled();
+
+    await vi.advanceTimersByTimeAsync(25);
+    await checkpoint;
+
+    await expect(finalization).resolves.toBe(
+      'logto-session=session-id; Path=/checkpoint; HttpOnly'
+    );
+    expect(store.getData()).toEqual({ refreshToken: 'rotated' });
+    expect(store.commitSession).toHaveBeenCalledOnce();
   });
 
   it('commits mutations made through the request session during a checkpoint', async () => {

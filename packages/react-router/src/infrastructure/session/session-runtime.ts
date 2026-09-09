@@ -14,6 +14,20 @@ export type SessionOperation<
   FlashData extends SessionData = Data,
 > = (session: TrackedSession<Data, FlashData>) => Promise<Result>;
 
+type SessionOperationOutcome<Result> =
+  | Readonly<{ status: 'fulfilled'; value: Result }>
+  | Readonly<{ status: 'rejected'; error: unknown }>;
+
+const settleSessionOperation = async <Result>(
+  operation: Promise<Result>
+): Promise<SessionOperationOutcome<Result>> => {
+  try {
+    return { status: 'fulfilled', value: await operation };
+  } catch (error: unknown) {
+    return { status: 'rejected', error };
+  }
+};
+
 /** Inputs for creating a request-scoped session runtime. */
 export type SessionRuntimeOptions<
   Data extends SessionData = SessionData,
@@ -81,6 +95,7 @@ export class SessionRuntime<
   private currentCookieHeader: string | undefined;
   private responseCookieHeader: string | undefined;
   private destroyed = false;
+  private readonly activeCheckpoints = new Set<Promise<unknown>>();
 
   private constructor(
     private readonly options: SessionRuntimeOptions<Data, FlashData> &
@@ -100,6 +115,8 @@ export class SessionRuntime<
 
   /**
    * Reloads and updates the session under coordination, then persists the resulting state.
+   * Mutations completed before an operation rejects are still persisted because external effects,
+   * such as refresh-token rotation, cannot be rolled back.
    * Mutations recorded on {@link session} while the operation is in flight remain pending.
    */
   public async checkpoint<Result>(
@@ -109,14 +126,14 @@ export class SessionRuntime<
 
     const { sessionCoordinator, sessionStorage, sessionKey } = this.options;
 
-    return sessionCoordinator.runExclusive(sessionKey, async () => {
+    const checkpoint = sessionCoordinator.runExclusive(sessionKey, async () => {
       const latestSession = await sessionStorage.getSession(this.currentCookieHeader);
       const replayedMutationCount = this.session.pendingMutationCount;
 
       this.session.applyPendingMutations(latestSession, 0, replayedMutationCount);
 
       const checkpointSession = new TrackedSession(latestSession);
-      const result = await operation(checkpointSession);
+      const outcome = await settleSessionOperation(operation(checkpointSession));
       const mutationCountBeforeCommit = this.session.pendingMutationCount;
 
       this.session.applyPendingMutations(
@@ -134,8 +151,14 @@ export class SessionRuntime<
 
       this.session.adopt(latestSession, mutationCountBeforeCommit);
 
-      return result;
+      if (outcome.status === 'rejected') {
+        throw outcome.error;
+      }
+
+      return outcome.value;
     });
+
+    return this.trackCheckpoint(checkpoint);
   }
 
   /**
@@ -168,6 +191,8 @@ export class SessionRuntime<
 
   /** Commits remaining mutations once and returns the latest response `Set-Cookie` header. */
   public async finalize() {
+    await Promise.allSettled(this.activeCheckpoints);
+
     if (this.destroyed || !this.session.hasPendingMutations) {
       return this.responseCookieHeader;
     }
@@ -180,6 +205,16 @@ export class SessionRuntime<
   private assertActive() {
     if (this.destroyed) {
       throw new Error('Cannot update a destroyed session.');
+    }
+  }
+
+  private async trackCheckpoint<Result>(checkpoint: Promise<Result>) {
+    this.activeCheckpoints.add(checkpoint);
+
+    try {
+      return await checkpoint;
+    } finally {
+      this.activeCheckpoints.delete(checkpoint);
     }
   }
 }
