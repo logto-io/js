@@ -1,6 +1,9 @@
 {
   "name": "@logto/react-router",
   "version": "1.0.5",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "type": "module",
   "module": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -57,7 +60,7 @@
     "main": {
       "context": "node",
       "engines": {
-        "node": ">=20.0.0"
+        "node": ">=22.0.0"
       }
     }
   }

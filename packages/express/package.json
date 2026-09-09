@@ -1,6 +1,9 @@
 {
   "name": "@logto/express",
   "version": "3.0.16",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "type": "module",
   "module": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -65,7 +68,7 @@
     "main": {
       "context": "node",
       "engines": {
-        "node": ">=18.12.0"
+        "node": ">=22.0.0"
       }
     }
   }
