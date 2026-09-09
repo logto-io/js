@@ -1,4 +1,10 @@
-import { logto } from '../services/auth.server';
+import { applicationOrigin, logto } from '../services/auth.server';
+
+const validateActionRequest = (request: Request) => {
+  if (request.headers.get('Origin') !== applicationOrigin) {
+    return new Response(null, { status: 403, statusText: 'Forbidden' });
+  }
+};
 
 const authRoutes = logto.authRoutes({
   paths: {
@@ -9,6 +15,7 @@ const authRoutes = logto.authRoutes({
   },
   postCallbackRedirectUri: '/',
   postSignOutRedirectUri: '/',
+  validateActionRequest,
 });
 
 export const loader = authRoutes.loader;

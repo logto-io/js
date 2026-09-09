@@ -17,12 +17,16 @@ if (!process.env.LOGTO_ENDPOINT || !process.env.LOGTO_APP_ID || !process.env.LOG
   throw new Error('Missing Logto environment variables');
 }
 
+const baseUrl = process.env.LOGTO_BASE_URL ?? 'http://localhost:5173';
+
+export const applicationOrigin = new URL(baseUrl).origin;
+
 export const logto = createLogtoReactRouter(
   {
     endpoint: process.env.LOGTO_ENDPOINT,
     appId: process.env.LOGTO_APP_ID,
     appSecret: process.env.LOGTO_APP_SECRET,
-    baseUrl: process.env.LOGTO_BASE_URL ?? 'http://localhost:5173',
+    baseUrl,
   },
   { sessionStorage }
 );
