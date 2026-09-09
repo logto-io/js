@@ -51,9 +51,9 @@ export type { LogtoReactRouterConfig } from './types.js';
 
 export type {
   AccessTokenClaims,
+  FirstScreen,
   IdTokenClaims,
   LogtoContext,
-  InteractionMode,
   LogtoErrorCode,
   UserInfoResponse,
 } from '@logto/node';

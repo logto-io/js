@@ -5,6 +5,7 @@ export type { LogtoContext, GetContextParameters } from './types.js';
 
 export type {
   AccessTokenClaims,
+  FirstScreen,
   IdTokenClaims,
   LogtoErrorCode,
   LogtoConfig,
