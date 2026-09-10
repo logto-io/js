@@ -36,7 +36,7 @@ pnpm add @logto/node
 
 As the name suggests, Logto Node.js SDK is the foundation of all Logto SDKs that run in Node.js (Express, Next.js, etc.). `@logto/node` extends `@logto/client` and provides a Node.js specific implementation of the client adapters:
 
-- Implements `requester` by using package `node-fetch`.
+- Uses the native Fetch API for HTTP requests.
 - Implements `generateCodeChallenge`, `generateCodeVerifier`, `generateState` methods by using `crypto`.
 
 Usually, you are not expected to use it directly in your application, but instead choosing a framework specific SDK that built on top of it. We have already released a set of official SDKs to accelerate your integration. [Check this out](https://docs.logto.io/integrate-logto) and get started!
