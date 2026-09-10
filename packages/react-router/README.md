@@ -222,12 +222,19 @@ export const loader = async ({ context }: Route.LoaderArgs) => {
 };
 ```
 
-Use `getOrganizationToken(organizationId)` when you need an organization token. The request
-context also exposes `getIdTokenClaims()`, `getAccessTokenClaims(resource, organizationId)`, and
-`getOrganizationTokenClaims(organizationId)`. Pass both arguments when the token is scoped to an
-API resource within an organization. Access-token and organization-token claim lookups use the
-same coordinated session checkpoints as their token counterparts because they may refresh and
-rotate session credentials.
+The request context also provides:
+
+- `getOrganizationToken(organizationId)` for an organization token;
+- `getIdTokenClaims()` for ID token claims;
+- `getAccessTokenClaims(resource, organizationId)` for access token claims;
+- `getOrganizationTokenClaims(organizationId)` for organization token claims;
+- `clearAccessToken()` to remove cached access tokens; and
+- `clearAllTokens()` to remove every locally stored token.
+
+Pass both resource and organization arguments when the token is scoped to an API resource within
+an organization. Access-token and organization-token acquisition and claim lookups use coordinated
+session checkpoints because they may refresh and rotate session credentials. The clearing methods
+also persist their session changes before they return.
 
 ## Session coordination
 

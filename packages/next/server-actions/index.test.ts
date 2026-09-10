@@ -3,6 +3,8 @@ import type { AccessTokenClaims, IdTokenClaims } from '@logto/node';
 import type { LogtoNextConfig } from '../src/types.js';
 
 import {
+  clearAccessToken,
+  clearAllTokens,
   getAccessTokenClaims,
   getAccessTokenClaimsRSC,
   getIdTokenClaims,
@@ -27,10 +29,14 @@ const getAccessTokenClaimsFromClient = vi.fn(
 const getOrganizationTokenClaimsFromClient = vi.fn(
   async (_organizationId: string) => organizationTokenClaims
 );
+const clearAccessTokenFromClient = vi.fn();
+const clearAllTokensFromClient = vi.fn();
 const createNodeClient = vi.fn(async () => ({
   getIdTokenClaims: getIdTokenClaimsFromClient,
   getAccessTokenClaims: getAccessTokenClaimsFromClient,
   getOrganizationTokenClaims: getOrganizationTokenClaimsFromClient,
+  clearAccessToken: clearAccessTokenFromClient,
+  clearAllTokens: clearAllTokensFromClient,
 }));
 
 vi.mock('next/navigation', () => ({ redirect: vi.fn() }));
@@ -90,5 +96,15 @@ describe('Next (server actions): token claims', () => {
       'org-id'
     );
     expect(getOrganizationTokenClaimsFromClient).toHaveBeenCalledWith('org-id');
+  });
+
+  it('clears tokens with cookie persistence enabled', async () => {
+    await clearAccessToken(config);
+    await clearAllTokens(config);
+
+    expect(createNodeClient).toHaveBeenNthCalledWith(1);
+    expect(createNodeClient).toHaveBeenNthCalledWith(2);
+    expect(clearAccessTokenFromClient).toHaveBeenCalledOnce();
+    expect(clearAllTokensFromClient).toHaveBeenCalledOnce();
   });
 });

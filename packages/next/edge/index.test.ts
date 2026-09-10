@@ -6,6 +6,8 @@ import LogtoClient from './index.js';
 
 const signOut = vi.fn();
 const destroy = vi.fn();
+const clearAccessToken = vi.fn();
+const clearAllTokens = vi.fn();
 
 vi.mock('@logto/node', () => ({
   CookieStorage: vi.fn(
@@ -18,19 +20,33 @@ vi.mock('@logto/node', () => ({
         destroy();
         config.setCookie(config.cookieKey, 'encrypted-empty-session', { maxAge: 14 * 24 * 3600 });
       },
+      removeItem: async () => {
+        config.setCookie(config.cookieKey, 'encrypted-updated-session', {
+          maxAge: 14 * 24 * 3600,
+        });
+      },
     })
   ),
 }));
 
 type Adapter = {
   navigate: (url: string) => void;
+  storage: { removeItem: (key: string) => Promise<void> };
 };
 
 vi.mock('@logto/node/edge', () => ({
-  default: vi.fn((_: unknown, { navigate }: Adapter) => ({
+  default: vi.fn((_: unknown, { navigate, storage }: Adapter) => ({
     signOut: async () => {
       await signOut();
       navigate('https://logto.example.com/oidc/session/end');
+    },
+    clearAccessToken: async () => {
+      clearAccessToken();
+      await storage.removeItem('accessToken');
+    },
+    clearAllTokens: async () => {
+      clearAllTokens();
+      await storage.removeItem('accessToken');
     },
   })),
 }));
@@ -78,5 +94,29 @@ describe('Next (edge): sign-out', () => {
     expect(destroy).toHaveBeenCalledOnce();
     expect(consoleError).toHaveBeenCalledWith('Logto sign-out failed.', signOutError);
     consoleError.mockRestore();
+  });
+});
+
+describe('Next (edge): token clearing', () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('clears cached access tokens and returns the updated session headers', async () => {
+    const client = new LogtoClient(config);
+    const headers = await client.clearAccessToken(
+      new Request('https://app.example.com/api/tokens')
+    );
+
+    expect(clearAccessToken).toHaveBeenCalledOnce();
+    expect(headers.get('Set-Cookie')).toContain('logto_app-id=encrypted-updated-session');
+  });
+
+  it('clears all local tokens and returns the updated session headers', async () => {
+    const client = new LogtoClient(config);
+    const headers = await client.clearAllTokens(new Request('https://app.example.com/api/tokens'));
+
+    expect(clearAllTokens).toHaveBeenCalledOnce();
+    expect(headers.get('Set-Cookie')).toContain('logto_app-id=encrypted-updated-session');
   });
 });

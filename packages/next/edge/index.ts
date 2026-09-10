@@ -123,6 +123,26 @@ export default class LogtoClient extends BaseClient {
   };
 
   /**
+   * Clear cached access tokens and return headers containing the updated session cookie. Attach
+   * the returned headers to the response so the cookie is persisted.
+   */
+  clearAccessToken = async (request: Request): Promise<Headers> => {
+    const { nodeClient, headers } = await this.createNodeClientFromEdgeRequest(request);
+    await nodeClient.clearAccessToken();
+    return headers;
+  };
+
+  /**
+   * Clear every locally stored token and return headers containing the updated session cookie.
+   * Attach the returned headers to the response so the cookie is persisted.
+   */
+  clearAllTokens = async (request: Request): Promise<Headers> => {
+    const { nodeClient, headers } = await this.createNodeClientFromEdgeRequest(request);
+    await nodeClient.clearAllTokens();
+    return headers;
+  };
+
+  /**
    * Create a Node client for the current edge request.
    *
    * The public return shape is intentionally kept as `{ nodeClient, headers }` (unchanged from

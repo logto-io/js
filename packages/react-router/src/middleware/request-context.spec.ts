@@ -50,10 +50,15 @@ const idTokenClaims: IdTokenClaims = {
 };
 const accessTokenClaims: AccessTokenClaims = { sub: 'access-token-user-id' };
 const organizationTokenClaims: AccessTokenClaims = { sub: 'organization-token-user-id' };
+const noTokenClearing = async () => {
+  // Most tests in this suite do not exercise token clearing.
+};
 const defaultClaimsClientMethods = {
   getIdTokenClaims: async () => idTokenClaims,
   getAccessTokenClaims: async (_resource?: string, _organizationId?: string) => accessTokenClaims,
   getOrganizationTokenClaims: async (_organizationId: string) => organizationTokenClaims,
+  clearAccessToken: noTokenClearing,
+  clearAllTokens: noTokenClearing,
 };
 const authenticatedContext: LogtoContext = {
   isAuthenticated: true,
