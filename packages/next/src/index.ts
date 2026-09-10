@@ -171,19 +171,21 @@ export default class LogtoClient extends LogtoNextBaseClient {
   getAccessToken = async (
     request: NextApiRequest,
     response: NextApiResponse,
-    resource: string
+    resource?: string,
+    organizationId?: string
   ): Promise<string> => {
     const nodeClient = await this.createNodeClientFromNextApi(request, response);
-    return nodeClient.getAccessToken(resource);
+    return nodeClient.getAccessToken(resource, organizationId);
   };
 
   getAccessTokenClaims = async (
     request: NextApiRequest,
     response: NextApiResponse,
-    resource?: string
+    resource?: string,
+    organizationId?: string
   ): Promise<AccessTokenClaims> => {
     const nodeClient = await this.createNodeClientFromNextApi(request, response);
-    return nodeClient.getAccessTokenClaims(resource);
+    return nodeClient.getAccessTokenClaims(resource, organizationId);
   };
 
   getIdTokenClaims = async (

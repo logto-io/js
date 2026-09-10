@@ -21,7 +21,9 @@ const accessTokenClaims: AccessTokenClaims = { sub: 'access-token-user-id' };
 const organizationTokenClaims: AccessTokenClaims = { sub: 'organization-token-user-id' };
 
 const getIdTokenClaimsFromClient = vi.fn(async () => idTokenClaims);
-const getAccessTokenClaimsFromClient = vi.fn(async (_resource?: string) => accessTokenClaims);
+const getAccessTokenClaimsFromClient = vi.fn(
+  async (_resource?: string, _organizationId?: string) => accessTokenClaims
+);
 const getOrganizationTokenClaimsFromClient = vi.fn(
   async (_organizationId: string) => organizationTokenClaims
 );
@@ -57,30 +59,36 @@ describe('Next (server actions): token claims', () => {
   });
 
   it('gets access and organization token claims with cookie persistence enabled', async () => {
-    await expect(getAccessTokenClaims(config, 'https://api.example.com')).resolves.toEqual(
-      accessTokenClaims
-    );
+    await expect(
+      getAccessTokenClaims(config, 'https://api.example.com', 'org-id')
+    ).resolves.toEqual(accessTokenClaims);
     await expect(getOrganizationTokenClaims(config, 'org-id')).resolves.toEqual(
       organizationTokenClaims
     );
 
     expect(createNodeClient).toHaveBeenNthCalledWith(1);
     expect(createNodeClient).toHaveBeenNthCalledWith(2);
-    expect(getAccessTokenClaimsFromClient).toHaveBeenCalledWith('https://api.example.com');
+    expect(getAccessTokenClaimsFromClient).toHaveBeenCalledWith(
+      'https://api.example.com',
+      'org-id'
+    );
     expect(getOrganizationTokenClaimsFromClient).toHaveBeenCalledWith('org-id');
   });
 
   it('gets access and organization token claims without cookie writes in RSC', async () => {
-    await expect(getAccessTokenClaimsRSC(config, 'https://api.example.com')).resolves.toEqual(
-      accessTokenClaims
-    );
+    await expect(
+      getAccessTokenClaimsRSC(config, 'https://api.example.com', 'org-id')
+    ).resolves.toEqual(accessTokenClaims);
     await expect(getOrganizationTokenClaimsRSC(config, 'org-id')).resolves.toEqual(
       organizationTokenClaims
     );
 
     expect(createNodeClient).toHaveBeenNthCalledWith(1, { ignoreCookieChange: true });
     expect(createNodeClient).toHaveBeenNthCalledWith(2, { ignoreCookieChange: true });
-    expect(getAccessTokenClaimsFromClient).toHaveBeenCalledWith('https://api.example.com');
+    expect(getAccessTokenClaimsFromClient).toHaveBeenCalledWith(
+      'https://api.example.com',
+      'org-id'
+    );
     expect(getOrganizationTokenClaimsFromClient).toHaveBeenCalledWith('org-id');
   });
 });

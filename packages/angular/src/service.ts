@@ -132,14 +132,17 @@ export class LogtoService {
     return this.run(async () => this.client.getRefreshToken());
   }
 
-  /** Get an access token for the OIDC or requested API resource. */
-  async getAccessToken(resource?: string): Promise<string> {
-    return this.run(async () => this.client.getAccessToken(resource));
+  /** Get an access token for the OIDC or requested API resource and organization. */
+  async getAccessToken(resource?: string, organizationId?: string): Promise<string> {
+    return this.run(async () => this.client.getAccessToken(resource, organizationId));
   }
 
-  /** Get decoded claims for an OIDC or API-resource access token. */
-  async getAccessTokenClaims(resource?: string): Promise<AccessTokenClaims> {
-    return this.run(async () => this.client.getAccessTokenClaims(resource));
+  /** Get decoded claims for an OIDC or API-resource and organization access token. */
+  async getAccessTokenClaims(
+    resource?: string,
+    organizationId?: string
+  ): Promise<AccessTokenClaims> {
+    return this.run(async () => this.client.getAccessTokenClaims(resource, organizationId));
   }
 
   /** Get an access token for a Logto organization. */

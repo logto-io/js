@@ -13,6 +13,7 @@ const storage = {
 };
 
 const getAccessToken = vi.fn(async () => true);
+const getAccessTokenClaims = vi.fn(async () => ({ scope: 'read' }));
 const getOrganizationToken = vi.fn(async () => 'token');
 const fetchUserInfo = vi.fn(async () => ({ name: 'name' }));
 const mockIdTokenClaims = { sub: 'sub', organizations: ['org1'] };
@@ -22,6 +23,7 @@ vi.mock('@logto/client', () => ({
   __esModule: true,
   default: vi.fn(() => ({
     getAccessToken,
+    getAccessTokenClaims,
     getOrganizationToken,
     getIdTokenClaims,
     isAuthenticated,
@@ -141,6 +143,7 @@ describe('LogtoClient', () => {
   describe('getContext', () => {
     beforeEach(() => {
       getAccessToken.mockClear();
+      getAccessTokenClaims.mockClear();
       getOrganizationToken.mockClear();
       fetchUserInfo.mockClear();
     });
@@ -168,6 +171,7 @@ describe('LogtoClient', () => {
         isAuthenticated: true,
       });
       expect(getAccessToken).toHaveBeenCalledWith('resource', 'org1');
+      expect(getAccessTokenClaims).toHaveBeenCalledWith('resource', 'org1');
     });
 
     it('should get organization tokens', async () => {

@@ -153,16 +153,17 @@ export const getAccessToken = async (
 };
 
 /**
- * Get access token claims for the specified resource. This function can be used in server actions
- * or API routes.
+ * Get access token claims for the specified resource and organization. This function can be used
+ * in server actions or API routes.
  */
 export const getAccessTokenClaims = async (
   config: LogtoNextConfig,
-  resource?: string
+  resource?: string,
+  organizationId?: string
 ): Promise<AccessTokenClaims> => {
   const client = new LogtoClient(config);
   const nodeClient = await client.createNodeClient();
-  return nodeClient.getAccessTokenClaims(resource);
+  return nodeClient.getAccessTokenClaims(resource, organizationId);
 };
 
 /**
@@ -206,16 +207,17 @@ export const getAccessTokenRSC = async (
 };
 
 /**
- * Get access token claims for the specified resource in React Server Components. Refreshed tokens
- * cannot be persisted because cookies are not writable in a Server Component.
+ * Get access token claims for the specified resource and organization in React Server Components.
+ * Refreshed tokens cannot be persisted because cookies are not writable in a Server Component.
  */
 export const getAccessTokenClaimsRSC = async (
   config: LogtoNextConfig,
-  resource?: string
+  resource?: string,
+  organizationId?: string
 ): Promise<AccessTokenClaims> => {
   const client = new LogtoClient(config);
   const nodeClient = await client.createNodeClient({ ignoreCookieChange: true });
-  return nodeClient.getAccessTokenClaims(resource);
+  return nodeClient.getAccessTokenClaims(resource, organizationId);
 };
 
 /**

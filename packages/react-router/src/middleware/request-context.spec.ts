@@ -52,7 +52,7 @@ const accessTokenClaims: AccessTokenClaims = { sub: 'access-token-user-id' };
 const organizationTokenClaims: AccessTokenClaims = { sub: 'organization-token-user-id' };
 const defaultClaimsClientMethods = {
   getIdTokenClaims: async () => idTokenClaims,
-  getAccessTokenClaims: async (_resource?: string) => accessTokenClaims,
+  getAccessTokenClaims: async (_resource?: string, _organizationId?: string) => accessTokenClaims,
   getOrganizationTokenClaims: async (_organizationId: string) => organizationTokenClaims,
 };
 const authenticatedContext: LogtoContext = {
@@ -200,7 +200,9 @@ describe('middleware:createLogtoRequestContext', () => {
       sessionStorage: store.sessionStorage,
       sessionCoordinator: createProcessLocalSessionCoordinator(),
     });
-    const getAccessTokenClaims = vi.fn(async (_resource?: string) => accessTokenClaims);
+    const getAccessTokenClaims = vi.fn(
+      async (_resource?: string, _organizationId?: string) => accessTokenClaims
+    );
     const getOrganizationTokenClaims = vi.fn(
       async (_organizationId: string) => organizationTokenClaims
     );
@@ -208,9 +210,9 @@ describe('middleware:createLogtoRequestContext', () => {
       ...defaultClaimsClientMethods,
       getContext: async () => authenticatedContext,
       getAccessToken: async () => 'access-token',
-      getAccessTokenClaims: async (resource) => {
+      getAccessTokenClaims: async (resource, organizationId) => {
         session.set('refreshToken', 'rotated-for-access-token');
-        return getAccessTokenClaims(resource);
+        return getAccessTokenClaims(resource, organizationId);
       },
       getOrganizationToken: async () => 'organization-token',
       getOrganizationTokenClaims: async (organizationId) => {
@@ -220,14 +222,14 @@ describe('middleware:createLogtoRequestContext', () => {
     });
     const context = createLogtoRequestContext(runtime, createClient);
 
-    await expect(context.getAccessTokenClaims('https://api.example.com')).resolves.toEqual(
-      accessTokenClaims
-    );
+    await expect(
+      context.getAccessTokenClaims('https://api.example.com', 'org-id')
+    ).resolves.toEqual(accessTokenClaims);
     await expect(context.getOrganizationTokenClaims('org-id')).resolves.toEqual(
       organizationTokenClaims
     );
 
-    expect(getAccessTokenClaims).toHaveBeenCalledWith('https://api.example.com');
+    expect(getAccessTokenClaims).toHaveBeenCalledWith('https://api.example.com', 'org-id');
     expect(getOrganizationTokenClaims).toHaveBeenCalledWith('org-id');
     expect(store.getData()).toEqual({ refreshToken: 'rotated-for-organization-token' });
     expect(store.commitSession).toHaveBeenCalledTimes(2);

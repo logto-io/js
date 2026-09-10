@@ -46,7 +46,9 @@ export default class LogtoNodeBaseClient extends BaseClient {
     const { accessToken, accessTokenClaims } = getAccessToken
       ? {
           accessToken: await trySafe(async () => this.getAccessToken(resource, organizationId)),
-          accessTokenClaims: await trySafe(async () => this.getAccessTokenClaims(resource)),
+          accessTokenClaims: await trySafe(async () =>
+            this.getAccessTokenClaims(resource, organizationId)
+          ),
         }
       : { accessToken: undefined, accessTokenClaims: undefined };
 

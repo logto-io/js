@@ -24,7 +24,7 @@ export type LogtoRequestContext = Readonly<{
   getContext: (options?: GetLogtoContextOptions) => Promise<LogtoAuthenticationContext>;
   getIdTokenClaims: () => Promise<IdTokenClaims>;
   getAccessToken: (options?: GetAccessTokenOptions) => Promise<string>;
-  getAccessTokenClaims: (resource?: string) => Promise<AccessTokenClaims>;
+  getAccessTokenClaims: (resource?: string, organizationId?: string) => Promise<AccessTokenClaims>;
   getOrganizationToken: (organizationId: string) => Promise<string>;
   getOrganizationTokenClaims: (organizationId: string) => Promise<AccessTokenClaims>;
 }>;
@@ -33,7 +33,7 @@ type LogtoRequestClient = {
   getContext: (options?: GetContextParameters) => Promise<LogtoContext>;
   getIdTokenClaims: () => Promise<IdTokenClaims>;
   getAccessToken: (resource?: string, organizationId?: string) => Promise<string>;
-  getAccessTokenClaims: (resource?: string) => Promise<AccessTokenClaims>;
+  getAccessTokenClaims: (resource?: string, organizationId?: string) => Promise<AccessTokenClaims>;
   getOrganizationToken: (organizationId: string) => Promise<string>;
   getOrganizationTokenClaims: (organizationId: string) => Promise<AccessTokenClaims>;
 };
@@ -49,8 +49,10 @@ export const createLogtoRequestContext = (
       createClient(session).getAccessToken(resource, organizationId)
     );
 
-  const getAccessTokenClaims = async (resource?: string) =>
-    runtime.checkpoint(async (session) => createClient(session).getAccessTokenClaims(resource));
+  const getAccessTokenClaims = async (resource?: string, organizationId?: string) =>
+    runtime.checkpoint(async (session) =>
+      createClient(session).getAccessTokenClaims(resource, organizationId)
+    );
 
   const getContext = async (options: GetLogtoContextOptions = {}) => {
     const context = await createClient(runtime.session).getContext();

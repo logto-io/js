@@ -148,13 +148,13 @@ describe('Next', () => {
       const client = new LogtoClient(configs);
       await testApiHandler({
         pagesHandler: async (request, response) => {
-          await client.getAccessToken(request, response, 'resource');
+          await client.getAccessToken(request, response, 'resource', 'organization_id');
           response.end();
         },
         url: '/api/logto/get-access-token',
         test: async ({ fetch }) => {
           await fetch({ method: 'GET' });
-          expect(getAccessToken).toHaveBeenCalledWith('resource');
+          expect(getAccessToken).toHaveBeenCalledWith('resource', 'organization_id');
         },
       });
     });
@@ -165,13 +165,13 @@ describe('Next', () => {
       const client = new LogtoClient(configs);
       await testApiHandler({
         pagesHandler: async (request, response) => {
-          await client.getAccessTokenClaims(request, response, 'resource');
+          await client.getAccessTokenClaims(request, response, 'resource', 'organization_id');
           response.end();
         },
         url: '/api/logto/get-access-token-claims',
         test: async ({ fetch }) => {
           await fetch({ method: 'GET' });
-          expect(getAccessTokenClaims).toHaveBeenCalledWith('resource');
+          expect(getAccessTokenClaims).toHaveBeenCalledWith('resource', 'organization_id');
         },
       });
     });
