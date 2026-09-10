@@ -38,7 +38,8 @@ describe('useCases:handleSignOut:makeHandleSignOutUseCase', () => {
       createLogtoAdapter,
       sessionStorage,
     });
-    handleSignOut.mockRejectedValueOnce(new Error('OIDC discovery failed'));
+    const signOutError = new Error('OIDC discovery failed');
+    handleSignOut.mockRejectedValueOnce(signOutError);
 
     await expect(
       execute({
@@ -48,6 +49,7 @@ describe('useCases:handleSignOut:makeHandleSignOutUseCase', () => {
     ).resolves.toEqual({
       status: 'rejected',
       cookieHeader: 'logto-session=; Max-Age=0',
+      error: signOutError,
     });
 
     expect(handleSignOut).toBeCalledTimes(1);

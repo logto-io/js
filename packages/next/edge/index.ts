@@ -56,14 +56,15 @@ export default class LogtoClient extends BaseClient {
       const { nodeClient, storage, headers, getNavigateUrl } = await this.createRequestScopedClient(
         request
       );
-      const didStartRemoteSignOut = await nodeClient.signOut(redirectUri).then(
-        () => true,
-        () => false
+      const signOutOutcome = await nodeClient.signOut(redirectUri).then(
+        () => ({ status: 'fulfilled' }) as const,
+        (error: unknown) => ({ status: 'rejected', error }) as const
       );
       await storage.destroy();
 
-      if (!didStartRemoteSignOut) {
-        // The response must carry the clearing cookie even when remote sign-out cannot start.
+      if (signOutOutcome.status === 'rejected') {
+        console.error('Logto sign-out failed.', signOutOutcome.error);
+        // The response must carry the session-reset cookie even when remote sign-out cannot start.
         return new Response(null, { headers, status: 500, statusText: 'Sign-out failed' });
       }
 

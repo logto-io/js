@@ -16,6 +16,7 @@ type SignOutResponse =
   | Readonly<{
       status: 'rejected';
       cookieHeader: string;
+      error: unknown;
     }>;
 
 export const makeHandleSignOutUseCase =
@@ -33,13 +34,13 @@ export const makeHandleSignOutUseCase =
       })
       .then(
         (response) => ({ status: 'fulfilled', response }) as const,
-        () => ({ status: 'rejected' }) as const
+        (error: unknown) => ({ status: 'rejected', error }) as const
       );
 
     const cookieHeader = await sessionStorage.destroySession(session);
 
     if (outcome.status === 'rejected') {
-      return { status: outcome.status, cookieHeader };
+      return { status: outcome.status, cookieHeader, error: outcome.error };
     }
 
     return {

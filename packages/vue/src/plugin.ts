@@ -27,6 +27,20 @@ export const createPluginMethods = (context: Context) => {
     };
   };
 
+  const signOut = async (postLogoutRedirectUri?: string) => {
+    try {
+      await client.signOut(postLogoutRedirectUri);
+    } catch (error: unknown) {
+      const currentAuthenticationState = await trySafe(async () => client.isAuthenticated());
+
+      if (currentAuthenticationState !== undefined) {
+        setIsAuthenticated(currentAuthenticationState);
+      }
+
+      throw error;
+    }
+  };
+
   const methods = {
     getRefreshToken: proxy(client.getRefreshToken.bind(client)),
     getAccessToken: proxy(client.getAccessToken.bind(client)),
@@ -37,19 +51,7 @@ export const createPluginMethods = (context: Context) => {
     getIdTokenClaims: proxy(client.getIdTokenClaims.bind(client)),
     // eslint-disable-next-line no-restricted-syntax
     signIn: proxy(client.signIn.bind(client), false) as LogtoClient['signIn'],
-    signOut: proxy(async (postLogoutRedirectUri?: string) => {
-      try {
-        await client.signOut(postLogoutRedirectUri);
-      } catch (error: unknown) {
-        const currentAuthenticationState = await trySafe(async () => client.isAuthenticated());
-
-        if (currentAuthenticationState !== undefined) {
-          setIsAuthenticated(currentAuthenticationState);
-        }
-
-        throw error;
-      }
-    }),
+    signOut: proxy(signOut),
     fetchUserInfo: proxy(client.fetchUserInfo.bind(client)),
     clearAccessToken: proxy(client.clearAccessToken.bind(client)),
     clearAllTokens: proxy(client.clearAllTokens.bind(client)),

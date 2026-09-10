@@ -41,6 +41,7 @@ export class HandleSignOutController {
     });
 
     if (result.status === 'rejected') {
+      console.error('Logto sign-out failed.', result.error);
       // eslint-disable-next-line @typescript-eslint/no-throw-literal -- Remix response exceptions preserve the clearing cookie.
       throw new Response(null, {
         status: 500,

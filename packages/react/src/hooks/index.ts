@@ -129,8 +129,22 @@ const useLogto = (): Logto => {
     [setIsLoading, handleError]
   );
 
-  const methods = useMemo(
-    () => ({
+  const methods = useMemo(() => {
+    const signOut = async (postLogoutRedirectUri?: string) => {
+      try {
+        await client.signOut(postLogoutRedirectUri);
+      } catch (error: unknown) {
+        const currentAuthenticationState = await trySafe(async () => client.isAuthenticated());
+
+        if (currentAuthenticationState !== undefined) {
+          setIsAuthenticated(currentAuthenticationState);
+        }
+
+        throw error;
+      }
+    };
+
+    return {
       getRefreshToken: proxy(client.getRefreshToken.bind(client)),
       getAccessToken: proxy(client.getAccessToken.bind(client)),
       getAccessTokenClaims: proxy(client.getAccessTokenClaims.bind(client)),
@@ -140,25 +154,12 @@ const useLogto = (): Logto => {
       getIdTokenClaims: proxy(client.getIdTokenClaims.bind(client)),
       // eslint-disable-next-line no-restricted-syntax -- TypeScript cannot infer the correct type.
       signIn: proxy(client.signIn.bind(client), false) as LogtoClient['signIn'],
-      signOut: proxy(async (postLogoutRedirectUri?: string) => {
-        try {
-          await client.signOut(postLogoutRedirectUri);
-        } catch (error: unknown) {
-          const currentAuthenticationState = await trySafe(async () => client.isAuthenticated());
-
-          if (currentAuthenticationState !== undefined) {
-            setIsAuthenticated(currentAuthenticationState);
-          }
-
-          throw error;
-        }
-      }),
+      signOut: proxy(signOut),
       fetchUserInfo: proxy(client.fetchUserInfo.bind(client)),
       clearAccessToken: proxy(client.clearAccessToken.bind(client)),
       clearAllTokens: proxy(client.clearAllTokens.bind(client)),
-    }),
-    [client, proxy, setIsAuthenticated]
-  );
+    };
+  }, [client, proxy, setIsAuthenticated]);
 
   return {
     isAuthenticated,

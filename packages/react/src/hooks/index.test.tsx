@@ -137,6 +137,27 @@ describe('useLogto', () => {
     });
   });
 
+  it('uses the sign-out operation name in fallback errors', async () => {
+    signOut.mockRejectedValueOnce('OIDC discovery failed');
+    const { result } = renderHook(useLogto, {
+      wrapper: createHookWrapper(),
+    });
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+
+    await act(async () => {
+      await result.current.signOut();
+    });
+
+    await waitFor(() => {
+      expect(result.current.error?.message).toBe(
+        'Unexpected error occurred while calling signOut.'
+      );
+    });
+  });
+
   it('should not call `handleSignInCallback` when logtoClient is not found in the context', async () => {
     // Mock `isSignInRedirected` to return true for triggering `useEffect`
     isSignInRedirected.mockResolvedValueOnce(true);

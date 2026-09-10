@@ -160,6 +160,21 @@ describe('useLogto', () => {
     expect(context.isAuthenticated.value).toBe(false);
     expect(context.error.value).toBe(signOutError);
   });
+
+  it('uses the sign-out operation name in fallback errors', async () => {
+    signOut.mockRejectedValueOnce('OIDC discovery failed');
+    const client = new LogtoClient({ appId, endpoint });
+    const context = createContext(client);
+
+    await vi.waitFor(() => {
+      expect(context.isLoading.value).toBe(false);
+    });
+
+    const { signOut: wrappedSignOut } = createPluginMethods(context);
+    await wrappedSignOut();
+
+    expect(context.error.value?.message).toBe('Unexpected error occurred while calling signOut.');
+  });
 });
 
 describe('useHandleSignInCallback', () => {

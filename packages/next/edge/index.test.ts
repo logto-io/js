@@ -10,12 +10,13 @@ const destroy = vi.fn();
 vi.mock('@logto/node', () => ({
   CookieStorage: vi.fn(
     (config: {
+      cookieKey: string;
       setCookie: (name: string, value: string, options: { maxAge: number }) => void;
     }) => ({
       init: vi.fn(),
       destroy: async () => {
         destroy();
-        config.setCookie('logto-session', '', { maxAge: 0 });
+        config.setCookie(config.cookieKey, 'encrypted-empty-session', { maxAge: 14 * 24 * 3600 });
       },
     })
   ),
@@ -47,7 +48,7 @@ describe('Next (edge): sign-out', () => {
     vi.clearAllMocks();
   });
 
-  it('returns the remote sign-out redirect with the destroyed session cookie', async () => {
+  it('returns the remote sign-out redirect with the reset session cookie', async () => {
     const client = new LogtoClient(config);
     const handler = client.handleSignOut();
     const response = await handler(
@@ -56,12 +57,15 @@ describe('Next (edge): sign-out', () => {
 
     expect(response.status).toBe(307);
     expect(response.headers.get('Location')).toBe('https://logto.example.com/oidc/session/end');
-    expect(response.headers.get('Set-Cookie')).toContain('logto-session=');
+    expect(response.headers.get('Set-Cookie')).toContain('logto_app-id=encrypted-empty-session');
+    expect(response.headers.get('Set-Cookie')).toContain('Max-Age=1209600');
     expect(destroy).toHaveBeenCalledOnce();
   });
 
-  it('returns the clearing cookie when remote sign-out fails', async () => {
-    signOut.mockRejectedValueOnce(new Error('OIDC discovery failed'));
+  it('reports the failure and returns the reset session cookie when remote sign-out fails', async () => {
+    const signOutError = new Error('OIDC discovery failed');
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => true);
+    signOut.mockRejectedValueOnce(signOutError);
     const client = new LogtoClient(config);
     const handler = client.handleSignOut();
     const response = await handler(
@@ -69,7 +73,10 @@ describe('Next (edge): sign-out', () => {
     );
 
     expect(response.status).toBe(500);
-    expect(response.headers.get('Set-Cookie')).toContain('logto-session=');
+    expect(response.headers.get('Set-Cookie')).toContain('logto_app-id=encrypted-empty-session');
+    expect(response.headers.get('Set-Cookie')).toContain('Max-Age=1209600');
     expect(destroy).toHaveBeenCalledOnce();
+    expect(consoleError).toHaveBeenCalledWith('Logto sign-out failed.', signOutError);
+    consoleError.mockRestore();
   });
 });
