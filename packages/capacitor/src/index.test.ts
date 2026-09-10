@@ -69,11 +69,16 @@ class CapacitorLogtoClientTest extends CapacitorLogtoClient {
   }
 }
 
-const createClient = () =>
-  new CapacitorLogtoClientTest({
-    endpoint: 'https://your.logto.endpoint',
-    appId: 'your-app-id',
-  });
+const createClient = (
+  capacitorConfig?: ConstructorParameters<typeof CapacitorLogtoClientTest>[1]
+) =>
+  new CapacitorLogtoClientTest(
+    {
+      endpoint: 'https://your.logto.endpoint',
+      appId: 'your-app-id',
+    },
+    capacitorConfig
+  );
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -82,6 +87,11 @@ beforeEach(() => {
 });
 
 describe('CapacitorLogtoClient', () => {
+  it('keeps cache disabled by default and supports opting in', () => {
+    expect(createClient().getAdapter().cache).toBeUndefined();
+    expect(createClient({ enableCache: true }).getAdapter().cache).toBeDefined();
+  });
+
   it('should override navigate', async () => {
     const client = createClient();
     expect(client.getAdapter().navigate).toBeDefined();

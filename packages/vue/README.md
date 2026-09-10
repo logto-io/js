@@ -39,6 +39,19 @@ pnpm i && pnpm build
 cd packages/vue-sample && pnpm start
 ```
 
+## Discovery cache
+
+Add `enableCache: true` to the plugin configuration to cache OIDC discovery metadata in session
+storage. Caching is disabled by default.
+
+```ts
+app.use(createLogto, {
+  endpoint: 'https://your-tenant.logto.app',
+  appId: 'your-app-id',
+  enableCache: true,
+});
+```
+
 ## Resources
 
 [![Website](https://img.shields.io/badge/website-logto.io-8262F8.svg)](https://logto.io/)

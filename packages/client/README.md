@@ -40,9 +40,14 @@ To implement a platform-specific SDK, you should implement the following adapter
 3. generateState: generate state.
 4. generateCodeVerifier: generate code verifier.
 5. generateCodeChallenge: generate code challenge.
+6. cache: optionally cache well-known data.
 
 The client uses the runtime's native `fetch` by default. Set the optional `fetch` adapter only when
 the platform needs a custom transport.
+
+The optional `cache` adapter stores well-known data. Cache reads and writes are best-effort and do
+not make an otherwise successful request fail. The deprecated `unstable_cache` property remains
+supported; `cache` takes precedence when both are provided.
 
 See the [adapters](./src/adapter/index.ts) for more information.
 

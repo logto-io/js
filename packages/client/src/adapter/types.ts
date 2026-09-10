@@ -92,7 +92,14 @@ export type ClientAdapter = ClientAdapterTransport & {
    *
    * @see {@link CacheKey}
    */
-  unstable_cache?: Storage<CacheKey>;
+  cache?: Storage<CacheKey> | undefined;
+  /**
+   * An optional storage for caching well-known data.
+   *
+   * @deprecated Use {@link ClientAdapter.cache | cache} instead.
+   * @see {@link CacheKey}
+   */
+  unstable_cache?: Storage<CacheKey> | undefined;
   navigate: Navigate;
   /**
    * The function that generates a random state string.

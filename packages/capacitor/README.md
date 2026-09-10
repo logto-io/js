@@ -29,6 +29,12 @@ pnpm add @logto/capacitor @capacitor/app @capacitor/browser @capacitor/preferenc
 
 See [Integrate Logto in your application](https://docs.logto.io/docs/recipes/integrate-logto/) for more information.
 
+OIDC discovery caching is disabled by default. Enable it through the Capacitor options:
+
+```ts
+const client = new LogtoClient(config, { enableCache: true });
+```
+
 ## Resources
 
 [![Website](https://img.shields.io/badge/website-logto.io-8262F8.svg)](https://logto.io/)

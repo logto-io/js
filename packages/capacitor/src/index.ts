@@ -35,6 +35,12 @@ export type {
 
 export type CapacitorConfig = {
   /**
+   * Whether to cache OIDC discovery metadata in session storage.
+   *
+   * @default false
+   */
+  enableCache?: boolean;
+  /**
    * The options to pass to the `open` method of the Capacitor Browser plugin.
    * @default { windowName: '_self', presentationStyle: 'popover' }
    */
@@ -51,8 +57,8 @@ const swallowError = (): void => {
 
 export default class CapacitorLogtoClient extends LogtoBaseClient {
   constructor(config: LogtoConfig, capacitorConfig: CapacitorConfig = {}) {
-    const { openOptions } = capacitorConfig;
-    super(config);
+    const { enableCache = false, openOptions } = capacitorConfig;
+    super(config, enableCache);
 
     // Use the Capacitor Browser plugin to open the sign-in and sign-out pages
     // since the default location assignment method will open the pages in a

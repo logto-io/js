@@ -63,8 +63,14 @@ describe('createLogto.install', () => {
   it('should call LogtoClient constructor and provide Logto context data', async () => {
     createLogto.install(appMock, { appId, endpoint });
 
-    expect(LogtoClient).toHaveBeenCalledWith({ endpoint, appId });
+    expect(LogtoClient).toHaveBeenCalledWith({ endpoint, appId }, false);
     expect(appMock.provide).toBeCalled();
+  });
+
+  it('should enable cache through plugin configuration', () => {
+    createLogto.install(appMock, { appId, endpoint, enableCache: true });
+
+    expect(LogtoClient).toHaveBeenCalledWith({ endpoint, appId }, true);
   });
 });
 

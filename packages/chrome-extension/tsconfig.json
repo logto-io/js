@@ -4,9 +4,10 @@
     "moduleResolution": "bundler",
     "module": "esnext",
     "outDir": "lib",
-    "types": ["chrome-types"]
+    "types": ["chrome-types", "vitest/globals"]
   },
   "include": [
-    "src"
+    "src",
+    "vitest.config.ts"
   ]
 }

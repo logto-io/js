@@ -39,6 +39,15 @@ Usually you are not expected to use it directly in your application, but instead
 
 If Logto does not support your front-end framework and you want to create your own SDK from scratch, we recommend checking out the [SDK convention](https://docs.logto.io/docs/references/sdk-convention/) first. You can also refer to our [React SDK](https://github.com/logto-io/js/tree/master/packages/react) and [Vue SDK](https://github.com/logto-io/js/tree/master/packages/vue) to learn more about the implementation details.
 
+### Discovery cache
+
+OIDC discovery caching is disabled by default. Pass `true` as the second constructor argument to use
+session storage scoped by the normalized Logto endpoint and application ID.
+
+```ts
+const client = new LogtoClient(config, true);
+```
+
 ## Resources
 
 [![Website](https://img.shields.io/badge/website-logto.io-8262F8.svg)](https://logto.io/)

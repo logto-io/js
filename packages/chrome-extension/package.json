@@ -17,8 +17,10 @@
   },
   "scripts": {
     "precommit": "lint-staged",
-    "build": "rm -rf lib && tsc",
+    "check": "tsc --noEmit",
+    "build": "rm -rf lib && tsc -p tsconfig.build.json",
     "lint": "eslint --ext .ts --ext .tsx src",
+    "test": "vitest",
     "prepack": "pnpm build"
   },
   "keywords": [],
@@ -38,7 +40,8 @@
     "eslint": "^8.57.0",
     "lint-staged": "^15.0.0",
     "prettier": "^3.0.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitest": "^3.2.6"
   },
   "eslintConfig": {
     "extends": "@silverhand/react"

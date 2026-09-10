@@ -142,7 +142,7 @@ export const createAdapters = (withCache = false) =>
   ({
     fetch: fetchFunction,
     storage: new MockedStorage(),
-    unstable_cache: conditional(withCache && new MockedStorage()),
+    cache: conditional(withCache && new MockedStorage()),
     navigate,
     generateCodeChallenge,
     generateCodeVerifier,

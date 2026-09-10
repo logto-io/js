@@ -6,14 +6,14 @@ import {
   createAuthenticatedFetch,
   resolveAdapterTransport,
 } from '../src/utils/adapter-transport.js';
-import { createMemoryCache } from '../src/utils/cache.js';
+import { resolveAdapterCache } from '../src/utils/cache.js';
 
 import { generateCodeChallenge, generateCodeVerifier, generateState } from './generators.js';
 
 export { CacheKey, PersistKey, ReservedResource, decodeAccessToken } from '@logto/client';
 
 type EdgeClientAdapter = Pick<ClientAdapter, 'navigate' | 'storage'> &
-  Partial<Pick<ClientAdapter, 'fetch' | 'requester'>>;
+  Partial<Pick<ClientAdapter, 'cache' | 'unstable_cache' | 'fetch' | 'requester'>>;
 
 // Used for edge runtime, currently only NextJS.
 export default class LogtoClient extends BaseClient {
@@ -31,7 +31,7 @@ export default class LogtoClient extends BaseClient {
       generateCodeChallenge,
       generateCodeVerifier,
       generateState,
-      unstable_cache: createMemoryCache(config.endpoint),
+      cache: resolveAdapterCache(adapter, config.endpoint),
       ...transport,
     });
   }

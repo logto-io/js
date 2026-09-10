@@ -21,16 +21,22 @@ import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideLogto({
-      endpoint: 'https://your-tenant.logto.app',
-      appId: 'your-app-id',
-      scopes: [UserScope.Email, UserScope.Organizations],
-      resources: ['https://api.example.com'],
-    }),
+    provideLogto(
+      {
+        endpoint: 'https://your-tenant.logto.app',
+        appId: 'your-app-id',
+        scopes: [UserScope.Email, UserScope.Organizations],
+        resources: ['https://api.example.com'],
+      },
+      { enableCache: true }
+    ),
     provideRouter(routes),
   ],
 };
 ```
+
+OIDC discovery caching is disabled by default. The deprecated `unstable_enableCache` option remains
+supported, and `enableCache` takes precedence when both are provided.
 
 ## Sign in and sign out
 

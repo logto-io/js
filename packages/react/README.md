@@ -39,6 +39,20 @@ pnpm i && pnpm build
 cd packages/react-sample && pnpm start
 ```
 
+## Discovery cache
+
+Set `enableCache` on `LogtoProvider` to cache OIDC discovery metadata in session storage. Caching is
+disabled by default.
+
+```tsx
+<LogtoProvider config={config} enableCache>
+  <App />
+</LogtoProvider>
+```
+
+The deprecated `unstable_enableCache` property remains supported. `enableCache` takes precedence
+when both are provided.
+
 ## Resources
 
 [![Website](https://img.shields.io/badge/website-logto.io-8262F8.svg)](https://logto.io/)
