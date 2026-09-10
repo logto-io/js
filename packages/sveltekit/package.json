@@ -1,6 +1,9 @@
 {
   "name": "@logto/sveltekit",
   "version": "0.3.24",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "type": "module",
   "main": "./lib/index.js",
   "module": "./lib/index.js",

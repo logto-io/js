@@ -1,6 +1,9 @@
 {
   "name": "@logto/next",
   "version": "4.2.11",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "type": "module",
   "module": "./lib/src/index.js",
   "types": "./lib/src/index.d.ts",
