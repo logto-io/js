@@ -328,6 +328,9 @@ importers:
       '@silverhand/ts-config':
         specifier: ^6.0.0
         version: 6.0.0(typescript@5.3.3)
+      '@vitest/coverage-v8':
+        specifier: 3.2.6
+        version: 3.2.6(vitest@3.2.6(@types/node@22.10.0)(happy-dom@20.8.9)(jiti@2.7.0)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.9.0))
       chrome-types:
         specifier: ^0.1.276
         version: 0.1.276
