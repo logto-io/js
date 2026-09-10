@@ -3,7 +3,7 @@ import { createRemoteJWKSet, exportJWK, generateKeyPair, SignJWT } from 'jose';
 
 import { nocked } from '../mock.js';
 
-import { verifyIdToken } from './defaults.js';
+import { buildRemoteJwkSetOptions, verifyIdToken } from './defaults.js';
 
 const createDefaultJwks = () => createRemoteJWKSet(new URL('https://logto.dev/oidc/jwks'));
 
@@ -193,5 +193,15 @@ describe('verifyIdToken', () => {
     const jwks = createDefaultJwks();
 
     await expect(verifyIdToken(idToken, 'qux', 'foo', jwks, 3600)).resolves.not.toThrow();
+  });
+});
+
+describe('buildRemoteJwkSetOptions', () => {
+  it('preserves the default JSON Web Key Set timeout when no timeout is configured', () => {
+    expect(buildRemoteJwkSetOptions()).toBeUndefined();
+  });
+
+  it('uses requestTimeoutMs as the JSON Web Key Set timeout', () => {
+    expect(buildRemoteJwkSetOptions(12_000)).toEqual({ timeoutDuration: 12_000 });
   });
 });

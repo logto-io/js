@@ -3,7 +3,7 @@ import { conditional, type Nullable } from '@silverhand/essentials';
 import nock from 'nock';
 import { type Mock } from 'vitest';
 
-import type { Storage } from './adapter/index.js';
+import type { ClientAdapter, Storage } from './adapter/index.js';
 import type { AccessToken, LogtoConfig, LogtoSignInSessionItem } from './index.js';
 import LogtoClient from './index.js';
 
@@ -127,7 +127,12 @@ export const mockFetchOidcConfig: (delay?: number) => Mock<() => Promise<OidcCon
 
 export const fetchOidcConfig: Mock<() => Promise<OidcConfigResponse>> = mockFetchOidcConfig();
 export const requester = vi.fn();
-export const failingRequester = vi.fn().mockRejectedValue(new Error('Failed request'));
+export const fetchFunction = vi.fn(async (...args: Parameters<typeof fetch>) => {
+  const data: unknown = await requester(...args);
+
+  return Response.json(data ?? null);
+});
+export const failingFetch = vi.fn().mockRejectedValue(new Error('Failed request'));
 export const navigate = vi.fn();
 export const generateCodeChallenge = vi.fn(async () => mockCodeChallenge);
 export const generateCodeVerifier = vi.fn(() => mockedCodeVerifier);
@@ -135,14 +140,14 @@ export const generateState = vi.fn(() => mockedState);
 
 export const createAdapters = (withCache = false) =>
   ({
-    requester,
+    fetch: fetchFunction,
     storage: new MockedStorage(),
     unstable_cache: conditional(withCache && new MockedStorage()),
     navigate,
     generateCodeChallenge,
     generateCodeVerifier,
     generateState,
-  }) satisfies Partial<Record<keyof LogtoClient['adapter'], unknown>>;
+  }) satisfies ClientAdapter;
 
 export const createClient = (
   prompt?: Prompt,

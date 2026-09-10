@@ -8,6 +8,9 @@ import { type JwtVerifier } from './types.js';
 
 export const defaultClockTolerance = 300; // 5 minutes
 
+export const buildRemoteJwkSetOptions = (requestTimeoutMs?: number) =>
+  requestTimeoutMs === undefined ? undefined : { timeoutDuration: requestTimeoutMs };
+
 export const verifyIdToken = async (
   idToken: string,
   clientId: string,
@@ -31,10 +34,11 @@ export class DefaultJwtVerifier implements JwtVerifier {
   ) {}
 
   async verifyIdToken(idToken: string): Promise<void> {
-    const { appId } = this.client.logtoConfig;
+    const { appId, requestTimeoutMs } = this.client.logtoConfig;
     const { issuer, jwksUri } = await this.client.getOidcConfig();
+    const remoteJwkSetOptions = buildRemoteJwkSetOptions(requestTimeoutMs);
 
-    this.getJwtVerifyGetKey ||= createRemoteJWKSet(new URL(jwksUri));
+    this.getJwtVerifyGetKey ||= createRemoteJWKSet(new URL(jwksUri), remoteJwkSetOptions);
 
     await verifyIdToken(idToken, appId, issuer, this.getJwtVerifyGetKey, this.clockTolerance);
   }

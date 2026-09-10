@@ -1,6 +1,8 @@
 import { type Requester } from '@logto/js';
 import { trySafe, type Nullable, conditional } from '@silverhand/essentials';
 
+import { createRequester, type CreateRequesterOptions } from '../utils/requester.js';
+
 import {
   type CacheKey,
   type Navigate,
@@ -27,10 +29,9 @@ const getRunningCacheGetterMap = (cache: Storage<CacheKey>) => {
   return newRunningGetterMap;
 };
 
-export class ClientAdapterInstance implements ClientAdapter {
+export class ClientAdapterInstance {
   /*
-   * Implement `ClientAdapter`. Its properties are assigned by
-   * `Object.assign()` in the constructor.
+   * Its properties are assigned by `Object.assign()` in the constructor.
    */
   requester!: Requester;
   storage!: Storage<StorageKey | PersistKey>;
@@ -41,9 +42,15 @@ export class ClientAdapterInstance implements ClientAdapter {
   generateCodeChallenge!: (codeVerifier: string) => string | Promise<string>;
   /* END OF IMPLEMENTATION */
 
-  constructor(adapter: ClientAdapter) {
+  constructor(adapter: ClientAdapter, requestOptions: CreateRequesterOptions = {}) {
+    const requester = adapter.fetch
+      ? createRequester(adapter.fetch, requestOptions)
+      : adapter.requester ?? createRequester(globalThis.fetch, requestOptions);
+
     // eslint-disable-next-line @silverhand/fp/no-mutating-assign
-    Object.assign(this, adapter);
+    Object.assign(this, adapter, {
+      requester,
+    });
   }
 
   async setStorageItem(key: InferStorageKey<typeof this.storage>, value: Nullable<string>) {

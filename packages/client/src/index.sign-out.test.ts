@@ -9,7 +9,7 @@ import {
   postSignOutRedirectUri,
   revocationEndpoint,
   endSessionEndpoint,
-  failingRequester,
+  failingFetch,
   createAdapters,
   fetchOidcConfig,
 } from './mock.js';
@@ -58,14 +58,14 @@ describe('LogtoClient', () => {
         { endpoint, appId },
         {
           ...createAdapters(),
-          requester: failingRequester,
+          fetch: failingFetch,
           storage,
         }
       );
       vi.spyOn(logtoClient, 'getOidcConfig').mockReturnValue(fetchOidcConfig());
 
       await expect(logtoClient.signOut()).resolves.not.toThrow();
-      expect(failingRequester).toBeCalledTimes(1);
+      expect(failingFetch).toBeCalledTimes(1);
       await expect(storage.getItem('idToken')).resolves.toBeNull();
       await expect(storage.getItem('refreshToken')).resolves.toBeNull();
       await expect(storage.getItem('accessToken')).resolves.toBeNull();

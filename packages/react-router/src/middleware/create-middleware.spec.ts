@@ -1,57 +1,18 @@
-import type {
-  LoaderFunctionArgs,
-  MiddlewareFunction,
-  RouterContextProvider,
-  Session,
-  SessionData,
-  SessionStorage,
-} from 'react-router';
-import {
-  createSession,
-  createStaticHandler,
-  RouterContextProvider as ContextProvider,
-} from 'react-router';
-
 import { createLogtoReactRouter } from '../create-logto-react-router.js';
 
-const config = {
-  endpoint: 'https://logto.example.com',
-  appId: 'app-id',
-  appSecret: 'app-secret',
-  baseUrl: 'https://app.example.com',
-};
-
-const sessionCookie = 'logto-session=session-id';
+import type { RouteHandler } from './create-middleware.test-utils.js';
+import {
+  config,
+  createTestSessionStorage,
+  runRoute,
+  stubLogtoFetch,
+  waitForAbort,
+} from './create-middleware.test-utils.js';
 
 const delay = async (milliseconds: number) =>
   new Promise<void>((resolve) => {
     setTimeout(resolve, milliseconds);
   });
-
-type RouteHandler = (
-  args: LoaderFunctionArgs<Readonly<RouterContextProvider>>
-) => Response | Promise<Response>;
-
-const createTestSessionStorage = (initialData: SessionData = {}) => {
-  const sessions = new Map<string, SessionData>([['session-id', structuredClone(initialData)]]);
-  const commitSession = vi.fn(async (session: Session) => {
-    sessions.set('session-id', structuredClone(session.data));
-
-    return `${sessionCookie}; Path=/; HttpOnly; SameSite=Lax`;
-  });
-  const sessionStorage: SessionStorage = {
-    getSession: async () =>
-      createSession(structuredClone(sessions.get('session-id') ?? {}), 'session-id'),
-    commitSession,
-    destroySession: async () => `${sessionCookie}; Max-Age=0`,
-  };
-
-  return {
-    commitSession,
-    sessionStorage,
-    getData: () => structuredClone(sessions.get('session-id') ?? {}),
-  };
-};
 
 const stubTokenRefresh = () => {
   const tokenRequest = vi.fn(async () => {
@@ -64,87 +25,14 @@ const stubTokenRefresh = () => {
       expires_in: 3600,
     });
   });
-  const fetchRequest = vi.fn(async (input: string | URL | Request) => {
-    const url = String(input);
-
-    if (url.endsWith('/oidc/.well-known/openid-configuration')) {
-      return Response.json({
-        authorization_endpoint: `${config.endpoint}/oidc/auth`,
-        token_endpoint: `${config.endpoint}/oidc/token`,
-        userinfo_endpoint: `${config.endpoint}/oidc/me`,
-        end_session_endpoint: `${config.endpoint}/oidc/session/end`,
-        revocation_endpoint: `${config.endpoint}/oidc/token/revocation`,
-        jwks_uri: `${config.endpoint}/oidc/jwks`,
-        issuer: `${config.endpoint}/oidc`,
-      });
-    }
-
-    if (url.endsWith('/oidc/token')) {
-      return tokenRequest();
-    }
-
-    return new Response('Not found', { status: 404 });
-  });
-
-  vi.stubGlobal('fetch', fetchRequest);
+  stubLogtoFetch(tokenRequest);
 
   return tokenRequest;
 };
 
-const runRoute = async (
-  middleware: MiddlewareFunction<Response>,
-  handler: RouteHandler,
-  method = 'GET',
-  path = '/'
-) => {
-  // `createStaticHandler` uses the Data Mode middleware type even when its response generator
-  // supplies the Framework Mode response pipeline exercised here.
-  const dataMiddleware: MiddlewareFunction = async (args, next) =>
-    middleware(args, async () => {
-      const result = await next();
-
-      if (!(result instanceof Response)) {
-        throw new TypeError('Expected downstream middleware to return a response.');
-      }
-
-      return result;
-    });
-  const staticHandler = createStaticHandler([
-    {
-      id: 'root',
-      path: '*',
-      middleware: [dataMiddleware],
-      loader: handler,
-      action: handler,
-    },
-  ]);
-  const request = new Request(`${config.baseUrl}${path}`, {
-    method,
-    headers: { Cookie: sessionCookie },
-  });
-  const response: unknown = await staticHandler.queryRoute(request, {
-    routeId: 'root',
-    requestContext: new ContextProvider(),
-    generateMiddlewareResponse: async (queryRoute) => {
-      try {
-        return await queryRoute(request);
-      } catch (error: unknown) {
-        return error instanceof Response
-          ? error
-          : new Response('Internal Server Error', { status: 500 });
-      }
-    },
-  });
-
-  if (!(response instanceof Response)) {
-    throw new TypeError('Expected the route to return a response.');
-  }
-
-  return response;
-};
-
 describe('middleware:createLogtoMiddleware', () => {
   afterEach(() => {
+    vi.restoreAllMocks();
     vi.unstubAllGlobals();
     vi.useRealTimers();
   });
@@ -202,24 +90,7 @@ describe('middleware:createLogtoMiddleware', () => {
 
   it('runs an authentication route through the request middleware runtime', async () => {
     const store = createTestSessionStorage();
-    const fetchRequest = vi.fn(async (input: string | URL | Request) => {
-      const url = String(input);
-
-      if (url.endsWith('/oidc/.well-known/openid-configuration')) {
-        return Response.json({
-          authorization_endpoint: `${config.endpoint}/oidc/auth`,
-          token_endpoint: `${config.endpoint}/oidc/token`,
-          userinfo_endpoint: `${config.endpoint}/oidc/me`,
-          end_session_endpoint: `${config.endpoint}/oidc/session/end`,
-          revocation_endpoint: `${config.endpoint}/oidc/token/revocation`,
-          jwks_uri: `${config.endpoint}/oidc/jwks`,
-          issuer: `${config.endpoint}/oidc`,
-        });
-      }
-
-      return new Response('Not found', { status: 404 });
-    });
-    vi.stubGlobal('fetch', fetchRequest);
+    stubLogtoFetch();
     const logto = createLogtoReactRouter(config, { sessionStorage: store.sessionStorage });
     const authRoutes = logto.authRoutes({
       paths: {
@@ -266,6 +137,82 @@ describe('middleware:createLogtoMiddleware', () => {
       'access-token',
     ]);
     expect(tokenRequest).toHaveBeenCalledOnce();
+    expect(store.getData()).toMatchObject({ refreshToken: 'rotated' });
+    expect(store.commitSession).toHaveBeenCalledOnce();
+  });
+
+  it('holds the session lock until a timed-out token request settles', async () => {
+    const store = createTestSessionStorage({ idToken: 'id-token', refreshToken: 'old' });
+    const abortObserved = vi.fn();
+    const firstRequestAborted = new AbortController();
+    const firstTokenRequestStarted = new AbortController();
+    const settleFirstRequest = new AbortController();
+    const firstTokenTimeoutController = new AbortController();
+    const timeoutError = new DOMException(
+      'The operation was aborted due to timeout',
+      'TimeoutError'
+    );
+    vi.spyOn(AbortSignal, 'timeout').mockImplementation(() =>
+      firstTokenRequestStarted.signal.aborted
+        ? new AbortController().signal
+        : firstTokenTimeoutController.signal
+    );
+    const tokenRequest = vi.fn(
+      async (input: string | URL | Request, init?: RequestInit): Promise<Response> => {
+        if (tokenRequest.mock.calls.length === 1) {
+          const signal = init?.signal ?? (input instanceof Request ? input.signal : undefined);
+          signal?.addEventListener(
+            'abort',
+            () => {
+              abortObserved();
+              firstRequestAborted.abort();
+            },
+            { once: true }
+          );
+          firstTokenRequestStarted.abort();
+          await waitForAbort(settleFirstRequest.signal);
+
+          const abortReason: unknown = signal?.reason;
+          throw abortReason instanceof Error ? abortReason : new Error('Token request aborted.');
+        }
+
+        return Response.json({
+          access_token: 'access-token',
+          refresh_token: 'rotated',
+          scope: 'read',
+          expires_in: 3600,
+        });
+      }
+    );
+    stubLogtoFetch(tokenRequest);
+    const logto = createLogtoReactRouter(
+      { ...config, requestTimeoutMs: 100 },
+      { sessionStorage: store.sessionStorage }
+    );
+    const handler: RouteHandler = async ({ context }) => {
+      const accessToken = await context.get(logto.context).getAccessToken();
+
+      return new Response(accessToken);
+    };
+
+    const firstResponse = runRoute(logto.middleware, handler);
+    await waitForAbort(firstTokenRequestStarted.signal);
+    expect(tokenRequest).toHaveBeenCalledOnce();
+
+    const secondResponse = runRoute(logto.middleware, handler);
+    firstTokenTimeoutController.abort(timeoutError);
+    await waitForAbort(firstRequestAborted.signal);
+
+    expect(tokenRequest).toHaveBeenCalledOnce();
+    expect(abortObserved).toHaveBeenCalledOnce();
+
+    settleFirstRequest.abort();
+
+    const [first, second] = await Promise.all([firstResponse, secondResponse]);
+
+    expect(first.status).toBe(500);
+    await expect(second.text()).resolves.toBe('access-token');
+    expect(tokenRequest).toHaveBeenCalledTimes(2);
     expect(store.getData()).toMatchObject({ refreshToken: 'rotated' });
     expect(store.commitSession).toHaveBeenCalledOnce();
   });

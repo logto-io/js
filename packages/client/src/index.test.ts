@@ -344,7 +344,6 @@ describe('LogtoClient', () => {
         { endpoint, appId },
         {
           ...createAdapters(),
-          requester,
           storage: new MockedStorage({
             idToken: 'id_token_value',
             refreshToken: 'refresh_token_value',
@@ -374,7 +373,6 @@ describe('LogtoClient', () => {
         { endpoint, appId },
         {
           ...createAdapters(),
-          requester,
           storage: new MockedStorage({ idToken, refreshToken }),
         }
       );

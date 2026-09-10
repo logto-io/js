@@ -409,10 +409,10 @@ importers:
     devDependencies:
       '@silverhand/eslint-config':
         specifier: ^6.0.1
-        version: 6.0.1(@types/eslint@9.6.1)(eslint@8.57.0)(prettier@3.0.0)(typescript@5.3.3)
+        version: 6.0.1(@types/eslint@9.6.1)(eslint@8.57.0)(prettier@3.0.0)(typescript@5.8.3)
       '@silverhand/ts-config':
         specifier: ^6.0.0
-        version: 6.0.0(typescript@5.3.3)
+        version: 6.0.0(typescript@5.8.3)
       '@types/node':
         specifier: ^22.0.0
         version: 22.10.0
@@ -435,8 +435,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.8.3
+        version: 5.8.3
       vitest:
         specifier: ^3.2.6
         version: 3.2.6(@types/node@22.10.0)(happy-dom@20.8.9)(jiti@2.7.0)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.9.0)

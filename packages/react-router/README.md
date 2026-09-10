@@ -58,6 +58,7 @@ export const logto = createLogtoReactRouter(
     appId: process.env.LOGTO_APP_ID!,
     appSecret: process.env.LOGTO_APP_SECRET!,
     baseUrl: process.env.LOGTO_BASE_URL!,
+    requestTimeoutMs: 10_000,
   },
   { sessionStorage }
 );
@@ -241,6 +242,10 @@ For a multi-instance deployment, use both:
 
 The storage keeps session state shared. The coordinator provides mutual exclusion for refresh and
 persistence operations that use the same session ID.
+
+Set `requestTimeoutMs` in the Logto configuration to bound each request to the Logto server. When a
+request times out during a session checkpoint, the coordinator keeps the session lock until the
+aborted request settles.
 
 ## Migrating from 1.x
 

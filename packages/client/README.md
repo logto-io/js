@@ -35,14 +35,39 @@ If Logto does not support your framework and you want to contribute by building 
 
 To implement a platform-specific SDK, you should implement the following adapters:
 
-1. requester: send http requests.
-2. storage: save tokens and other info.
-3. navigate: handle redirect.
-4. generateState: generate state.
-5. generateCodeVerifier: generate code verifier.
-6. generateCodeChallenge: generate code challenge.
+1. storage: save tokens and other info.
+2. navigate: handle redirect.
+3. generateState: generate state.
+4. generateCodeVerifier: generate code verifier.
+5. generateCodeChallenge: generate code challenge.
+
+The client uses the runtime's native `fetch` by default. Set the optional `fetch` adapter only when
+the platform needs a custom transport.
 
 See the [adapters](./src/adapter/index.ts) for more information.
+
+### Request timeouts
+
+Set `requestTimeoutMs` in `LogtoConfig` to apply a timeout to each request to the Logto server. The
+option covers discovery, authorization-code and refresh-token exchange, revocation, user info, and
+remote JSON Web Key Set requests. Framework SDKs built on `@logto/client` inherit the same option.
+
+```ts
+const config = {
+  endpoint: 'https://example.logto.app',
+  appId: 'your-app-id',
+  requestTimeoutMs: 10_000,
+};
+```
+
+The timeout is opt-in. The client builds its requester on top of native `fetch`, or the adapter's
+custom `fetch` transport when provided, so the same timeout policy applies in both cases. A custom
+transport must observe `RequestInit.signal` and settle after the signal is aborted. The client
+awaits that settlement before it rejects the operation.
+
+The deprecated `requester` adapter remains supported for compatibility. When both `fetch` and
+`requester` are provided, `fetch` takes precedence. Since a custom requester is already fully
+configured, the client does not apply `requestTimeoutMs` to it.
 
 ## Resources
 
