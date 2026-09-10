@@ -222,7 +222,11 @@ export const loader = async ({ context }: Route.LoaderArgs) => {
 };
 ```
 
-Use `getOrganizationToken(organizationId)` when you need an organization token.
+Use `getOrganizationToken(organizationId)` when you need an organization token. The request
+context also exposes `getIdTokenClaims()`, `getAccessTokenClaims(resource)`, and
+`getOrganizationTokenClaims(organizationId)`. Access-token and organization-token claim lookups
+use the same coordinated session checkpoints as their token counterparts because they may refresh
+and rotate session credentials.
 
 ## Session coordination
 

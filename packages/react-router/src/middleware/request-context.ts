@@ -1,4 +1,9 @@
-import type { GetContextParameters, LogtoContext } from '@logto/node';
+import type {
+  AccessTokenClaims,
+  GetContextParameters,
+  IdTokenClaims,
+  LogtoContext,
+} from '@logto/node';
 import type { Session } from 'react-router';
 
 import type { SessionRuntime } from '../infrastructure/session/index.js';
@@ -17,14 +22,20 @@ export type LogtoAuthenticationContext = Readonly<
 export type LogtoRequestContext = Readonly<{
   session: Session;
   getContext: (options?: GetLogtoContextOptions) => Promise<LogtoAuthenticationContext>;
+  getIdTokenClaims: () => Promise<IdTokenClaims>;
   getAccessToken: (options?: GetAccessTokenOptions) => Promise<string>;
+  getAccessTokenClaims: (resource?: string) => Promise<AccessTokenClaims>;
   getOrganizationToken: (organizationId: string) => Promise<string>;
+  getOrganizationTokenClaims: (organizationId: string) => Promise<AccessTokenClaims>;
 }>;
 
 type LogtoRequestClient = {
   getContext: (options?: GetContextParameters) => Promise<LogtoContext>;
+  getIdTokenClaims: () => Promise<IdTokenClaims>;
   getAccessToken: (resource?: string, organizationId?: string) => Promise<string>;
+  getAccessTokenClaims: (resource?: string) => Promise<AccessTokenClaims>;
   getOrganizationToken: (organizationId: string) => Promise<string>;
+  getOrganizationTokenClaims: (organizationId: string) => Promise<AccessTokenClaims>;
 };
 
 export type CreateLogtoRequestClient = (session: Session) => LogtoRequestClient;
@@ -37,6 +48,9 @@ export const createLogtoRequestContext = (
     runtime.checkpoint(async (session) =>
       createClient(session).getAccessToken(resource, organizationId)
     );
+
+  const getAccessTokenClaims = async (resource?: string) =>
+    runtime.checkpoint(async (session) => createClient(session).getAccessTokenClaims(resource));
 
   const getContext = async (options: GetLogtoContextOptions = {}) => {
     const context = await createClient(runtime.session).getContext();
@@ -55,10 +69,18 @@ export const createLogtoRequestContext = (
       createClient(session).getOrganizationToken(organizationId)
     );
 
+  const getOrganizationTokenClaims = async (organizationId: string) =>
+    runtime.checkpoint(async (session) =>
+      createClient(session).getOrganizationTokenClaims(organizationId)
+    );
+
   return Object.freeze({
     session: runtime.session,
     getContext,
+    getIdTokenClaims: async () => createClient(runtime.session).getIdTokenClaims(),
     getAccessToken,
+    getAccessTokenClaims,
     getOrganizationToken,
+    getOrganizationTokenClaims,
   });
 };

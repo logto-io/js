@@ -2,8 +2,10 @@ import { type IncomingMessage, type ServerResponse } from 'node:http';
 
 import NodeClient, {
   CookieStorage,
+  type AccessTokenClaims,
   type SignInOptions,
   type GetContextParameters,
+  type IdTokenClaims,
   type InteractionMode,
 } from '@logto/node';
 import { serialize } from 'cookie';
@@ -175,6 +177,23 @@ export default class LogtoClient extends LogtoNextBaseClient {
     return nodeClient.getAccessToken(resource);
   };
 
+  getAccessTokenClaims = async (
+    request: NextApiRequest,
+    response: NextApiResponse,
+    resource?: string
+  ): Promise<AccessTokenClaims> => {
+    const nodeClient = await this.createNodeClientFromNextApi(request, response);
+    return nodeClient.getAccessTokenClaims(resource);
+  };
+
+  getIdTokenClaims = async (
+    request: NextApiRequest,
+    response: NextApiResponse
+  ): Promise<IdTokenClaims> => {
+    const nodeClient = await this.createNodeClientFromNextApi(request, response);
+    return nodeClient.getIdTokenClaims();
+  };
+
   getOrganizationToken = async (
     request: NextApiRequest,
     response: NextApiResponse,
@@ -182,6 +201,15 @@ export default class LogtoClient extends LogtoNextBaseClient {
   ): Promise<string> => {
     const nodeClient = await this.createNodeClientFromNextApi(request, response);
     return nodeClient.getOrganizationToken(organizationId);
+  };
+
+  getOrganizationTokenClaims = async (
+    request: NextApiRequest,
+    response: NextApiResponse,
+    organizationId: string
+  ): Promise<AccessTokenClaims> => {
+    const nodeClient = await this.createNodeClientFromNextApi(request, response);
+    return nodeClient.getOrganizationTokenClaims(organizationId);
   };
 
   withLogtoApiRoute = (

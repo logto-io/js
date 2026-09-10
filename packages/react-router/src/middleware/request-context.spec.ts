@@ -1,4 +1,4 @@
-import type { LogtoContext } from '@logto/node';
+import type { AccessTokenClaims, IdTokenClaims, LogtoContext } from '@logto/node';
 import type { Session, SessionData, SessionStorage } from 'react-router';
 import { createSession } from 'react-router';
 
@@ -41,15 +41,23 @@ const createTestSessionStorage = (initialData: SessionData = {}) => {
   };
 };
 
+const idTokenClaims: IdTokenClaims = {
+  aud: 'app-id',
+  exp: 1_700_000_000,
+  iat: 1_600_000_000,
+  iss: 'https://logto.example.com/oidc',
+  sub: 'user-id',
+};
+const accessTokenClaims: AccessTokenClaims = { sub: 'access-token-user-id' };
+const organizationTokenClaims: AccessTokenClaims = { sub: 'organization-token-user-id' };
+const defaultClaimsClientMethods = {
+  getIdTokenClaims: async () => idTokenClaims,
+  getAccessTokenClaims: async (_resource?: string) => accessTokenClaims,
+  getOrganizationTokenClaims: async (_organizationId: string) => organizationTokenClaims,
+};
 const authenticatedContext: LogtoContext = {
   isAuthenticated: true,
-  claims: {
-    aud: 'app-id',
-    exp: 1_700_000_000,
-    iat: 1_600_000_000,
-    iss: 'https://logto.example.com/oidc',
-    sub: 'user-id',
-  },
+  claims: idTokenClaims,
 };
 
 describe('middleware:createLogtoRequestContext', () => {
@@ -57,7 +65,7 @@ describe('middleware:createLogtoRequestContext', () => {
     vi.useRealTimers();
   });
 
-  it('reads the authentication context without committing the session', async () => {
+  it('reads authentication and ID token claims without committing the session', async () => {
     const store = createTestSessionStorage({ idToken: 'id-token' });
     const runtime = await SessionRuntime.create({
       cookieHeader: sessionCookie,
@@ -67,15 +75,20 @@ describe('middleware:createLogtoRequestContext', () => {
     const getContext = vi.fn(
       async (_options?: { fetchUserInfo?: boolean }) => authenticatedContext
     );
+    const getIdTokenClaims = vi.fn(async () => idTokenClaims);
     const createClient: CreateLogtoRequestClient = () => ({
+      ...defaultClaimsClientMethods,
       getContext,
+      getIdTokenClaims,
       getAccessToken: async () => 'access-token',
       getOrganizationToken: async () => 'organization-token',
     });
     const context = createLogtoRequestContext(runtime, createClient);
 
     await expect(context.getContext()).resolves.toEqual(authenticatedContext);
+    await expect(context.getIdTokenClaims()).resolves.toEqual(idTokenClaims);
     expect(getContext).toHaveBeenCalledWith();
+    expect(getIdTokenClaims).toHaveBeenCalledOnce();
     expect(store.commitSession).not.toHaveBeenCalled();
   });
 
@@ -91,6 +104,7 @@ describe('middleware:createLogtoRequestContext', () => {
     );
     const getAccessToken = vi.fn(async () => 'access-token');
     const createClient: CreateLogtoRequestClient = (session) => ({
+      ...defaultClaimsClientMethods,
       getContext,
       getAccessToken: async () => {
         session.set('refreshToken', 'rotated');
@@ -119,6 +133,7 @@ describe('middleware:createLogtoRequestContext', () => {
     });
     const userInfoError = new Error('userinfo unavailable');
     const createClient: CreateLogtoRequestClient = (session) => ({
+      ...defaultClaimsClientMethods,
       getContext: async (options) => {
         if (options?.fetchUserInfo) {
           throw userInfoError;
@@ -151,6 +166,7 @@ describe('middleware:createLogtoRequestContext', () => {
     );
     const getOrganizationToken = vi.fn(async (_organizationId: string) => 'organization-token');
     const createClient: CreateLogtoRequestClient = (session) => ({
+      ...defaultClaimsClientMethods,
       getContext: async () => authenticatedContext,
       getAccessToken: async (resource, organizationId) => {
         session.set('accessToken', 'cached-access-token');
@@ -177,6 +193,46 @@ describe('middleware:createLogtoRequestContext', () => {
     expect(store.commitSession).toHaveBeenCalledTimes(2);
   });
 
+  it('passes claim parameters through session checkpoints', async () => {
+    const store = createTestSessionStorage({ refreshToken: 'old' });
+    const runtime = await SessionRuntime.create({
+      cookieHeader: sessionCookie,
+      sessionStorage: store.sessionStorage,
+      sessionCoordinator: createProcessLocalSessionCoordinator(),
+    });
+    const getAccessTokenClaims = vi.fn(async (_resource?: string) => accessTokenClaims);
+    const getOrganizationTokenClaims = vi.fn(
+      async (_organizationId: string) => organizationTokenClaims
+    );
+    const createClient: CreateLogtoRequestClient = (session) => ({
+      ...defaultClaimsClientMethods,
+      getContext: async () => authenticatedContext,
+      getAccessToken: async () => 'access-token',
+      getAccessTokenClaims: async (resource) => {
+        session.set('refreshToken', 'rotated-for-access-token');
+        return getAccessTokenClaims(resource);
+      },
+      getOrganizationToken: async () => 'organization-token',
+      getOrganizationTokenClaims: async (organizationId) => {
+        session.set('refreshToken', 'rotated-for-organization-token');
+        return getOrganizationTokenClaims(organizationId);
+      },
+    });
+    const context = createLogtoRequestContext(runtime, createClient);
+
+    await expect(context.getAccessTokenClaims('https://api.example.com')).resolves.toEqual(
+      accessTokenClaims
+    );
+    await expect(context.getOrganizationTokenClaims('org-id')).resolves.toEqual(
+      organizationTokenClaims
+    );
+
+    expect(getAccessTokenClaims).toHaveBeenCalledWith('https://api.example.com');
+    expect(getOrganizationTokenClaims).toHaveBeenCalledWith('org-id');
+    expect(store.getData()).toEqual({ refreshToken: 'rotated-for-organization-token' });
+    expect(store.commitSession).toHaveBeenCalledTimes(2);
+  });
+
   it('persists token mutations before propagating a token acquisition error', async () => {
     const store = createTestSessionStorage({ refreshToken: 'old' });
     const runtime = await SessionRuntime.create({
@@ -186,6 +242,7 @@ describe('middleware:createLogtoRequestContext', () => {
     });
     const verificationError = new Error('ID token verification failed');
     const createClient: CreateLogtoRequestClient = (session) => ({
+      ...defaultClaimsClientMethods,
       getContext: async () => authenticatedContext,
       getAccessToken: async () => {
         session.set('refreshToken', 'rotated');
@@ -220,6 +277,7 @@ describe('middleware:createLogtoRequestContext', () => {
       session.set('refreshToken', 'rotated');
     });
     const createClient: CreateLogtoRequestClient = (session) => ({
+      ...defaultClaimsClientMethods,
       getContext: async () => authenticatedContext,
       getAccessToken: async () => {
         if (session.get('refreshToken') === 'old') {
