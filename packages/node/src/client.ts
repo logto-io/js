@@ -1,4 +1,4 @@
-import BaseClient from '@logto/client';
+import BaseClient, { decodeAccessToken } from '@logto/client';
 import { conditional, trySafe } from '@silverhand/essentials';
 
 import type { GetContextParameters, LogtoContext } from './types.js';
@@ -43,14 +43,9 @@ export default class LogtoNodeBaseClient extends BaseClient {
 
     const claims = await this.getIdTokenClaims();
 
-    const { accessToken, accessTokenClaims } = getAccessToken
-      ? {
-          accessToken: await trySafe(async () => this.getAccessToken(resource, organizationId)),
-          accessTokenClaims: await trySafe(async () =>
-            this.getAccessTokenClaims(resource, organizationId)
-          ),
-        }
-      : { accessToken: undefined, accessTokenClaims: undefined };
+    const accessToken = getAccessToken
+      ? await trySafe(async () => this.getAccessToken(resource, organizationId))
+      : undefined;
 
     if (getAccessToken && !accessToken) {
       // Failed to get access token, the user is not authenticated
@@ -58,6 +53,10 @@ export default class LogtoNodeBaseClient extends BaseClient {
         isAuthenticated: false,
       };
     }
+
+    const accessTokenClaims = accessToken
+      ? await trySafe(async () => decodeAccessToken(accessToken))
+      : undefined;
 
     const organizationTokens = conditional(
       getOrganizationToken &&

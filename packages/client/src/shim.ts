@@ -22,6 +22,7 @@ export {
   UserScope,
   organizationUrnPrefix,
   buildOrganizationUrn,
+  decodeAccessToken,
   getOrganizationIdFromUrn,
   isLogtoRequestError,
 } from '@logto/js';
