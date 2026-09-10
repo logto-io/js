@@ -1,4 +1,4 @@
-import { type SignInOptions } from '@logto/node';
+import { CookieStorage, type SignInOptions } from '@logto/node';
 import type { NextApiResponse } from 'next';
 import { testApiHandler } from 'next-test-api-route-handler';
 
@@ -59,9 +59,9 @@ vi.mock('@logto/node', async (importOriginal) => ({
     getOrganizationToken,
     getOrganizationTokenClaims,
     getIdTokenClaims,
-    signOut: () => {
+    signOut: async () => {
+      await signOut();
       navigate(configs.baseUrl);
-      signOut();
     },
     isAuthenticated: true,
   })),
@@ -70,6 +70,7 @@ vi.mock('@logto/node', async (importOriginal) => ({
 describe('Next', () => {
   afterEach(() => {
     vi.clearAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('creates an instance without crash', () => {
@@ -278,6 +279,28 @@ describe('Next', () => {
         },
       });
       expect(signOut).toHaveBeenCalled();
+    });
+
+    it('should destroy storage when sign-out fails', async () => {
+      const signOutError = new Error('OIDC discovery failed');
+      const destroy = vi.spyOn(CookieStorage.prototype, 'destroy');
+      signOut.mockRejectedValueOnce(signOutError);
+      const client = new LogtoClient(configs);
+
+      await testApiHandler({
+        pagesHandler: client.handleSignOut(undefined, (_request, response, error) => {
+          expect(error).toBe(signOutError);
+          response.status(500).end();
+        }),
+        url: '/api/logto/sign-out',
+        test: async ({ fetch }) => {
+          const response = await fetch({ method: 'GET', redirect: 'manual' });
+          expect(response.status).toBe(500);
+          expect(response.headers.get('Set-Cookie')).toContain('logto_app_id_value=');
+        },
+      });
+
+      expect(destroy).toHaveBeenCalledOnce();
     });
   });
 

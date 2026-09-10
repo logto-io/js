@@ -1,5 +1,5 @@
 import type LogtoClient from '@logto/browser';
-import { type Optional } from '@silverhand/essentials';
+import { type Optional, trySafe } from '@silverhand/essentials';
 
 import type { Context } from './context.js';
 import { throwContextError } from './context.js';
@@ -37,11 +37,19 @@ export const createPluginMethods = (context: Context) => {
     getIdTokenClaims: proxy(client.getIdTokenClaims.bind(client)),
     // eslint-disable-next-line no-restricted-syntax
     signIn: proxy(client.signIn.bind(client), false) as LogtoClient['signIn'],
-    // We deliberately do NOT set isAuthenticated to false in the function below, because the app state
-    // may change immediately even before navigating to the oidc end session endpoint, which might cause
-    // rendering problems.
-    // Moreover, since the location will be redirected, the isAuthenticated state will not matter any more.
-    signOut: proxy(client.signOut.bind(client)),
+    signOut: proxy(async (postLogoutRedirectUri?: string) => {
+      try {
+        await client.signOut(postLogoutRedirectUri);
+      } catch (error: unknown) {
+        const currentAuthenticationState = await trySafe(async () => client.isAuthenticated());
+
+        if (currentAuthenticationState !== undefined) {
+          setIsAuthenticated(currentAuthenticationState);
+        }
+
+        throw error;
+      }
+    }),
     fetchUserInfo: proxy(client.fetchUserInfo.bind(client)),
     clearAccessToken: proxy(client.clearAccessToken.bind(client)),
     clearAllTokens: proxy(client.clearAllTokens.bind(client)),

@@ -390,7 +390,8 @@ export class StandardLogtoClient {
    * Start the sign-out flow with the specified redirect URI. The URI must be
    * registered in the Logto Console.
    *
-   * It will also revoke all the tokens and clean up the storage.
+   * It clears local authentication data before attempting token revocation and remote sign-out,
+   * so local cleanup is preserved when a network request or navigation fails.
    *
    * The user will be redirected that URI after the sign-out flow is completed.
    * If the `postLogoutRedirectUri` is not specified, the user will be redirected
@@ -398,8 +399,11 @@ export class StandardLogtoClient {
    */
   async signOut(postLogoutRedirectUri?: string): Promise<void> {
     const { appId: clientId } = this.logtoConfig;
-    const { endSessionEndpoint, revocationEndpoint } = await this.getOidcConfig();
     const refreshToken = await this.getRefreshToken();
+
+    await Promise.all([this.clearAllTokens(), this.setSignInSession(null)]);
+
+    const { endSessionEndpoint, revocationEndpoint } = await this.getOidcConfig();
 
     if (refreshToken) {
       try {
@@ -415,7 +419,6 @@ export class StandardLogtoClient {
       clientId,
     });
 
-    await this.clearAllTokens();
     await this.adapter.navigate(url, { redirectUri: postLogoutRedirectUri, for: 'sign-out' });
   }
 

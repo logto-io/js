@@ -53,7 +53,7 @@ export const createLogtoAdapter: CreateLogtoAdapter = vi.fn((session: Session) =
 
 // eslint-disable-next-line no-restricted-syntax
 export const commitSession = vi.fn(async (session: Session) => session.data as unknown as string);
-export const destroySession = vi.fn();
+export const destroySession = vi.fn(async () => 'logto-session=; Max-Age=0');
 export const getSession = vi.fn();
 
 export const sessionStorage: SessionStorage = {

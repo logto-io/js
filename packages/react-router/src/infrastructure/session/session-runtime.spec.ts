@@ -308,4 +308,22 @@ describe('infrastructure:session:SessionRuntime', () => {
       'Cannot update a destroyed session.'
     );
   });
+
+  it('destroys the session before rethrowing an operation error', async () => {
+    const store = createTestSessionStorage({ idToken: 'id-token' });
+    const runtime = await createRuntime(store.sessionStorage);
+    const signOutError = new Error('OIDC discovery failed');
+
+    await expect(
+      runtime.destroy(async (session) => {
+        session.unset('idToken');
+        throw signOutError;
+      })
+    ).rejects.toBe(signOutError);
+
+    expect(store.getData()).toEqual({});
+    expect(store.destroySession).toHaveBeenCalledOnce();
+    expect(runtime.session.data).toEqual({});
+    await expect(runtime.finalize()).resolves.toBe('logto-session=; Max-Age=0');
+  });
 });

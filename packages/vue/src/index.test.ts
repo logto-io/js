@@ -14,6 +14,7 @@ const getAccessToken = vi.fn(() => {
   throw new Error('not authenticated');
 });
 const signIn = vi.fn();
+const signOut = vi.fn();
 const injectMock = vi.fn((key: string): unknown => {
   return undefined;
 });
@@ -42,7 +43,7 @@ vi.mock('@logto/browser', () => {
         getIdToken: vi.fn(),
         getIdTokenClaims: vi.fn(),
         signIn,
-        signOut: vi.fn(),
+        signOut,
         fetchUserInfo: mockedFetchUserInfo,
         clearAccessToken: vi.fn(),
         clearAllTokens: vi.fn(),
@@ -87,7 +88,7 @@ describe('useLogto', () => {
     const context = createContext(client);
     const { isAuthenticated, isLoading, error } = context;
 
-    injectMock.mockImplementationOnce(() => {
+    injectMock.mockImplementation(() => {
       return {
         isAuthenticated: readonly(isAuthenticated),
         isLoading: readonly(isLoading),
@@ -140,6 +141,24 @@ describe('useLogto', () => {
     await getAccessToken();
     expect(error.value).not.toBeUndefined();
     expect(error.value?.message).toBe('not authenticated');
+  });
+
+  it('reflects cleared authentication state when remote sign-out fails', async () => {
+    const signOutError = new Error('OIDC discovery failed');
+    isAuthenticated.mockResolvedValueOnce(true).mockResolvedValueOnce(false);
+    signOut.mockRejectedValueOnce(signOutError);
+    const client = new LogtoClient({ appId, endpoint });
+    const context = createContext(client);
+
+    await vi.waitFor(() => {
+      expect(context.isAuthenticated.value).toBe(true);
+    });
+
+    const { signOut: wrappedSignOut } = createPluginMethods(context);
+    await wrappedSignOut();
+
+    expect(context.isAuthenticated.value).toBe(false);
+    expect(context.error.value).toBe(signOutError);
   });
 });
 

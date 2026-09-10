@@ -21,12 +21,13 @@ const getIdTokenClaims = vi.fn(() => ({
 }));
 const signOut = vi.fn();
 const getContext = vi.fn(async () => ({ isAuthenticated: true }));
+const destroy = vi.fn();
 
 vi.mock('@logto/node', () => ({
   CookieStorage: vi.fn((_, cookie: string) => {
     return {
       init: vi.fn(),
-      destroy: vi.fn(),
+      destroy,
     };
   }),
 }));
@@ -47,15 +48,19 @@ vi.mock('@logto/node/edge', () => ({
     },
     getContext,
     getIdTokenClaims,
-    signOut: () => {
+    signOut: async () => {
+      await signOut();
       navigate(configs.baseUrl);
-      signOut();
     },
     isAuthenticated: true,
   })),
 }));
 
 describe('Next (server actions)', () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('creates an instance without crash', () => {
     expect(() => new LogtoClient(configs)).not.toThrow();
   });
@@ -82,6 +87,15 @@ describe('Next (server actions)', () => {
       const client = new LogtoClient(configs);
       const url = await client.handleSignOut('{}');
       expect(url).toEqual(configs.baseUrl);
+    });
+
+    it('should destroy storage when sign-out fails', async () => {
+      const signOutError = new Error('OIDC discovery failed');
+      signOut.mockRejectedValueOnce(signOutError);
+      const client = new LogtoClient(configs);
+
+      await expect(client.handleSignOut()).rejects.toBe(signOutError);
+      expect(destroy).toHaveBeenCalledOnce();
     });
   });
 

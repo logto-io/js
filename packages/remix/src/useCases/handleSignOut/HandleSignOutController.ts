@@ -40,6 +40,17 @@ export class HandleSignOutController {
       redirectUri: this.redirectUri,
     });
 
+    if (result.status === 'rejected') {
+      // eslint-disable-next-line @typescript-eslint/no-throw-literal -- Remix response exceptions preserve the clearing cookie.
+      throw new Response(null, {
+        status: 500,
+        statusText: 'Sign-out failed',
+        headers: {
+          'Set-Cookie': result.cookieHeader,
+        },
+      });
+    }
+
     return redirect(result.navigateToUrl, {
       headers: {
         'Set-Cookie': result.cookieHeader,

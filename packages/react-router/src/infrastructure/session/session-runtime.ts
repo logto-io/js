@@ -162,8 +162,9 @@ export class SessionRuntime<
   }
 
   /**
-   * Runs an operation against the latest session, then destroys it under coordination. Once
-   * destroyed, further checkpoints and destruction fail and finalization performs no commit.
+   * Runs an operation against the latest session, then destroys it under coordination even when
+   * the operation rejects. Once destroyed, further checkpoints and destruction fail and
+   * finalization performs no commit.
    */
   public async destroy<Result>(
     operation: SessionOperation<Result, Data, FlashData>
@@ -177,7 +178,7 @@ export class SessionRuntime<
 
       this.session.applyPendingMutations(latestSession);
 
-      const result = await operation(new TrackedSession(latestSession));
+      const outcome = await settleSessionOperation(operation(new TrackedSession(latestSession)));
       const cookieHeader = await sessionStorage.destroySession(latestSession);
 
       this.currentCookieHeader = getRequestCookieHeader(cookieHeader);
@@ -185,7 +186,11 @@ export class SessionRuntime<
       this.destroyed = true;
       this.session.adopt(createSession<Data, FlashData>());
 
-      return result;
+      if (outcome.status === 'rejected') {
+        throw outcome.error;
+      }
+
+      return outcome.value;
     });
   }
 

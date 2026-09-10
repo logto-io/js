@@ -110,7 +110,14 @@ export class LogtoService {
   /** Revoke local credentials and start the Logto sign-out redirect flow. */
   async signOut(postLogoutRedirectUri?: string): Promise<void> {
     // Keep authentication state stable while the redirect starts to avoid an intermediate UI state.
-    return this.run(async () => this.client.signOut(postLogoutRedirectUri));
+    return this.run(async () => {
+      try {
+        await this.client.signOut(postLogoutRedirectUri);
+      } catch (error: unknown) {
+        await this.syncAuthenticationState();
+        throw error;
+      }
+    });
   }
 
   /** Check whether the current URL is the redirect URI for an active sign-in session. */
@@ -187,6 +194,14 @@ export class LogtoService {
   /** Clear the latest SDK operation error. */
   clearError(): void {
     this.errorState.set(undefined);
+  }
+
+  private async syncAuthenticationState() {
+    try {
+      this.authenticatedState.set(await this.client.isAuthenticated());
+    } catch {
+      // Preserve the current state when storage cannot be read.
+    }
   }
 
   private startLoading() {

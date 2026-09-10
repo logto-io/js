@@ -12,6 +12,7 @@ const isSignInRedirected = vi.fn(async () => false);
 const handleSignInCallback = vi.fn().mockResolvedValue(undefined);
 const getAccessToken = vi.fn();
 const signIn = vi.fn();
+const signOut = vi.fn();
 
 vi.mock('@logto/browser', () => {
   return {
@@ -28,7 +29,7 @@ vi.mock('@logto/browser', () => {
         getIdToken: vi.fn(),
         getIdTokenClaims: vi.fn(),
         signIn,
-        signOut: vi.fn(),
+        signOut,
         fetchUserInfo: vi.fn(),
         clearAccessToken: vi.fn(),
         clearAllTokens: vi.fn(),
@@ -111,6 +112,28 @@ describe('useLogto', () => {
       expect(getIdTokenClaims).toBeDefined();
       expect(clearAccessToken).toBeDefined();
       expect(clearAllTokens).toBeDefined();
+    });
+  });
+
+  it('reflects cleared authentication state when remote sign-out fails', async () => {
+    const signOutError = new Error('OIDC discovery failed');
+    isAuthenticated.mockResolvedValueOnce(true).mockResolvedValueOnce(false);
+    signOut.mockRejectedValueOnce(signOutError);
+    const { result } = renderHook(useLogto, {
+      wrapper: createHookWrapper(),
+    });
+
+    await waitFor(() => {
+      expect(result.current.isAuthenticated).toBe(true);
+    });
+
+    await act(async () => {
+      await result.current.signOut();
+    });
+
+    await waitFor(() => {
+      expect(result.current.isAuthenticated).toBe(false);
+      expect(result.current.error).toBe(signOutError);
     });
   });
 

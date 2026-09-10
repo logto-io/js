@@ -7,10 +7,16 @@ type SignOutRequest = {
   redirectUri: string;
 };
 
-type SignOutResponse = {
-  cookieHeader: string;
-  readonly navigateToUrl: string;
-};
+type SignOutResponse =
+  | Readonly<{
+      status: 'fulfilled';
+      cookieHeader: string;
+      navigateToUrl: string;
+    }>
+  | Readonly<{
+      status: 'rejected';
+      cookieHeader: string;
+    }>;
 
 export const makeHandleSignOutUseCase =
   (deps: { createLogtoAdapter: CreateLogtoAdapter; sessionStorage: SessionStorage }) =>
@@ -21,15 +27,25 @@ export const makeHandleSignOutUseCase =
 
     const logto = createLogtoAdapter(session);
 
-    const response = await logto.handleSignOut({
-      redirectUri: request.redirectUri,
-    });
+    const outcome = await logto
+      .handleSignOut({
+        redirectUri: request.redirectUri,
+      })
+      .then(
+        (response) => ({ status: 'fulfilled', response }) as const,
+        () => ({ status: 'rejected' }) as const
+      );
 
     const cookieHeader = await sessionStorage.destroySession(session);
 
+    if (outcome.status === 'rejected') {
+      return { status: outcome.status, cookieHeader };
+    }
+
     return {
+      status: outcome.status,
       cookieHeader,
-      navigateToUrl: response.navigateToUrl,
+      navigateToUrl: outcome.response.navigateToUrl,
     };
   };
 

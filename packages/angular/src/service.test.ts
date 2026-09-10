@@ -295,4 +295,18 @@ describe('LogtoService', () => {
     expect(methods.signOut).toHaveBeenCalledWith('https://app.example/');
     expect(service.isLoading()).toBe(false);
   });
+
+  it('reflects cleared authentication state when remote sign-out fails', async () => {
+    const { client, methods } = createClient();
+    methods.isAuthenticated.mockResolvedValueOnce(true).mockResolvedValueOnce(false);
+    const service = new LogtoService(client);
+    await service.initialize();
+    const error = new Error('OIDC discovery failed');
+    methods.signOut.mockRejectedValueOnce(error);
+
+    await expect(service.signOut()).rejects.toBe(error);
+
+    expect(service.isAuthenticated()).toBe(false);
+    expect(service.error()).toBe(error);
+  });
 });

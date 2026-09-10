@@ -123,9 +123,11 @@ export default class LogtoClient extends LogtoNextBaseClient {
         request,
         response
       );
-      await nodeClient.signOut(redirectUri);
-
-      await storage.destroy();
+      try {
+        await nodeClient.signOut(redirectUri);
+      } finally {
+        await storage.destroy();
+      }
 
       const navigateUrl = getNavigateUrl();
       if (navigateUrl) {
