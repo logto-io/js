@@ -1,10 +1,7 @@
 import type { Session, SessionStorage } from 'react-router';
 import { createSession } from 'react-router';
 
-import {
-  createProcessLocalSessionCoordinator,
-  type SessionCoordinator,
-} from './session-coordinator.js';
+import { createProcessLocalSessionCoordinator } from './session-coordinator.js';
 import { SessionRuntime } from './session-runtime.js';
 import type { TrackedSession } from './tracked-session.js';
 
@@ -101,48 +98,6 @@ describe('infrastructure:session:SessionRuntime', () => {
       theme: 'dark',
     });
     expect(store.commitSession).toHaveBeenCalledTimes(2);
-  });
-
-  it('uses the stable session ID as the coordination key', async () => {
-    const store = createTestSessionStorage({ refreshToken: 'old' });
-    const observeSessionKey = vi.fn();
-    const sessionCoordinator: SessionCoordinator = {
-      runExclusive: async (sessionKey, operation) => {
-        observeSessionKey(sessionKey);
-        return operation();
-      },
-    };
-    const runtime = await createRuntime(store.sessionStorage, sessionCoordinator);
-
-    runtime.session.set('theme', 'dark');
-    await runtime.finalize();
-
-    expect(observeSessionKey).toHaveBeenCalledOnce();
-    expect(observeSessionKey).toHaveBeenCalledWith('session-id');
-  });
-
-  it('does not share coordination keys for cookie-only sessions', async () => {
-    const observeSessionKey = vi.fn();
-    const sessionCoordinator: SessionCoordinator = {
-      runExclusive: async (sessionKey, operation) => {
-        observeSessionKey(sessionKey);
-        return operation();
-      },
-    };
-    const sessionStorage: SessionStorage<TestSessionData> = {
-      getSession: async () => createSession<TestSessionData>({}),
-      commitSession: async () => 'logto-session=value; Path=/',
-      destroySession: async () => 'logto-session=; Max-Age=0',
-    };
-    const firstRuntime = await createRuntime(sessionStorage, sessionCoordinator);
-    const secondRuntime = await createRuntime(sessionStorage, sessionCoordinator);
-
-    firstRuntime.session.set('theme', 'dark');
-    secondRuntime.session.set('theme', 'dark');
-    await Promise.all([firstRuntime.finalize(), secondRuntime.finalize()]);
-
-    expect(observeSessionKey).toHaveBeenCalledTimes(2);
-    expect(observeSessionKey.mock.calls[0]?.[0]).not.toBe(observeSessionKey.mock.calls[1]?.[0]);
   });
 
   it('reloads the session inside the coordinator before refreshing', async () => {

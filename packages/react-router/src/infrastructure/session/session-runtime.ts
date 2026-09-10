@@ -1,7 +1,10 @@
 import type { Session, SessionData, SessionStorage } from 'react-router';
 import { createSession } from 'react-router';
 
-import type { SessionCoordinator } from './session-coordinator.js';
+import {
+  createProcessLocalSessionCoordinator,
+  type SessionCoordinator,
+} from './session-coordinator.js';
 import { TrackedSession } from './tracked-session.js';
 
 /**
@@ -40,17 +43,20 @@ export type SessionRuntimeOptions<
    * multi-instance coordination also requires shared server-side storage.
    */
   sessionStorage: SessionStorage<Data, FlashData>;
-  /** Serializes persistence operations that share a session identifier. */
+  /** Serializes persistence operations for sessions loaded with a persistent identifier. */
   sessionCoordinator: SessionCoordinator;
 }>;
 
-const createSessionKey = (session: Session) => {
+const createSessionCoordination = (session: Session, sessionCoordinator: SessionCoordinator) => {
   if (session.id) {
-    return session.id;
+    return { sessionCoordinator, sessionKey: session.id };
   }
 
-  // Cookie-backed sessions cannot reload state committed by another response.
-  return globalThis.crypto.randomUUID();
+  // Until the response establishes a persistent session, only this request can observe its state.
+  return {
+    sessionCoordinator: createProcessLocalSessionCoordinator(),
+    sessionKey: globalThis.crypto.randomUUID(),
+  };
 };
 
 const getRequestCookieHeader = (setCookieHeader: string) => {
@@ -81,11 +87,12 @@ export class SessionRuntime<
     FlashData extends SessionData = Data,
   >(options: SessionRuntimeOptions<Data, FlashData>) {
     const session = await options.sessionStorage.getSession(options.cookieHeader);
+    const coordination = createSessionCoordination(session, options.sessionCoordinator);
 
     return new SessionRuntime({
       ...options,
+      ...coordination,
       session,
-      sessionKey: createSessionKey(session),
     });
   }
 
