@@ -1,5 +1,14 @@
 # Change Log
 
+## 2.1.33
+
+### Patch Changes
+
+- Updated dependencies [a9dca71]
+- Updated dependencies [1b9abbd]
+- Updated dependencies [9f877b2]
+  - @logto/vue@3.1.0
+
 ## 2.1.32
 
 ### Patch Changes
