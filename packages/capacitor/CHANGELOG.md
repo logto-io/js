@@ -1,5 +1,30 @@
 # @logto/capacitor
 
+## 4.1.0
+
+### Minor Changes
+
+- a9dca71: export `decodeAccessToken`, `ReservedResource`, and `CacheKey` from applicable platform SDK package
+  roots
+- 1b9abbd: stabilize cache configuration across JavaScript SDKs
+  
+  Use the stable `cache` client adapter property. The deprecated `unstable_cache` alias remains
+  supported, with the stable property taking precedence. Node and edge clients continue to use an
+  endpoint-scoped process-local cache by default.
+  
+  Browser, React, Angular, Vue, Capacitor, and Chrome Extension clients can opt in through the stable
+  `enableCache` option. Browser caches are isolated by endpoint and application, and cache storage
+  failures no longer discard successful discovery responses.
+
+### Patch Changes
+
+- 9f877b2: clear local authentication state when remote sign-out cannot start
+- Updated dependencies [b694c0e]
+- Updated dependencies [a9dca71]
+- Updated dependencies [1b9abbd]
+- Updated dependencies [9f877b2]
+  - @logto/browser@3.1.0
+
 ## 4.0.8
 
 ### Patch Changes

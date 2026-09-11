@@ -1,5 +1,14 @@
 # @logto/capacitor-sample
 
+## 0.1.6
+
+### Patch Changes
+
+- Updated dependencies [a9dca71]
+- Updated dependencies [1b9abbd]
+- Updated dependencies [9f877b2]
+  - @logto/capacitor@4.1.0
+
 ## 0.1.5
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@logto/react-router",
-  "version": "1.0.5",
+  "version": "2.0.0",
   "engines": {
     "node": ">=22.0.0"
   },

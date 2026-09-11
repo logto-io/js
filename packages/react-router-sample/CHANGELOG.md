@@ -1,5 +1,20 @@
 # @logto/react-router-sample
 
+## 1.0.7
+
+### Patch Changes
+
+- Updated dependencies [f335935]
+- Updated dependencies [e5f3817]
+- Updated dependencies [db78ef4]
+- Updated dependencies [3b32030]
+- Updated dependencies [a9dca71]
+- Updated dependencies [6a98d63]
+- Updated dependencies [a9dca71]
+- Updated dependencies [1cfbfd2]
+- Updated dependencies [9f877b2]
+  - @logto/react-router@2.0.0
+
 ## 1.0.6
 
 ### Patch Changes
