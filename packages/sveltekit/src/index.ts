@@ -28,6 +28,7 @@ export {
   LogtoError,
   LogtoRequestError,
   OidcError,
+  CacheKey,
   PersistKey,
   Prompt,
   ReservedResource,
@@ -35,6 +36,7 @@ export {
   StandardLogtoClient,
   UserScope,
   buildOrganizationUrn,
+  decodeAccessToken,
   getOrganizationIdFromUrn,
   organizationUrnPrefix,
 } from '@logto/node';

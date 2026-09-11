@@ -34,7 +34,9 @@ export {
   UserScope,
   organizationUrnPrefix,
   buildOrganizationUrn,
+  decodeAccessToken,
   getOrganizationIdFromUrn,
+  CacheKey,
   PersistKey,
   isLogtoRequestError,
 } from '@logto/client';

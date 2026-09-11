@@ -23,7 +23,9 @@ const getIdTokenClaims = vi.fn(() => ({
 const signOut = vi.fn();
 const getContext = vi.fn(async () => true);
 const getAccessToken = vi.fn();
+const getAccessTokenClaims = vi.fn();
 const getOrganizationToken = vi.fn();
+const getOrganizationTokenClaims = vi.fn();
 
 const mockResponse = (_: unknown, response: NextApiResponse) => {
   response.status(200).end();
@@ -53,7 +55,9 @@ vi.mock('@logto/node', async (importOriginal) => ({
     handleSignInCallback: (url: string) => handleSignInCallback(url, navigate),
     getContext,
     getAccessToken,
+    getAccessTokenClaims,
     getOrganizationToken,
+    getOrganizationTokenClaims,
     getIdTokenClaims,
     signOut: () => {
       navigate(configs.baseUrl);
@@ -144,13 +148,47 @@ describe('Next', () => {
       const client = new LogtoClient(configs);
       await testApiHandler({
         pagesHandler: async (request, response) => {
-          await client.getAccessToken(request, response, 'resource');
+          await client.getAccessToken(request, response, 'resource', 'organization_id');
           response.end();
         },
         url: '/api/logto/get-access-token',
         test: async ({ fetch }) => {
           await fetch({ method: 'GET' });
-          expect(getAccessToken).toHaveBeenCalledWith('resource');
+          expect(getAccessToken).toHaveBeenCalledWith('resource', 'organization_id');
+        },
+      });
+    });
+  });
+
+  describe('getAccessTokenClaims', () => {
+    it('should call client.getAccessTokenClaims', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        pagesHandler: async (request, response) => {
+          await client.getAccessTokenClaims(request, response, 'resource', 'organization_id');
+          response.end();
+        },
+        url: '/api/logto/get-access-token-claims',
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET' });
+          expect(getAccessTokenClaims).toHaveBeenCalledWith('resource', 'organization_id');
+        },
+      });
+    });
+  });
+
+  describe('getIdTokenClaims', () => {
+    it('should call client.getIdTokenClaims', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        pagesHandler: async (request, response) => {
+          await client.getIdTokenClaims(request, response);
+          response.end();
+        },
+        url: '/api/logto/get-id-token-claims',
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET' });
+          expect(getIdTokenClaims).toHaveBeenCalledOnce();
         },
       });
     });
@@ -168,6 +206,23 @@ describe('Next', () => {
         test: async ({ fetch }) => {
           await fetch({ method: 'GET' });
           expect(getOrganizationToken).toHaveBeenCalledWith('organization_id');
+        },
+      });
+    });
+  });
+
+  describe('getOrganizationTokenClaims', () => {
+    it('should call client.getOrganizationTokenClaims', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        pagesHandler: async (request, response) => {
+          await client.getOrganizationTokenClaims(request, response, 'organization_id');
+          response.end();
+        },
+        url: '/api/logto/get-organization-token-claims',
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET' });
+          expect(getOrganizationTokenClaims).toHaveBeenCalledWith('organization_id');
         },
       });
     });

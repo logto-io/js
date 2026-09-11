@@ -269,6 +269,40 @@ describe('LogtoClient', () => {
     });
   });
 
+  describe('getAccessTokenClaims', () => {
+    it('should return claims for a resource and organization access token', async () => {
+      requester.mockClear().mockResolvedValue({
+        accessToken: 'access_token_value',
+        expiresIn: 3600,
+      });
+
+      const logtoClient = createClient(
+        undefined,
+        new MockedStorage({
+          idToken: 'id_token_value',
+          refreshToken: 'refresh_token_value',
+        })
+      );
+
+      await expect(
+        logtoClient.getAccessTokenClaims('https://api.example.com', 'organization_id')
+      ).resolves.toEqual({});
+      expect(requester).toHaveBeenCalledWith(tokenEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          client_id: 'app_id_value',
+          refresh_token: 'refresh_token_value',
+          grant_type: 'refresh_token',
+          resource: 'https://api.example.com',
+          organization_id: 'organization_id',
+        }).toString(),
+      });
+    });
+  });
+
   describe('clearAccessToken', () => {
     it('should clear access token cache storage', async () => {
       const storage = new MockedStorage({

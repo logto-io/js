@@ -153,8 +153,10 @@ describe('LogtoService', () => {
     await service.initialize();
 
     await expect(service.getRefreshToken()).resolves.toBe('refresh-token');
-    await expect(service.getAccessToken('api-resource')).resolves.toBe('access-token');
-    await expect(service.getAccessTokenClaims('api-resource')).resolves.toEqual({
+    await expect(service.getAccessToken('api-resource', 'organization-id')).resolves.toBe(
+      'access-token'
+    );
+    await expect(service.getAccessTokenClaims('api-resource', 'organization-id')).resolves.toEqual({
       sub: 'access-sub',
     });
     await expect(service.getOrganizationToken('organization-id')).resolves.toBe(
@@ -167,8 +169,8 @@ describe('LogtoService', () => {
     await expect(service.getIdTokenClaims()).resolves.toMatchObject({ sub: 'id-sub' });
     await expect(service.fetchUserInfo()).resolves.toMatchObject({ sub: 'user-sub' });
 
-    expect(methods.getAccessToken).toHaveBeenCalledWith('api-resource');
-    expect(methods.getAccessTokenClaims).toHaveBeenCalledWith('api-resource');
+    expect(methods.getAccessToken).toHaveBeenCalledWith('api-resource', 'organization-id');
+    expect(methods.getAccessTokenClaims).toHaveBeenCalledWith('api-resource', 'organization-id');
     expect(methods.getOrganizationToken).toHaveBeenCalledWith('organization-id');
     expect(methods.getOrganizationTokenClaims).toHaveBeenCalledWith('organization-id');
   });

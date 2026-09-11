@@ -1,8 +1,10 @@
 'use server';
 
 import {
+  type AccessTokenClaims,
   type LogtoContext,
   type GetContextParameters,
+  type IdTokenClaims,
   type InteractionMode,
   type SignInOptions,
 } from '@logto/node';
@@ -12,7 +14,7 @@ import type { LogtoNextConfig } from '../src/types.js';
 
 import LogtoClient from './client';
 
-export type { LogtoContext, InteractionMode } from '@logto/node';
+export type { AccessTokenClaims, IdTokenClaims, LogtoContext, InteractionMode } from '@logto/node';
 
 /**
  * Init sign in process and redirect to the Logto sign-in page
@@ -101,6 +103,15 @@ export const getLogtoContext = async (
 };
 
 /**
+ * Get ID token claims from session. This function can also be used in React Server Components.
+ */
+export const getIdTokenClaims = async (config: LogtoNextConfig): Promise<IdTokenClaims> => {
+  const client = new LogtoClient(config);
+  const nodeClient = await client.createNodeClient({ ignoreCookieChange: true });
+  return nodeClient.getIdTokenClaims();
+};
+
+/**
  * Get organization tokens from session
  *
  * @deprecated Use getOrganizationToken instead
@@ -142,6 +153,20 @@ export const getAccessToken = async (
 };
 
 /**
+ * Get access token claims for the specified resource and organization. This function can be used
+ * in server actions or API routes.
+ */
+export const getAccessTokenClaims = async (
+  config: LogtoNextConfig,
+  resource?: string,
+  organizationId?: string
+): Promise<AccessTokenClaims> => {
+  const client = new LogtoClient(config);
+  const nodeClient = await client.createNodeClient();
+  return nodeClient.getAccessTokenClaims(resource, organizationId);
+};
+
+/**
  * Get organization token from session,
  * this function can be used in server actions or API routes
  */
@@ -150,6 +175,19 @@ export const getOrganizationToken = async (
   organizationId?: string
 ): Promise<string> => {
   return getAccessToken(config, undefined, organizationId);
+};
+
+/**
+ * Get organization token claims from session. This function can be used in server actions or API
+ * routes.
+ */
+export const getOrganizationTokenClaims = async (
+  config: LogtoNextConfig,
+  organizationId: string
+): Promise<AccessTokenClaims> => {
+  const client = new LogtoClient(config);
+  const nodeClient = await client.createNodeClient();
+  return nodeClient.getOrganizationTokenClaims(organizationId);
 };
 
 /**
@@ -169,6 +207,20 @@ export const getAccessTokenRSC = async (
 };
 
 /**
+ * Get access token claims for the specified resource and organization in React Server Components.
+ * Refreshed tokens cannot be persisted because cookies are not writable in a Server Component.
+ */
+export const getAccessTokenClaimsRSC = async (
+  config: LogtoNextConfig,
+  resource?: string,
+  organizationId?: string
+): Promise<AccessTokenClaims> => {
+  const client = new LogtoClient(config);
+  const nodeClient = await client.createNodeClient({ ignoreCookieChange: true });
+  return nodeClient.getAccessTokenClaims(resource, organizationId);
+};
+
+/**
  * Get organization token from session,
  * this function can be used in React Server Components (RSC)
  * Note: You can't write to the cookie in a React Server Component, so if the access token is refreshed, it won't be persisted in the session.
@@ -179,6 +231,19 @@ export const getOrganizationTokenRSC = async (
   organizationId?: string
 ): Promise<string> => {
   return getAccessTokenRSC(config, undefined, organizationId);
+};
+
+/**
+ * Get organization token claims in React Server Components. Refreshed tokens cannot be persisted
+ * because cookies are not writable in a Server Component.
+ */
+export const getOrganizationTokenClaimsRSC = async (
+  config: LogtoNextConfig,
+  organizationId: string
+): Promise<AccessTokenClaims> => {
+  const client = new LogtoClient(config);
+  const nodeClient = await client.createNodeClient({ ignoreCookieChange: true });
+  return nodeClient.getOrganizationTokenClaims(organizationId);
 };
 
 export { default } from './client';

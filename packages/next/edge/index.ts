@@ -21,6 +21,8 @@ export type {
   UserInfoResponse,
 } from '@logto/node';
 
+export { CacheKey, ReservedResource, decodeAccessToken } from '@logto/node/edge';
+
 export default class LogtoClient extends BaseClient {
   constructor(config: LogtoNextConfig) {
     super(config, {

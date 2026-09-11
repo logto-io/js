@@ -12,7 +12,10 @@ const storage = {
   removeItem: vi.fn(),
 };
 
-const getAccessToken = vi.fn(async () => true);
+const { decodeAccessToken } = vi.hoisted(() => ({
+  decodeAccessToken: vi.fn(() => ({ scope: 'read' })),
+}));
+const getAccessToken = vi.fn(async () => 'access-token');
 const getOrganizationToken = vi.fn(async () => 'token');
 const fetchUserInfo = vi.fn(async () => ({ name: 'name' }));
 const mockIdTokenClaims = { sub: 'sub', organizations: ['org1'] };
@@ -20,6 +23,7 @@ const getIdTokenClaims = vi.fn(async () => mockIdTokenClaims);
 const isAuthenticated = vi.fn(async () => true);
 vi.mock('@logto/client', () => ({
   __esModule: true,
+  decodeAccessToken,
   default: vi.fn(() => ({
     getAccessToken,
     getOrganizationToken,
@@ -141,6 +145,7 @@ describe('LogtoClient', () => {
   describe('getContext', () => {
     beforeEach(() => {
       getAccessToken.mockClear();
+      decodeAccessToken.mockClear();
       getOrganizationToken.mockClear();
       fetchUserInfo.mockClear();
     });
@@ -168,6 +173,8 @@ describe('LogtoClient', () => {
         isAuthenticated: true,
       });
       expect(getAccessToken).toHaveBeenCalledWith('resource', 'org1');
+      expect(getAccessToken).toHaveBeenCalledOnce();
+      expect(decodeAccessToken).toHaveBeenCalledWith('access-token');
     });
 
     it('should get organization tokens', async () => {

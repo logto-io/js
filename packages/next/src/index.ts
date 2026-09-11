@@ -2,8 +2,10 @@ import { type IncomingMessage, type ServerResponse } from 'node:http';
 
 import NodeClient, {
   CookieStorage,
+  type AccessTokenClaims,
   type SignInOptions,
   type GetContextParameters,
+  type IdTokenClaims,
   type InteractionMode,
 } from '@logto/node';
 import { serialize } from 'cookie';
@@ -33,7 +35,9 @@ export {
   UserScope,
   organizationUrnPrefix,
   buildOrganizationUrn,
+  decodeAccessToken,
   getOrganizationIdFromUrn,
+  CacheKey,
   PersistKey,
 } from '@logto/node';
 
@@ -169,10 +173,29 @@ export default class LogtoClient extends LogtoNextBaseClient {
   getAccessToken = async (
     request: NextApiRequest,
     response: NextApiResponse,
-    resource: string
+    resource?: string,
+    organizationId?: string
   ): Promise<string> => {
     const nodeClient = await this.createNodeClientFromNextApi(request, response);
-    return nodeClient.getAccessToken(resource);
+    return nodeClient.getAccessToken(resource, organizationId);
+  };
+
+  getAccessTokenClaims = async (
+    request: NextApiRequest,
+    response: NextApiResponse,
+    resource?: string,
+    organizationId?: string
+  ): Promise<AccessTokenClaims> => {
+    const nodeClient = await this.createNodeClientFromNextApi(request, response);
+    return nodeClient.getAccessTokenClaims(resource, organizationId);
+  };
+
+  getIdTokenClaims = async (
+    request: NextApiRequest,
+    response: NextApiResponse
+  ): Promise<IdTokenClaims> => {
+    const nodeClient = await this.createNodeClientFromNextApi(request, response);
+    return nodeClient.getIdTokenClaims();
   };
 
   getOrganizationToken = async (
@@ -182,6 +205,15 @@ export default class LogtoClient extends LogtoNextBaseClient {
   ): Promise<string> => {
     const nodeClient = await this.createNodeClientFromNextApi(request, response);
     return nodeClient.getOrganizationToken(organizationId);
+  };
+
+  getOrganizationTokenClaims = async (
+    request: NextApiRequest,
+    response: NextApiResponse,
+    organizationId: string
+  ): Promise<AccessTokenClaims> => {
+    const nodeClient = await this.createNodeClientFromNextApi(request, response);
+    return nodeClient.getOrganizationTokenClaims(organizationId);
   };
 
   withLogtoApiRoute = (
