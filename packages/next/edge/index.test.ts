@@ -102,19 +102,19 @@ describe('Next (edge): token clearing', () => {
     vi.clearAllMocks();
   });
 
-  it('clears cached access tokens and returns the updated session headers', async () => {
+  it('clears cached access tokens and updates the response headers', async () => {
     const client = new LogtoClient(config);
-    const headers = await client.clearAccessToken(
-      new Request('https://app.example.com/api/tokens')
-    );
+    const headers = new Headers();
+    await client.clearAccessToken(new Request('https://app.example.com/api/tokens'), headers);
 
     expect(clearAccessToken).toHaveBeenCalledOnce();
     expect(headers.get('Set-Cookie')).toContain('logto_app-id=encrypted-updated-session');
   });
 
-  it('clears all local tokens and returns the updated session headers', async () => {
+  it('clears all local tokens and updates the response headers', async () => {
     const client = new LogtoClient(config);
-    const headers = await client.clearAllTokens(new Request('https://app.example.com/api/tokens'));
+    const headers = new Headers();
+    await client.clearAllTokens(new Request('https://app.example.com/api/tokens'), headers);
 
     expect(clearAllTokens).toHaveBeenCalledOnce();
     expect(headers.get('Set-Cookie')).toContain('logto_app-id=encrypted-updated-session');
