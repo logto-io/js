@@ -10,6 +10,13 @@ Check out our [docs](https://docs.logto.io/sdk/chrome-extension/) for more infor
 > [!Note]
 > This package is ESM-only.
 
+OIDC discovery caching is disabled by default. Enable it through the constructor options to use
+endpoint- and application-scoped `chrome.storage.session` storage:
+
+```ts
+const client = new LogtoClient(config, { enableCache: true });
+```
+
 ## Installation
 
 ### Using npm

@@ -1,6 +1,6 @@
 import type { Requester } from '@logto/js';
 
-import { createAdapters } from '../mock.js';
+import { createAdapters, MockedStorage } from '../mock.js';
 
 import { CacheKey, type ClientAdapter, ClientAdapterInstance, PersistKey } from './index.js';
 
@@ -77,11 +77,43 @@ describe('ClientAdapterInstance', () => {
 
   it('should be able get cached object', async () => {
     const adapterInstance = new ClientAdapterInstance(createAdapters(true));
-    await adapterInstance.unstable_cache?.setItem(
-      CacheKey.OpenidConfig,
-      JSON.stringify({ test: 'test' })
-    );
+    await adapterInstance.cache?.setItem(CacheKey.OpenidConfig, JSON.stringify({ test: 'test' }));
     expect(await adapterInstance.getCachedObject(CacheKey.OpenidConfig)).toEqual({ test: 'test' });
+  });
+
+  it('treats malformed cached JSON as a miss', async () => {
+    const adapterInstance = new ClientAdapterInstance(createAdapters(true));
+    await adapterInstance.cache?.setItem(CacheKey.OpenidConfig, 'not-json');
+    const getter = vi.fn(async () => ({ test: 'recovered' }));
+
+    await expect(adapterInstance.getWithCache(CacheKey.OpenidConfig, getter)).resolves.toEqual({
+      test: 'recovered',
+    });
+    expect(getter).toHaveBeenCalledOnce();
+  });
+
+  it('supports the deprecated cache alias', () => {
+    const unstableCache = new MockedStorage();
+    const adapterInstance = new ClientAdapterInstance({
+      ...createAdapters(),
+      cache: undefined,
+      unstable_cache: unstableCache,
+    });
+
+    expect(adapterInstance.cache).toBe(unstableCache);
+    expect(adapterInstance.unstable_cache).toBe(unstableCache);
+  });
+
+  it('prefers the stable cache when both cache properties are provided', () => {
+    const cache = new MockedStorage();
+    const adapterInstance = new ClientAdapterInstance({
+      ...createAdapters(),
+      cache,
+      unstable_cache: new MockedStorage(),
+    });
+
+    expect(adapterInstance.cache).toBe(cache);
+    expect(adapterInstance.unstable_cache).toBe(cache);
   });
 
   it('should be able get with cache and directly return the cached value when needed', async () => {
@@ -94,7 +126,7 @@ describe('ClientAdapterInstance', () => {
     });
     expect(spy).toHaveBeenCalledTimes(1);
     expect(getter).toHaveBeenCalledTimes(1);
-    expect(await adapterInstance.unstable_cache?.getItem(CacheKey.OpenidConfig)).toBe(
+    expect(await adapterInstance.cache?.getItem(CacheKey.OpenidConfig)).toBe(
       JSON.stringify({
         test: 'test',
       })
@@ -125,7 +157,7 @@ describe('ClientAdapterInstance', () => {
     await expect(firstCall).rejects.toThrow('transient failure');
     await expect(secondCall).resolves.toEqual({ test: 'recovered' });
     expect(secondGetter).toHaveBeenCalledTimes(1);
-    expect(await adapters.unstable_cache?.getItem(CacheKey.OpenidConfig)).toBe(
+    expect(await adapters.cache?.getItem(CacheKey.OpenidConfig)).toBe(
       JSON.stringify({ test: 'recovered' })
     );
 
@@ -149,6 +181,23 @@ describe('ClientAdapterInstance', () => {
 
       return { test: 'test' };
     });
+
+    await expect(
+      Promise.all([
+        firstAdapterInstance.getWithCache(CacheKey.OpenidConfig, getter),
+        secondAdapterInstance.getWithCache(CacheKey.OpenidConfig, getter),
+      ])
+    ).resolves.toEqual([{ test: 'test' }, { test: 'test' }]);
+    expect(getter).toHaveBeenCalledTimes(1);
+  });
+
+  it('returns one shared result when cache storage rejects a write', async () => {
+    const cache = new MockedStorage();
+    vi.spyOn(cache, 'setItem').mockRejectedValue(new Error('Cache unavailable'));
+    const adapters = { ...createAdapters(), cache };
+    const firstAdapterInstance = new ClientAdapterInstance(adapters);
+    const secondAdapterInstance = new ClientAdapterInstance(adapters);
+    const getter = vi.fn(async () => ({ test: 'test' }));
 
     await expect(
       Promise.all([

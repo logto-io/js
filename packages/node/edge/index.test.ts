@@ -68,14 +68,45 @@ describe('LogtoClient (edge)', () => {
     expect(
       new LogtoClient({ endpoint: `${endpoint}/`, appId }, { navigate, storage })
     ).toBeDefined();
-    const cache = getLatestBaseClientAdapter().unstable_cache;
+    const cache = getLatestBaseClientAdapter().cache;
 
     expect(new LogtoClient({ endpoint, appId }, { navigate, storage })).toBeDefined();
-    expect(getLatestBaseClientAdapter().unstable_cache).toBe(cache);
+    expect(getLatestBaseClientAdapter().cache).toBe(cache);
 
     expect(
       new LogtoClient({ endpoint: 'https://another.logto.dev', appId }, { navigate, storage })
     ).toBeDefined();
-    expect(getLatestBaseClientAdapter().unstable_cache).not.toBe(cache);
+    expect(getLatestBaseClientAdapter().cache).not.toBe(cache);
+  });
+
+  it('supports stable and deprecated custom caches with stable precedence', () => {
+    const cache = { setItem: vi.fn(), getItem: vi.fn(), removeItem: vi.fn() };
+    const unstableCache = { setItem: vi.fn(), getItem: vi.fn(), removeItem: vi.fn() };
+
+    expect(
+      new LogtoClient(
+        { endpoint, appId },
+        { navigate, storage, cache, unstable_cache: unstableCache }
+      )
+    ).toBeDefined();
+    expect(getLatestBaseClientAdapter().cache).toBe(cache);
+
+    expect(
+      new LogtoClient(
+        { endpoint, appId },
+        { navigate, storage, cache: undefined, unstable_cache: unstableCache }
+      )
+    ).toBeDefined();
+    expect(getLatestBaseClientAdapter().cache).toBe(unstableCache);
+  });
+
+  it('uses the default cache when cache properties are explicitly undefined', () => {
+    expect(
+      new LogtoClient(
+        { endpoint, appId },
+        { navigate, storage, cache: undefined, unstable_cache: undefined }
+      )
+    ).toBeDefined();
+    expect(getLatestBaseClientAdapter().cache).toBeDefined();
   });
 });

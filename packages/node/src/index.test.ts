@@ -117,18 +117,18 @@ describe('LogtoClient', () => {
       expect(
         new LogtoClient({ endpoint: `${endpoint}/`, appId }, { navigate, storage })
       ).toBeDefined();
-      const cache = getLatestBaseClientAdapter().unstable_cache;
+      const { cache } = getLatestBaseClientAdapter();
 
       expect(new LogtoClient({ endpoint, appId }, { navigate, storage })).toBeDefined();
-      expect(getLatestBaseClientAdapter().unstable_cache).toBe(cache);
+      expect(getLatestBaseClientAdapter().cache).toBe(cache);
 
       expect(
         new LogtoClient({ endpoint: 'https://another.logto.dev', appId }, { navigate, storage })
       ).toBeDefined();
-      expect(getLatestBaseClientAdapter().unstable_cache).not.toBe(cache);
+      expect(getLatestBaseClientAdapter().cache).not.toBe(cache);
     });
 
-    it('should allow overriding the default cache storage', () => {
+    it('should allow overriding the default cache storage through the deprecated property', () => {
       const unstableCache = {
         setItem: vi.fn(),
         getItem: vi.fn(),
@@ -138,7 +138,41 @@ describe('LogtoClient', () => {
       expect(
         new LogtoClient({ endpoint, appId }, { navigate, storage, unstable_cache: unstableCache })
       ).toBeDefined();
-      expect(getLatestBaseClientAdapter().unstable_cache).toBe(unstableCache);
+      expect(getLatestBaseClientAdapter().cache).toBe(unstableCache);
+    });
+
+    it('should allow overriding the default cache storage through the stable property', () => {
+      const cache = {
+        setItem: vi.fn(),
+        getItem: vi.fn(),
+        removeItem: vi.fn(),
+      };
+
+      expect(new LogtoClient({ endpoint, appId }, { navigate, storage, cache })).toBeDefined();
+      expect(getLatestBaseClientAdapter().cache).toBe(cache);
+    });
+
+    it('should prefer the stable cache property', () => {
+      const cache = { setItem: vi.fn(), getItem: vi.fn(), removeItem: vi.fn() };
+      const unstableCache = { setItem: vi.fn(), getItem: vi.fn(), removeItem: vi.fn() };
+
+      expect(
+        new LogtoClient(
+          { endpoint, appId },
+          { navigate, storage, cache, unstable_cache: unstableCache }
+        )
+      ).toBeDefined();
+      expect(getLatestBaseClientAdapter().cache).toBe(cache);
+    });
+
+    it('should use the default cache when cache properties are explicitly undefined', () => {
+      expect(
+        new LogtoClient(
+          { endpoint, appId },
+          { navigate, storage, cache: undefined, unstable_cache: undefined }
+        )
+      ).toBeDefined();
+      expect(getLatestBaseClientAdapter().cache).toBeDefined();
     });
   });
 

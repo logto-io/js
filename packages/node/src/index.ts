@@ -4,7 +4,7 @@ import { generateCodeChallenge, generateCodeVerifier, generateState } from '../e
 
 import BaseClient from './client.js';
 import { createAuthenticatedFetch, resolveAdapterTransport } from './utils/adapter-transport.js';
-import { createMemoryCache } from './utils/cache.js';
+import { resolveAdapterCache } from './utils/cache.js';
 
 export * from './exports.js';
 
@@ -28,8 +28,8 @@ export default class LogtoClient extends BaseClient {
         generateCodeChallenge,
         generateCodeVerifier,
         generateState,
-        unstable_cache: createMemoryCache(config.endpoint),
         ...adapter,
+        cache: resolveAdapterCache(adapter, config.endpoint),
         ...transport,
       },
       buildJwtVerifier

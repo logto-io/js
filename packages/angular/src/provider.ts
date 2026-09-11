@@ -17,6 +17,12 @@ export type LogtoAngularOptions = {
    *
    * @default false
    */
+  enableCache?: boolean;
+  /**
+   * Whether to cache OIDC discovery metadata in session storage.
+   *
+   * @deprecated Use {@link enableCache} instead.
+   */
   unstable_enableCache?: boolean;
 };
 
@@ -43,9 +49,9 @@ export const provideLogto = (
       provide: LOGTO_CLIENT,
       useFactory: () => {
         const logtoConfig = inject(LOGTO_CONFIG);
-        const { unstable_enableCache = false } = inject(LOGTO_OPTIONS);
+        const { enableCache, unstable_enableCache } = inject(LOGTO_OPTIONS);
 
-        return new LogtoClient(logtoConfig, unstable_enableCache);
+        return new LogtoClient(logtoConfig, enableCache ?? unstable_enableCache ?? false);
       },
     },
     {

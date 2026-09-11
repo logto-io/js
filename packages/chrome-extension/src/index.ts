@@ -8,16 +8,25 @@ import {
   generateState,
 } from '@logto/browser';
 
-import { ChromeExtensionStorage } from './storage.js';
+import { ChromeExtensionCacheStorage, ChromeExtensionStorage } from './storage.js';
 
 export * from '@logto/browser';
-export { ChromeExtensionStorage } from './storage.js';
+export { ChromeExtensionCacheStorage, ChromeExtensionStorage } from './storage.js';
+
+export type ChromeExtensionOptions = {
+  /**
+   * Whether to cache OIDC discovery metadata in Chrome's session storage.
+   *
+   * @default false
+   */
+  enableCache?: boolean;
+};
 
 export default class LogtoClient extends BaseClient {
   /**
    * @param config The configuration object for the client.
    */
-  constructor(config: LogtoConfig) {
+  constructor(config: LogtoConfig, { enableCache = false }: ChromeExtensionOptions = {}) {
     // eslint-disable-next-line unicorn/consistent-function-scoping -- we use `this` in the function
     const navigate: ClientAdapter['navigate'] = async (url, params) => {
       switch (params.for) {
@@ -50,6 +59,9 @@ export default class LogtoClient extends BaseClient {
     super(config, {
       navigate,
       storage: new ChromeExtensionStorage(config.appId),
+      cache: enableCache
+        ? new ChromeExtensionCacheStorage(config.endpoint, config.appId)
+        : undefined,
       generateCodeChallenge,
       generateCodeVerifier,
       generateState,

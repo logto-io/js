@@ -41,6 +41,13 @@ As the name suggests, Logto Node.js SDK is the foundation of all Logto SDKs that
 
 Usually, you are not expected to use it directly in your application, but instead choosing a framework specific SDK that built on top of it. We have already released a set of official SDKs to accelerate your integration. [Check this out](https://docs.logto.io/integrate-logto) and get started!
 
+### Discovery cache
+
+The Node and edge clients cache OIDC discovery metadata in an endpoint-scoped, process-local memory
+cache by default. Pass a custom `cache` storage adapter when the cache should be shared or managed by
+the application. The deprecated `unstable_cache` property remains supported, and `cache` takes
+precedence when both are provided.
+
 ## How to create your own SDK from scratch?
 
 If Logto does not support your traditional web framework and you want to create your own SDK from scratch, we recommend checking out the SDK specification first. You can also refer to our [Express SDK](https://github.com/logto-io/js/tree/master/packages/express) and [Next.js SDK](https://github.com/logto-io/js/tree/master/packages/next) to learn more about the implementation details.

@@ -42,8 +42,17 @@ type OptionalPromiseReturn<T> = {
     : T[K];
 };
 
+export type LogtoVueConfig = LogtoConfig & {
+  /**
+   * Whether to cache OIDC discovery metadata in session storage.
+   *
+   * @default false
+   */
+  enableCache?: boolean;
+};
+
 type LogtoVuePlugin = {
-  install: (app: App, config: LogtoConfig) => void;
+  install: (app: App, config: LogtoVueConfig) => void;
 };
 
 type Logto = {
@@ -87,8 +96,8 @@ type Logto = {
  * Use this in your Vue root component to register the plugin
  */
 export const createLogto: LogtoVuePlugin = {
-  install(app: App, config: LogtoConfig) {
-    const client = new LogtoClient(config);
+  install(app: App, { enableCache = false, ...config }: LogtoVueConfig) {
+    const client = new LogtoClient(config, enableCache);
     const context = createContext(client);
     const pluginMethods = createPluginMethods(context);
     const { isAuthenticated, isLoading, error } = context;

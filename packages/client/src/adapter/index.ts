@@ -35,6 +35,8 @@ export class ClientAdapterInstance {
    */
   requester!: Requester;
   storage!: Storage<StorageKey | PersistKey>;
+  cache?: Storage<CacheKey> | undefined;
+  /** @deprecated Use {@link cache} instead. */
   unstable_cache?: Storage<CacheKey> | undefined;
   navigate!: Navigate;
   generateState!: () => string | Promise<string>;
@@ -43,12 +45,15 @@ export class ClientAdapterInstance {
   /* END OF IMPLEMENTATION */
 
   constructor(adapter: ClientAdapter, requestOptions: CreateRequesterOptions = {}) {
+    const cache = adapter.cache ?? adapter.unstable_cache;
     const requester = adapter.fetch
       ? createRequester(adapter.fetch, requestOptions)
       : adapter.requester ?? createRequester(globalThis.fetch, requestOptions);
 
     // eslint-disable-next-line @silverhand/fp/no-mutating-assign
     Object.assign(this, adapter, {
+      cache,
+      unstable_cache: cache,
       requester,
     });
   }
@@ -70,7 +75,7 @@ export class ClientAdapterInstance {
    */
   async getCachedObject<T>(key: CacheKey): Promise<T | undefined> {
     const cached = await trySafe(async () => {
-      const data = await this.unstable_cache?.getItem(key);
+      const data = await this.cache?.getItem(key);
       // It's actually `unknown`
       // eslint-disable-next-line no-restricted-syntax
       return conditional(data && (JSON.parse(data) as unknown));
@@ -96,7 +101,7 @@ export class ClientAdapterInstance {
       return cached;
     }
 
-    const { unstable_cache: cache } = this;
+    const { cache } = this;
 
     if (!cache) {
       return getter();
@@ -109,35 +114,32 @@ export class ClientAdapterInstance {
       // Another client sharing the same cache storage is already populating this key. Wait for it
       // instead of issuing a duplicate discovery request.
       try {
-        await runningGetter;
+        // Cache keys identify one value shape, so all callers waiting on this key expect the same
+        // result type.
+        // eslint-disable-next-line no-restricted-syntax
+        return (await runningGetter) as T;
       } catch {
-        // The in-flight getter rejected before writing to cache. Fall through to the cache check
-        // and the current caller's getter below.
+        // The in-flight getter rejected before producing a value. Retry through the normal path.
       }
-
-      const cachedResult = await this.getCachedObject<T>(key);
-
-      if (cachedResult) {
-        return cachedResult;
-      }
-
-      // The in-flight getter may fail before writing to cache. Retry through the same population
-      // path so a successful recovery is stored for later callers.
       return this.getWithCache(key, getter);
     }
 
     const newRunningGetter = (async () => {
       const result = await getter();
-      await cache.setItem(key, JSON.stringify(result));
+      // Cache storage is an optimization. A storage failure must not discard a successful result.
+      await trySafe(async () => cache.setItem(key, JSON.stringify(result)));
       return result;
     })();
-    runningGetterMap.set(key, newRunningGetter);
+    const trackedRunningGetter = (async () => {
+      try {
+        return await newRunningGetter;
+      } finally {
+        runningGetterMap.delete(key);
+      }
+    })();
+    runningGetterMap.set(key, trackedRunningGetter);
 
-    try {
-      return await newRunningGetter;
-    } finally {
-      runningGetterMap.delete(key);
-    }
+    return trackedRunningGetter;
   }
 }
 

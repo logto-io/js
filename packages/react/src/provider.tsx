@@ -10,6 +10,13 @@ export type LogtoProviderProps = {
    * @default false
    */
   // eslint-disable-next-line react/boolean-prop-naming
+  enableCache?: boolean;
+  /**
+   * Whether to enable cache for well-known data. Use sessionStorage by default.
+   *
+   * @deprecated Use {@link enableCache} instead.
+   */
+  // eslint-disable-next-line react/boolean-prop-naming
   unstable_enableCache?: boolean;
   LogtoClientClass?: typeof LogtoClient;
   children?: ReactNode;
@@ -19,12 +26,14 @@ export const LogtoProvider = ({
   config,
   LogtoClientClass = LogtoClient,
   children,
-  unstable_enableCache = false,
+  enableCache,
+  unstable_enableCache,
 }: LogtoProviderProps) => {
+  const resolvedEnableCache = enableCache ?? unstable_enableCache ?? false;
   const [loadingCount, setLoadingCount] = useState(1);
   const memorizedLogtoClient = useMemo(
-    () => ({ logtoClient: new LogtoClientClass(config, unstable_enableCache) }),
-    [LogtoClientClass, config, unstable_enableCache]
+    () => ({ logtoClient: new LogtoClientClass(config, resolvedEnableCache) }),
+    [LogtoClientClass, config, resolvedEnableCache]
   );
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState<Error>();

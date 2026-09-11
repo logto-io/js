@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import LogtoClient from '@logto/browser';
 
-import { LOGTO_CLIENT, provideLogto } from './provider.js';
+import { LOGTO_CLIENT, provideLogto, type LogtoAngularOptions } from './provider.js';
 import { LogtoService } from './service.js';
 
 const config = {
@@ -21,12 +21,12 @@ const config = {
 
 const platform = platformCore();
 const platformInjector = platform.injector as EnvironmentInjector;
-const createInjector = (additionalProviders: Provider[] = []) =>
+const createInjector = (additionalProviders: Provider[] = [], options?: LogtoAngularOptions) =>
   createEnvironmentInjector(
     [
       { provide: ɵINJECTOR_SCOPE, useValue: 'root' },
       provideZonelessChangeDetection(),
-      provideLogto(config, { unstable_enableCache: true }),
+      provideLogto(config, options ?? { enableCache: true }),
       ...additionalProviders,
     ],
     platformInjector
@@ -49,10 +49,30 @@ describe('provideLogto', () => {
 
     expect(client).toBeInstanceOf(LogtoClient);
     expect(client.logtoConfig).toMatchObject(config);
-    expect(client.adapter.unstable_cache).toBeDefined();
+    expect(client.adapter.cache).toBeDefined();
     expect(injector.get(LOGTO_CLIENT)).toBe(client);
     expect(injector.get(LogtoService)).toBe(service);
     injector.destroy();
+  });
+
+  it('keeps cache disabled by default', () => {
+    const injector = createInjector([], {});
+
+    expect(injector.get(LOGTO_CLIENT).adapter.cache).toBeUndefined();
+    injector.destroy();
+  });
+
+  it('supports the deprecated cache option with stable precedence', () => {
+    const legacyInjector = createInjector([], { unstable_enableCache: true });
+    expect(legacyInjector.get(LOGTO_CLIENT).adapter.cache).toBeDefined();
+    legacyInjector.destroy();
+
+    const stableInjector = createInjector([], {
+      enableCache: false,
+      unstable_enableCache: true,
+    });
+    expect(stableInjector.get(LOGTO_CLIENT).adapter.cache).toBeUndefined();
+    stableInjector.destroy();
   });
 
   it('uses an Angular DI override for the underlying client', async () => {

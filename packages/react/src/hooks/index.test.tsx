@@ -47,6 +47,57 @@ const createHookWrapper =
     <LogtoProvider config={{ endpoint, appId }}>{children}</LogtoProvider>
   );
 
+describe('LogtoProvider cache options', () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('supports the stable cache option', async () => {
+    const { result } = renderHook(() => useLogto(), {
+      wrapper: ({ children }) => (
+        <LogtoProvider enableCache config={{ endpoint, appId }}>
+          {children}
+        </LogtoProvider>
+      ),
+    });
+
+    expect(LogtoClient).toHaveBeenLastCalledWith({ endpoint, appId }, true);
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+  });
+
+  it('supports the deprecated cache option', async () => {
+    const { result } = renderHook(() => useLogto(), {
+      wrapper: ({ children }) => (
+        <LogtoProvider unstable_enableCache config={{ endpoint, appId }}>
+          {children}
+        </LogtoProvider>
+      ),
+    });
+
+    expect(LogtoClient).toHaveBeenLastCalledWith({ endpoint, appId }, true);
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+  });
+
+  it('prefers the stable cache option', async () => {
+    const { result } = renderHook(() => useLogto(), {
+      wrapper: ({ children }) => (
+        <LogtoProvider unstable_enableCache config={{ endpoint, appId }} enableCache={false}>
+          {children}
+        </LogtoProvider>
+      ),
+    });
+
+    expect(LogtoClient).toHaveBeenLastCalledWith({ endpoint, appId }, false);
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+  });
+});
+
 const HasError = ({ children }: { children?: ReactNode }) => {
   const { error, setError } = useContext(LogtoContext);
   useEffect(() => {

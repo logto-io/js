@@ -50,14 +50,14 @@ const navigate = (url: string) => {
 export default class LogtoClient extends BaseClient {
   /**
    * @param config The configuration object for the client.
-   * @param [unstable_enableCache=false] Whether to enable cache for well-known data.
+   * @param [enableCache=false] Whether to enable cache for well-known data.
    * Use sessionStorage by default.
    */
-  constructor(config: LogtoConfig, unstable_enableCache = false) {
+  constructor(config: LogtoConfig, enableCache = false) {
     super(config, {
       navigate,
       storage: new BrowserStorage(config.appId),
-      unstable_cache: conditional(unstable_enableCache && new CacheStorage(config.appId)),
+      cache: conditional(enableCache && new CacheStorage(config.endpoint, config.appId)),
       generateCodeChallenge,
       generateCodeVerifier,
       generateState,
