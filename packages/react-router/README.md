@@ -235,9 +235,16 @@ The default `ProcessLocalSessionCoordinator` serializes writes for the same stab
 single server process. This protects concurrent refresh-token rotation when `SessionStorage`
 returns reloadable server-side sessions.
 
-Cookie-only storage returns sessions without a stable ID, so it cannot coordinate refreshes across
-requests. It is suitable for simple deployments, but applications that need concurrent refresh
-coordination should use shared server-side session storage.
+Coordinator selection is based on the session loaded when a request begins. A session with a
+stable ID uses the configured coordinator. Without one, the request uses an internal request-local
+coordinator for its full lifetime. This includes cookie-only sessions and the first request of a
+new server-side session. Once the response cookie for a new server-side session reaches the
+browser, subsequent requests load its persistent ID and use the configured coordinator.
+
+Because cookie-only storage never returns a stable ID, it can serialize operations only within one
+request and cannot coordinate refreshes across concurrent requests. Passing a distributed
+coordinator does not change this. Applications that need cross-request coordination should use
+shared server-side session storage.
 
 For a multi-instance deployment, use both:
 
