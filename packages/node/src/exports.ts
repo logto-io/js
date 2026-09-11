@@ -30,7 +30,9 @@ export {
   UserScope,
   organizationUrnPrefix,
   buildOrganizationUrn,
+  decodeAccessToken,
   getOrganizationIdFromUrn,
+  CacheKey,
   PersistKey,
   StandardLogtoClient,
 } from '@logto/client';

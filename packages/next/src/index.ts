@@ -35,7 +35,9 @@ export {
   UserScope,
   organizationUrnPrefix,
   buildOrganizationUrn,
+  decodeAccessToken,
   getOrganizationIdFromUrn,
+  CacheKey,
   PersistKey,
 } from '@logto/node';
 

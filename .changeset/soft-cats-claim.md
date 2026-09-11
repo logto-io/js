@@ -6,5 +6,6 @@
 "@logto/node": minor
 ---
 
-expose ID, access, and organization token claim helpers in server request APIs, including claims
-for access tokens scoped to both a resource and organization
+expose `getIdTokenClaims`, `getAccessTokenClaims`, and `getOrganizationTokenClaims` through the
+Next.js server APIs and React Router request context. Support the optional `organizationId`
+argument in platform `getAccessToken` and `getAccessTokenClaims` wrappers

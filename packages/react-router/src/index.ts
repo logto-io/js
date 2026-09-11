@@ -40,9 +40,12 @@ export {
   OidcError,
   Prompt,
   ReservedScope,
+  ReservedResource,
   UserScope,
   organizationUrnPrefix,
   buildOrganizationUrn,
+  decodeAccessToken,
   getOrganizationIdFromUrn,
+  CacheKey,
   PersistKey,
 } from '@logto/node';

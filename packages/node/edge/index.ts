@@ -10,7 +10,7 @@ import { createMemoryCache } from '../src/utils/cache.js';
 
 import { generateCodeChallenge, generateCodeVerifier, generateState } from './generators.js';
 
-export { PersistKey } from '@logto/client';
+export { CacheKey, PersistKey, ReservedResource, decodeAccessToken } from '@logto/client';
 
 type EdgeClientAdapter = Pick<ClientAdapter, 'navigate' | 'storage'> &
   Partial<Pick<ClientAdapter, 'fetch' | 'requester'>>;

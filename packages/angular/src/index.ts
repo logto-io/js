@@ -13,6 +13,7 @@ export type {
 
 export {
   BrowserStorage,
+  CacheKey,
   LogtoClientError,
   LogtoError,
   LogtoRequestError,
@@ -23,6 +24,7 @@ export {
   ReservedScope,
   UserScope,
   buildOrganizationUrn,
+  decodeAccessToken,
   getOrganizationIdFromUrn,
   isLogtoRequestError,
   organizationUrnPrefix,
