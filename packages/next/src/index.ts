@@ -218,6 +218,16 @@ export default class LogtoClient extends LogtoNextBaseClient {
     return nodeClient.getOrganizationTokenClaims(organizationId);
   };
 
+  clearAccessToken = async (request: NextApiRequest, response: NextApiResponse): Promise<void> => {
+    const nodeClient = await this.createNodeClientFromNextApi(request, response);
+    await nodeClient.clearAccessToken();
+  };
+
+  clearAllTokens = async (request: NextApiRequest, response: NextApiResponse): Promise<void> => {
+    const nodeClient = await this.createNodeClientFromNextApi(request, response);
+    await nodeClient.clearAllTokens();
+  };
+
   withLogtoApiRoute = (
     handler: NextApiHandler,
     config: GetContextParameters = {},

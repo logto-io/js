@@ -122,6 +122,18 @@ export default class LogtoClient extends BaseClient {
     return context;
   };
 
+  /** Clear cached access tokens and persist the updated session cookie to the response headers. */
+  clearAccessToken = async (request: Request, responseHeaders: Headers): Promise<void> => {
+    const { nodeClient } = await this.createRequestScopedClient(request, responseHeaders);
+    await nodeClient.clearAccessToken();
+  };
+
+  /** Clear every locally stored token and persist the updated session cookie to the response headers. */
+  clearAllTokens = async (request: Request, responseHeaders: Headers): Promise<void> => {
+    const { nodeClient } = await this.createRequestScopedClient(request, responseHeaders);
+    await nodeClient.clearAllTokens();
+  };
+
   /**
    * Create a Node client for the current edge request.
    *
@@ -140,9 +152,8 @@ export default class LogtoClient extends BaseClient {
    * Storage and the navigation URL are kept local to this call rather than on the (typically
    * singleton) client instance, so concurrent requests can never clobber each other's state.
    */
-  private async createRequestScopedClient(request: Request) {
+  private async createRequestScopedClient(request: Request, headers = new Headers()) {
     const cookies = new RequestCookies(request.headers);
-    const headers = new Headers();
     const responseCookies = new ResponseCookies(headers);
 
     const storage = new CookieStorage({

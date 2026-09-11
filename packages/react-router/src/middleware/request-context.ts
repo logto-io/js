@@ -27,6 +27,8 @@ export type LogtoRequestContext = Readonly<{
   getAccessTokenClaims: (resource?: string, organizationId?: string) => Promise<AccessTokenClaims>;
   getOrganizationToken: (organizationId: string) => Promise<string>;
   getOrganizationTokenClaims: (organizationId: string) => Promise<AccessTokenClaims>;
+  clearAccessToken: () => Promise<void>;
+  clearAllTokens: () => Promise<void>;
 }>;
 
 type LogtoRequestClient = {
@@ -36,6 +38,8 @@ type LogtoRequestClient = {
   getAccessTokenClaims: (resource?: string, organizationId?: string) => Promise<AccessTokenClaims>;
   getOrganizationToken: (organizationId: string) => Promise<string>;
   getOrganizationTokenClaims: (organizationId: string) => Promise<AccessTokenClaims>;
+  clearAccessToken: () => Promise<void>;
+  clearAllTokens: () => Promise<void>;
 };
 
 export type CreateLogtoRequestClient = (session: Session) => LogtoRequestClient;
@@ -76,6 +80,12 @@ export const createLogtoRequestContext = (
       createClient(session).getOrganizationTokenClaims(organizationId)
     );
 
+  const clearAccessToken = async () =>
+    runtime.checkpoint(async (session) => createClient(session).clearAccessToken());
+
+  const clearAllTokens = async () =>
+    runtime.checkpoint(async (session) => createClient(session).clearAllTokens());
+
   return Object.freeze({
     session: runtime.session,
     getContext,
@@ -84,5 +94,7 @@ export const createLogtoRequestContext = (
     getAccessTokenClaims,
     getOrganizationToken,
     getOrganizationTokenClaims,
+    clearAccessToken,
+    clearAllTokens,
   });
 };

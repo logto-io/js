@@ -191,6 +191,26 @@ export const getOrganizationTokenClaims = async (
 };
 
 /**
+ * Clear cached access tokens from the session. Use this in a Server Action or Route Handler where
+ * cookies are writable.
+ */
+export const clearAccessToken = async (config: LogtoNextConfig): Promise<void> => {
+  const client = new LogtoClient(config);
+  const nodeClient = await client.createNodeClient();
+  await nodeClient.clearAccessToken();
+};
+
+/**
+ * Clear every locally stored token from the session. Use this in a Server Action or Route Handler
+ * where cookies are writable.
+ */
+export const clearAllTokens = async (config: LogtoNextConfig): Promise<void> => {
+  const client = new LogtoClient(config);
+  const nodeClient = await client.createNodeClient();
+  await nodeClient.clearAllTokens();
+};
+
+/**
  * Get access token for the specified resource or organization,
  * this function can be used in React Server Components (RSC)
  * Note: You can't write to the cookie in a React Server Component, so if the access token is refreshed, it won't be persisted in the session.
