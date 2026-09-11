@@ -19,10 +19,12 @@ describe('LogtoClient', () => {
     const storage = new MockedStorage();
 
     beforeEach(() => {
+      vi.clearAllMocks();
       storage.reset({
         idToken: 'id_token_value',
         refreshToken: 'refresh_token_value',
         accessToken: 'access_token_map_json_string',
+        signInSession: 'sign_in_session_json_string',
       });
     });
 
@@ -33,13 +35,14 @@ describe('LogtoClient', () => {
       expect(requester).toHaveBeenCalledWith(revocationEndpoint, expect.anything());
     });
 
-    it('should clear id token, refresh token and access token from storage', async () => {
+    it('should clear all local authentication data from storage', async () => {
       const logtoClient = createClient(undefined, storage);
       await logtoClient.signOut(postSignOutRedirectUri);
 
       await expect(storage.getItem('idToken')).resolves.toBeNull();
       await expect(storage.getItem('refreshToken')).resolves.toBeNull();
       await expect(storage.getItem('accessToken')).resolves.toBeNull();
+      await expect(storage.getItem('signInSession')).resolves.toBeNull();
     });
 
     it('should redirect to post sign-out URI after signing out', async () => {
@@ -73,6 +76,34 @@ describe('LogtoClient', () => {
         redirectUri: undefined,
         for: 'sign-out',
       });
+    });
+
+    it('should clear local authentication data before OIDC discovery', async () => {
+      const discoveryError = new Error('OIDC discovery failed');
+      const logtoClient = createClient(undefined, storage);
+
+      vi.spyOn(logtoClient, 'getOidcConfig').mockRejectedValue(discoveryError);
+
+      await expect(logtoClient.signOut()).rejects.toBe(discoveryError);
+      await expect(storage.getItem('idToken')).resolves.toBeNull();
+      await expect(storage.getItem('refreshToken')).resolves.toBeNull();
+      await expect(storage.getItem('accessToken')).resolves.toBeNull();
+      await expect(storage.getItem('signInSession')).resolves.toBeNull();
+      expect(requester).not.toHaveBeenCalled();
+      expect(navigate).not.toHaveBeenCalled();
+    });
+
+    it('should keep local authentication data cleared when navigation fails', async () => {
+      const navigationError = new Error('Navigation failed');
+      const logtoClient = createClient(undefined, storage);
+
+      navigate.mockRejectedValueOnce(navigationError);
+
+      await expect(logtoClient.signOut()).rejects.toBe(navigationError);
+      await expect(storage.getItem('idToken')).resolves.toBeNull();
+      await expect(storage.getItem('refreshToken')).resolves.toBeNull();
+      await expect(storage.getItem('accessToken')).resolves.toBeNull();
+      await expect(storage.getItem('signInSession')).resolves.toBeNull();
     });
   });
 });

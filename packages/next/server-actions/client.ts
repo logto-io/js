@@ -69,8 +69,11 @@ export default class LogtoClient extends BaseClient {
    */
   async handleSignOut(redirectUri = this.config.baseUrl): Promise<string> {
     const { nodeClient, storage, getNavigateUrl } = await this.createRequestScopedClient();
-    await nodeClient.signOut(redirectUri);
-    await storage.destroy();
+    try {
+      await nodeClient.signOut(redirectUri);
+    } finally {
+      await storage.destroy();
+    }
 
     const navigateUrl = getNavigateUrl();
     if (!navigateUrl) {

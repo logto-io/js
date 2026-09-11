@@ -117,6 +117,43 @@ describe('middleware:createLogtoMiddleware', () => {
     expect(store.commitSession).toHaveBeenCalledOnce();
   });
 
+  it('returns the destroyed session cookie when remote sign-out fails', async () => {
+    const store = createTestSessionStorage({ idToken: 'id-token', refreshToken: 'refresh-token' });
+    const discoveryError = new Error('OIDC discovery failed');
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => {
+        throw discoveryError;
+      })
+    );
+    const logto = createLogtoReactRouter(
+      { ...config, endpoint: 'https://failed-logto.example.com' },
+      { sessionStorage: store.sessionStorage }
+    );
+    const authRoutes = logto.authRoutes({
+      paths: {
+        signIn: '/api/logto/sign-in',
+        signUp: '/api/logto/sign-up',
+        callback: '/api/logto/callback',
+        signOut: '/api/logto/sign-out',
+      },
+      postCallbackRedirectUri: '/',
+      postSignOutRedirectUri: '/',
+    });
+
+    const response = await runRoute(
+      logto.middleware,
+      authRoutes.action,
+      'POST',
+      '/api/logto/sign-out'
+    );
+
+    expect(response.status).toBe(500);
+    expect(response.headers.get('Set-Cookie')).toBe('logto-session=session-id; Max-Age=0');
+    expect(store.getData()).toEqual({});
+    expect(store.destroySession).toHaveBeenCalledOnce();
+  });
+
   it('coordinates access-token refreshes across concurrent requests', async () => {
     const store = createTestSessionStorage({ idToken: 'id-token', refreshToken: 'old' });
     const tokenRequest = stubTokenRefresh();

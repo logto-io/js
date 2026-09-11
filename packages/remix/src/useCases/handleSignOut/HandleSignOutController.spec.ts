@@ -17,4 +17,36 @@ describe('useCases:handleSignOut:HandleSignOutController', () => {
 
     expect(controller.constructor.name).toBe('HandleSignOutController');
   });
+
+  it('throws an error response with the destroyed session cookie when sign-out fails', async () => {
+    const signOutError = new Error('OIDC discovery failed');
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => true);
+    const useCase = vi.fn(async () => ({
+      status: 'rejected' as const,
+      cookieHeader: 'logto-session=; Max-Age=0',
+      error: signOutError,
+    }));
+    const controller = HandleSignOutController.fromDto({
+      useCase,
+      redirectUri: '/',
+    });
+    const request = new Request('https://app.example.com/sign-out', {
+      headers: { Cookie: 'logto-session=session-id' },
+    });
+
+    try {
+      await controller.execute(request);
+      expect.fail('Expected sign-out to throw an error response.');
+    } catch (error: unknown) {
+      expect(error).toBeInstanceOf(Response);
+
+      if (error instanceof Response) {
+        expect(error.status).toBe(500);
+        expect(error.headers.get('Set-Cookie')).toBe('logto-session=; Max-Age=0');
+      }
+
+      expect(consoleError).toHaveBeenCalledWith('Logto sign-out failed.', signOutError);
+      consoleError.mockRestore();
+    }
+  });
 });

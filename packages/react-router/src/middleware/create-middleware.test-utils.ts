@@ -23,6 +23,7 @@ const sessionCookie = 'logto-session=session-id';
 
 type TestSessionStore = Readonly<{
   commitSession: (session: Session) => Promise<string>;
+  destroySession: (session: Session) => Promise<string>;
   sessionStorage: SessionStorage;
   getData: () => SessionData;
 }>;
@@ -56,15 +57,21 @@ export const createTestSessionStorage = (initialData: SessionData = {}): TestSes
 
     return `${sessionCookie}; Path=/; HttpOnly; SameSite=Lax`;
   });
+  const destroySession = vi.fn(async () => {
+    sessions.delete('session-id');
+
+    return `${sessionCookie}; Max-Age=0`;
+  });
   const sessionStorage: SessionStorage = {
     getSession: async () =>
       createSession(structuredClone(sessions.get('session-id') ?? {}), 'session-id'),
     commitSession,
-    destroySession: async () => `${sessionCookie}; Max-Age=0`,
+    destroySession,
   };
 
   return {
     commitSession,
+    destroySession,
     sessionStorage,
     getData: () => structuredClone(sessions.get('session-id') ?? {}),
   };
