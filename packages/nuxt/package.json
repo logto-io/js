@@ -43,6 +43,7 @@
     "h3": "^1.15.5",
     "happy-dom": "^20.0.11",
     "lint-staged": "^15.0.0",
+    "nitropack": "^2.13.4",
     "nuxt": "^3.21.10",
     "prettier": "^3.0.0",
     "typescript": "^5.3.3",
@@ -60,7 +61,6 @@
     "@logto/node": "workspace:^",
     "@nuxt/kit": "^3.21.10",
     "@silverhand/essentials": "^2.9.3",
-    "defu": "^6.1.4",
-    "nitropack": "^2.13.4"
+    "defu": "^6.1.4"
   }
 }

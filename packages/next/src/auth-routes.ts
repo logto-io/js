@@ -2,6 +2,7 @@ import type { GetContextParameters, SignInOptions } from '@logto/node';
 import type { NextApiHandler } from 'next';
 
 import type { ErrorHandler, HandleAuthRoutesOptions } from './types.js';
+import { buildHandler } from './utils.js';
 
 type AuthRouteHandlers = Readonly<{
   handleSignIn: (options: SignInOptions & { onError?: ErrorHandler }) => NextApiHandler;
@@ -32,7 +33,7 @@ export const createAuthRoutesHandler = (
       };
   const { getContext, onError, signInOptions, getSignInOptions } = options;
 
-  return async (request, response) => {
+  return buildHandler(async (request, response) => {
     const { action } = request.query;
 
     if (action === 'sign-in' || action === 'sign-up') {
@@ -44,22 +45,21 @@ export const createAuthRoutesHandler = (
         ...requestSignInOptions,
         redirectUri: `${baseUrl}/api/logto/sign-in-callback`,
         ...(flow === 'signUp' && { firstScreen: 'register' }),
-        ...(onError && { onError }),
       })(request, response);
     }
 
     if (action === 'sign-in-callback') {
-      return handlers.handleSignInCallback(undefined, onError)(request, response);
+      return handlers.handleSignInCallback()(request, response);
     }
 
     if (action === 'sign-out') {
-      return handlers.handleSignOut(undefined, onError)(request, response);
+      return handlers.handleSignOut()(request, response);
     }
 
     if (action === 'user') {
-      return handlers.handleUser(getContext, onError)(request, response);
+      return handlers.handleUser(getContext)(request, response);
     }
 
     response.status(404).end();
-  };
+  }, onError);
 };

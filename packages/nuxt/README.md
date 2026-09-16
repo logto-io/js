@@ -53,16 +53,12 @@ individual request, register the `logto:sign-in-options` Nitro hook in a server 
 
 ```ts
 // server/plugins/logto.ts
-import { Prompt } from '@logto/nuxt';
-
 export default defineNitroPlugin((nitroApp) => {
   nitroApp.hooks.hook('logto:sign-in-options', ({ event, signInOptions }) => {
     const prompt = getQuery(event).prompt;
 
     if (prompt === 'login' || prompt === 'consent') {
-      Object.assign(signInOptions, {
-        prompt: prompt === 'login' ? Prompt.Login : Prompt.Consent,
-      });
+      Object.assign(signInOptions, { prompt });
     }
   });
 });

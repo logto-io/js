@@ -124,6 +124,9 @@ describe('CapacitorLogtoClient', () => {
     it('should forward object-form sign-in options', async () => {
       const hooks = installListenerCapture();
       const baseSignIn = vi.spyOn(LogtoBaseClient.prototype, 'signIn').mockResolvedValue();
+      const assign = vi.spyOn(window.location, 'assign').mockImplementation(() => {
+        // Prevent navigation in the test environment.
+      });
       const client = createClient();
       vi.spyOn(client, 'handleSignInCallback').mockImplementation(async () => {
         await client.getAdapter().navigate('https://app.example.com/after-sign-in', {
@@ -145,9 +148,27 @@ describe('CapacitorLogtoClient', () => {
       await hooks.appUrlOpen?.({ url: 'io.logto.example://callback?code=abc' });
 
       await expect(pending).resolves.toBeUndefined();
-      expect(vi.mocked(Browser.close).mock.invocationCallOrder[0]).toBeLessThan(
-        vi.mocked(Browser.open).mock.invocationCallOrder[0] ?? Number.POSITIVE_INFINITY
-      );
+      expect(assign).toHaveBeenCalledWith(options.postRedirectUri);
+      expect(Browser.open).not.toHaveBeenCalled();
+      expect(Browser.close).toHaveBeenCalledOnce();
+    });
+
+    it('should exchange the authorization code when the browser is already closed', async () => {
+      const hooks = installListenerCapture();
+      vi.spyOn(LogtoBaseClient.prototype, 'signIn').mockResolvedValue();
+      vi.mocked(Browser.close).mockRejectedValueOnce(new Error('No active window to close!'));
+
+      const client = createClient();
+      const handleSignInCallback = vi.spyOn(client, 'handleSignInCallback').mockResolvedValue();
+
+      const pending = client.signIn('io.logto.example://callback');
+      await vi.waitFor(() => {
+        expect(hooks.appUrlOpen).toBeDefined();
+      });
+      await hooks.appUrlOpen?.({ url: 'io.logto.example://callback?code=abc' });
+
+      await expect(pending).resolves.toBeUndefined();
+      expect(handleSignInCallback).toHaveBeenCalledWith('io.logto.example://callback?code=abc');
     });
 
     it('should reject if App.addListener rejects at bootstrap', async () => {

@@ -51,8 +51,8 @@ const toError = (value: unknown): Error =>
   value instanceof Error ? value : new Error(String(value));
 
 const swallowError = (): void => {
-  // Intentionally empty: listener-removal failures during cleanup must not override
-  // the resolve/reject outcome the caller actually cares about.
+  // Intentionally empty: best-effort cleanup failures must not override the resolve/reject
+  // outcome the caller actually cares about.
 };
 
 export default class CapacitorLogtoClient extends LogtoBaseClient {
@@ -65,7 +65,12 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
     // system browser. We need to open an in-app browser to be able to handle
     // the redirects back to the app.
     // https://capacitorjs.com/docs/apis/browser
-    this.adapter.navigate = async (url) => {
+    this.adapter.navigate = async (url, parameters) => {
+      if (parameters.for === 'post-sign-in') {
+        window.location.assign(url);
+        return;
+      }
+
       return Browser.open({
         url,
         windowName: '_self',
@@ -173,11 +178,13 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
         redirectionHandled = true;
 
         try {
-          // Close the authorization browser before callback handling. Object-form sign-in can
-          // navigate to a postRedirectUri during the callback, and closing afterward would close
-          // that new browser instead.
-          await Promise.all([Browser.close(), cleanup()]);
-          await this.handleSignInCallback(url);
+          // Browser dismissal is best-effort cleanup. It must not delay or override the token
+          // exchange, especially when the browser has already closed during deep-link handoff.
+          await Promise.all([
+            this.handleSignInCallback(url),
+            Browser.close().catch(swallowError),
+            cleanup(),
+          ]);
           resolve();
         } catch (error: unknown) {
           await cleanup();

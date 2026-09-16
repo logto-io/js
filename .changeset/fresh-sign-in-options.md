@@ -3,11 +3,11 @@
 "@logto/express": minor
 "@logto/nuxt": minor
 "@logto/next": minor
-"@logto/capacitor": patch
+"@logto/capacitor": minor
 ---
 
 support request-specific sign-in options in platform SDKs
 
 Add static `signInOptions` defaults and per-request `getSignInOptions` callbacks to React Router,
 Express, Nuxt, and Next.js auth routes. Support the existing object-form sign-in options API in
-Capacitor.
+Capacitor, and use `firstScreen: 'register'` for the Next.js sign-up route.

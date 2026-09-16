@@ -221,7 +221,10 @@ describe('auth-routes:createAuthRoutes', () => {
       url: new URL(signInRequest.url),
     });
 
-    expect(resolvePostCallbackRedirectUri).toHaveBeenCalledWith(signInRequest);
+    expect(resolvePostCallbackRedirectUri).toHaveBeenCalledWith(expect.any(Request));
+    const resolvedRequest = resolvePostCallbackRedirectUri.mock.calls[0]?.[0];
+    expect(resolvedRequest?.url).toBe(signInRequest.url);
+    expect(resolvedRequest?.method).toBe(signInRequest.method);
     expect(signInRuntime.spies.signIn).toHaveBeenCalledWith({
       redirectUri: `${baseUrl}${paths.callback}`,
       postRedirectUri: `${baseUrl}/tasks/123`,

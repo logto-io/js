@@ -1,4 +1,5 @@
 import { Prompt, type SignInOptions } from '@logto/node';
+import type { ErrorRequestHandler } from 'express';
 
 import { handleAuthRoutes, withLogto } from './index.js';
 import { testMiddleware, testRouter } from './test-utils.js';
@@ -114,6 +115,29 @@ describe('Express', () => {
           extraParams: { source: 'request' },
           redirectUri: `${configs.baseUrl}/logto/sign-in-callback`,
         });
+      });
+
+      it('should forward request-specific option errors to Express error middleware', async () => {
+        const resolverError = new Error('failed to resolve sign-in options');
+        const errorHandler = vi.fn<ErrorRequestHandler>((error, _request, response, _next) => {
+          expect(error).toBe(resolverError);
+          response.status(503).end();
+        });
+
+        await Promise.resolve(
+          testRouter(
+            handleAuthRoutes(configs, {
+              getSignInOptions: async () => {
+                throw resolverError;
+              },
+            }),
+            errorHandler
+          )
+            .get('/logto/sign-in')
+            .expect(503)
+        );
+
+        expect(errorHandler).toHaveBeenCalledOnce();
       });
     });
 

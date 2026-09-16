@@ -76,54 +76,58 @@ export const handleAuthRoutes = (
   const router = Router();
   const prefix = config.authRoutesPrefix ?? 'logto';
 
-  router.use(`/${prefix}/:action`, async (request, response) => {
-    const { action } = request.params;
-    const nodeClient = createNodeClient(request, response, config);
+  router.use(`/${prefix}/:action`, async (request, response, next) => {
+    try {
+      const { action } = request.params;
+      const nodeClient = createNodeClient(request, response, config);
 
-    switch (action) {
-      case 'sign-in': {
-        const requestSignInOptions = await getSignInOptions?.(request, 'signIn');
+      switch (action) {
+        case 'sign-in': {
+          const requestSignInOptions = await getSignInOptions?.(request, 'signIn');
 
-        await nodeClient.signIn({
-          ...config.signInOptions,
-          ...requestSignInOptions,
-          redirectUri: `${config.baseUrl}/${prefix}/sign-in-callback`,
-        });
+          await nodeClient.signIn({
+            ...config.signInOptions,
+            ...requestSignInOptions,
+            redirectUri: `${config.baseUrl}/${prefix}/sign-in-callback`,
+          });
 
-        break;
-      }
-
-      case 'sign-up': {
-        const requestSignInOptions = await getSignInOptions?.(request, 'signUp');
-
-        await nodeClient.signIn({
-          ...config.signInOptions,
-          ...requestSignInOptions,
-          redirectUri: `${config.baseUrl}/${prefix}/sign-in-callback`,
-          firstScreen: 'register',
-        });
-
-        break;
-      }
-
-      case 'sign-in-callback': {
-        if (request.url) {
-          await nodeClient.handleSignInCallback(`${config.baseUrl}${request.originalUrl}`);
-          response.redirect(config.baseUrl);
+          break;
         }
 
-        break;
-      }
+        case 'sign-up': {
+          const requestSignInOptions = await getSignInOptions?.(request, 'signUp');
 
-      case 'sign-out': {
-        await nodeClient.signOut(config.baseUrl);
+          await nodeClient.signIn({
+            ...config.signInOptions,
+            ...requestSignInOptions,
+            redirectUri: `${config.baseUrl}/${prefix}/sign-in-callback`,
+            firstScreen: 'register',
+          });
 
-        break;
-      }
+          break;
+        }
 
-      default: {
-        response.status(404).end();
+        case 'sign-in-callback': {
+          if (request.url) {
+            await nodeClient.handleSignInCallback(`${config.baseUrl}${request.originalUrl}`);
+            response.redirect(config.baseUrl);
+          }
+
+          break;
+        }
+
+        case 'sign-out': {
+          await nodeClient.signOut(config.baseUrl);
+
+          break;
+        }
+
+        default: {
+          response.status(404).end();
+        }
       }
+    } catch (error: unknown) {
+      next(error);
     }
   });
 

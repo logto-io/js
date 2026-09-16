@@ -4,7 +4,7 @@ import type { NextApiResponse } from 'next';
 import { testApiHandler } from 'next-test-api-route-handler';
 
 import LogtoClient from './index.js';
-import type { LogtoNextConfig, GetSignInOptions } from './types.js';
+import type { ErrorHandler, GetSignInOptions, LogtoNextConfig } from './types.js';
 
 const signInUrl = 'http://mock-logto-server.com/sign-in';
 
@@ -359,6 +359,34 @@ describe('Next', () => {
       });
     });
 
+    it('should route request-specific option errors through onError', async () => {
+      const resolverError = new Error('failed to resolve sign-in options');
+      const onError = vi.fn<ErrorHandler>((_request, response, error) => {
+        expect(error).toBe(resolverError);
+        response.status(503).end();
+      });
+      const client = new LogtoClient(configs);
+
+      await testApiHandler({
+        pagesHandler: client.handleAuthRoutes({
+          getSignInOptions: async () => {
+            throw resolverError;
+          },
+          onError,
+        }),
+        paramsPatcher: (parameters) => {
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          parameters.action = 'sign-in';
+        },
+        test: async ({ fetch }) => {
+          const response = await fetch({ method: 'GET' });
+          expect(response.status).toBe(503);
+        },
+      });
+
+      expect(onError).toHaveBeenCalledOnce();
+    });
+
     it('should call handleSignInCallback for "sign-in-callback"', async () => {
       const client = new LogtoClient(configs);
       vi.spyOn(client, 'handleSignInCallback').mockImplementation(() => mockResponse);
@@ -403,7 +431,7 @@ describe('Next', () => {
         },
         test: async ({ fetch }) => {
           await fetch({ method: 'GET', redirect: 'manual' });
-          expect(client.handleUser).toHaveBeenCalledWith({ fetchUserInfo: true }, onError);
+          expect(client.handleUser).toHaveBeenCalledWith({ fetchUserInfo: true });
         },
       });
     });
