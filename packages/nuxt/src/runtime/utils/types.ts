@@ -30,12 +30,11 @@ declare module 'nuxt/schema' {
   }
 }
 
-type DeepPartial<T> =
-  T extends Record<string, unknown>
-    ? {
-        [P in keyof T]?: DeepPartial<T[P]>;
-      }
-    : T;
+type DeepPartial<T> = T extends Record<string, unknown>
+  ? {
+      [P in keyof T]?: DeepPartial<T[P]>;
+    }
+  : T;
 
 type LogtoModuleOptions = {
   /**

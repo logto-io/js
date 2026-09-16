@@ -60,14 +60,15 @@ const toAccessTokenError = (error: unknown): LogtoAccessTokenError => {
   const statusCode =
     isObjectLike(error) && typeof error.statusCode === 'number' ? error.statusCode : 0;
   const data = isObjectLike(error) ? error.data : undefined;
-  const code =
-    isObjectLike(data) && typeof data.code === 'string'
-      ? data.code
-      : statusCode === 401
-        ? NotAuthenticatedErrorCode
-        : RequestFailedErrorCode;
 
-  return { statusCode, code };
+  if (isObjectLike(data) && typeof data.code === 'string') {
+    return { statusCode, code: data.code };
+  }
+
+  return {
+    statusCode,
+    code: statusCode === 401 ? NotAuthenticatedErrorCode : RequestFailedErrorCode,
+  };
 };
 
 /**
