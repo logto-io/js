@@ -60,6 +60,7 @@
     "@logto/node": "workspace:^",
     "@nuxt/kit": "^3.21.10",
     "@silverhand/essentials": "^2.9.3",
-    "defu": "^6.1.4"
+    "defu": "^6.1.4",
+    "nitropack": "^2.13.4"
   }
 }

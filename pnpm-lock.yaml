@@ -894,6 +894,9 @@ importers:
       defu:
         specifier: ^6.1.4
         version: 6.1.7
+      nitropack:
+        specifier: ^2.13.4
+        version: 2.13.4(@capacitor/preferences@8.0.1(@capacitor/core@8.1.0))(@netlify/blobs@9.0.1)(encoding@0.1.13)(oxc-parser@0.143.0)(xml2js@0.6.2)
     devDependencies:
       '@nuxt/module-builder':
         specifier: ^1.0.1

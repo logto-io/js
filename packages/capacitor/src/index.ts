@@ -91,9 +91,7 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
     };
   }
 
-  /**
-   * **NOTE: Capacitor does not support this method signature, use the other overloads.**
-   */
+  /** Start the sign-in flow with the specified options. */
   async signIn(options: SignInOptions): Promise<void>;
   /**
    * Start the sign-in flow with the specified redirect URI. The URI must be
@@ -130,12 +128,17 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
    */
   async signIn(redirectUri: string, interactionMode?: InteractionMode): Promise<void>;
   async signIn(
-    redirectUri: string | URL | SignInOptions,
+    optionsOrRedirectUri: string | URL | SignInOptions,
     interactionMode?: InteractionMode
   ): Promise<void> {
-    if (typeof redirectUri === 'object' && !(redirectUri instanceof URL)) {
-      throw new TypeError('The first argument must be a string or a URL.');
-    }
+    const options =
+      typeof optionsOrRedirectUri === 'string' || optionsOrRedirectUri instanceof URL
+        ? {
+            redirectUri: optionsOrRedirectUri,
+            ...(interactionMode && { interactionMode }),
+          }
+        : optionsOrRedirectUri;
+    const redirectUri = options.redirectUri.toString();
 
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line @silverhand/fp/no-let
@@ -162,7 +165,7 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
 
       // eslint-disable-next-line @silverhand/fp/no-mutation
       appHandlePromise = App.addListener('appUrlOpen', async ({ url }) => {
-        if (!url.startsWith(redirectUri.toString())) {
+        if (!url.startsWith(redirectUri)) {
           return;
         }
 
@@ -170,10 +173,11 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
         redirectionHandled = true;
 
         try {
-          // Kick off listener removal alongside the token exchange and browser dismiss
-          // (matches the original parallelism); the awaited Promise.all guarantees all
-          // three are done before resolve().
-          await Promise.all([this.handleSignInCallback(url), Browser.close(), cleanup()]);
+          // Close the authorization browser before callback handling. Object-form sign-in can
+          // navigate to a postRedirectUri during the callback, and closing afterward would close
+          // that new browser instead.
+          await Promise.all([Browser.close(), cleanup()]);
+          await this.handleSignInCallback(url);
           resolve();
         } catch (error: unknown) {
           await cleanup();
@@ -204,7 +208,7 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
       void (async () => {
         try {
           await Promise.all([appHandlePromise, browserHandlePromise]);
-          await super.signIn(redirectUri, interactionMode);
+          await super.signIn(options);
         } catch (error: unknown) {
           await cleanup();
           reject(toError(error));

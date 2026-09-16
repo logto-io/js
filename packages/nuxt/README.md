@@ -46,6 +46,31 @@ NUXT_LOGTO_APP_SECRET=<your-logto-app-secret>
 NUXT_LOGTO_COOKIE_ENCRYPTION_KEY=<random-string>
 ```
 
+## Request-specific sign-in options
+
+Set module-level `signInOptions` for defaults shared by every sign-in. To override them for an
+individual request, register the `logto:sign-in-options` Nitro hook in a server plugin:
+
+```ts
+// server/plugins/logto.ts
+import { Prompt } from '@logto/nuxt';
+
+export default defineNitroPlugin((nitroApp) => {
+  nitroApp.hooks.hook('logto:sign-in-options', ({ event, signInOptions }) => {
+    const prompt = getQuery(event).prompt;
+
+    if (prompt === 'login' || prompt === 'consent') {
+      Object.assign(signInOptions, {
+        prompt: prompt === 'login' ? Prompt.Login : Prompt.Consent,
+      });
+    }
+  });
+});
+```
+
+Hook values override module-level defaults. The SDK still owns the callback redirect URI. Validate
+or allowlist request input before copying it into sign-in options.
+
 ## Resources
 
 [![Website](https://img.shields.io/badge/website-logto.io-8262F8.svg)](https://logto.io/)

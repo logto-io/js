@@ -33,7 +33,12 @@ export type {
   LogtoErrorCode,
   UserInfoResponse,
 } from '@logto/node';
-export type { LogtoExpressConfig } from './types.js';
+export type {
+  AuthRouteFlow,
+  AuthRouteSignInOptions,
+  LogtoExpressConfig,
+  ResolveSignInOptions,
+} from './types.js';
 
 export type Middleware = (
   request: Request,
@@ -73,8 +78,11 @@ export const handleAuthRoutes = (config: LogtoExpressConfig): Router => {
 
     switch (action) {
       case 'sign-in': {
+        const requestSignInOptions = await config.resolveSignInOptions?.(request, 'signIn');
+
         await nodeClient.signIn({
           ...config.signInOptions,
+          ...requestSignInOptions,
           redirectUri: `${config.baseUrl}/${prefix}/sign-in-callback`,
         });
 
@@ -82,8 +90,11 @@ export const handleAuthRoutes = (config: LogtoExpressConfig): Router => {
       }
 
       case 'sign-up': {
+        const requestSignInOptions = await config.resolveSignInOptions?.(request, 'signUp');
+
         await nodeClient.signIn({
           ...config.signInOptions,
+          ...requestSignInOptions,
           redirectUri: `${config.baseUrl}/${prefix}/sign-in-callback`,
           firstScreen: 'register',
         });

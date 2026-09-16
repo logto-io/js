@@ -35,6 +35,19 @@ OIDC discovery caching is disabled by default. Enable it through the Capacitor o
 const client = new LogtoClient(config, { enableCache: true });
 ```
 
+Sign-in accepts the same object-form options as `@logto/browser`, including `prompt`,
+`loginHint`, and `extraParams`:
+
+```ts
+import { Prompt } from '@logto/capacitor';
+
+await client.signIn({
+  redirectUri: 'io.logto.example://callback',
+  prompt: Prompt.Consent,
+  extraParams: { organization_id: 'organization-id' },
+});
+```
+
 ## Resources
 
 [![Website](https://img.shields.io/badge/website-logto.io-8262F8.svg)](https://logto.io/)
