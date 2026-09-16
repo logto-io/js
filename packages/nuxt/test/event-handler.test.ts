@@ -16,6 +16,7 @@ mockNuxtImport('useRuntimeConfig', () =>
         callback: '/callback',
       },
     },
+    public: { logto: { accessTokenPath: '/api/logto/access-token' } },
   }))
 );
 const cookies = new Map();
@@ -83,6 +84,7 @@ describe('event-handler', async () => {
           callback: '/callback-1',
         },
       },
+      public: { logto: { accessTokenPath: '/api/logto/access-token' } },
     });
     getRequestURL.mockReturnValueOnce(new URL('http://localhost:3000/callback-1'));
     await handler(event);
