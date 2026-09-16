@@ -10,7 +10,7 @@ export type {
   AuthRoutes,
   AuthRoutesOptions,
   ResolvePostCallbackRedirectUri,
-  ResolveSignInOptions,
+  GetSignInOptions,
   ValidateAuthActionRequest,
 } from './auth-routes/auth-routes.js';
 

@@ -7,7 +7,7 @@ export type AuthRouteSignInOptions = Omit<
   'redirectUri' | 'postRedirectUri' | 'interactionMode'
 >;
 
-export type ResolveSignInOptions = (
+export type GetSignInOptions = (
   event: H3Event
 ) => AuthRouteSignInOptions | Promise<AuthRouteSignInOptions>;
 

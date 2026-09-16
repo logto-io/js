@@ -4,7 +4,7 @@ import type { NextApiResponse } from 'next';
 import { testApiHandler } from 'next-test-api-route-handler';
 
 import LogtoClient from './index.js';
-import type { LogtoNextConfig, ResolveSignInOptions } from './types.js';
+import type { LogtoNextConfig, GetSignInOptions } from './types.js';
 
 const signInUrl = 'http://mock-logto-server.com/sign-in';
 
@@ -311,14 +311,14 @@ describe('Next', () => {
     it('should call handleSignIn for "sign-in"', async () => {
       const client = new LogtoClient(configs);
       const handleSignIn = vi.spyOn(client, 'handleSignIn').mockImplementation(() => mockResponse);
-      const resolveSignInOptions = vi.fn<ResolveSignInOptions>((request) => ({
+      const getSignInOptions = vi.fn<GetSignInOptions>((request) => ({
         prompt: request.query.prompt === 'consent' ? Prompt.Consent : Prompt.Login,
         extraParams: { source: 'request' },
       }));
       await testApiHandler({
         pagesHandler: client.handleAuthRoutes({
           signInOptions: { prompt: Prompt.Login },
-          resolveSignInOptions,
+          getSignInOptions,
         }),
         paramsPatcher: (parameters) => {
           // eslint-disable-next-line @silverhand/fp/no-mutation
@@ -328,7 +328,7 @@ describe('Next', () => {
         },
         test: async ({ fetch }) => {
           await fetch({ method: 'GET', redirect: 'manual' });
-          expect(resolveSignInOptions).toHaveBeenCalledWith(expect.anything(), 'signIn');
+          expect(getSignInOptions).toHaveBeenCalledWith(expect.anything(), 'signIn');
           expect(handleSignIn).toHaveBeenCalledWith({
             prompt: Prompt.Consent,
             extraParams: { source: 'request' },
@@ -343,7 +343,7 @@ describe('Next', () => {
       vi.spyOn(client, 'handleSignIn').mockImplementation(() => mockResponse);
       await testApiHandler({
         pagesHandler: client.handleAuthRoutes({
-          resolveSignInOptions: () => ({ firstScreen: 'signIn' }),
+          getSignInOptions: () => ({ firstScreen: 'signIn' }),
         }),
         paramsPatcher: (parameters) => {
           // eslint-disable-next-line @silverhand/fp/no-mutation

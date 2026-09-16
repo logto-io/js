@@ -16,7 +16,7 @@ const isHandleAuthRoutesOptions = (
   'getContext' in value ||
   'onError' in value ||
   'signInOptions' in value ||
-  'resolveSignInOptions' in value;
+  'getSignInOptions' in value;
 
 export const createAuthRoutesHandler = (
   baseUrl: string,
@@ -30,14 +30,14 @@ export const createAuthRoutesHandler = (
         getContext: optionsOrConfigs,
         ...(legacyOnError && { onError: legacyOnError }),
       };
-  const { getContext, onError, signInOptions, resolveSignInOptions } = options;
+  const { getContext, onError, signInOptions, getSignInOptions } = options;
 
   return async (request, response) => {
     const { action } = request.query;
 
     if (action === 'sign-in' || action === 'sign-up') {
       const flow = action === 'sign-in' ? 'signIn' : 'signUp';
-      const requestSignInOptions = await resolveSignInOptions?.(request, flow);
+      const requestSignInOptions = await getSignInOptions?.(request, flow);
 
       return handlers.handleSignIn({
         ...signInOptions,

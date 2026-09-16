@@ -28,7 +28,7 @@ export type {
   AuthRouteSignInOptions,
   HandleAuthRoutesOptions,
   LogtoNextConfig,
-  ResolveSignInOptions,
+  GetSignInOptions,
 } from './types.js';
 
 export {

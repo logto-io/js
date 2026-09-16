@@ -2,7 +2,7 @@ import { Prompt, type SignInOptions } from '@logto/node';
 
 import { handleAuthRoutes, withLogto } from './index.js';
 import { testMiddleware, testRouter } from './test-utils.js';
-import type { LogtoExpressConfig } from './types.js';
+import type { GetSignInOptions, LogtoExpressConfig } from './types.js';
 
 const signInUrl = 'http://mock-logto-server.com/sign-in';
 
@@ -89,26 +89,26 @@ describe('Express', () => {
       });
 
       it('should merge request-specific options over static defaults', async () => {
-        const resolveSignInOptions = vi.fn(
-          (request: Parameters<NonNullable<LogtoExpressConfig['resolveSignInOptions']>>[0]) => ({
-            prompt: request.query.prompt === 'consent' ? Prompt.Consent : Prompt.Login,
-            extraParams: { source: 'request' },
-          })
-        );
+        const getSignInOptions = vi.fn<GetSignInOptions>((request) => ({
+          prompt: request.query.prompt === 'consent' ? Prompt.Consent : Prompt.Login,
+          extraParams: { source: 'request' },
+        }));
 
         await Promise.resolve(
           testRouter(
-            handleAuthRoutes({
-              ...configs,
-              signInOptions: { prompt: Prompt.Login, extraParams: { source: 'static' } },
-              resolveSignInOptions,
-            })
+            handleAuthRoutes(
+              {
+                ...configs,
+                signInOptions: { prompt: Prompt.Login, extraParams: { source: 'static' } },
+              },
+              { getSignInOptions }
+            )
           )
             .get('/logto/sign-in?prompt=consent')
             .expect('Location', signInUrl)
         );
 
-        expect(resolveSignInOptions).toHaveBeenCalledWith(expect.anything(), 'signIn');
+        expect(getSignInOptions).toHaveBeenCalledWith(expect.anything(), 'signIn');
         expect(signIn).toHaveBeenCalledWith({
           prompt: 'consent',
           extraParams: { source: 'request' },
@@ -134,9 +134,8 @@ describe('Express', () => {
       it('should keep the registration screen authoritative', async () => {
         await Promise.resolve(
           testRouter(
-            handleAuthRoutes({
-              ...configs,
-              resolveSignInOptions: () => ({ firstScreen: 'signIn' }),
+            handleAuthRoutes(configs, {
+              getSignInOptions: () => ({ firstScreen: 'signIn' }),
             })
           )
             .get('/logto/sign-up')

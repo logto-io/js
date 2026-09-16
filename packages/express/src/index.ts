@@ -6,7 +6,7 @@ import { Router } from 'express';
 
 import { LogtoExpressError } from './errors.js';
 import ExpressStorage from './storage.js';
-import type { LogtoExpressConfig } from './types.js';
+import type { HandleAuthRoutesOptions, LogtoExpressConfig } from './types.js';
 
 export {
   LogtoError,
@@ -36,8 +36,9 @@ export type {
 export type {
   AuthRouteFlow,
   AuthRouteSignInOptions,
+  HandleAuthRoutesOptions,
   LogtoExpressConfig,
-  ResolveSignInOptions,
+  GetSignInOptions,
 } from './types.js';
 
 export type Middleware = (
@@ -67,7 +68,10 @@ const createNodeClient = (
   });
 };
 
-export const handleAuthRoutes = (config: LogtoExpressConfig): Router => {
+export const handleAuthRoutes = (
+  config: LogtoExpressConfig,
+  { getSignInOptions }: HandleAuthRoutesOptions = {}
+): Router => {
   // eslint-disable-next-line new-cap
   const router = Router();
   const prefix = config.authRoutesPrefix ?? 'logto';
@@ -78,7 +82,7 @@ export const handleAuthRoutes = (config: LogtoExpressConfig): Router => {
 
     switch (action) {
       case 'sign-in': {
-        const requestSignInOptions = await config.resolveSignInOptions?.(request, 'signIn');
+        const requestSignInOptions = await getSignInOptions?.(request, 'signIn');
 
         await nodeClient.signIn({
           ...config.signInOptions,
@@ -90,7 +94,7 @@ export const handleAuthRoutes = (config: LogtoExpressConfig): Router => {
       }
 
       case 'sign-up': {
-        const requestSignInOptions = await config.resolveSignInOptions?.(request, 'signUp');
+        const requestSignInOptions = await getSignInOptions?.(request, 'signUp');
 
         await nodeClient.signIn({
           ...config.signInOptions,

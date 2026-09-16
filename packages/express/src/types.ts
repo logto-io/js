@@ -16,16 +16,19 @@ export type AuthRouteSignInOptions = Omit<
 
 export type AuthRouteFlow = 'signIn' | 'signUp';
 
-export type ResolveSignInOptions = (
+export type GetSignInOptions = (
   request: Request,
   flow: AuthRouteFlow
 ) => AuthRouteSignInOptions | Promise<AuthRouteSignInOptions>;
+
+export type HandleAuthRoutesOptions = {
+  /** Returns request-specific options that override `signInOptions`. */
+  getSignInOptions?: GetSignInOptions;
+};
 
 export type LogtoExpressConfig = LogtoConfig & {
   baseUrl: string;
   authRoutesPrefix?: string;
   /** Default options for sign-in and sign-up. Redirect fields are managed by the SDK. */
   signInOptions?: Omit<SignInOptions, 'redirectUri' | 'postRedirectUri'>;
-  /** Returns request-specific options that override `signInOptions`. */
-  resolveSignInOptions?: ResolveSignInOptions;
 } & GetContextParameters;

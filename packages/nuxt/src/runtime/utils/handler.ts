@@ -4,12 +4,12 @@ import { type H3Event, getRequestURL, getCookie, setCookie, sendRedirect } from 
 import type { RuntimeConfig } from 'nuxt/schema';
 
 import { defaults } from './constants';
-import { type LogtoRuntimeConfig, type ResolveSignInOptions } from './types';
+import { type LogtoRuntimeConfig, type GetSignInOptions } from './types';
 
 export const logtoEventHandler = async (
   event: H3Event,
   config: RuntimeConfig,
-  resolveSignInOptions?: ResolveSignInOptions
+  getSignInOptions?: GetSignInOptions
 ) => {
   // eslint-disable-next-line no-restricted-syntax -- Optional fields are not inferred
   const logtoConfig = config.logto as LogtoRuntimeConfig;
@@ -74,7 +74,7 @@ export const logtoEventHandler = async (
   });
 
   if (url.pathname === pathnames.signIn) {
-    const requestSignInOptions = await resolveSignInOptions?.(event);
+    const requestSignInOptions = await getSignInOptions?.(event);
 
     await logto.signIn({
       ...signInOptions,

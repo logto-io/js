@@ -32,7 +32,7 @@ export type AuthRouteSignInOptions = Omit<
 
 export type AuthRouteFlow = 'signIn' | 'signUp';
 
-export type ResolveSignInOptions = (
+export type GetSignInOptions = (
   request: NextApiRequest,
   flow: AuthRouteFlow
 ) => AuthRouteSignInOptions | Promise<AuthRouteSignInOptions>;
@@ -43,5 +43,5 @@ export type HandleAuthRoutesOptions = {
   /** Default options for sign-in and sign-up. Redirect fields are managed by the SDK. */
   signInOptions?: AuthRouteSignInOptions;
   /** Returns request-specific options that override `signInOptions`. */
-  resolveSignInOptions?: ResolveSignInOptions;
+  getSignInOptions?: GetSignInOptions;
 };

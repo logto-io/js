@@ -29,22 +29,26 @@ pnpm add @logto/express
 
 ## Request-specific sign-in options
 
-Use `signInOptions` for defaults shared by every sign-in. Add `resolveSignInOptions` when an
+Use `signInOptions` for defaults shared by every sign-in. Add `getSignInOptions` when an
 individual request needs to override them:
 
 ```ts
 import { handleAuthRoutes, Prompt } from '@logto/express';
 
 app.use(
-  handleAuthRoutes({
-    ...config,
-    signInOptions: { prompt: Prompt.Login },
-    resolveSignInOptions: (request, flow) => {
-      const prompt = request.query.prompt;
-
-      return flow === 'signIn' && prompt === 'consent' ? { prompt: Prompt.Consent } : {};
+  handleAuthRoutes(
+    {
+      ...config,
+      signInOptions: { prompt: Prompt.Login },
     },
-  })
+    {
+      getSignInOptions: (request, flow) => {
+        const prompt = request.query.prompt;
+
+        return flow === 'signIn' && prompt === 'consent' ? { prompt: Prompt.Consent } : {};
+      },
+    }
+  )
 );
 ```
 

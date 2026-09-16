@@ -48,7 +48,7 @@ import { Prompt } from '@logto/next';
 
 export default logtoClient.handleAuthRoutes({
   signInOptions: { prompt: Prompt.Login },
-  resolveSignInOptions: (request) => {
+  getSignInOptions: (request) => {
     const prompt = request.query.prompt;
 
     return prompt === 'consent' ? { prompt: Prompt.Consent } : {};

@@ -14,7 +14,7 @@ import type {
   AuthRouteSignInOptions,
   AuthRoutePaths,
   ResolvePostCallbackRedirectUri,
-  ResolveSignInOptions,
+  GetSignInOptions,
   ValidateAuthActionRequest,
 } from './auth-routes.js';
 import { createAuthRoutes } from './auth-routes.js';
@@ -71,7 +71,7 @@ type RequestRuntimeOptions = Readonly<{
   validateActionRequest?: ValidateAuthActionRequest;
   postCallbackRedirectUri?: string | ResolvePostCallbackRedirectUri;
   signInOptions?: AuthRouteSignInOptions;
-  resolveSignInOptions?: ResolveSignInOptions;
+  getSignInOptions?: GetSignInOptions;
 }>;
 
 const createRequestRuntime = async (
@@ -131,8 +131,8 @@ const createRequestRuntime = async (
     ...(options.validateActionRequest && {
       validateActionRequest: options.validateActionRequest,
     }),
-    ...(options.resolveSignInOptions && {
-      resolveSignInOptions: options.resolveSignInOptions,
+    ...(options.getSignInOptions && {
+      getSignInOptions: options.getSignInOptions,
     }),
   });
 
@@ -150,13 +150,13 @@ describe('auth-routes:createAuthRoutes', () => {
     const validateActionRequest = vi.fn(async (request: Request) => {
       await request.text();
     });
-    const resolveSignInOptions = vi.fn<ResolveSignInOptions>(async (request, flow) => {
+    const getSignInOptions = vi.fn<GetSignInOptions>(async (request, flow) => {
       await request.text();
       return { prompt: Prompt.Consent, extraParams: { flow } };
     });
     const { context, routes, spies } = await createRequestRuntime(store.sessionStorage, {
       signInOptions: { prompt: Prompt.Login },
-      resolveSignInOptions,
+      getSignInOptions,
       validateActionRequest,
     });
     const request = new Request(`${baseUrl}${paths.signIn}`, {
@@ -176,7 +176,7 @@ describe('auth-routes:createAuthRoutes', () => {
       postRedirectUri: `${baseUrl}/auth/provision`,
     });
     expect(validateActionRequest).toHaveBeenCalledOnce();
-    expect(resolveSignInOptions).toHaveBeenCalledWith(expect.any(Request), 'signIn');
+    expect(getSignInOptions).toHaveBeenCalledWith(expect.any(Request), 'signIn');
     expect(response.status).toBe(302);
     expect(response.headers.get('Location')).toBe('https://logto.example.com/oidc/auth');
     expect(store.getData()).toHaveProperty('signInSession');
@@ -186,7 +186,7 @@ describe('auth-routes:createAuthRoutes', () => {
   it('starts sign-up on the registration screen', async () => {
     const store = createTestSessionStorage();
     const { context, routes, spies } = await createRequestRuntime(store.sessionStorage, {
-      resolveSignInOptions: () => ({ firstScreen: 'signIn' }),
+      getSignInOptions: () => ({ firstScreen: 'signIn' }),
     });
 
     await routes.action({

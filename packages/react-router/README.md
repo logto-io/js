@@ -116,7 +116,7 @@ export const SignInButton = () => (
 );
 ```
 
-Use `signInOptions` for defaults shared by every sign-in. Add `resolveSignInOptions` when a request
+Use `signInOptions` for defaults shared by every sign-in. Add `getSignInOptions` when a request
 needs to override them, for example to request consent for a selected flow:
 
 ```ts
@@ -125,7 +125,7 @@ import { Prompt } from '@logto/react-router';
 const authRoutes = logto.authRoutes({
   // ...paths and redirect options
   signInOptions: { prompt: Prompt.Login },
-  resolveSignInOptions: (request, flow) => {
+  getSignInOptions: (request, flow) => {
     const prompt = new URL(request.url).searchParams.get('prompt');
 
     return flow === 'signIn' && prompt === 'consent' ? { prompt: Prompt.Consent } : {};
