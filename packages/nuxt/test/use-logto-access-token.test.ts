@@ -1,8 +1,10 @@
 import { setTimeout as sleep } from 'node:timers/promises';
 
+import { clearNuxtState } from '#app/composables/state';
 import { mockNuxtImport } from '@nuxt/test-utils/runtime';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ref } from 'vue';
+
+import { type useRuntimeConfig } from '#imports';
 
 import useLogtoAccessToken from '../src/runtime/composables/use-logto-access-token';
 import { NotAuthenticatedErrorCode } from '../src/runtime/utils/constants';
@@ -10,27 +12,17 @@ import { NotAuthenticatedErrorCode } from '../src/runtime/utils/constants';
 const accessTokenPath = '/api/logto/access-token';
 
 /**
- * A single Nuxt app instance and a persistent state store, so that repeated composable calls share
- * exactly what they would share inside a running application.
+ * Only the runtime config is mocked: the nuxt test environment provides a real app instance and
+ * real `useState`, and mocking those leaks into the environment's own bootstrap (its payload
+ * plugin calls `useState`). The spread of the original config keeps keys like `app` that the
+ * bootstrap reads.
  */
-const nuxt = vi.hoisted(() => ({
-  app: {},
-  state: new Map<string, unknown>(),
-}));
-
-mockNuxtImport('useNuxtApp', () => vi.fn(() => nuxt.app));
-
-mockNuxtImport('useState', () =>
-  vi.fn((key: string, init: () => unknown) => {
-    if (!nuxt.state.has(key)) {
-      nuxt.state.set(key, ref(init()));
-    }
-
-    return nuxt.state.get(key);
-  })
+mockNuxtImport<typeof useRuntimeConfig>('useRuntimeConfig', (original) =>
+  vi.fn(() => ({
+    ...original(),
+    public: { ...original().public, logto: { accessTokenPath } },
+  }))
 );
-
-mockNuxtImport('useRuntimeConfig', () => vi.fn(() => ({ public: { logto: { accessTokenPath } } })));
 
 const fetchMock = vi.fn();
 vi.stubGlobal('$fetch', fetchMock);
@@ -42,7 +34,7 @@ const unauthorizedError = {
 
 describe('useLogtoAccessToken', () => {
   beforeEach(() => {
-    nuxt.state.clear();
+    clearNuxtState();
     fetchMock.mockReset();
   });
 

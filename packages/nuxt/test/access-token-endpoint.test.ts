@@ -6,6 +6,8 @@ import { mockNuxtImport } from '@nuxt/test-utils/runtime';
 import { createEvent } from 'h3';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { type useRuntimeConfig } from '#imports';
+
 const accessTokenPath = '/api/logto/access-token';
 const cookieKey = 'logtoCookies';
 
@@ -25,7 +27,15 @@ const runtimeConfig = vi.hoisted(() => ({
   public: { logto: { accessTokenPath: '/api/logto/access-token' } },
 }));
 
-mockNuxtImport('useRuntimeConfig', () => vi.fn(() => runtimeConfig));
+// The spread of the original config keeps keys like `app` that the nuxt environment's own
+// bootstrap reads; the mock is visible there too.
+mockNuxtImport<typeof useRuntimeConfig>('useRuntimeConfig', (original) =>
+  vi.fn(() => ({
+    ...original(),
+    ...runtimeConfig,
+    public: { ...original().public, ...runtimeConfig.public },
+  }))
+);
 
 /**
  * Observable state of the fake Logto client, used to assert on concurrency and on the session
