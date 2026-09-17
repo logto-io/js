@@ -126,14 +126,16 @@ export const mockFetchOidcConfig: (delay?: number) => Mock<() => Promise<OidcCon
   });
 
 export const fetchOidcConfig: Mock<() => Promise<OidcConfigResponse>> = mockFetchOidcConfig();
-export const requester = vi.fn();
+export const requester: Mock<(...args: Parameters<typeof fetch>) => Promise<unknown>> = vi.fn();
 export const fetchFunction = vi.fn(async (...args: Parameters<typeof fetch>) => {
   const data: unknown = await requester(...args);
 
   return Response.json(data ?? null);
 });
-export const failingFetch = vi.fn().mockRejectedValue(new Error('Failed request'));
-export const navigate = vi.fn();
+export const failingFetch: Mock<typeof fetch> = vi
+  .fn<typeof fetch>()
+  .mockRejectedValue(new Error('Failed request'));
+export const navigate: Mock<ClientAdapter['navigate']> = vi.fn();
 export const generateCodeChallenge = vi.fn(async () => mockCodeChallenge);
 export const generateCodeVerifier = vi.fn(() => mockedCodeVerifier);
 export const generateState = vi.fn(() => mockedState);

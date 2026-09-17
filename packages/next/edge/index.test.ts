@@ -10,11 +10,11 @@ const clearAccessToken = vi.fn();
 const clearAllTokens = vi.fn();
 
 vi.mock('@logto/node', () => ({
-  CookieStorage: vi.fn(
-    (config: {
-      cookieKey: string;
-      setCookie: (name: string, value: string, options: { maxAge: number }) => void;
-    }) => ({
+  CookieStorage: vi.fn(function (config: {
+    cookieKey: string;
+    setCookie: (name: string, value: string, options: { maxAge: number }) => void;
+  }) {
+    return {
       init: vi.fn(),
       destroy: async () => {
         destroy();
@@ -25,8 +25,8 @@ vi.mock('@logto/node', () => ({
           maxAge: 14 * 24 * 3600,
         });
       },
-    })
-  ),
+    };
+  }),
 }));
 
 type Adapter = {
@@ -35,20 +35,22 @@ type Adapter = {
 };
 
 vi.mock('@logto/node/edge', () => ({
-  default: vi.fn((_: unknown, { navigate, storage }: Adapter) => ({
-    signOut: async () => {
-      await signOut();
-      navigate('https://logto.example.com/oidc/session/end');
-    },
-    clearAccessToken: async () => {
-      clearAccessToken();
-      await storage.removeItem('accessToken');
-    },
-    clearAllTokens: async () => {
-      clearAllTokens();
-      await storage.removeItem('accessToken');
-    },
-  })),
+  default: vi.fn(function (_: unknown, { navigate, storage }: Adapter) {
+    return {
+      signOut: async () => {
+        await signOut();
+        navigate('https://logto.example.com/oidc/session/end');
+      },
+      clearAccessToken: async () => {
+        clearAccessToken();
+        await storage.removeItem('accessToken');
+      },
+      clearAllTokens: async () => {
+        clearAllTokens();
+        await storage.removeItem('accessToken');
+      },
+    };
+  }),
 }));
 
 const config: LogtoNextConfig = {

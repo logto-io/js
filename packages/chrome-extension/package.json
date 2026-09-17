@@ -37,13 +37,13 @@
   "devDependencies": {
     "@silverhand/eslint-config": "^6.0.1",
     "@silverhand/ts-config": "^6.0.0",
-    "@vitest/coverage-v8": "3.2.6",
+    "@vitest/coverage-v8": "4.1.11",
     "chrome-types": "^0.1.276",
     "eslint": "^8.57.0",
     "lint-staged": "^15.0.0",
     "prettier": "^3.0.0",
     "typescript": "^5.3.3",
-    "vitest": "^3.2.6"
+    "vitest": "^4.1.11"
   },
   "eslintConfig": {
     "extends": "@silverhand/react"

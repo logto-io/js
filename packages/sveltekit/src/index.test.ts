@@ -92,7 +92,6 @@ describe('handleLogto()', () => {
 
     const handle = handleLogto(config, cookieConfig, { buildLogtoClient: () => client });
     await expect(handle({ resolve, event })).rejects.toThrow(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       expect.objectContaining({ status: 302, location: '/' })
     );
   });

@@ -10,7 +10,9 @@ vi.mock('@logto/node', async (importOriginal) => ({
   // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   ...(await importOriginal<typeof import('@logto/node')>()),
   __esModule: true,
-  default: vi.fn(() => ({ clearAccessToken, clearAllTokens })),
+  default: vi.fn(function () {
+    return { clearAccessToken, clearAllTokens };
+  }),
 }));
 
 const config: LogtoNextConfig = {

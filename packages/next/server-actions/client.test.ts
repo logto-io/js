@@ -24,7 +24,7 @@ const getContext = vi.fn(async () => ({ isAuthenticated: true }));
 const destroy = vi.fn();
 
 vi.mock('@logto/node', () => ({
-  CookieStorage: vi.fn((_, cookie: string) => {
+  CookieStorage: vi.fn(function (_, cookie: string) {
     return {
       init: vi.fn(),
       destroy,
@@ -37,23 +37,25 @@ type Adapter = {
 };
 
 vi.mock('@logto/node/edge', () => ({
-  default: vi.fn((_: unknown, { navigate }: Adapter) => ({
-    signIn: () => {
-      navigate(signInUrl);
-      signIn();
-    },
-    handleSignInCallback: (url: string) => {
-      handleSignInCallback(url);
-      navigate(postRedirectUri);
-    },
-    getContext,
-    getIdTokenClaims,
-    signOut: async () => {
-      await signOut();
-      navigate(configs.baseUrl);
-    },
-    isAuthenticated: true,
-  })),
+  default: vi.fn(function (_: unknown, { navigate }: Adapter) {
+    return {
+      signIn: () => {
+        navigate(signInUrl);
+        signIn();
+      },
+      handleSignInCallback: (url: string) => {
+        handleSignInCallback(url);
+        navigate(postRedirectUri);
+      },
+      getContext,
+      getIdTokenClaims,
+      signOut: async () => {
+        await signOut();
+        navigate(configs.baseUrl);
+      },
+      isAuthenticated: true,
+    };
+  }),
 }));
 
 describe('Next (server actions)', () => {

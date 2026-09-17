@@ -34,11 +34,13 @@ const delay = async (ms: number) =>
   });
 
 vi.mock('./storage', () => ({
-  default: vi.fn(() => ({
-    setItem,
-    getItem,
-    removeItem: vi.fn(),
-  })),
+  default: vi.fn(function () {
+    return {
+      setItem,
+      getItem,
+      removeItem: vi.fn(),
+    };
+  }),
 }));
 
 type Adapter = {
@@ -46,20 +48,22 @@ type Adapter = {
 };
 
 vi.mock('@logto/node', () => ({
-  default: vi.fn((_: unknown, { navigate }: Adapter) => ({
-    signIn: (_redirectUri?: string, interactionMode?: string) => {
-      navigate(interactionMode ? `${signInUrl}?interactionMode=${interactionMode}` : signInUrl);
-      signIn();
-    },
-    handleSignInCallback,
-    getContext,
-    getIdTokenClaims,
-    signOut: () => {
-      navigate(configs.baseUrl);
-      signOut();
-    },
-    isAuthenticated: true,
-  })),
+  default: vi.fn(function (_: unknown, { navigate }: Adapter) {
+    return {
+      signIn: (_redirectUri?: string, interactionMode?: string) => {
+        navigate(interactionMode ? `${signInUrl}?interactionMode=${interactionMode}` : signInUrl);
+        signIn();
+      },
+      handleSignInCallback,
+      getContext,
+      getIdTokenClaims,
+      signOut: () => {
+        navigate(configs.baseUrl);
+        signOut();
+      },
+      isAuthenticated: true,
+    };
+  }),
 }));
 
 // The new version of Supertest use callback chaining instead of promise chaining

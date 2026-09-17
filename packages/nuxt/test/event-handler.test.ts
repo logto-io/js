@@ -4,10 +4,13 @@ import { Socket } from 'node:net';
 import * as logtoNode from '@logto/node';
 import { mockNuxtImport } from '@nuxt/test-utils/runtime';
 import { createEvent } from 'h3';
-import { describe, expect, it, vi, type Mock } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
-mockNuxtImport('useRuntimeConfig', () =>
+import { useRuntimeConfig } from '#imports';
+
+mockNuxtImport<typeof useRuntimeConfig>('useRuntimeConfig', (original) =>
   vi.fn(() => ({
+    ...original(),
     logto: {
       cookieEncryptionKey: 'foo',
       pathnames: {
@@ -73,8 +76,8 @@ describe('event-handler', async () => {
 
   it('should handle callback with custom callback pathname', async () => {
     const event = createH3Event();
-    // @ts-expect-error
-    (useRuntimeConfig as Mock<typeof useRuntimeConfig>).mockReturnValueOnce({
+    vi.mocked(useRuntimeConfig).mockReturnValueOnce({
+      ...useRuntimeConfig(),
       logto: {
         postCallbackRedirectUri: '/',
         cookieEncryptionKey: 'foo',
