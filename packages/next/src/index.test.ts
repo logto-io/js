@@ -40,31 +40,33 @@ vi.mock('@logto/node', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@logto/node')>()),
   // https://stackoverflow.com/a/70705719/12514940
   __esModule: true,
-  default: vi.fn((_: unknown, { navigate }: Adapter) => ({
-    signIn: (options?: SignInOptions) => {
-      navigate(
-        options?.interactionMode
-          ? `${signInUrl}?interactionMode=${options.interactionMode}`
-          : signInUrl
-      );
-      signIn();
-    },
-    // Delegate to the spy and hand it `navigate` so a test can simulate the NodeClient
-    // navigating during callback processing (e.g. a configured postRedirectUri). The URL flows
-    // back through this per-request callback, never via shared client instance state.
-    handleSignInCallback: (url: string) => handleSignInCallback(url, navigate),
-    getContext,
-    getAccessToken,
-    getAccessTokenClaims,
-    getOrganizationToken,
-    getOrganizationTokenClaims,
-    getIdTokenClaims,
-    signOut: async () => {
-      await signOut();
-      navigate(configs.baseUrl);
-    },
-    isAuthenticated: true,
-  })),
+  default: vi.fn(function (_: unknown, { navigate }: Adapter) {
+    return {
+      signIn: (options?: SignInOptions) => {
+        navigate(
+          options?.interactionMode
+            ? `${signInUrl}?interactionMode=${options.interactionMode}`
+            : signInUrl
+        );
+        signIn();
+      },
+      // Delegate to the spy and hand it `navigate` so a test can simulate the NodeClient
+      // navigating during callback processing (e.g. a configured postRedirectUri). The URL flows
+      // back through this per-request callback, never via shared client instance state.
+      handleSignInCallback: (url: string) => handleSignInCallback(url, navigate),
+      getContext,
+      getAccessToken,
+      getAccessTokenClaims,
+      getOrganizationToken,
+      getOrganizationTokenClaims,
+      getIdTokenClaims,
+      signOut: async () => {
+        await signOut();
+        navigate(configs.baseUrl);
+      },
+      isAuthenticated: true,
+    };
+  }),
 }));
 
 describe('Next', () => {

@@ -32,14 +32,14 @@ type BrowserFinishedCallback = () => void | Promise<void>;
 type ListenerHooks = {
   appUrlOpen?: AppUrlOpenCallback;
   browserFinished?: BrowserFinishedCallback;
-  appRemove: ReturnType<typeof vi.fn>;
-  browserRemove: ReturnType<typeof vi.fn>;
+  appRemove: ReturnType<typeof vi.fn<() => Promise<void>>>;
+  browserRemove: ReturnType<typeof vi.fn<() => Promise<void>>>;
 };
 
 const installListenerCapture = (): ListenerHooks => {
   const hooks: ListenerHooks = {
-    appRemove: vi.fn(),
-    browserRemove: vi.fn(),
+    appRemove: vi.fn<() => Promise<void>>().mockResolvedValue(),
+    browserRemove: vi.fn<() => Promise<void>>().mockResolvedValue(),
   };
   vi.mocked(App.addListener).mockImplementation(
     // @ts-expect-error -- mocking the union signature without enumerating every overload

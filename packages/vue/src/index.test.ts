@@ -30,7 +30,7 @@ vi.mock('vue', async (importOriginal) => {
 
 vi.mock('@logto/browser', () => {
   return {
-    default: vi.fn().mockImplementation(() => {
+    default: vi.fn().mockImplementation(function () {
       return {
         isAuthenticated,
         isSignInRedirected,

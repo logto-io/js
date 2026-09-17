@@ -16,7 +16,7 @@ const signOut = vi.fn();
 
 vi.mock('@logto/browser', () => {
   return {
-    default: vi.fn().mockImplementation(() => {
+    default: vi.fn().mockImplementation(function () {
       return {
         isAuthenticated,
         isSignInRedirected,
@@ -346,7 +346,7 @@ describe('useLogto', () => {
     await waitFor(() => {
       expect(result.current.error).not.toBeUndefined();
       expect(result.current.error?.message).toBe(
-        'Unexpected error occurred while calling bound spy.'
+        'Unexpected error occurred while calling bound Mock.'
       );
       expect(result.current.isLoading).toBe(false);
     });

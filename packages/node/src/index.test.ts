@@ -24,13 +24,15 @@ const isAuthenticated = vi.fn(async () => true);
 vi.mock('@logto/client', () => ({
   __esModule: true,
   decodeAccessToken,
-  default: vi.fn(() => ({
-    getAccessToken,
-    getOrganizationToken,
-    getIdTokenClaims,
-    isAuthenticated,
-    fetchUserInfo,
-  })),
+  default: vi.fn(function () {
+    return {
+      getAccessToken,
+      getOrganizationToken,
+      getIdTokenClaims,
+      isAuthenticated,
+      fetchUserInfo,
+    };
+  }),
 }));
 
 const getLatestBaseClientAdapter = (): ClientAdapter => {
