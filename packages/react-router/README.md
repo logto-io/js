@@ -116,6 +116,27 @@ export const SignInButton = () => (
 );
 ```
 
+Use `signInOptions` for defaults shared by every sign-in. Add `getSignInOptions` when a request
+needs to override them, for example to request consent for a selected flow:
+
+```ts
+import { Prompt } from '@logto/react-router';
+
+const authRoutes = logto.authRoutes({
+  // ...paths and redirect options
+  signInOptions: { prompt: Prompt.Login },
+  getSignInOptions: (request, flow) => {
+    const prompt = new URL(request.url).searchParams.get('prompt');
+
+    return flow === 'signIn' && prompt === 'consent' ? { prompt: Prompt.Consent } : {};
+  },
+});
+```
+
+Resolver values override `signInOptions`. The SDK manages callback redirect fields and forces the
+registration screen for the sign-up route. Validate or allowlist request input before copying it
+into sign-in options.
+
 POST routes should also validate the request origin or a CSRF token when they use cookie sessions.
 Use `validateActionRequest` to apply the application's policy before Logto changes the session. For
 example, a same-origin validator can reject cross-origin form submissions:

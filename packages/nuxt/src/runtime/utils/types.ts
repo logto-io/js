@@ -1,11 +1,41 @@
 import type LogtoClient from '@logto/node';
 import type { LogtoConfig, SignInOptions, IdTokenClaims, UserInfoResponse } from '@logto/node';
+import type { H3Event } from 'h3';
+
+export type AuthRouteSignInOptions = Omit<
+  SignInOptions,
+  'redirectUri' | 'postRedirectUri' | 'interactionMode'
+>;
+
+export type GetSignInOptions = (
+  event: H3Event
+) => AuthRouteSignInOptions | Promise<AuthRouteSignInOptions>;
+
+export type LogtoSignInOptionsHookContext = {
+  event: H3Event;
+  /** Mutable request-specific overrides applied after module-level `signInOptions`. */
+  signInOptions: AuthRouteSignInOptions;
+};
 
 declare module 'h3' {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- interface required for module augmentation
   interface H3EventContext {
     logtoUser: UserInfoResponse | IdTokenClaims | undefined;
     logtoClient: LogtoClient;
+  }
+}
+
+declare module 'nitropack' {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- module augmentation
+  interface NitroRuntimeHooks {
+    'logto:sign-in-options': (context: LogtoSignInOptionsHookContext) => void | Promise<void>;
+  }
+}
+
+declare module 'nitropack/types' {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- module augmentation
+  interface NitroRuntimeHooks {
+    'logto:sign-in-options': (context: LogtoSignInOptionsHookContext) => void | Promise<void>;
   }
 }
 

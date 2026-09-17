@@ -1,4 +1,5 @@
-import type { SignInOptions } from '@logto/node';
+/* eslint-disable max-lines */
+import { Prompt, type SignInOptions } from '@logto/node';
 import type { Session, SessionData, SessionStorage } from 'react-router';
 import {
   createContext,
@@ -10,8 +11,10 @@ import { createProcessLocalSessionCoordinator } from '../infrastructure/session/
 import { SessionRuntime } from '../infrastructure/session/session-runtime.js';
 
 import type {
+  AuthRouteSignInOptions,
   AuthRoutePaths,
   ResolvePostCallbackRedirectUri,
+  GetSignInOptions,
   ValidateAuthActionRequest,
 } from './auth-routes.js';
 import { createAuthRoutes } from './auth-routes.js';
@@ -67,6 +70,8 @@ type RequestRuntimeOptions = Readonly<{
   paths?: AuthRoutePaths;
   validateActionRequest?: ValidateAuthActionRequest;
   postCallbackRedirectUri?: string | ResolvePostCallbackRedirectUri;
+  signInOptions?: AuthRouteSignInOptions;
+  getSignInOptions?: GetSignInOptions;
 }>;
 
 const createRequestRuntime = async (
@@ -122,8 +127,12 @@ const createRequestRuntime = async (
     paths: options.paths ?? paths,
     postCallbackRedirectUri: options.postCallbackRedirectUri ?? '/auth/provision',
     postSignOutRedirectUri: '/',
+    ...(options.signInOptions && { signInOptions: options.signInOptions }),
     ...(options.validateActionRequest && {
       validateActionRequest: options.validateActionRequest,
+    }),
+    ...(options.getSignInOptions && {
+      getSignInOptions: options.getSignInOptions,
     }),
   });
 
@@ -138,17 +147,36 @@ const createRequestRuntime = async (
 describe('auth-routes:createAuthRoutes', () => {
   it('starts sign-in and commits the sign-in session before redirecting', async () => {
     const store = createTestSessionStorage();
-    const { context, routes, spies } = await createRequestRuntime(store.sessionStorage);
+    const validateActionRequest = vi.fn(async (request: Request) => {
+      await request.text();
+    });
+    const getSignInOptions = vi.fn<GetSignInOptions>(async (request, flow) => {
+      await request.text();
+      return { prompt: Prompt.Consent, extraParams: { flow } };
+    });
+    const { context, routes, spies } = await createRequestRuntime(store.sessionStorage, {
+      signInOptions: { prompt: Prompt.Login },
+      getSignInOptions,
+      validateActionRequest,
+    });
+    const request = new Request(`${baseUrl}${paths.signIn}`, {
+      method: 'POST',
+      body: 'csrf-token',
+    });
     const response = await routes.action({
-      request: new Request(`${baseUrl}${paths.signIn}.data`, { method: 'POST' }),
+      request,
       context,
       url: new URL(`${baseUrl}${paths.signIn}`),
     });
 
     expect(spies.signIn).toHaveBeenCalledWith({
+      prompt: Prompt.Consent,
+      extraParams: { flow: 'signIn' },
       redirectUri: `${baseUrl}${paths.callback}`,
       postRedirectUri: `${baseUrl}/auth/provision`,
     });
+    expect(validateActionRequest).toHaveBeenCalledOnce();
+    expect(getSignInOptions).toHaveBeenCalledWith(expect.any(Request), 'signIn');
     expect(response.status).toBe(302);
     expect(response.headers.get('Location')).toBe('https://logto.example.com/oidc/auth');
     expect(store.getData()).toHaveProperty('signInSession');
@@ -157,7 +185,9 @@ describe('auth-routes:createAuthRoutes', () => {
 
   it('starts sign-up on the registration screen', async () => {
     const store = createTestSessionStorage();
-    const { context, routes, spies } = await createRequestRuntime(store.sessionStorage);
+    const { context, routes, spies } = await createRequestRuntime(store.sessionStorage, {
+      getSignInOptions: () => ({ firstScreen: 'signIn' }),
+    });
 
     await routes.action({
       request: new Request(`${baseUrl}${paths.signUp}`, { method: 'POST' }),
@@ -191,7 +221,10 @@ describe('auth-routes:createAuthRoutes', () => {
       url: new URL(signInRequest.url),
     });
 
-    expect(resolvePostCallbackRedirectUri).toHaveBeenCalledWith(signInRequest);
+    expect(resolvePostCallbackRedirectUri).toHaveBeenCalledWith(expect.any(Request));
+    const resolvedRequest = resolvePostCallbackRedirectUri.mock.calls[0]?.[0];
+    expect(resolvedRequest?.url).toBe(signInRequest.url);
+    expect(resolvedRequest?.method).toBe(signInRequest.method);
     expect(signInRuntime.spies.signIn).toHaveBeenCalledWith({
       redirectUri: `${baseUrl}${paths.callback}`,
       postRedirectUri: `${baseUrl}/tasks/123`,
@@ -340,3 +373,4 @@ describe('auth-routes:createAuthRoutes', () => {
     expect(response.status).toBe(404);
   });
 });
+/* eslint-enable max-lines */

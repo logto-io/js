@@ -18,11 +18,18 @@ import {
 } from 'next';
 import { type NextApiRequestCookies } from 'next/dist/server/api-utils/index.js';
 
+import { createAuthRoutesHandler } from './auth-routes.js';
 import LogtoNextBaseClient from './client.js';
-import type { ErrorHandler, LogtoNextConfig } from './types.js';
+import type { ErrorHandler, HandleAuthRoutesOptions, LogtoNextConfig } from './types.js';
 import { buildHandler, NavigationStore } from './utils.js';
 
-export type { LogtoNextConfig } from './types.js';
+export type {
+  AuthRouteFlow,
+  AuthRouteSignInOptions,
+  HandleAuthRoutesOptions,
+  LogtoNextConfig,
+  GetSignInOptions,
+} from './types.js';
 
 export {
   LogtoError,
@@ -144,33 +151,24 @@ export default class LogtoClient extends LogtoNextBaseClient {
       onError
     );
 
-  handleAuthRoutes =
-    (configs?: GetContextParameters, onError?: ErrorHandler): NextApiHandler =>
-    (request, response) => {
-      const { action } = request.query;
-
-      if (action === 'sign-in') {
-        return this.handleSignIn(undefined, undefined, onError)(request, response);
-      }
-
-      if (action === 'sign-up') {
-        return this.handleSignIn(undefined, 'signUp', onError)(request, response);
-      }
-
-      if (action === 'sign-in-callback') {
-        return this.handleSignInCallback(undefined, onError)(request, response);
-      }
-
-      if (action === 'sign-out') {
-        return this.handleSignOut(undefined, onError)(request, response);
-      }
-
-      if (action === 'user') {
-        return this.handleUser(configs)(request, response);
-      }
-
-      response.status(404).end();
-    };
+  handleAuthRoutes: {
+    (options?: HandleAuthRoutesOptions): NextApiHandler;
+    (configs?: GetContextParameters, onError?: ErrorHandler): NextApiHandler;
+  } = (
+    optionsOrConfigs: GetContextParameters | HandleAuthRoutesOptions = {},
+    legacyOnError?: ErrorHandler
+  ) =>
+    createAuthRoutesHandler(
+      this.config.baseUrl,
+      {
+        handleSignIn: this.handleSignIn,
+        handleSignInCallback: this.handleSignInCallback,
+        handleSignOut: this.handleSignOut,
+        handleUser: this.handleUser,
+      },
+      optionsOrConfigs,
+      legacyOnError
+    );
 
   getAccessToken = async (
     request: NextApiRequest,

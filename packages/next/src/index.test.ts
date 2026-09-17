@@ -1,9 +1,10 @@
-import { CookieStorage, type SignInOptions } from '@logto/node';
+/* eslint-disable max-lines */
+import { CookieStorage, Prompt, type SignInOptions } from '@logto/node';
 import type { NextApiResponse } from 'next';
 import { testApiHandler } from 'next-test-api-route-handler';
 
 import LogtoClient from './index.js';
-import type { LogtoNextConfig } from './types.js';
+import type { ErrorHandler, GetSignInOptions, LogtoNextConfig } from './types.js';
 
 const signInUrl = 'http://mock-logto-server.com/sign-in';
 
@@ -15,7 +16,7 @@ const configs: LogtoNextConfig = {
   cookieSecure: process.env.NODE_ENV === 'production',
 };
 
-const signIn = vi.fn();
+const signIn = vi.fn<(options?: SignInOptions) => void>();
 const handleSignInCallback = vi.fn();
 const getIdTokenClaims = vi.fn(() => ({
   sub: 'user_id',
@@ -48,7 +49,7 @@ vi.mock('@logto/node', async (importOriginal) => ({
             ? `${signInUrl}?interactionMode=${options.interactionMode}`
             : signInUrl
         );
-        signIn();
+        signIn(options);
       },
       // Delegate to the spy and hand it `navigate` so a test can simulate the NodeClient
       // navigating during callback processing (e.g. a configured postRedirectUri). The URL flows
@@ -309,16 +310,30 @@ describe('Next', () => {
   describe('handleAuthRoutes', () => {
     it('should call handleSignIn for "sign-in"', async () => {
       const client = new LogtoClient(configs);
-      vi.spyOn(client, 'handleSignIn').mockImplementation(() => mockResponse);
+      const handleSignIn = vi.spyOn(client, 'handleSignIn').mockImplementation(() => mockResponse);
+      const getSignInOptions = vi.fn<GetSignInOptions>((request) => ({
+        prompt: request.query.prompt === 'consent' ? Prompt.Consent : Prompt.Login,
+        extraParams: { source: 'request' },
+      }));
       await testApiHandler({
-        pagesHandler: client.handleAuthRoutes(),
+        pagesHandler: client.handleAuthRoutes({
+          signInOptions: { prompt: Prompt.Login },
+          getSignInOptions,
+        }),
         paramsPatcher: (parameters) => {
           // eslint-disable-next-line @silverhand/fp/no-mutation
           parameters.action = 'sign-in';
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          parameters.prompt = 'consent';
         },
         test: async ({ fetch }) => {
           await fetch({ method: 'GET', redirect: 'manual' });
-          expect(client.handleSignIn).toHaveBeenCalled();
+          expect(getSignInOptions).toHaveBeenCalledWith(expect.anything(), 'signIn');
+          expect(handleSignIn).toHaveBeenCalledWith({
+            prompt: Prompt.Consent,
+            extraParams: { source: 'request' },
+            redirectUri: `${configs.baseUrl}/api/logto/sign-in-callback`,
+          });
         },
       });
     });
@@ -327,16 +342,49 @@ describe('Next', () => {
       const client = new LogtoClient(configs);
       vi.spyOn(client, 'handleSignIn').mockImplementation(() => mockResponse);
       await testApiHandler({
-        pagesHandler: client.handleAuthRoutes(),
+        pagesHandler: client.handleAuthRoutes({
+          getSignInOptions: () => ({ firstScreen: 'signIn' }),
+        }),
         paramsPatcher: (parameters) => {
           // eslint-disable-next-line @silverhand/fp/no-mutation
           parameters.action = 'sign-up';
         },
         test: async ({ fetch }) => {
           await fetch({ method: 'GET', redirect: 'manual' });
-          expect(client.handleSignIn).toHaveBeenCalledWith(undefined, 'signUp', undefined);
+          expect(client.handleSignIn).toHaveBeenCalledWith({
+            redirectUri: `${configs.baseUrl}/api/logto/sign-in-callback`,
+            firstScreen: 'register',
+          });
         },
       });
+    });
+
+    it('should route request-specific option errors through onError', async () => {
+      const resolverError = new Error('failed to resolve sign-in options');
+      const onError = vi.fn<ErrorHandler>((_request, response, error) => {
+        expect(error).toBe(resolverError);
+        response.status(503).end();
+      });
+      const client = new LogtoClient(configs);
+
+      await testApiHandler({
+        pagesHandler: client.handleAuthRoutes({
+          getSignInOptions: async () => {
+            throw resolverError;
+          },
+          onError,
+        }),
+        paramsPatcher: (parameters) => {
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          parameters.action = 'sign-in';
+        },
+        test: async ({ fetch }) => {
+          const response = await fetch({ method: 'GET' });
+          expect(response.status).toBe(503);
+        },
+      });
+
+      expect(onError).toHaveBeenCalledOnce();
     });
 
     it('should call handleSignInCallback for "sign-in-callback"', async () => {
@@ -373,16 +421,17 @@ describe('Next', () => {
 
     it('should call handleUser for "user"', async () => {
       const client = new LogtoClient(configs);
+      const onError = vi.fn();
       vi.spyOn(client, 'handleUser').mockImplementation(() => mockResponse);
       await testApiHandler({
-        pagesHandler: client.handleAuthRoutes(),
+        pagesHandler: client.handleAuthRoutes({ fetchUserInfo: true }, onError),
         paramsPatcher: (parameters) => {
           // eslint-disable-next-line @silverhand/fp/no-mutation
           parameters.action = 'user';
         },
         test: async ({ fetch }) => {
           await fetch({ method: 'GET', redirect: 'manual' });
-          expect(client.handleUser).toHaveBeenCalled();
+          expect(client.handleUser).toHaveBeenCalledWith({ fetchUserInfo: true });
         },
       });
     });
@@ -444,3 +493,4 @@ describe('Next', () => {
     });
   });
 });
+/* eslint-enable max-lines */
