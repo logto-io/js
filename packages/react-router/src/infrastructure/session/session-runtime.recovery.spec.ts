@@ -6,6 +6,7 @@ import { SessionRuntime } from './session-runtime.js';
 
 type TestSessionData = {
   refreshToken?: string;
+  notice?: string;
 };
 
 const createTestSessionStorage = () => {
@@ -18,17 +19,32 @@ const createTestSessionStorage = () => {
 
     return `logto-session=${session.id}; Path=/; HttpOnly`;
   });
+  const destroySession = vi.fn(async (session: Session<TestSessionData>) => {
+    sessions.delete(session.id);
+
+    return 'logto-session=; Max-Age=0';
+  });
   const sessionStorage: SessionStorage<TestSessionData> = {
     getSession,
     commitSession,
-    destroySession: async () => 'logto-session=; Max-Age=0',
+    destroySession,
   };
 
   return {
     sessionStorage,
     getSession,
     commitSession,
+    destroySession,
     getData: () => structuredClone(sessions.get('session-id') ?? {}),
+    flash: (name: keyof TestSessionData & string, value: string) => {
+      const session = createSession<TestSessionData>(
+        structuredClone(sessions.get('session-id') ?? {}),
+        'session-id'
+      );
+
+      session.flash(name, value);
+      sessions.set('session-id', structuredClone(session.data));
+    },
   };
 };
 
@@ -75,6 +91,26 @@ describe('infrastructure:session:SessionRuntime recovery', () => {
     expect(store.getData()).toEqual({ refreshToken: 'rotated' });
     expect(runtime.session.get('refreshToken')).toBe('rotated');
     expect(runtime.session.hasPendingMutations).toBe(false);
+    expect(store.commitSession).toHaveBeenCalledOnce();
+  });
+
+  it('preserves flash consumption when destruction fails', async () => {
+    const store = createTestSessionStorage();
+    const runtime = await createRuntime(store.sessionStorage);
+    const destructionError = new Error('database unavailable');
+
+    store.flash('notice', 'welcome');
+    store.destroySession.mockRejectedValueOnce(destructionError);
+
+    await expect(
+      runtime.destroy(async (session) => {
+        expect(session.get('notice')).toBe('welcome');
+      })
+    ).rejects.toBe(destructionError);
+
+    await runtime.finalize();
+
+    expect(store.getData()).toEqual({ refreshToken: 'old' });
     expect(store.commitSession).toHaveBeenCalledOnce();
   });
 });

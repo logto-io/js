@@ -223,7 +223,7 @@ export class SessionRuntime<
     try {
       return await this.options.sessionStorage.destroySession(latestSession);
     } catch (error: unknown) {
-      destructionSession.applyPendingMutations(this.session);
+      this.session.appendPendingMutationsFrom(destructionSession);
       throw error;
     }
   }

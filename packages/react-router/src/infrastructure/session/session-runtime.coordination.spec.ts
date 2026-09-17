@@ -21,6 +21,7 @@ const getSessionId = (cookieHeader: string | undefined) =>
 const createSessionBackend = (existingSessionId?: string) => {
   const createdSessionId = existingSessionId ?? 'created-session-id';
   const sessions = new Map<string, TestSessionData>();
+  const sessionAliases = new Map<string, string>();
   // eslint-disable-next-line @silverhand/fp/no-let
   let activeSessionId: string | undefined;
   // eslint-disable-next-line @silverhand/fp/no-let
@@ -33,7 +34,8 @@ const createSessionBackend = (existingSessionId?: string) => {
   }
 
   const getSession = vi.fn(async (cookieHeader: string | undefined) => {
-    const sessionId = getSessionId(cookieHeader);
+    const cookieSessionId = getSessionId(cookieHeader);
+    const sessionId = sessionAliases.get(cookieSessionId) ?? cookieSessionId;
     const data = sessions.get(sessionId) ?? {};
 
     return createSession(structuredClone(data), sessionId);
@@ -101,6 +103,15 @@ const createSessionBackend = (existingSessionId?: string) => {
     rotateOnNextCommit: (sessionId: string) => {
       // eslint-disable-next-line @silverhand/fp/no-mutation
       nextSessionId = sessionId;
+    },
+    replaceStoredSessionId: (currentId: string, nextId: string) => {
+      const data = sessions.get(currentId) ?? {};
+
+      sessions.delete(currentId);
+      sessions.set(nextId, data);
+      sessionAliases.set(currentId, nextId);
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      currentSessionId = nextId;
     },
   };
 };
@@ -244,5 +255,24 @@ describe('infrastructure:session:SessionRuntime coordination', () => {
     expect(runtime.session.id).toBe('rotated-session-id');
     expect(backend.runExclusive.mock.calls).toEqual([['session-id'], ['rotated-session-id']]);
     expect(backend.getData()).toEqual({ refreshToken: 'rotated', idToken: 'id-token' });
+  });
+
+  it('retries coordination when the session ID changes before the coordinated reload', async () => {
+    const backend = createSessionBackend('session-id');
+    const runtime = await SessionRuntime.create({
+      cookieHeader: 'logto-session=session-id',
+      sessionStorage: backend.sessionStorage,
+      sessionCoordinator: backend.sessionCoordinator,
+    });
+
+    backend.replaceStoredSessionId('session-id', 'rotated-session-id');
+
+    await runtime.checkpoint(async (session) => {
+      session.set('refreshToken', 'rotated');
+    });
+
+    expect(backend.runExclusive.mock.calls).toEqual([['session-id'], ['rotated-session-id']]);
+    expect(runtime.session.id).toBe('rotated-session-id');
+    expect(backend.getData()).toEqual({ refreshToken: 'rotated' });
   });
 });
