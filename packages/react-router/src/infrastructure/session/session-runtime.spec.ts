@@ -281,4 +281,65 @@ describe('infrastructure:session:SessionRuntime', () => {
     expect(runtime.session.data).toEqual({});
     await expect(runtime.finalize()).resolves.toBe('logto-session=; Max-Age=0');
   });
+
+  it('rejects new operations and waits for destruction before finalizing', async () => {
+    vi.useFakeTimers();
+
+    const store = createTestSessionStorage({ idToken: 'id-token' });
+    const runtime = await createRuntime(store.sessionStorage);
+    const destructionStarted = vi.fn();
+    const queuedCheckpoint = vi.fn();
+    const secondDestruction = vi.fn();
+    const destruction = runtime.destroy(async () => {
+      destructionStarted();
+      await delay(25);
+    });
+
+    await vi.advanceTimersByTimeAsync(0);
+    expect(destructionStarted).toHaveBeenCalledOnce();
+
+    await expect(runtime.checkpoint(queuedCheckpoint)).rejects.toThrow(
+      'Cannot update a destroyed session.'
+    );
+    await expect(runtime.destroy(secondDestruction)).rejects.toThrow(
+      'Cannot update a destroyed session.'
+    );
+
+    const finalization = runtime.finalize();
+
+    await vi.advanceTimersByTimeAsync(0);
+    expect(store.destroySession).not.toHaveBeenCalled();
+
+    await vi.advanceTimersByTimeAsync(25);
+    await destruction;
+
+    await expect(finalization).resolves.toBe('logto-session=; Max-Age=0');
+    expect(queuedCheckpoint).not.toHaveBeenCalled();
+    expect(secondDestruction).not.toHaveBeenCalled();
+    expect(store.destroySession).toHaveBeenCalledOnce();
+  });
+
+  it('restores finalization after destruction fails', async () => {
+    vi.useFakeTimers();
+
+    const store = createTestSessionStorage({ idToken: 'id-token' });
+    const runtime = await createRuntime(store.sessionStorage);
+    const destructionError = new Error('database unavailable');
+
+    store.destroySession.mockRejectedValueOnce(destructionError);
+    runtime.session.set('theme', 'dark');
+
+    const destruction = runtime.destroy(async () => {
+      await delay(25);
+    });
+    const destructionExpectation = expect(destruction).rejects.toBe(destructionError);
+    const finalization = runtime.finalize();
+
+    await vi.advanceTimersByTimeAsync(25);
+    await destructionExpectation;
+
+    await expect(finalization).resolves.toBe('logto-session=session-id; Path=/final; HttpOnly');
+    expect(store.getData()).toEqual({ idToken: 'id-token', theme: 'dark' });
+    expect(store.commitSession).toHaveBeenCalledOnce();
+  });
 });

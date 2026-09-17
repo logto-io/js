@@ -263,11 +263,11 @@ The default `ProcessLocalSessionCoordinator` serializes writes for the same stab
 single server process. This protects concurrent refresh-token rotation when `SessionStorage`
 returns reloadable server-side sessions.
 
-Coordinator selection is based on the session loaded when a request begins. A session with a
-stable ID uses the configured coordinator. Without one, the request uses an internal request-local
-coordinator for its full lifetime. This includes cookie-only sessions and the first request of a
-new server-side session. Once the response cookie for a new server-side session reaches the
-browser, subsequent requests load its persistent ID and use the configured coordinator.
+Every request uses an internal request-local coordinator to serialize its own session operations.
+When the latest session has a stable ID, each operation also uses the configured coordinator. A
+new server-side session starts with request-local coordination, then switches to the configured
+coordinator as soon as its first commit produces a reloadable persistent ID. Later checkpoints,
+finalization, and destruction in the same request use that persistent ID.
 
 Because cookie-only storage never returns a stable ID, it can serialize operations only within one
 request and cannot coordinate refreshes across concurrent requests. Passing a distributed

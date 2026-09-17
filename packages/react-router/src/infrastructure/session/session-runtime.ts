@@ -21,6 +21,10 @@ type SessionOperationOutcome<Result> =
   | Readonly<{ status: 'fulfilled'; value: Result }>
   | Readonly<{ status: 'rejected'; error: unknown }>;
 
+type CoordinatedSessionOutcome<Result, Data extends SessionData, FlashData extends SessionData> =
+  | Readonly<{ status: 'completed'; value: Result }>
+  | Readonly<{ status: 'session-changed'; session: Session<Data, FlashData> }>;
+
 const settleSessionOperation = async <Result>(
   operation: Promise<Result>
 ): Promise<SessionOperationOutcome<Result>> => {
@@ -46,18 +50,6 @@ export type SessionRuntimeOptions<
   /** Serializes persistence operations for sessions loaded with a persistent identifier. */
   sessionCoordinator: SessionCoordinator;
 }>;
-
-const createSessionCoordination = (session: Session, sessionCoordinator: SessionCoordinator) => {
-  if (session.id) {
-    return { sessionCoordinator, sessionKey: session.id };
-  }
-
-  // Until the response establishes a persistent session, only this request can observe its state.
-  return {
-    sessionCoordinator: createProcessLocalSessionCoordinator(),
-    sessionKey: globalThis.crypto.randomUUID(),
-  };
-};
 
 const getRequestCookieHeader = (setCookieHeader: string) => {
   const attributeSeparatorIndex = setCookieHeader.indexOf(';');
@@ -87,11 +79,9 @@ export class SessionRuntime<
     FlashData extends SessionData = Data,
   >(options: SessionRuntimeOptions<Data, FlashData>) {
     const session = await options.sessionStorage.getSession(options.cookieHeader);
-    const coordination = createSessionCoordination(session, options.sessionCoordinator);
 
     return new SessionRuntime({
       ...options,
-      ...coordination,
       session,
     });
   }
@@ -101,14 +91,15 @@ export class SessionRuntime<
 
   private currentCookieHeader: string | undefined;
   private responseCookieHeader: string | undefined;
-  private destroyed = false;
-  private readonly activeCheckpoints = new Set<Promise<unknown>>();
+  private lifecycle: 'active' | 'destroying' | 'destroyed' = 'active';
+  private readonly activeOperations = new Set<Promise<unknown>>();
+  private readonly requestCoordinator = createProcessLocalSessionCoordinator();
+  private readonly requestKey = globalThis.crypto.randomUUID();
 
   private constructor(
     private readonly options: SessionRuntimeOptions<Data, FlashData> &
       Readonly<{
         session: Session<Data, FlashData>;
-        sessionKey: string;
       }>
   ) {
     this.currentCookieHeader = options.cookieHeader;
@@ -131,10 +122,7 @@ export class SessionRuntime<
   ): Promise<Result> {
     this.assertActive();
 
-    const { sessionCoordinator, sessionStorage, sessionKey } = this.options;
-
-    const checkpoint = sessionCoordinator.runExclusive(sessionKey, async () => {
-      const latestSession = await sessionStorage.getSession(this.currentCookieHeader);
+    const checkpoint = this.runSessionOperation(async (latestSession) => {
       const replayedMutationCount = this.session.pendingMutationCount;
 
       this.session.applyPendingMutations(latestSession, 0, replayedMutationCount);
@@ -150,13 +138,10 @@ export class SessionRuntime<
       );
 
       if (mutationCountBeforeCommit > 0 || checkpointSession.hasPendingMutations) {
-        const cookieHeader = await sessionStorage.commitSession(latestSession);
-
-        this.currentCookieHeader = getRequestCookieHeader(cookieHeader);
-        this.responseCookieHeader = cookieHeader;
+        await this.commitSession(latestSession, mutationCountBeforeCommit);
+      } else {
+        this.session.adopt(latestSession, mutationCountBeforeCommit);
       }
-
-      this.session.adopt(latestSession, mutationCountBeforeCommit);
 
       if (outcome.status === 'rejected') {
         throw outcome.error;
@@ -165,32 +150,29 @@ export class SessionRuntime<
       return outcome.value;
     });
 
-    return this.trackCheckpoint(checkpoint);
+    return this.trackOperation(checkpoint);
   }
 
   /**
    * Runs an operation against the latest session, then destroys it under coordination even when
-   * the operation rejects. Once destroyed, further checkpoints and destruction fail and
-   * finalization performs no commit.
+   * the operation rejects. Once destruction begins, further checkpoints and destruction fail.
+   * Finalization waits for the destruction and performs no commit after it succeeds.
    */
   public async destroy<Result>(
     operation: SessionOperation<Result, Data, FlashData>
   ): Promise<Result> {
     this.assertActive();
+    this.lifecycle = 'destroying';
 
-    const { sessionCoordinator, sessionStorage, sessionKey } = this.options;
-
-    return sessionCoordinator.runExclusive(sessionKey, async () => {
-      const latestSession = await sessionStorage.getSession(this.currentCookieHeader);
-
+    const destruction = this.runSessionOperation(async (latestSession) => {
       this.session.applyPendingMutations(latestSession);
 
       const outcome = await settleSessionOperation(operation(new TrackedSession(latestSession)));
-      const cookieHeader = await sessionStorage.destroySession(latestSession);
+      const cookieHeader = await this.options.sessionStorage.destroySession(latestSession);
 
       this.currentCookieHeader = getRequestCookieHeader(cookieHeader);
       this.responseCookieHeader = cookieHeader;
-      this.destroyed = true;
+      this.lifecycle = 'destroyed';
       this.session.adopt(createSession<Data, FlashData>());
 
       if (outcome.status === 'rejected') {
@@ -199,13 +181,15 @@ export class SessionRuntime<
 
       return outcome.value;
     });
+
+    return this.trackOperation(this.recoverFailedDestruction(destruction));
   }
 
   /** Commits remaining mutations once and returns the latest response `Set-Cookie` header. */
   public async finalize() {
-    await Promise.allSettled(this.activeCheckpoints);
+    await Promise.allSettled(this.activeOperations);
 
-    if (this.destroyed || !this.session.hasPendingMutations) {
+    if (this.lifecycle === 'destroyed' || !this.session.hasPendingMutations) {
       return this.responseCookieHeader;
     }
 
@@ -215,18 +199,92 @@ export class SessionRuntime<
   }
 
   private assertActive() {
-    if (this.destroyed) {
+    if (this.lifecycle !== 'active') {
       throw new Error('Cannot update a destroyed session.');
     }
   }
 
-  private async trackCheckpoint<Result>(checkpoint: Promise<Result>) {
-    this.activeCheckpoints.add(checkpoint);
+  private async recoverFailedDestruction<Result>(destruction: Promise<Result>) {
+    try {
+      return await destruction;
+    } catch (error: unknown) {
+      if (this.lifecycle === 'destroying') {
+        this.lifecycle = 'active';
+      }
+
+      throw error;
+    }
+  }
+
+  private async commitSession(
+    latestSession: Session<Data, FlashData>,
+    appliedMutationCount: number
+  ) {
+    const cookieHeader = await this.options.sessionStorage.commitSession(latestSession);
+
+    this.currentCookieHeader = getRequestCookieHeader(cookieHeader);
+    this.responseCookieHeader = cookieHeader;
+    this.session.adopt(latestSession, appliedMutationCount);
+
+    // Session storage may assign or rotate an ID without mutating the committed session object.
+    const committedSession = await this.options.sessionStorage.getSession(this.currentCookieHeader);
+
+    this.session.adopt(committedSession, 0);
+  }
+
+  private async runSessionOperation<Result>(
+    operation: (session: Session<Data, FlashData>) => Promise<Result>
+  ) {
+    return this.requestCoordinator.runExclusive(this.requestKey, async () =>
+      this.runWithPersistentSessionCoordination(operation)
+    );
+  }
+
+  private async runWithPersistentSessionCoordination<Result>(
+    operation: (session: Session<Data, FlashData>) => Promise<Result>,
+    expectedSessionId = this.session.id || undefined
+  ): Promise<Result> {
+    const { sessionCoordinator, sessionStorage } = this.options;
+
+    if (!expectedSessionId) {
+      const latestSession = await sessionStorage.getSession(this.currentCookieHeader);
+
+      if (!latestSession.id) {
+        return operation(latestSession);
+      }
+
+      return this.runWithPersistentSessionCoordination(operation, latestSession.id);
+    }
+
+    const outcome: CoordinatedSessionOutcome<Result, Data, FlashData> =
+      await sessionCoordinator.runExclusive(expectedSessionId, async () => {
+        const latestSession = await sessionStorage.getSession(this.currentCookieHeader);
+
+        if (latestSession.id !== expectedSessionId) {
+          return { status: 'session-changed', session: latestSession } as const;
+        }
+
+        return { status: 'completed', value: await operation(latestSession) } as const;
+      });
+
+    if (outcome.status === 'session-changed') {
+      if (!outcome.session.id) {
+        return operation(outcome.session);
+      }
+
+      return this.runWithPersistentSessionCoordination(operation, outcome.session.id);
+    }
+
+    return outcome.value;
+  }
+
+  private async trackOperation<Result>(operation: Promise<Result>) {
+    this.activeOperations.add(operation);
 
     try {
-      return await checkpoint;
+      return await operation;
     } finally {
-      this.activeCheckpoints.delete(checkpoint);
+      this.activeOperations.delete(operation);
     }
   }
 }
