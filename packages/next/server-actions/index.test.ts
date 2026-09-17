@@ -41,7 +41,9 @@ const createNodeClient = vi.fn(async () => ({
 
 vi.mock('next/navigation', () => ({ redirect: vi.fn() }));
 vi.mock('./client', () => ({
-  default: vi.fn(() => ({ createNodeClient })),
+  default: vi.fn(function () {
+    return { createNodeClient };
+  }),
 }));
 
 const config: LogtoNextConfig = {
