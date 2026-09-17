@@ -1,5 +1,5 @@
 ---
-"@logto/react-router": minor
+"@logto/express": minor
 ---
 
 support request-specific sign-in options

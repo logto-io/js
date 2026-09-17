@@ -96,7 +96,13 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
     };
   }
 
-  /** Start the sign-in flow with the specified options. */
+  /**
+   * Start the sign-in flow with the specified options.
+   *
+   * When `postRedirectUri` is specified, it must be an in-app URL that the current WebView can
+   * load, such as `/home`. After the callback succeeds, the SDK navigates the WebView to that URL
+   * with a full page reload. External and custom-scheme URLs are not supported for this option.
+   */
   async signIn(options: SignInOptions): Promise<void>;
   /**
    * Start the sign-in flow with the specified redirect URI. The URI must be
@@ -140,7 +146,7 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
       typeof optionsOrRedirectUri === 'string' || optionsOrRedirectUri instanceof URL
         ? {
             redirectUri: optionsOrRedirectUri,
-            ...(interactionMode && { interactionMode }),
+            interactionMode,
           }
         : optionsOrRedirectUri;
     const redirectUri = options.redirectUri.toString();
@@ -275,7 +281,7 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
             try {
               // Run listener removal in parallel with the browser dismiss (matches the
               // original) — Promise.all still waits for both before resolve().
-              await Promise.all([Browser.close(), cleanup()]);
+              await Promise.all([Browser.close().catch(swallowError), cleanup()]);
               resolve();
             } catch (error: unknown) {
               await cleanup();

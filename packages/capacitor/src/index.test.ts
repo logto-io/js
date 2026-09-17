@@ -129,13 +129,13 @@ describe('CapacitorLogtoClient', () => {
       });
       const client = createClient();
       vi.spyOn(client, 'handleSignInCallback').mockImplementation(async () => {
-        await client.getAdapter().navigate('https://app.example.com/after-sign-in', {
+        await client.getAdapter().navigate('/after-sign-in', {
           for: 'post-sign-in',
         });
       });
       const options = {
         redirectUri: 'io.logto.example://callback',
-        postRedirectUri: 'https://app.example.com/after-sign-in',
+        postRedirectUri: '/after-sign-in',
         prompt: Prompt.Consent,
         extraParams: { source: 'capacitor' },
       };
@@ -280,6 +280,22 @@ describe('CapacitorLogtoClient', () => {
 
       await expect(pending).resolves.toBeUndefined();
       expect(Browser.close).toHaveBeenCalled();
+    });
+
+    it('should resolve via appUrlOpen when the browser is already closed', async () => {
+      const hooks = installListenerCapture();
+      vi.spyOn(LogtoBaseClient.prototype, 'signOut').mockResolvedValue();
+      vi.mocked(Browser.close).mockRejectedValueOnce(new Error('No active window to close!'));
+
+      const client = createClient();
+      const pending = client.signOut('io.logto.example://logout');
+      await vi.waitFor(() => {
+        expect(hooks.appUrlOpen).toBeDefined();
+      });
+      await hooks.appUrlOpen?.({ url: 'io.logto.example://logout' });
+
+      await expect(pending).resolves.toBeUndefined();
+      expect(Browser.close).toHaveBeenCalledOnce();
     });
 
     it('should resolve via browserFinished when no postLogoutRedirectUri is provided', async () => {

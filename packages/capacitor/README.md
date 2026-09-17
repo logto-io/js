@@ -1,4 +1,5 @@
 # Logto JS Capacitor SDK
+
 [![Version](https://img.shields.io/npm/v/@logto/capacitor)](https://www.npmjs.com/package/@logto/capacitor)
 [![Build Status](https://github.com/logto-io/js/actions/workflows/main.yml/badge.svg)](https://github.com/logto-io/js/actions/workflows/main.yml)
 [![Codecov](https://img.shields.io/codecov/c/github/logto-io/js)](https://app.codecov.io/gh/logto-io/js?branch=master)
@@ -43,10 +44,15 @@ import { Prompt } from '@logto/capacitor';
 
 await client.signIn({
   redirectUri: 'io.logto.example://callback',
+  postRedirectUri: '/home',
   prompt: Prompt.Consent,
   extraParams: { organization_id: 'organization-id' },
 });
 ```
+
+`postRedirectUri` must be an in-app URL that the current WebView can load, such as `/home`. After
+sign-in, the SDK navigates the WebView to that URL with a full page reload. External URLs leave the
+app shell, and custom-scheme URLs are not supported for this option.
 
 ## Resources
 
