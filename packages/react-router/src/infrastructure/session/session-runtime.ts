@@ -137,14 +137,21 @@ export class SessionRuntime<
         mutationCountBeforeCommit
       );
 
-      if (mutationCountBeforeCommit > 0 || checkpointSession.hasPendingMutations) {
-        await this.commitSession(latestSession, mutationCountBeforeCommit);
-      } else {
+      const shouldCommit = mutationCountBeforeCommit > 0 || checkpointSession.hasPendingMutations;
+      const committedSessionOutcome = shouldCommit
+        ? await this.commitSession(latestSession, mutationCountBeforeCommit)
+        : undefined;
+
+      if (!shouldCommit) {
         this.session.adopt(latestSession, mutationCountBeforeCommit);
       }
 
       if (outcome.status === 'rejected') {
         throw outcome.error;
+      }
+
+      if (committedSessionOutcome?.status === 'rejected') {
+        throw committedSessionOutcome.error;
       }
 
       return outcome.value;
@@ -167,8 +174,9 @@ export class SessionRuntime<
     const destruction = this.runSessionOperation(async (latestSession) => {
       this.session.applyPendingMutations(latestSession);
 
-      const outcome = await settleSessionOperation(operation(new TrackedSession(latestSession)));
-      const cookieHeader = await this.options.sessionStorage.destroySession(latestSession);
+      const destructionSession = new TrackedSession(latestSession);
+      const outcome = await settleSessionOperation(operation(destructionSession));
+      const cookieHeader = await this.destroySession(latestSession, destructionSession);
 
       this.currentCookieHeader = getRequestCookieHeader(cookieHeader);
       this.responseCookieHeader = cookieHeader;
@@ -199,8 +207,24 @@ export class SessionRuntime<
   }
 
   private assertActive() {
-    if (this.lifecycle !== 'active') {
+    if (this.lifecycle === 'destroying') {
+      throw new Error('Cannot update a session while it is being destroyed.');
+    }
+
+    if (this.lifecycle === 'destroyed') {
       throw new Error('Cannot update a destroyed session.');
+    }
+  }
+
+  private async destroySession(
+    latestSession: Session<Data, FlashData>,
+    destructionSession: TrackedSession<Data, FlashData>
+  ) {
+    try {
+      return await this.options.sessionStorage.destroySession(latestSession);
+    } catch (error: unknown) {
+      destructionSession.applyPendingMutations(this.session);
+      throw error;
     }
   }
 
@@ -227,9 +251,15 @@ export class SessionRuntime<
     this.session.adopt(latestSession, appliedMutationCount);
 
     // Session storage may assign or rotate an ID without mutating the committed session object.
-    const committedSession = await this.options.sessionStorage.getSession(this.currentCookieHeader);
+    const committedSessionOutcome = await settleSessionOperation(
+      this.options.sessionStorage.getSession(this.currentCookieHeader)
+    );
 
-    this.session.adopt(committedSession, 0);
+    if (committedSessionOutcome.status === 'fulfilled') {
+      this.session.adopt(committedSessionOutcome.value, 0);
+    }
+
+    return committedSessionOutcome;
   }
 
   private async runSessionOperation<Result>(

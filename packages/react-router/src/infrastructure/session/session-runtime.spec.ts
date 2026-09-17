@@ -299,10 +299,10 @@ describe('infrastructure:session:SessionRuntime', () => {
     expect(destructionStarted).toHaveBeenCalledOnce();
 
     await expect(runtime.checkpoint(queuedCheckpoint)).rejects.toThrow(
-      'Cannot update a destroyed session.'
+      'Cannot update a session while it is being destroyed.'
     );
     await expect(runtime.destroy(secondDestruction)).rejects.toThrow(
-      'Cannot update a destroyed session.'
+      'Cannot update a session while it is being destroyed.'
     );
 
     const finalization = runtime.finalize();
@@ -322,14 +322,19 @@ describe('infrastructure:session:SessionRuntime', () => {
   it('restores finalization after destruction fails', async () => {
     vi.useFakeTimers();
 
-    const store = createTestSessionStorage({ idToken: 'id-token' });
+    const store = createTestSessionStorage({
+      idToken: 'id-token',
+      refreshToken: 'refresh-token',
+    });
     const runtime = await createRuntime(store.sessionStorage);
     const destructionError = new Error('database unavailable');
 
     store.destroySession.mockRejectedValueOnce(destructionError);
     runtime.session.set('theme', 'dark');
 
-    const destruction = runtime.destroy(async () => {
+    const destruction = runtime.destroy(async (session) => {
+      session.unset('idToken');
+      session.unset('refreshToken');
       await delay(25);
     });
     const destructionExpectation = expect(destruction).rejects.toBe(destructionError);
@@ -339,7 +344,7 @@ describe('infrastructure:session:SessionRuntime', () => {
     await destructionExpectation;
 
     await expect(finalization).resolves.toBe('logto-session=session-id; Path=/final; HttpOnly');
-    expect(store.getData()).toEqual({ idToken: 'id-token', theme: 'dark' });
+    expect(store.getData()).toEqual({ theme: 'dark' });
     expect(store.commitSession).toHaveBeenCalledOnce();
   });
 });
