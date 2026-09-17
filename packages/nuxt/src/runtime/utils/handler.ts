@@ -1,8 +1,8 @@
 import { trySafe } from '@silverhand/essentials';
-import { type H3Event, getQuery, getRequestURL, sendRedirect } from 'h3';
+import { type H3Event, getRequestURL, sendRedirect } from 'h3';
 import type { RuntimeConfig } from 'nuxt/schema';
 
-import { respondWithAccessToken } from './access-token';
+import { handleAccessTokenRequest } from './access-token';
 import { createLogtoClient, resolveLogtoConfig } from './client';
 import { defaults } from './constants';
 
@@ -45,6 +45,17 @@ export const logtoEventHandler = async (event: H3Event, config: RuntimeConfig) =
     ? new URL(requestUrl.pathname + requestUrl.search + requestUrl.hash, customRedirectBaseUrl)
     : requestUrl;
 
+  /**
+   * The access token request is answered before the user info is resolved: it only needs the
+   * session, and skipping the user info avoids an unnecessary request to the userinfo endpoint.
+   *
+   * The module mirrors the pathname into the public runtime config so that the composable and this
+   * handler cannot disagree about where the endpoint lives.
+   */
+  if (url.pathname === config.public.logto.accessTokenPath) {
+    return handleAccessTokenRequest(event, config);
+  }
+
   const { logto } = await createLogtoClient(event, config);
 
   if (url.pathname === pathnames.signIn) {
@@ -66,26 +77,10 @@ export const logtoEventHandler = async (event: H3Event, config: RuntimeConfig) =
     return;
   }
 
-  /**
-   * The access token request is answered before the user info is resolved: it only needs the
-   * session, and skipping the user info avoids an unnecessary request to the userinfo endpoint.
-   *
-   * The module mirrors the pathname into the public runtime config so that the composable and this
-   * handler cannot disagree about where the endpoint lives.
-   */
-  if (url.pathname === config.public.logto.accessTokenPath) {
-    return respondWithAccessToken(event, logto, getQuery<AccessTokenQuery>(event));
-  }
-
   // eslint-disable-next-line @silverhand/fp/no-mutation
   event.context.logtoClient = logto;
   // eslint-disable-next-line @silverhand/fp/no-mutation
   event.context.logtoUser = (await logto.isAuthenticated())
     ? await trySafe(async () => (fetchUserInfo ? logto.fetchUserInfo() : logto.getIdTokenClaims()))
     : undefined;
-};
-
-type AccessTokenQuery = {
-  resource?: string;
-  organizationId?: string;
 };
