@@ -69,17 +69,13 @@ export const handleAccessTokenRequest = async (event: H3Event, config: RuntimeCo
     } finally {
       /**
        * Share the session minted here (a refresh, but also a cleared session) with requests that
-       * are still queued on a superseded cookie. Both the request cookie and the adopted value
-       * are superseded by the new one, so chained rotations cannot strand a request on a
-       * consumed refresh token.
+       * are still queued on a superseded cookie, and with requests that arrive with the new
+       * cookie, so chained rotations cannot strand a request on a consumed refresh token.
        */
       const persistedSessionValue = getPersistedSessionValue();
 
       if (persistedSessionValue) {
-        recordRotatedSessionValue(
-          [requestSessionValue, ...(adoptedSessionValue ? [adoptedSessionValue] : [])],
-          persistedSessionValue
-        );
+        recordRotatedSessionValue(requestSessionValue, persistedSessionValue);
       }
     }
   });
