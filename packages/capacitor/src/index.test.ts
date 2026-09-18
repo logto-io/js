@@ -1,6 +1,6 @@
 import { App } from '@capacitor/app';
 import { Browser } from '@capacitor/browser';
-import LogtoBaseClient from '@logto/browser';
+import LogtoBaseClient, { Prompt } from '@logto/browser';
 
 import CapacitorLogtoClient from './index.js';
 
@@ -121,6 +121,56 @@ describe('CapacitorLogtoClient', () => {
       expect(hooks.browserRemove).toHaveBeenCalledTimes(1);
     });
 
+    it('should forward object-form sign-in options', async () => {
+      const hooks = installListenerCapture();
+      const baseSignIn = vi.spyOn(LogtoBaseClient.prototype, 'signIn').mockResolvedValue();
+      const assign = vi.spyOn(window.location, 'assign').mockImplementation(() => {
+        // Prevent navigation in the test environment.
+      });
+      const client = createClient();
+      vi.spyOn(client, 'handleSignInCallback').mockImplementation(async () => {
+        await client.getAdapter().navigate('/after-sign-in', {
+          for: 'post-sign-in',
+        });
+      });
+      const options = {
+        redirectUri: 'io.logto.example://callback',
+        postRedirectUri: '/after-sign-in',
+        prompt: Prompt.Consent,
+        extraParams: { source: 'capacitor' },
+      };
+
+      const pending = client.signIn(options);
+      await vi.waitFor(() => {
+        expect(baseSignIn).toHaveBeenCalledWith(options);
+        expect(hooks.appUrlOpen).toBeDefined();
+      });
+      await hooks.appUrlOpen?.({ url: 'io.logto.example://callback?code=abc' });
+
+      await expect(pending).resolves.toBeUndefined();
+      expect(assign).toHaveBeenCalledWith(options.postRedirectUri);
+      expect(Browser.open).not.toHaveBeenCalled();
+      expect(Browser.close).toHaveBeenCalledOnce();
+    });
+
+    it('should exchange the authorization code when the browser is already closed', async () => {
+      const hooks = installListenerCapture();
+      vi.spyOn(LogtoBaseClient.prototype, 'signIn').mockResolvedValue();
+      vi.mocked(Browser.close).mockRejectedValueOnce(new Error('No active window to close!'));
+
+      const client = createClient();
+      const handleSignInCallback = vi.spyOn(client, 'handleSignInCallback').mockResolvedValue();
+
+      const pending = client.signIn('io.logto.example://callback');
+      await vi.waitFor(() => {
+        expect(hooks.appUrlOpen).toBeDefined();
+      });
+      await hooks.appUrlOpen?.({ url: 'io.logto.example://callback?code=abc' });
+
+      await expect(pending).resolves.toBeUndefined();
+      expect(handleSignInCallback).toHaveBeenCalledWith('io.logto.example://callback?code=abc');
+    });
+
     it('should reject if App.addListener rejects at bootstrap', async () => {
       const hooks = installListenerCapture();
       vi.mocked(App.addListener).mockRejectedValueOnce(new Error('plugin unavailable'));
@@ -230,6 +280,22 @@ describe('CapacitorLogtoClient', () => {
 
       await expect(pending).resolves.toBeUndefined();
       expect(Browser.close).toHaveBeenCalled();
+    });
+
+    it('should resolve via appUrlOpen when the browser is already closed', async () => {
+      const hooks = installListenerCapture();
+      vi.spyOn(LogtoBaseClient.prototype, 'signOut').mockResolvedValue();
+      vi.mocked(Browser.close).mockRejectedValueOnce(new Error('No active window to close!'));
+
+      const client = createClient();
+      const pending = client.signOut('io.logto.example://logout');
+      await vi.waitFor(() => {
+        expect(hooks.appUrlOpen).toBeDefined();
+      });
+      await hooks.appUrlOpen?.({ url: 'io.logto.example://logout' });
+
+      await expect(pending).resolves.toBeUndefined();
+      expect(Browser.close).toHaveBeenCalledOnce();
     });
 
     it('should resolve via browserFinished when no postLogoutRedirectUri is provided', async () => {

@@ -100,6 +100,27 @@ Notes:
 - When the session is missing or can no longer be refreshed, the endpoint responds with `401` and
   the error code `not_authenticated`, which is available as `NotAuthenticatedErrorCode`.
 
+## Request-specific sign-in options
+
+Set module-level `signInOptions` for defaults shared by every sign-in. To override them for an
+individual request, register the `logto:sign-in-options` Nitro hook in a server plugin:
+
+```ts
+// server/plugins/logto.ts
+export default defineNitroPlugin((nitroApp) => {
+  nitroApp.hooks.hook('logto:sign-in-options', ({ event, signInOptions }) => {
+    const prompt = getQuery(event).prompt;
+
+    if (prompt === 'login' || prompt === 'consent') {
+      Object.assign(signInOptions, { prompt });
+    }
+  });
+});
+```
+
+Hook values override module-level defaults. The SDK still owns the callback redirect URI. Validate
+or allowlist request input before copying it into sign-in options.
+
 ## Resources
 
 [![Website](https://img.shields.io/badge/website-logto.io-8262F8.svg)](https://logto.io/)

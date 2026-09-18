@@ -5,8 +5,13 @@ import type { RuntimeConfig } from 'nuxt/schema';
 import { handleAccessTokenRequest } from './access-token';
 import { createLogtoClient, resolveLogtoConfig } from './client';
 import { defaults } from './constants';
+import { type GetSignInOptions } from './types';
 
-export const logtoEventHandler = async (event: H3Event, config: RuntimeConfig) => {
+export const logtoEventHandler = async (
+  event: H3Event,
+  config: RuntimeConfig,
+  getSignInOptions?: GetSignInOptions
+) => {
   const {
     logtoConfig,
     fetchUserInfo,
@@ -59,8 +64,11 @@ export const logtoEventHandler = async (event: H3Event, config: RuntimeConfig) =
   const { logto } = await createLogtoClient(event, config);
 
   if (url.pathname === pathnames.signIn) {
+    const requestSignInOptions = await getSignInOptions?.(event);
+
     await logto.signIn({
       ...signInOptions,
+      ...requestSignInOptions,
       redirectUri: new URL(pathnames.callback, url).href,
     });
     return;

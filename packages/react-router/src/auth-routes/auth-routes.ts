@@ -1,3 +1,4 @@
+import type { SignInOptions } from '@logto/node';
 import type {
   ActionFunctionArgs,
   LoaderFunctionArgs,
@@ -21,6 +22,19 @@ export type AuthRoutePaths = Readonly<{
  */
 export type ResolvePostCallbackRedirectUri = (signInRequest: Request) => string | Promise<string>;
 
+export type AuthRouteSignInOptions = Omit<
+  SignInOptions,
+  'redirectUri' | 'postRedirectUri' | 'interactionMode'
+>;
+
+export type AuthRouteFlow = 'signIn' | 'signUp';
+
+/** Called with the action request that starts the selected authentication flow. */
+export type GetSignInOptions = (
+  request: Request,
+  flow: AuthRouteFlow
+) => AuthRouteSignInOptions | Promise<AuthRouteSignInOptions>;
+
 export type ValidateAuthActionRequest = (
   request: Request
 ) => Response | void | Promise<Response | void>;
@@ -30,6 +44,10 @@ export type AuthRoutesOptions = Readonly<{
   /** The post-callback destination or a resolver that runs when sign-in or sign-up starts. */
   postCallbackRedirectUri: string | ResolvePostCallbackRedirectUri;
   postSignOutRedirectUri: string;
+  /** Default options for sign-in and sign-up. Redirect fields are managed by the SDK. */
+  signInOptions?: AuthRouteSignInOptions;
+  /** Returns request-specific options that override `signInOptions`. */
+  getSignInOptions?: GetSignInOptions;
   /** Runs before sign-in, sign-up, or sign-out. Return a Response to reject the request. */
   validateActionRequest?: ValidateAuthActionRequest;
 }>;
@@ -139,6 +157,8 @@ export const createAuthRoutes = ({ baseUrl, requestRuntimeContext }: CreateAuthR
     paths,
     postCallbackRedirectUri,
     postSignOutRedirectUri,
+    signInOptions,
+    getSignInOptions,
     validateActionRequest,
   }: AuthRoutesOptions): AuthRoutes => {
     const getPostCallbackRedirectUri = async (signInRequest: Request) => {
@@ -210,9 +230,14 @@ export const createAuthRoutes = ({ baseUrl, requestRuntimeContext }: CreateAuthR
       const requestRuntime = context.get(requestRuntimeContext);
 
       if (pathname === paths.signIn) {
-        const postRedirectUri = await getPostCallbackRedirectUri(request);
+        const [postRedirectUri, requestSignInOptions] = await Promise.all([
+          getPostCallbackRedirectUri(request.clone()),
+          getSignInOptions?.(request.clone(), 'signIn'),
+        ]);
         const navigateTo = await checkpointWithNavigation(requestRuntime, async (client) =>
           client.signIn({
+            ...signInOptions,
+            ...requestSignInOptions,
             redirectUri: resolveUri(baseUrl, paths.callback),
             postRedirectUri,
           })
@@ -222,9 +247,14 @@ export const createAuthRoutes = ({ baseUrl, requestRuntimeContext }: CreateAuthR
       }
 
       if (paths.signUp && pathname === paths.signUp) {
-        const postRedirectUri = await getPostCallbackRedirectUri(request);
+        const [postRedirectUri, requestSignInOptions] = await Promise.all([
+          getPostCallbackRedirectUri(request.clone()),
+          getSignInOptions?.(request.clone(), 'signUp'),
+        ]);
         const navigateTo = await checkpointWithNavigation(requestRuntime, async (client) =>
           client.signIn({
+            ...signInOptions,
+            ...requestSignInOptions,
             redirectUri: resolveUri(baseUrl, paths.callback),
             postRedirectUri,
             firstScreen: 'register',

@@ -3,11 +3,14 @@ export type { LogtoReactRouter } from './create-logto-react-router.js';
 
 export type {
   AuthRouteAction,
+  AuthRouteFlow,
   AuthRouteLoader,
   AuthRoutePaths,
+  AuthRouteSignInOptions,
   AuthRoutes,
   AuthRoutesOptions,
   ResolvePostCallbackRedirectUri,
+  GetSignInOptions,
   ValidateAuthActionRequest,
 } from './auth-routes/auth-routes.js';
 

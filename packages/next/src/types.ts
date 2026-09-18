@@ -1,4 +1,4 @@
-import type { LogtoConfig, SessionWrapper } from '@logto/node';
+import type { GetContextParameters, LogtoConfig, SessionWrapper, SignInOptions } from '@logto/node';
 import type NodeClient from '@logto/node';
 import { type NextApiRequest, type NextApiResponse } from 'next';
 
@@ -24,3 +24,24 @@ export type ErrorHandler = (
   response: NextApiResponse,
   error: unknown
 ) => unknown;
+
+export type AuthRouteSignInOptions = Omit<
+  SignInOptions,
+  'redirectUri' | 'postRedirectUri' | 'interactionMode'
+>;
+
+export type AuthRouteFlow = 'signIn' | 'signUp';
+
+export type GetSignInOptions = (
+  request: NextApiRequest,
+  flow: AuthRouteFlow
+) => AuthRouteSignInOptions | Promise<AuthRouteSignInOptions>;
+
+export type HandleAuthRoutesOptions = {
+  getContext?: GetContextParameters;
+  onError?: ErrorHandler;
+  /** Default options for sign-in and sign-up. Redirect fields are managed by the SDK. */
+  signInOptions?: AuthRouteSignInOptions;
+  /** Returns request-specific options that override `signInOptions`. */
+  getSignInOptions?: GetSignInOptions;
+};

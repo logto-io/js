@@ -925,6 +925,9 @@ importers:
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.0
+      nitropack:
+        specifier: ^2.13.4
+        version: 2.13.4(@capacitor/preferences@8.0.1(@capacitor/core@8.1.0))(@netlify/blobs@9.0.1)(encoding@0.1.13)(oxc-parser@0.143.0)(xml2js@0.6.2)
       nuxt:
         specifier: ^3.21.10
         version: 3.21.11(@capacitor/preferences@8.0.1(@capacitor/core@8.1.0))(@netlify/blobs@9.0.1)(@oxc-project/types@0.143.0)(@parcel/watcher@2.5.6)(@types/node@20.19.21)(@vue/compiler-sfc@3.5.42)(cac@6.7.14)(db0@0.3.4)(encoding@0.1.13)(esbuild@0.25.4)(eslint@8.57.0)(ioredis@5.10.1)(less@4.2.2)(lightningcss@1.31.1)(magicast@0.5.4)(meow@13.2.0)(rollup-plugin-visualizer@7.0.1(rollup@4.60.3))(rollup@4.60.3)(sass@1.97.3)(terser@5.39.0)(typescript@5.7.2)(vite@7.3.6(@types/node@20.19.21)(jiti@2.7.0)(less@4.2.2)(lightningcss@1.31.1)(sass@1.97.3)(terser@5.39.0)(yaml@2.9.0))(xml2js@0.6.2)(yaml@2.9.0)

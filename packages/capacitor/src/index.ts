@@ -51,8 +51,8 @@ const toError = (value: unknown): Error =>
   value instanceof Error ? value : new Error(String(value));
 
 const swallowError = (): void => {
-  // Intentionally empty: listener-removal failures during cleanup must not override
-  // the resolve/reject outcome the caller actually cares about.
+  // Intentionally empty: best-effort cleanup failures must not override the resolve/reject
+  // outcome the caller actually cares about.
 };
 
 export default class CapacitorLogtoClient extends LogtoBaseClient {
@@ -65,7 +65,12 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
     // system browser. We need to open an in-app browser to be able to handle
     // the redirects back to the app.
     // https://capacitorjs.com/docs/apis/browser
-    this.adapter.navigate = async (url) => {
+    this.adapter.navigate = async (url, parameters) => {
+      if (parameters.for === 'post-sign-in') {
+        window.location.assign(url);
+        return;
+      }
+
       return Browser.open({
         url,
         windowName: '_self',
@@ -92,7 +97,11 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
   }
 
   /**
-   * **NOTE: Capacitor does not support this method signature, use the other overloads.**
+   * Start the sign-in flow with the specified options.
+   *
+   * When `postRedirectUri` is specified, it must be an in-app URL that the current WebView can
+   * load, such as `/home`. After the callback succeeds, the SDK navigates the WebView to that URL
+   * with a full page reload. External and custom-scheme URLs are not supported for this option.
    */
   async signIn(options: SignInOptions): Promise<void>;
   /**
@@ -130,12 +139,17 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
    */
   async signIn(redirectUri: string, interactionMode?: InteractionMode): Promise<void>;
   async signIn(
-    redirectUri: string | URL | SignInOptions,
+    optionsOrRedirectUri: string | URL | SignInOptions,
     interactionMode?: InteractionMode
   ): Promise<void> {
-    if (typeof redirectUri === 'object' && !(redirectUri instanceof URL)) {
-      throw new TypeError('The first argument must be a string or a URL.');
-    }
+    const options =
+      typeof optionsOrRedirectUri === 'string' || optionsOrRedirectUri instanceof URL
+        ? {
+            redirectUri: optionsOrRedirectUri,
+            interactionMode,
+          }
+        : optionsOrRedirectUri;
+    const redirectUri = options.redirectUri.toString();
 
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line @silverhand/fp/no-let
@@ -162,7 +176,7 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
 
       // eslint-disable-next-line @silverhand/fp/no-mutation
       appHandlePromise = App.addListener('appUrlOpen', async ({ url }) => {
-        if (!url.startsWith(redirectUri.toString())) {
+        if (!url.startsWith(redirectUri)) {
           return;
         }
 
@@ -170,10 +184,13 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
         redirectionHandled = true;
 
         try {
-          // Kick off listener removal alongside the token exchange and browser dismiss
-          // (matches the original parallelism); the awaited Promise.all guarantees all
-          // three are done before resolve().
-          await Promise.all([this.handleSignInCallback(url), Browser.close(), cleanup()]);
+          // Browser dismissal is best-effort cleanup. It must not delay or override the token
+          // exchange, especially when the browser has already closed during deep-link handoff.
+          await Promise.all([
+            this.handleSignInCallback(url),
+            Browser.close().catch(swallowError),
+            cleanup(),
+          ]);
           resolve();
         } catch (error: unknown) {
           await cleanup();
@@ -204,7 +221,7 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
       void (async () => {
         try {
           await Promise.all([appHandlePromise, browserHandlePromise]);
-          await super.signIn(redirectUri, interactionMode);
+          await super.signIn(options);
         } catch (error: unknown) {
           await cleanup();
           reject(toError(error));
@@ -264,7 +281,7 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
             try {
               // Run listener removal in parallel with the browser dismiss (matches the
               // original) — Promise.all still waits for both before resolve().
-              await Promise.all([Browser.close(), cleanup()]);
+              await Promise.all([Browser.close().catch(swallowError), cleanup()]);
               resolve();
             } catch (error: unknown) {
               await cleanup();

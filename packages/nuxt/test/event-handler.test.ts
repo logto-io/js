@@ -7,10 +7,17 @@ import { createEvent } from 'h3';
 import { describe, expect, it, vi } from 'vitest';
 
 import { useRuntimeConfig } from '#imports';
+import type { LogtoSignInOptionsHookContext } from '@/src/runtime/utils/types';
 
-mockNuxtImport<typeof useRuntimeConfig>('useRuntimeConfig', (original) =>
+const { callHook } = vi.hoisted(() => ({ callHook: vi.fn() }));
+
+mockNuxtImport('useRuntimeConfig', () =>
   vi.fn(() => ({
-    ...original(),
+    app: {
+      baseURL: '/',
+      buildAssetsDir: '/_nuxt/',
+      cdnURL: '',
+    },
     logto: {
       cookieEncryptionKey: 'foo',
       pathnames: {
@@ -22,6 +29,9 @@ mockNuxtImport<typeof useRuntimeConfig>('useRuntimeConfig', (original) =>
     public: { logto: { accessTokenPath: '/api/logto/access-token' } },
   }))
 );
+vi.mock('nitropack/runtime', () => ({
+  useNitroApp: vi.fn(() => ({ hooks: { callHook } })),
+}));
 const cookies = new Map();
 const getRequestURL = vi.fn(() => new URL('http://localhost:3000'));
 const sendRedirect = vi.fn();
@@ -70,6 +80,35 @@ describe('event-handler', async () => {
     getRequestURL.mockReturnValueOnce(new URL('http://localhost:3000/sign-in'));
     await handler(event);
     expect(LogtoClient.prototype.signIn).toHaveBeenCalledWith({
+      redirectUri: 'http://localhost:3000/callback',
+    });
+  });
+
+  it('should apply request-specific sign-in options from the Nitro hook', async () => {
+    const event = createH3Event();
+    getRequestURL.mockReturnValueOnce(new URL('http://localhost:3000/sign-in?prompt=consent'));
+    callHook.mockImplementationOnce(
+      async (_name: string, context: LogtoSignInOptionsHookContext) => {
+        // eslint-disable-next-line @silverhand/fp/no-mutating-assign -- hook contract mutates the context
+        Object.assign(context.signInOptions, {
+          prompt: logtoNode.Prompt.Consent,
+          extraParams: { source: 'request' },
+        });
+      }
+    );
+
+    await handler(event);
+
+    expect(callHook).toHaveBeenCalledWith('logto:sign-in-options', {
+      event,
+      signInOptions: {
+        prompt: 'consent',
+        extraParams: { source: 'request' },
+      },
+    });
+    expect(LogtoClient.prototype.signIn).toHaveBeenCalledWith({
+      prompt: 'consent',
+      extraParams: { source: 'request' },
       redirectUri: 'http://localhost:3000/callback',
     });
   });

@@ -27,6 +27,35 @@ yarn add @logto/express
 pnpm add @logto/express
 ```
 
+## Request-specific sign-in options
+
+Use `signInOptions` for defaults shared by every sign-in. Add `getSignInOptions` when an
+individual request needs to override them:
+
+```ts
+import { handleAuthRoutes, Prompt } from '@logto/express';
+
+app.use(
+  handleAuthRoutes(
+    {
+      ...config,
+      signInOptions: { prompt: Prompt.Login },
+    },
+    {
+      getSignInOptions: (request, flow) => {
+        const prompt = request.query.prompt;
+
+        return flow === 'signIn' && prompt === 'consent' ? { prompt: Prompt.Consent } : {};
+      },
+    }
+  )
+);
+```
+
+Resolver values override `signInOptions`. The SDK manages callback redirect fields and forces the
+registration screen for the sign-up route. Validate or allowlist request input before copying it
+into sign-in options.
+
 ## Resources
 
 [![Website](https://img.shields.io/badge/website-logto.io-8262F8.svg)](https://logto.io/)

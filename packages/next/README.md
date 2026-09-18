@@ -38,6 +38,28 @@ pnpm add @logto/next
 | @logto/edge           | Next.js SDK running in edge environment       |
 | @logto/server-actions | Next.js SDK for App Router and Server Actions |
 
+## Request-specific sign-in options
+
+The Pages Router combined auth handler accepts shared defaults and a resolver for individual
+requests:
+
+```ts
+import { Prompt } from '@logto/next';
+
+export default logtoClient.handleAuthRoutes({
+  signInOptions: { prompt: Prompt.Login },
+  getSignInOptions: (request) => {
+    const prompt = request.query.prompt;
+
+    return prompt === 'consent' ? { prompt: Prompt.Consent } : {};
+  },
+});
+```
+
+Resolver values override `signInOptions`. The SDK manages callback redirect fields and forces the
+registration screen for the sign-up route. Validate or allowlist request input before copying it
+into sign-in options.
+
 ## Resources
 
 [![Website](https://img.shields.io/badge/website-logto.io-8262F8.svg)](https://logto.io/)
