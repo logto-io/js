@@ -87,6 +87,14 @@ export class TrackedSession<Data = SessionData, FlashData = Data>
     applySessionMutations(session, this.mutations.slice(startIndex, endIndex));
   }
 
+  /** Appends another tracked session's mutations while keeping the current view up to date. */
+  public appendPendingMutationsFrom(session: TrackedSession<Data, FlashData>) {
+    for (const mutation of session.mutations) {
+      mutation(this.currentSession);
+      this.recordMutation(mutation);
+    }
+  }
+
   /**
    * Replaces the backing session, removes the applied mutation prefix, and replays the remaining
    * tail so the current view still includes every pending mutation.
