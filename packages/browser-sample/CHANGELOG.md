@@ -1,5 +1,15 @@
 # Change Log
 
+## 2.0.35
+
+### Patch Changes
+
+- Updated dependencies [b694c0e]
+- Updated dependencies [a9dca71]
+- Updated dependencies [1b9abbd]
+- Updated dependencies [9f877b2]
+  - @logto/browser@3.1.0
+
 ## 2.0.34
 
 ### Patch Changes

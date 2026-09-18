@@ -1,5 +1,47 @@
 # Change Log
 
+## 4.0.0
+
+### Major Changes
+
+- db78ef4: require Node.js 22 or later for server-side SDKs
+
+### Minor Changes
+
+- b694c0e: support configurable request timeouts in Node.js and edge runtimes
+- a9dca71: export `decodeAccessToken`, `ReservedResource`, and `CacheKey` from applicable platform SDK package
+  roots
+- a9dca71: expose token claim APIs across platform SDKs
+  
+  Make `getIdTokenClaims`, `getAccessTokenClaims`, and `getOrganizationTokenClaims` available through
+  Next.js and React Router. Forward the optional `organizationId` through platform access-token
+  wrappers.
+- 1b9abbd: stabilize cache configuration across JavaScript SDKs
+  
+  Use the stable `cache` client adapter property. The deprecated `unstable_cache` alias remains
+  supported, with the stable property taking precedence. Node and edge clients continue to use an
+  endpoint-scoped process-local cache by default.
+  
+  Browser, React, Angular, Vue, Capacitor, and Chrome Extension clients can opt in through the stable
+  `enableCache` option. Browser caches are isolated by endpoint and application, and cache storage
+  failures no longer discard successful discovery responses.
+
+### Patch Changes
+
+- a078735: remove stale node-fetch documentation and declarations
+- 3b32030: export `FirstScreen` and update the React Router type surface
+  
+  React Router users should replace `InteractionMode` imports with `FirstScreen`. The client and Node
+  SDKs retain `InteractionMode` for compatibility.
+- 9f877b2: clear local authentication state when remote sign-out cannot start
+- Updated dependencies [a078735]
+- Updated dependencies [3b32030]
+- Updated dependencies [a9dca71]
+- Updated dependencies [1b9abbd]
+- Updated dependencies [b694c0e]
+- Updated dependencies [9f877b2]
+  - @logto/client@3.2.0
+
 ## 3.1.11
 
 ### Patch Changes
