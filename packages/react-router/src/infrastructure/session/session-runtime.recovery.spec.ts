@@ -76,22 +76,55 @@ describe('infrastructure:session:SessionRuntime recovery', () => {
     expect(store.commitSession).toHaveBeenCalledOnce();
   });
 
-  it('surfaces a committed session reload error after a successful checkpoint', async () => {
+  it('preserves a successful checkpoint result when the committed session reload fails', async () => {
     const store = createTestSessionStorage();
     const runtime = await createRuntime(store.sessionStorage);
     const reloadError = new Error('database unavailable');
 
-    await expect(
-      runtime.checkpoint(async (session) => {
-        session.set('refreshToken', 'rotated');
-        store.getSession.mockRejectedValueOnce(reloadError);
-      })
-    ).rejects.toBe(reloadError);
+    const result = await runtime.checkpoint(async (session) => {
+      session.set('refreshToken', 'rotated');
+      store.getSession.mockRejectedValueOnce(reloadError);
 
+      return 'access-token';
+    });
+
+    expect(result).toBe('access-token');
     expect(store.getData()).toEqual({ refreshToken: 'rotated' });
     expect(runtime.session.get('refreshToken')).toBe('rotated');
     expect(runtime.session.hasPendingMutations).toBe(false);
+    expect(runtime.getResponseCookieHeader()).toBe('logto-session=session-id; Path=/; HttpOnly');
     expect(store.commitSession).toHaveBeenCalledOnce();
+  });
+
+  it('keeps the in-memory session when committed cookie storage has no persistent ID', async () => {
+    const getSession = vi
+      .fn()
+      .mockResolvedValueOnce(createSession<TestSessionData>({ notice: 'initial' }))
+      .mockResolvedValueOnce(createSession<TestSessionData>({ notice: 'initial' }))
+      .mockResolvedValueOnce(createSession<TestSessionData>({ notice: 'round-tripped' }));
+    const sessionStorage: SessionStorage<TestSessionData> = {
+      getSession,
+      commitSession: async () => 'logto-session=serialized; Path=/; HttpOnly',
+      destroySession: async () => 'logto-session=; Max-Age=0',
+    };
+    const runtime = await SessionRuntime.create({
+      cookieHeader: undefined,
+      sessionStorage,
+      sessionCoordinator: createProcessLocalSessionCoordinator(),
+    });
+
+    runtime.session.set('notice', 'in-memory');
+
+    await expect(
+      runtime.checkpoint(async (session) => {
+        expect(session.get('notice')).toBe('in-memory');
+      })
+    ).resolves.toBeUndefined();
+
+    expect(runtime.session.get('notice')).toBe('in-memory');
+    expect(runtime.session.id).toBe('');
+    expect(runtime.session.hasPendingMutations).toBe(false);
+    expect(getSession).toHaveBeenCalledTimes(3);
   });
 
   it('preserves flash consumption when destruction fails', async () => {

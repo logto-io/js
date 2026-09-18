@@ -47,7 +47,7 @@ export type SessionRuntimeOptions<
    * multi-instance coordination also requires shared server-side storage.
    */
   sessionStorage: SessionStorage<Data, FlashData>;
-  /** Serializes persistence operations for sessions loaded with a persistent identifier. */
+  /** Serializes operations whenever storage exposes a persistent session identifier. */
   sessionCoordinator: SessionCoordinator;
 }>;
 
@@ -65,9 +65,9 @@ const getRequestCookieHeader = (setCookieHeader: string) => {
  * Tracks one request's session mutations and coordinates persistence against the latest stored
  * state. Create one runtime per request and finalize it before producing the response.
  *
- * Cross-request coordination requires storage that returns a stable session ID. Cookie-only
- * sessions receive request-local keys because they cannot reload state committed by another
- * response.
+ * Every request serializes its own operations. When storage exposes a stable session ID,
+ * operations also use the configured coordinator. Cookie-only sessions remain request-local
+ * because they cannot reload state committed by another response.
  */
 export class SessionRuntime<
   Data extends SessionData = SessionData,
@@ -138,20 +138,14 @@ export class SessionRuntime<
       );
 
       const shouldCommit = mutationCountBeforeCommit > 0 || checkpointSession.hasPendingMutations;
-      const committedSessionOutcome = shouldCommit
-        ? await this.commitSession(latestSession, mutationCountBeforeCommit)
-        : undefined;
-
-      if (!shouldCommit) {
+      if (shouldCommit) {
+        await this.commitSession(latestSession, mutationCountBeforeCommit);
+      } else {
         this.session.adopt(latestSession, mutationCountBeforeCommit);
       }
 
       if (outcome.status === 'rejected') {
         throw outcome.error;
-      }
-
-      if (committedSessionOutcome?.status === 'rejected') {
-        throw committedSessionOutcome.error;
       }
 
       return outcome.value;
@@ -255,11 +249,11 @@ export class SessionRuntime<
       this.options.sessionStorage.getSession(this.currentCookieHeader)
     );
 
-    if (committedSessionOutcome.status === 'fulfilled') {
+    // Persistence and the response cookie are already committed. A failed reload must not turn a
+    // successful operation into an error; the next operation will retry through the new cookie.
+    if (committedSessionOutcome.status === 'fulfilled' && committedSessionOutcome.value.id) {
       this.session.adopt(committedSessionOutcome.value, 0);
     }
-
-    return committedSessionOutcome;
   }
 
   private async runSessionOperation<Result>(

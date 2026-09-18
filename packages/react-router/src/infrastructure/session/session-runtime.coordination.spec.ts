@@ -97,6 +97,7 @@ const createSessionBackend = (existingSessionId?: string) => {
     sessionStorage,
     sessionCoordinator,
     runExclusive,
+    getSession,
     getData: () => structuredClone(sessions.get(currentSessionId) ?? {}),
     commitSession,
     destroySession,
@@ -273,6 +274,29 @@ describe('infrastructure:session:SessionRuntime coordination', () => {
 
     expect(backend.runExclusive.mock.calls).toEqual([['session-id'], ['rotated-session-id']]);
     expect(runtime.session.id).toBe('rotated-session-id');
+    expect(backend.getData()).toEqual({ refreshToken: 'rotated' });
+  });
+
+  it('continues request-local coordination when the session ID disappears', async () => {
+    const backend = createSessionBackend('session-id');
+    const runtime = await SessionRuntime.create({
+      cookieHeader: 'logto-session=session-id',
+      sessionStorage: backend.sessionStorage,
+      sessionCoordinator: backend.sessionCoordinator,
+    });
+    const observeSessionId = vi.fn();
+
+    backend.getSession.mockResolvedValueOnce(createSession<TestSessionData>());
+
+    await runtime.checkpoint(async (session) => {
+      observeSessionId(session.id);
+      session.set('refreshToken', 'rotated');
+    });
+
+    expect(observeSessionId).toHaveBeenCalledOnce();
+    expect(observeSessionId).toHaveBeenCalledWith('');
+    expect(backend.runExclusive.mock.calls).toEqual([['session-id']]);
+    expect(runtime.session.id).toBe('session-id');
     expect(backend.getData()).toEqual({ refreshToken: 'rotated' });
   });
 });
