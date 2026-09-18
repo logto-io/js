@@ -1,5 +1,29 @@
 # @logto/sveltekit
 
+## 1.0.0
+
+### Major Changes
+
+- db78ef4: require Node.js 22 or later for server-side SDKs
+
+### Minor Changes
+
+- a9dca71: export `decodeAccessToken`, `ReservedResource`, and `CacheKey` from applicable platform SDK package
+  roots
+
+### Patch Changes
+
+- 9f877b2: clear local authentication state when remote sign-out cannot start
+- Updated dependencies [b694c0e]
+- Updated dependencies [a078735]
+- Updated dependencies [db78ef4]
+- Updated dependencies [3b32030]
+- Updated dependencies [a9dca71]
+- Updated dependencies [a9dca71]
+- Updated dependencies [1b9abbd]
+- Updated dependencies [9f877b2]
+  - @logto/node@4.0.0
+
 ## 0.3.24
 
 ### Patch Changes
