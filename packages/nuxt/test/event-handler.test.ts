@@ -13,7 +13,6 @@ const { callHook } = vi.hoisted(() => ({ callHook: vi.fn() }));
 
 mockNuxtImport('useRuntimeConfig', () =>
   vi.fn(() => ({
-    public: {},
     app: {
       baseURL: '/',
       buildAssetsDir: '/_nuxt/',
@@ -27,6 +26,7 @@ mockNuxtImport('useRuntimeConfig', () =>
         callback: '/callback',
       },
     },
+    public: { logto: { accessTokenPath: '/api/logto/access-token' } },
   }))
 );
 vi.mock('nitropack/runtime', () => ({
@@ -86,11 +86,10 @@ describe('event-handler', async () => {
 
   it('should apply request-specific sign-in options from the Nitro hook', async () => {
     const event = createH3Event();
-    getRequestURL.mockReturnValueOnce(
-      new URL('http://localhost:3000/sign-in?prompt=consent')
-    );
+    getRequestURL.mockReturnValueOnce(new URL('http://localhost:3000/sign-in?prompt=consent'));
     callHook.mockImplementationOnce(
       async (_name: string, context: LogtoSignInOptionsHookContext) => {
+        // eslint-disable-next-line @silverhand/fp/no-mutating-assign -- hook contract mutates the context
         Object.assign(context.signInOptions, {
           prompt: logtoNode.Prompt.Consent,
           extraParams: { source: 'request' },
@@ -127,6 +126,7 @@ describe('event-handler', async () => {
           callback: '/callback-1',
         },
       },
+      public: { logto: { accessTokenPath: '/api/logto/access-token' } },
     });
     getRequestURL.mockReturnValueOnce(new URL('http://localhost:3000/callback-1'));
     await handler(event);

@@ -6,7 +6,11 @@ import { defu } from 'defu';
 import { type NuxtModule } from 'nuxt/schema';
 
 import { defaults } from './runtime/utils/constants';
-import { type LogtoRuntimeConfig, type LogtoRuntimeConfigInput } from './runtime/utils/types';
+import {
+  type LogtoPublicRuntimeConfig,
+  type LogtoRuntimeConfig,
+  type LogtoRuntimeConfigInput,
+} from './runtime/utils/types';
 
 // This will not export the default export
 export * from '@logto/node';
@@ -35,12 +39,25 @@ const logtoModule: NuxtModule<LogtoRuntimeConfigInput> = defineNuxtModule<LogtoR
           signIn: '/sign-in',
           signOut: '/sign-out',
           callback: '/callback',
+          accessToken: '/api/logto/access-token',
         },
       } satisfies LogtoRuntimeConfigInput
     );
 
     // eslint-disable-next-line @silverhand/fp/no-mutation
     nuxt.options.runtimeConfig.logto = runtimeConfig;
+
+    /**
+     * `useLogtoAccessToken` runs in the browser, so the endpoint pathname has to be readable there.
+     * It is derived from the same value the event handler matches on, which keeps the two in sync
+     * even when the pathname is overridden at runtime.
+     */
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    nuxt.options.runtimeConfig.public.logto = defu(
+      // eslint-disable-next-line no-restricted-syntax -- The public config is augmented by this module
+      nuxt.options.runtimeConfig.public.logto as LogtoPublicRuntimeConfig | undefined,
+      { accessTokenPath: runtimeConfig.pathnames.accessToken }
+    ) satisfies LogtoPublicRuntimeConfig;
 
     const { resolve } = createResolver(import.meta.url);
 
