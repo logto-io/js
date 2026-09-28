@@ -1,5 +1,33 @@
 # Change Log
 
+## 3.1.0
+
+### Minor Changes
+
+- b694c0e: support configurable request timeouts through native fetch
+- a9dca71: export `decodeAccessToken`, `ReservedResource`, and `CacheKey` from applicable platform SDK package
+  roots
+- 1b9abbd: stabilize cache configuration across JavaScript SDKs
+  
+  Use the stable `cache` client adapter property. The deprecated `unstable_cache` alias remains
+  supported, with the stable property taking precedence. Node and edge clients continue to use an
+  endpoint-scoped process-local cache by default.
+  
+  Browser, React, Angular, Vue, Capacitor, and Chrome Extension clients can opt in through the stable
+  `enableCache` option. Browser caches are isolated by endpoint and application, and cache storage
+  failures no longer discard successful discovery responses.
+
+### Patch Changes
+
+- 9f877b2: clear local authentication state when remote sign-out cannot start
+- Updated dependencies [a078735]
+- Updated dependencies [3b32030]
+- Updated dependencies [a9dca71]
+- Updated dependencies [1b9abbd]
+- Updated dependencies [b694c0e]
+- Updated dependencies [9f877b2]
+  - @logto/client@3.2.0
+
 ## 3.0.14
 
 ### Patch Changes
