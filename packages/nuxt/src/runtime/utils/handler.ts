@@ -1,30 +1,26 @@
-import LogtoClient, { CookieStorage } from '@logto/node';
 import { trySafe } from '@silverhand/essentials';
-import { type H3Event, getRequestURL, getCookie, setCookie, sendRedirect } from 'h3';
+import { type H3Event, getRequestURL, sendRedirect } from 'h3';
 import type { RuntimeConfig } from 'nuxt/schema';
 
+import { handleAccessTokenRequest } from './access-token';
+import { createLogtoClient, resolveLogtoConfig } from './client';
 import { defaults } from './constants';
-import { type LogtoRuntimeConfig, type GetSignInOptions } from './types';
+import { type GetSignInOptions } from './types';
 
 export const logtoEventHandler = async (
   event: H3Event,
   config: RuntimeConfig,
   getSignInOptions?: GetSignInOptions
 ) => {
-  // eslint-disable-next-line no-restricted-syntax -- Optional fields are not inferred
-  const logtoConfig = config.logto as LogtoRuntimeConfig;
   const {
-    cookieName,
-    cookieEncryptionKey,
-    cookieSecure,
+    logtoConfig,
     fetchUserInfo,
     pathnames,
     postCallbackRedirectUri,
     postLogoutRedirectUri,
     customRedirectBaseUrl,
     signInOptions,
-    ...clientConfig
-  } = logtoConfig;
+  } = resolveLogtoConfig(config);
 
   const defaultValueKeys = Object.entries(defaults)
     // @ts-expect-error The type of `key` can only be string
@@ -54,24 +50,18 @@ export const logtoEventHandler = async (
     ? new URL(requestUrl.pathname + requestUrl.search + requestUrl.hash, customRedirectBaseUrl)
     : requestUrl;
 
-  const storage = new CookieStorage({
-    cookieKey: cookieName,
-    encryptionKey: cookieEncryptionKey,
-    isSecure: cookieSecure,
-    getCookie: async (name) => getCookie(event, name),
-    setCookie: async (name, value, options) => {
-      setCookie(event, name, value, options);
-    },
-  });
+  /**
+   * The access token request is answered before the user info is resolved: it only needs the
+   * session, and skipping the user info avoids an unnecessary request to the userinfo endpoint.
+   *
+   * The module mirrors the pathname into the public runtime config so that the composable and this
+   * handler cannot disagree about where the endpoint lives.
+   */
+  if (url.pathname === config.public.logto.accessTokenPath) {
+    return handleAccessTokenRequest(event, config);
+  }
 
-  await storage.init();
-
-  const logto = new LogtoClient(clientConfig, {
-    navigate: async (url) => {
-      await sendRedirect(event, url, 302);
-    },
-    storage,
-  });
+  const { logto } = await createLogtoClient(event, config);
 
   if (url.pathname === pathnames.signIn) {
     const requestSignInOptions = await getSignInOptions?.(event);

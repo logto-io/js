@@ -39,6 +39,27 @@ declare module 'nitropack/types' {
   }
 }
 
+/**
+ * The subset of the Logto configuration that must be readable from the browser.
+ *
+ * Only the pathname of the SDK-managed access token endpoint is exposed. Tokens, secrets, and any
+ * other credential stay in the server-only `logto` runtime config.
+ */
+export type LogtoPublicRuntimeConfig = {
+  /**
+   * The pathname of the SDK-managed access token endpoint. It always mirrors
+   * `pathnames.accessToken` so the composable and the event handler cannot disagree.
+   */
+  accessTokenPath: string;
+};
+
+declare module 'nuxt/schema' {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- interface required for module augmentation
+  interface PublicRuntimeConfig {
+    logto: LogtoPublicRuntimeConfig;
+  }
+}
+
 type DeepPartial<T> = T extends Record<string, unknown>
   ? {
       [P in keyof T]?: DeepPartial<T[P]>;
@@ -107,6 +128,16 @@ type LogtoModuleOptions = {
      * @default '/callback'
      */
     callback: string;
+    /**
+     * The URI that the client-side composable uses to obtain an access token.
+     *
+     * The request is handled by the same event handler as the other Logto pathnames. The value is
+     * exposed to the browser through the public runtime config, so it can also be overridden at
+     * runtime with `NUXT_PUBLIC_LOGTO_ACCESS_TOKEN_PATH`.
+     *
+     * @default '/api/logto/access-token'
+     */
+    accessToken: string;
   };
   /**
    * The options for the sign-in process.
