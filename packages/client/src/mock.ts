@@ -193,6 +193,10 @@ export class LogtoClientWithAccessors extends LogtoClient {
   public getAccessTokenMap(): Map<string, AccessToken> {
     return this.accessTokenMap;
   }
+
+  public async runReloadAccessTokenMap(): Promise<void> {
+    return this.reloadAccessTokenMap();
+  }
 }
 
 export const nocked = nock('https://logto.dev/', { allowUnmocked: true });

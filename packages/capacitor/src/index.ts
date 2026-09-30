@@ -94,6 +94,10 @@ export default class CapacitorLogtoClient extends LogtoBaseClient {
         await Preferences.remove({ key });
       },
     };
+
+    // The base client loaded the persisted access tokens from its default storage during
+    // construction; load them again from Preferences, where this client saves them.
+    void this.reloadAccessTokenMap();
   }
 
   /**

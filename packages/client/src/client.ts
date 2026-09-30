@@ -135,6 +135,11 @@ export class StandardLogtoClient {
 
   protected jwtVerifierInstance: JwtVerifier;
   protected readonly accessTokenMap = new Map<string, AccessToken>();
+  /**
+   * Resolves once the persisted access tokens are loaded into `accessTokenMap`. Access token
+   * lookups wait for it, so a lookup right after construction doesn't miss a stored token.
+   */
+  private accessTokenMapLoading: Promise<void> = Promise.resolve();
 
   get jwtVerifier() {
     return this.jwtVerifierInstance;
@@ -151,7 +156,7 @@ export class StandardLogtoClient {
     });
     this.jwtVerifierInstance = buildJwtVerifier(this);
 
-    void this.loadAccessTokenMap();
+    this.accessTokenMapLoading = this.loadAccessTokenMap();
   }
 
   /**
@@ -422,6 +427,23 @@ export class StandardLogtoClient {
     await this.adapter.navigate(url, { redirectUri: postLogoutRedirectUri, for: 'sign-out' });
   }
 
+  /**
+   * Reload the persisted access tokens from `adapter.storage`. Subclasses that replace the storage
+   * adapter after construction must call this, since the constructor loaded the tokens from the
+   * storage it was given.
+   */
+  protected async reloadAccessTokenMap(): Promise<void> {
+    const previousLoading = this.accessTokenMapLoading;
+    const reload = async () => {
+      // Run after any load in progress so an earlier load can't overwrite this one.
+      await previousLoading;
+      this.accessTokenMap.clear();
+      await this.loadAccessTokenMap();
+    };
+    this.accessTokenMapLoading = reload();
+    return this.accessTokenMapLoading;
+  }
+
   protected async getSignInSession(): Promise<Nullable<LogtoSignInSessionItem>> {
     const jsonItem = await this.adapter.storage.getItem('signInSession');
 
@@ -511,13 +533,14 @@ export class StandardLogtoClient {
   }
 
   private async loadAccessTokenMap() {
-    const raw = await this.adapter.storage.getItem('accessToken');
-
-    if (!raw) {
-      return;
-    }
-
     try {
+      // A failed read leaves the map empty; tokens can be fetched again with the refresh token.
+      const raw = await this.adapter.storage.getItem('accessToken');
+
+      if (!raw) {
+        return;
+      }
+
       const json: unknown = JSON.parse(raw);
 
       if (!isLogtoAccessTokenMap(json)) {
@@ -547,6 +570,8 @@ export class StandardLogtoClient {
       throw new LogtoClientError('not_authenticated');
     }
 
+    await this.accessTokenMapLoading;
+
     const accessTokenKey = buildAccessTokenKey(resource, organizationId);
     const accessToken = this.accessTokenMap.get(accessTokenKey);
 
@@ -574,6 +599,8 @@ export class StandardLogtoClient {
   }
 
   async #clearAccessToken(): Promise<void> {
+    // A load still in progress would otherwise restore the tokens after they're cleared.
+    await this.accessTokenMapLoading;
     this.accessTokenMap.clear();
     await this.adapter.storage.removeItem('accessToken');
   }
@@ -613,6 +640,8 @@ export class StandardLogtoClient {
     await this.setRefreshToken(refreshToken ?? null);
     await this.setIdToken(idToken);
 
+    // A load still in progress would otherwise replace the token issued here.
+    await this.accessTokenMapLoading;
     this.accessTokenMap.set(accessTokenKey, {
       token: accessToken,
       scope,

@@ -1,5 +1,6 @@
 import { App } from '@capacitor/app';
 import { Browser } from '@capacitor/browser';
+import { Preferences } from '@capacitor/preferences';
 import LogtoBaseClient, { Prompt } from '@logto/browser';
 
 import CapacitorLogtoClient from './index.js';
@@ -101,6 +102,38 @@ describe('CapacitorLogtoClient', () => {
       url: 'https://example.com',
       windowName: '_self',
       presentationStyle: 'popover',
+    });
+  });
+
+  describe('access tokens', () => {
+    afterEach(() => {
+      vi.mocked(Preferences.get).mockResolvedValue({ value: null });
+      vi.restoreAllMocks();
+    });
+
+    it('should use the access token persisted in Preferences instead of refreshing it', async () => {
+      const stored: Record<string, string> = {
+        idToken: 'id_token_value',
+        refreshToken: 'refresh_token_value',
+        accessToken: JSON.stringify({
+          '@https://api.example.com': {
+            token: 'stored_access_token',
+            scope: '',
+            expiresAt: Date.now() / 1000 + 1000,
+          },
+        }),
+      };
+      vi.mocked(Preferences.get).mockImplementation(async ({ key }) => ({
+        value: stored[key] ?? null,
+      }));
+      const fetchSpy = vi.spyOn(globalThis, 'fetch');
+
+      const client = createClient();
+
+      await expect(client.getAccessToken('https://api.example.com')).resolves.toBe(
+        'stored_access_token'
+      );
+      expect(fetchSpy).not.toHaveBeenCalled();
     });
   });
 
