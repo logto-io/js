@@ -1,5 +1,41 @@
 # @logto/nuxt
 
+## 2.0.0
+
+### Major Changes
+
+- db78ef4: require Node.js 22 or later for server-side SDKs
+
+### Minor Changes
+
+- c8996b4: support request-specific sign-in options
+  
+  Add module-level `signInOptions` defaults and a `logto:sign-in-options` Nitro hook for per-request
+  overrides.
+- d6ca804: support client-side access token retrieval with on-demand refresh
+  
+  Add the `useLogtoAccessToken` composable backed by an SDK-managed endpoint, so browser code can
+  obtain a valid access token without a page reload or a hand-written token endpoint.
+  
+  A still-valid token is reused; an expired or missing one is exchanged through the server-side
+  session, and the renewed session is persisted to the response cookies before the request completes.
+  The refresh token and the application secret never reach the browser. Concurrent calls for the same
+  token share a single request, and a session that can no longer be refreshed answers `401` with the
+  `not_authenticated` error code so the application can start a sign-in instead of retrying.
+
+### Patch Changes
+
+- 9f877b2: clear local authentication state when remote sign-out cannot start
+- Updated dependencies [b694c0e]
+- Updated dependencies [a078735]
+- Updated dependencies [db78ef4]
+- Updated dependencies [3b32030]
+- Updated dependencies [a9dca71]
+- Updated dependencies [a9dca71]
+- Updated dependencies [1b9abbd]
+- Updated dependencies [9f877b2]
+  - @logto/node@4.0.0
+
 ## 1.2.11
 
 ### Patch Changes
