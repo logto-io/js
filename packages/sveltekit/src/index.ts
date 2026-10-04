@@ -153,7 +153,7 @@ export const handleLogto = (
       buildLogtoClient?.(event) ??
       new LogtoClient(config, {
         navigate: (url) => {
-          redirect(302, url);
+          redirect(302, url, {external: true});
         },
         storage,
       });
