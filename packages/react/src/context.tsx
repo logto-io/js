@@ -6,6 +6,17 @@ export type LogtoContextProps = {
   logtoClient?: LogtoClient;
   /** Whether the user is authenticated or not. */
   isAuthenticated: boolean;
+  /**
+   * Whether the client has finished its initial read of the authentication state from storage. It is
+   * `false` until that read resolves, then `true` forever.
+   *
+   * @remarks
+   * This answers "do I already know whether there is a session?", a different question from
+   * {@link LogtoContextProps.isLoading} ("is anything in flight?"). It is **not** an authorization
+   * signal: {@link LogtoContextProps.isAuthenticated} is the one for that, and access must keep being
+   * enforced on the server.
+   */
+  isInitialized: boolean;
   /** Whether the context has any pending requests. It will be `true` if there is at least one request pending. */
   isLoading: boolean;
   /** The error that occurred during the last request. If there was no error, this will be `undefined`. */
@@ -41,6 +52,7 @@ export const throwContextError = (): never => {
 export const LogtoContext = createContext<LogtoContextProps>({
   logtoClient: undefined,
   isAuthenticated: false,
+  isInitialized: false,
   isLoading: false,
   error: undefined,
   setIsAuthenticated: throwContextError,

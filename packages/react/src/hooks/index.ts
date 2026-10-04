@@ -12,6 +12,7 @@ type OptionalPromiseReturn<T> = {
 
 type Logto = {
   isAuthenticated: boolean;
+  isInitialized: boolean;
   isLoading: boolean;
   error?: Error;
 } & OptionalPromiseReturn<
@@ -52,8 +53,15 @@ const useErrorHandler = () => {
 };
 
 const useHandleSignInCallback = (callback?: () => void) => {
-  const { logtoClient, isAuthenticated, error, setIsAuthenticated, isLoading, setIsLoading } =
-    useContext(LogtoContext);
+  const {
+    logtoClient,
+    isAuthenticated,
+    isInitialized,
+    error,
+    setIsAuthenticated,
+    isLoading,
+    setIsLoading,
+  } = useContext(LogtoContext);
   const { handleError } = useErrorHandler();
   // eslint-disable-next-line unicorn/no-useless-undefined
   const callbackRef = useRef<Optional<() => void>>(undefined);
@@ -100,13 +108,21 @@ const useHandleSignInCallback = (callback?: () => void) => {
   return {
     isLoading,
     isAuthenticated,
+    isInitialized,
     error,
   };
 };
 
 const useLogto = (): Logto => {
-  const { logtoClient, isAuthenticated, error, isLoading, setIsAuthenticated, setIsLoading } =
-    useContext(LogtoContext);
+  const {
+    logtoClient,
+    isAuthenticated,
+    isInitialized,
+    error,
+    isLoading,
+    setIsAuthenticated,
+    setIsLoading,
+  } = useContext(LogtoContext);
   const { handleError } = useErrorHandler();
 
   const client = logtoClient ?? throwContextError();
@@ -163,6 +179,7 @@ const useLogto = (): Logto => {
 
   return {
     isAuthenticated,
+    isInitialized,
     isLoading,
     error,
     ...methods,
