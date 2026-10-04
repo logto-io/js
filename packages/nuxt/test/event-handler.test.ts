@@ -1,0 +1,138 @@
+import { ServerResponse, IncomingMessage } from 'node:http';
+import { Socket } from 'node:net';
+
+import * as logtoNode from '@logto/node';
+import { mockNuxtImport } from '@nuxt/test-utils/runtime';
+import { createEvent } from 'h3';
+import { describe, expect, it, vi } from 'vitest';
+
+import { useRuntimeConfig } from '#imports';
+import type { LogtoSignInOptionsHookContext } from '@/src/runtime/utils/types';
+
+const { callHook } = vi.hoisted(() => ({ callHook: vi.fn() }));
+
+mockNuxtImport('useRuntimeConfig', () =>
+  vi.fn(() => ({
+    app: {
+      baseURL: '/',
+      buildAssetsDir: '/_nuxt/',
+      cdnURL: '',
+    },
+    logto: {
+      cookieEncryptionKey: 'foo',
+      pathnames: {
+        signIn: '/sign-in',
+        signOut: '/sign-out',
+        callback: '/callback',
+      },
+    },
+    public: { logto: { accessTokenPath: '/api/logto/access-token' } },
+  }))
+);
+vi.mock('nitropack/runtime', () => ({
+  useNitroApp: vi.fn(() => ({ hooks: { callHook } })),
+}));
+const cookies = new Map();
+const getRequestURL = vi.fn(() => new URL('http://localhost:3000'));
+const sendRedirect = vi.fn();
+
+vi.doMock('h3', async (importOriginal) => ({
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  ...(await importOriginal<{}>()),
+  defineEventHandler: vi.fn((handler: unknown) => handler),
+  getRequestURL,
+  getCookie: vi.fn((_event: unknown, name: string) => cookies.get(name)),
+  setCookie: vi.fn((_event: unknown, name: string, value: string) => {
+    cookies.set(name, value);
+  }),
+  sendRedirect,
+}));
+
+const { default: handler } = await import('@/src/runtime/server/event-handler');
+
+const LogtoClient = vi.fn();
+
+vi.spyOn(logtoNode, 'default', 'get').mockImplementation(() => {
+  /* eslint-disable @silverhand/fp/no-mutation */
+  LogtoClient.prototype.signIn = vi.fn();
+  LogtoClient.prototype.isAuthenticated = vi.fn().mockResolvedValue(false);
+  LogtoClient.prototype.handleSignInCallback = vi.fn();
+  /* eslint-enable @silverhand/fp/no-mutation */
+  return LogtoClient;
+});
+
+const createH3Event = () => {
+  const incoming = new IncomingMessage(new Socket());
+  const response = new ServerResponse(incoming);
+  return createEvent(incoming, response);
+};
+
+describe('event-handler', async () => {
+  it('should inject logto client', async () => {
+    const event = createH3Event();
+    await handler(event);
+
+    expect(event.context.logtoClient).toBeInstanceOf(LogtoClient);
+  });
+
+  it('should handle sign-in', async () => {
+    const event = createH3Event();
+    getRequestURL.mockReturnValueOnce(new URL('http://localhost:3000/sign-in'));
+    await handler(event);
+    expect(LogtoClient.prototype.signIn).toHaveBeenCalledWith({
+      redirectUri: 'http://localhost:3000/callback',
+    });
+  });
+
+  it('should apply request-specific sign-in options from the Nitro hook', async () => {
+    const event = createH3Event();
+    getRequestURL.mockReturnValueOnce(new URL('http://localhost:3000/sign-in?prompt=consent'));
+    callHook.mockImplementationOnce(
+      async (_name: string, context: LogtoSignInOptionsHookContext) => {
+        // eslint-disable-next-line @silverhand/fp/no-mutating-assign -- hook contract mutates the context
+        Object.assign(context.signInOptions, {
+          prompt: logtoNode.Prompt.Consent,
+          extraParams: { source: 'request' },
+        });
+      }
+    );
+
+    await handler(event);
+
+    expect(callHook).toHaveBeenCalledWith('logto:sign-in-options', {
+      event,
+      signInOptions: {
+        prompt: 'consent',
+        extraParams: { source: 'request' },
+      },
+    });
+    expect(LogtoClient.prototype.signIn).toHaveBeenCalledWith({
+      prompt: 'consent',
+      extraParams: { source: 'request' },
+      redirectUri: 'http://localhost:3000/callback',
+    });
+  });
+
+  it('should handle callback with custom callback pathname', async () => {
+    const event = createH3Event();
+    vi.mocked(useRuntimeConfig).mockReturnValueOnce({
+      ...useRuntimeConfig(),
+      logto: {
+        postCallbackRedirectUri: '/',
+        cookieEncryptionKey: 'foo',
+        pathnames: {
+          signIn: '/sign-in',
+          signOut: '/sign-out',
+          callback: '/callback-1',
+        },
+      },
+      public: { logto: { accessTokenPath: '/api/logto/access-token' } },
+    });
+    getRequestURL.mockReturnValueOnce(new URL('http://localhost:3000/callback-1'));
+    await handler(event);
+    expect(LogtoClient.prototype.handleSignInCallback).toHaveBeenCalledWith(
+      'http://localhost:3000/callback-1'
+    );
+    expect(sendRedirect).toHaveBeenCalledWith(event, '/', 302);
+  });
+});

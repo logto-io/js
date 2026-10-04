@@ -1,0 +1,496 @@
+/* eslint-disable max-lines */
+import { CookieStorage, Prompt, type SignInOptions } from '@logto/node';
+import type { NextApiResponse } from 'next';
+import { testApiHandler } from 'next-test-api-route-handler';
+
+import LogtoClient from './index.js';
+import type { ErrorHandler, GetSignInOptions, LogtoNextConfig } from './types.js';
+
+const signInUrl = 'http://mock-logto-server.com/sign-in';
+
+const configs: LogtoNextConfig = {
+  appId: 'app_id_value',
+  endpoint: 'https://logto.dev',
+  baseUrl: 'http://localhost:3000',
+  cookieSecret: 'complex_password_at_least_32_characters_long',
+  cookieSecure: process.env.NODE_ENV === 'production',
+};
+
+const signIn = vi.fn<(options?: SignInOptions) => void>();
+const handleSignInCallback = vi.fn();
+const getIdTokenClaims = vi.fn(() => ({
+  sub: 'user_id',
+}));
+const signOut = vi.fn();
+const getContext = vi.fn(async () => true);
+const getAccessToken = vi.fn();
+const getAccessTokenClaims = vi.fn();
+const getOrganizationToken = vi.fn();
+const getOrganizationTokenClaims = vi.fn();
+
+const mockResponse = (_: unknown, response: NextApiResponse) => {
+  response.status(200).end();
+};
+
+type Adapter = {
+  navigate: (url: string) => void;
+};
+
+vi.mock('@logto/node', async (importOriginal) => ({
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+  ...(await importOriginal<typeof import('@logto/node')>()),
+  // https://stackoverflow.com/a/70705719/12514940
+  __esModule: true,
+  default: vi.fn(function (_: unknown, { navigate }: Adapter) {
+    return {
+      signIn: (options?: SignInOptions) => {
+        navigate(
+          options?.interactionMode
+            ? `${signInUrl}?interactionMode=${options.interactionMode}`
+            : signInUrl
+        );
+        signIn(options);
+      },
+      // Delegate to the spy and hand it `navigate` so a test can simulate the NodeClient
+      // navigating during callback processing (e.g. a configured postRedirectUri). The URL flows
+      // back through this per-request callback, never via shared client instance state.
+      handleSignInCallback: (url: string) => handleSignInCallback(url, navigate),
+      getContext,
+      getAccessToken,
+      getAccessTokenClaims,
+      getOrganizationToken,
+      getOrganizationTokenClaims,
+      getIdTokenClaims,
+      signOut: async () => {
+        await signOut();
+        navigate(configs.baseUrl);
+      },
+      isAuthenticated: true,
+    };
+  }),
+}));
+
+describe('Next', () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+    vi.restoreAllMocks();
+  });
+
+  it('creates an instance without crash', () => {
+    expect(() => new LogtoClient(configs)).not.toThrow();
+  });
+
+  describe('handleSignIn', () => {
+    it('should redirect to Logto sign in url and save session', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        pagesHandler: client.handleSignIn(),
+        url: '/api/logto/sign-in',
+        test: async ({ fetch }) => {
+          const { headers } = await fetch({ method: 'GET', redirect: 'manual' });
+          expect(headers.get('location')).toEqual(signInUrl);
+        },
+      });
+      expect(signIn).toHaveBeenCalled();
+    });
+
+    it('should redirect to Logto sign in url with interactionMode and save session', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        pagesHandler: client.handleSignIn(undefined, 'signUp'),
+        url: '/api/logto/sign-in',
+        test: async ({ fetch }) => {
+          const { headers } = await fetch({ method: 'GET', redirect: 'manual' });
+          expect(headers.get('location')).toEqual(`${signInUrl}?interactionMode=signUp`);
+        },
+      });
+      expect(signIn).toHaveBeenCalled();
+    });
+  });
+
+  describe('handleSignInCallback', () => {
+    it('should call client.handleSignInCallback and redirect to home', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        pagesHandler: client.handleSignInCallback(),
+        url: '/api/logto/sign-in-callback',
+        test: async ({ fetch }) => {
+          const { headers } = await fetch({ method: 'GET', redirect: 'manual' });
+          expect(headers.get('location')).toEqual(configs.baseUrl);
+        },
+      });
+      expect(handleSignInCallback).toHaveBeenCalled();
+    });
+
+    it('should redirect to navigateUrl when postRedirectUri is set', async () => {
+      const customRedirectUrl = 'http://localhost:3000/dashboard';
+      const client = new LogtoClient(configs);
+
+      // Simulate the NodeClient calling navigate() during callback processing (e.g. a configured
+      // postRedirectUri). The navigation URL flows back through the per-request adapter callback,
+      // not via shared instance state.
+      handleSignInCallback.mockImplementationOnce(
+        (_url: string, navigate: (url: string) => void) => {
+          navigate(customRedirectUrl);
+        }
+      );
+
+      await testApiHandler({
+        pagesHandler: client.handleSignInCallback(),
+        url: '/api/logto/sign-in-callback',
+        test: async ({ fetch }) => {
+          const { headers } = await fetch({ method: 'GET', redirect: 'manual' });
+          expect(headers.get('location')).toEqual(customRedirectUrl);
+        },
+      });
+      expect(handleSignInCallback).toHaveBeenCalled();
+    });
+  });
+
+  describe('getAccessToken', () => {
+    it('should call client.getAccessToken', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        pagesHandler: async (request, response) => {
+          await client.getAccessToken(request, response, 'resource', 'organization_id');
+          response.end();
+        },
+        url: '/api/logto/get-access-token',
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET' });
+          expect(getAccessToken).toHaveBeenCalledWith('resource', 'organization_id');
+        },
+      });
+    });
+  });
+
+  describe('getAccessTokenClaims', () => {
+    it('should call client.getAccessTokenClaims', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        pagesHandler: async (request, response) => {
+          await client.getAccessTokenClaims(request, response, 'resource', 'organization_id');
+          response.end();
+        },
+        url: '/api/logto/get-access-token-claims',
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET' });
+          expect(getAccessTokenClaims).toHaveBeenCalledWith('resource', 'organization_id');
+        },
+      });
+    });
+  });
+
+  describe('getIdTokenClaims', () => {
+    it('should call client.getIdTokenClaims', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        pagesHandler: async (request, response) => {
+          await client.getIdTokenClaims(request, response);
+          response.end();
+        },
+        url: '/api/logto/get-id-token-claims',
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET' });
+          expect(getIdTokenClaims).toHaveBeenCalledOnce();
+        },
+      });
+    });
+  });
+
+  describe('getOrganizationToken', () => {
+    it('should call client.getOrganizationToken', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        pagesHandler: async (request, response) => {
+          await client.getOrganizationToken(request, response, 'organization_id');
+          response.end();
+        },
+        url: '/api/logto/get-access-token',
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET' });
+          expect(getOrganizationToken).toHaveBeenCalledWith('organization_id');
+        },
+      });
+    });
+  });
+
+  describe('getOrganizationTokenClaims', () => {
+    it('should call client.getOrganizationTokenClaims', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        pagesHandler: async (request, response) => {
+          await client.getOrganizationTokenClaims(request, response, 'organization_id');
+          response.end();
+        },
+        url: '/api/logto/get-organization-token-claims',
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET' });
+          expect(getOrganizationTokenClaims).toHaveBeenCalledWith('organization_id');
+        },
+      });
+    });
+  });
+
+  describe('withLogtoApiRoute', () => {
+    it('should assign `user` to `request`', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        pagesHandler: client.withLogtoApiRoute((request, response) => {
+          expect(request.user).toBeDefined();
+          response.end();
+        }),
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET', redirect: 'manual' });
+        },
+      });
+      expect(getContext).toHaveBeenCalled();
+    });
+
+    it('custom error handler', async () => {
+      getContext.mockRejectedValueOnce(new Error('error'));
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        pagesHandler: client.withLogtoApiRoute(
+          (request, response) => {
+            expect(request.user).toBeDefined();
+            response.end();
+          },
+          undefined,
+          (request, response, error) => {
+            response.send(error instanceof Error ? error.message : 'unknown error');
+          }
+        ),
+        test: async ({ fetch }) => {
+          const response = await fetch({ method: 'GET', redirect: 'manual' });
+          await expect(response.text()).resolves.toBe('error');
+        },
+      });
+      expect(getContext).toHaveBeenCalled();
+    });
+  });
+
+  describe('handleSignOut', () => {
+    it('should redirect to Logto sign out url', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        pagesHandler: client.handleSignOut(),
+        url: '/api/logto/sign-out',
+        test: async ({ fetch }) => {
+          const { headers } = await fetch({ method: 'GET', redirect: 'manual' });
+          expect(headers.get('location')).toEqual(configs.baseUrl);
+        },
+      });
+      expect(signOut).toHaveBeenCalled();
+    });
+
+    it('should destroy storage when sign-out fails', async () => {
+      const signOutError = new Error('OIDC discovery failed');
+      const destroy = vi.spyOn(CookieStorage.prototype, 'destroy');
+      signOut.mockRejectedValueOnce(signOutError);
+      const client = new LogtoClient(configs);
+
+      await testApiHandler({
+        pagesHandler: client.handleSignOut(undefined, (_request, response, error) => {
+          expect(error).toBe(signOutError);
+          response.status(500).end();
+        }),
+        url: '/api/logto/sign-out',
+        test: async ({ fetch }) => {
+          const response = await fetch({ method: 'GET', redirect: 'manual' });
+          expect(response.status).toBe(500);
+          expect(response.headers.get('Set-Cookie')).toContain('logto_app_id_value=');
+        },
+      });
+
+      expect(destroy).toHaveBeenCalledOnce();
+    });
+  });
+
+  describe('handleAuthRoutes', () => {
+    it('should call handleSignIn for "sign-in"', async () => {
+      const client = new LogtoClient(configs);
+      const handleSignIn = vi.spyOn(client, 'handleSignIn').mockImplementation(() => mockResponse);
+      const getSignInOptions = vi.fn<GetSignInOptions>((request) => ({
+        prompt: request.query.prompt === 'consent' ? Prompt.Consent : Prompt.Login,
+        extraParams: { source: 'request' },
+      }));
+      await testApiHandler({
+        pagesHandler: client.handleAuthRoutes({
+          signInOptions: { prompt: Prompt.Login },
+          getSignInOptions,
+        }),
+        paramsPatcher: (parameters) => {
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          parameters.action = 'sign-in';
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          parameters.prompt = 'consent';
+        },
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET', redirect: 'manual' });
+          expect(getSignInOptions).toHaveBeenCalledWith(expect.anything(), 'signIn');
+          expect(handleSignIn).toHaveBeenCalledWith({
+            prompt: Prompt.Consent,
+            extraParams: { source: 'request' },
+            redirectUri: `${configs.baseUrl}/api/logto/sign-in-callback`,
+          });
+        },
+      });
+    });
+
+    it('should call handleSignIn for "sign-up"', async () => {
+      const client = new LogtoClient(configs);
+      vi.spyOn(client, 'handleSignIn').mockImplementation(() => mockResponse);
+      await testApiHandler({
+        pagesHandler: client.handleAuthRoutes({
+          getSignInOptions: () => ({ firstScreen: 'signIn' }),
+        }),
+        paramsPatcher: (parameters) => {
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          parameters.action = 'sign-up';
+        },
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET', redirect: 'manual' });
+          expect(client.handleSignIn).toHaveBeenCalledWith({
+            redirectUri: `${configs.baseUrl}/api/logto/sign-in-callback`,
+            firstScreen: 'register',
+          });
+        },
+      });
+    });
+
+    it('should route request-specific option errors through onError', async () => {
+      const resolverError = new Error('failed to resolve sign-in options');
+      const onError = vi.fn<ErrorHandler>((_request, response, error) => {
+        expect(error).toBe(resolverError);
+        response.status(503).end();
+      });
+      const client = new LogtoClient(configs);
+
+      await testApiHandler({
+        pagesHandler: client.handleAuthRoutes({
+          getSignInOptions: async () => {
+            throw resolverError;
+          },
+          onError,
+        }),
+        paramsPatcher: (parameters) => {
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          parameters.action = 'sign-in';
+        },
+        test: async ({ fetch }) => {
+          const response = await fetch({ method: 'GET' });
+          expect(response.status).toBe(503);
+        },
+      });
+
+      expect(onError).toHaveBeenCalledOnce();
+    });
+
+    it('should call handleSignInCallback for "sign-in-callback"', async () => {
+      const client = new LogtoClient(configs);
+      vi.spyOn(client, 'handleSignInCallback').mockImplementation(() => mockResponse);
+      await testApiHandler({
+        pagesHandler: client.handleAuthRoutes(),
+        paramsPatcher: (parameters) => {
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          parameters.action = 'sign-in-callback';
+        },
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET', redirect: 'manual' });
+          expect(client.handleSignInCallback).toHaveBeenCalled();
+        },
+      });
+    });
+
+    it('should call handleSignOut for "sign-out"', async () => {
+      const client = new LogtoClient(configs);
+      vi.spyOn(client, 'handleSignOut').mockImplementation(() => mockResponse);
+      await testApiHandler({
+        pagesHandler: client.handleAuthRoutes(),
+        paramsPatcher: (parameters) => {
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          parameters.action = 'sign-out';
+        },
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET', redirect: 'manual' });
+          expect(client.handleSignOut).toHaveBeenCalled();
+        },
+      });
+    });
+
+    it('should call handleUser for "user"', async () => {
+      const client = new LogtoClient(configs);
+      const onError = vi.fn();
+      vi.spyOn(client, 'handleUser').mockImplementation(() => mockResponse);
+      await testApiHandler({
+        pagesHandler: client.handleAuthRoutes({ fetchUserInfo: true }, onError),
+        paramsPatcher: (parameters) => {
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          parameters.action = 'user';
+        },
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET', redirect: 'manual' });
+          expect(client.handleUser).toHaveBeenCalledWith({ fetchUserInfo: true });
+        },
+      });
+    });
+  });
+
+  describe('createNodeClientFromNextApi', () => {
+    it('should get node client without crash', async () => {
+      const client = new LogtoClient(configs);
+      await testApiHandler({
+        pagesHandler: async (request, response) => {
+          await client.createNodeClientFromNextApi(request, response);
+          response.end();
+        },
+        test: async ({ fetch }) => {
+          await expect(fetch({ method: 'GET' })).resolves.not.toThrow();
+        },
+      });
+    });
+
+    // Regression test for the singleton-storage race: concurrent requests must not share
+    // per-request state. Two clients are created before either is awaited, so request B's
+    // setup interleaves through request A's `await storage.init()` yield point. When state was
+    // stored on the client instance, both requests ended up with the same (last-assigned)
+    // storage, causing authenticated users to intermittently report `isAuthenticated: false`.
+    it('keeps storage isolated across concurrent requests', async () => {
+      const client = new LogtoClient(configs);
+
+      const makeRequestAndResponse = (cookieValue: string) => ({
+        request: {
+          cookies: { [`logto_${configs.appId}`]: cookieValue },
+          headers: {},
+        } as unknown as Parameters<typeof client.createNodeClientFromNextApi>[0],
+        response: { setHeader: vi.fn() } as unknown as Parameters<
+          typeof client.createNodeClientFromNextApi
+        >[1],
+      });
+
+      const first = makeRequestAndResponse('cookie-a');
+      const second = makeRequestAndResponse('cookie-b');
+
+      // The public `createNodeClientFromNextApi` only exposes the node client, so reach the
+      // private request-scoped helper (which also returns the storage) to assert isolation.
+      const createRequestScopedClient = (
+        client as unknown as {
+          createRequestScopedClient: (
+            request: Parameters<typeof client.createNodeClientFromNextApi>[0],
+            response: Parameters<typeof client.createNodeClientFromNextApi>[1]
+          ) => Promise<{ nodeClient: unknown; storage: unknown }>;
+        }
+      ).createRequestScopedClient.bind(client);
+
+      const [resultA, resultB] = await Promise.all([
+        createRequestScopedClient(first.request, first.response),
+        createRequestScopedClient(second.request, second.response),
+      ]);
+
+      expect(resultA.storage).not.toBe(resultB.storage);
+      expect(resultA.nodeClient).not.toBe(resultB.nodeClient);
+    });
+  });
+});
+/* eslint-enable max-lines */

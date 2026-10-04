@@ -1,0 +1,61 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+node_modules
+/.pnp
+.pnp.js
+
+# testing
+/packages/*/coverage
+
+# production
+/packages/*/dist
+/packages/*/lib
+/packages/*/build
+/packages/*/tmp
+/packages/*/out-tsc
+/packages/*/bazel-out
+
+# sample lockfile
+/packages/*-sample/pnpm-lock.yaml
+
+# Next dev/build outputs
+next-env.d.ts
+
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+
+# capacitor platforms
+/packages/capacitor-sample/android
+/packages/capacitor-sample/ios
+
+# logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# superpowers / agent workspace
+/docs/superpowers
+
+# misc
+.angular/cache
+.sass-cache/
+cache
+.*cache
+.DS_Store
+Thumbs.db
+.env
+.env.*
+!.env.example
+.idea/
+*.pem
+.history
+.vercel
+.next
+*.local

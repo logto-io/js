@@ -1,0 +1,13 @@
+{
+  "extends": "@silverhand/ts-config/tsconfig.base",
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+    "module": "esnext",
+    "outDir": "lib",
+    "types": ["chrome-types", "vitest/globals"]
+  },
+  "include": [
+    "src",
+    "vitest.config.ts"
+  ]
+}

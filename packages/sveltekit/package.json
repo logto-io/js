@@ -1,0 +1,64 @@
+{
+  "name": "@logto/sveltekit",
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "type": "module",
+  "main": "./lib/index.js",
+  "module": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    "types": "./lib/index.d.ts",
+    "import": "./lib/index.js",
+    "require": "./lib/index.js",
+    "default": "./lib/index.js",
+    "svelte": "./lib/index.js"
+  },
+  "files": [
+    "lib"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/logto-io/js.git",
+    "directory": "packages/sveltekit"
+  },
+  "scripts": {
+    "dev:tsc": "tsc -p tsconfig.build.json -w --preserveWatchOutput",
+    "precommit": "lint-staged",
+    "check": "tsc --noEmit",
+    "build": "rm -rf lib/ && tsc -p tsconfig.build.json",
+    "lint": "eslint --ext .ts src",
+    "test": "vitest src",
+    "test:coverage": "vitest src --coverage",
+    "prepack": "pnpm build && pnpm test"
+  },
+  "devDependencies": {
+    "@silverhand/eslint-config": "^6.0.1",
+    "@silverhand/ts-config": "^6.0.0",
+    "@sveltejs/kit": "^2.70.2",
+    "@swc/core": "^1.6.5",
+    "@types/cookie": "^0.6.0",
+    "@types/node": "^22.0.0",
+    "@vitest/coverage-v8": "4.1.11",
+    "eslint": "^8.57.0",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.3.3",
+    "vitest": "^4.1.11"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc",
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@sveltejs/kit": "^2.52.2"
+  },
+  "dependencies": {
+    "@logto/node": "workspace:^"
+  }
+}

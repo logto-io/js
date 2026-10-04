@@ -1,0 +1,75 @@
+{
+  "name": "@logto/express",
+  "version": "4.0.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "type": "module",
+  "module": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    "types": "./lib/index.d.ts",
+    "import": "./lib/index.js",
+    "default": "./lib/index.js"
+  },
+  "files": [
+    "lib"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/logto-io/js.git",
+    "directory": "packages/express"
+  },
+  "scripts": {
+    "dev:tsc": "tsc -p tsconfig.build.json -w --preserveWatchOutput",
+    "precommit": "lint-staged",
+    "check": "tsc --noEmit",
+    "build": "rm -rf lib/ && tsc -p tsconfig.build.json --noEmit && rollup -c",
+    "lint": "eslint --ext .ts src",
+    "test": "vitest",
+    "test:coverage": "vitest --silent --coverage",
+    "prepack": "pnpm build && pnpm test"
+  },
+  "dependencies": {
+    "@logto/node": "workspace:^"
+  },
+  "devDependencies": {
+    "@silverhand/eslint-config": "^6.0.1",
+    "@silverhand/ts-config": "^6.0.0",
+    "@silverhand/ts-config-react": "^6.0.0",
+    "@swc/core": "^1.6.5",
+    "@types/cookie-parser": "^1.4.3",
+    "@types/express": "^5.0.0",
+    "@types/express-session": "^1.17.5",
+    "@types/supertest": "^6.0.0",
+    "@vitest/coverage-v8": "4.1.11",
+    "cookie-parser": "^1.4.6",
+    "eslint": "^8.57.0",
+    "express": "^4.20.0",
+    "express-session": "^1.17.3",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.0.0",
+    "supertest": "^7.0.0",
+    "typescript": "^5.3.3",
+    "vitest": "^4.1.11"
+  },
+  "peerDependencies": {
+    "express": ">=4"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc",
+  "publishConfig": {
+    "access": "public"
+  },
+  "targets": {
+    "main": {
+      "context": "node",
+      "engines": {
+        "node": ">=22.0.0"
+      }
+    }
+  }
+}

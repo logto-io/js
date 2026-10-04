@@ -1,0 +1,9 @@
+{
+  "extends": "./.nuxt/tsconfig",
+  "compilerOptions": {
+    "outDir": "dist",
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts", "vitest.config.ts"],
+  "exclude": ["node_modules", ".nuxt", "playground"]
+}

@@ -1,0 +1,7 @@
+{
+  "extends": "@silverhand/react",
+  "rules": {
+    "consistent-default-export-name/default-export-match-filename": "off",
+    "react/react-in-jsx-scope": "off"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "name": "@logto/browser-sample",
+  "version": "2.0.35",
+  "license": "MIT",
+  "private": true,
+  "source": "public/index.html",
+  "scripts": {
+    "precommit": "lint-staged",
+    "start": "parcel public/index.html -p 3000",
+    "build": "rm -rf dist && parcel build public/index.html --no-autoinstall",
+    "lint": "eslint --ext .js src",
+    "stylelint": "stylelint \"src/**/*.scss\""
+  },
+  "dependencies": {
+    "@logto/browser": "workspace:^"
+  },
+  "devDependencies": {
+    "@parcel/core": "^2.16.4",
+    "@parcel/transformer-sass": "^2.16.4",
+    "@silverhand/eslint-config": "^6.0.1",
+    "@silverhand/eslint-config-react": "^6.0.2",
+    "eslint": "^8.57.0",
+    "lint-staged": "^15.0.0",
+    "parcel": "^2.16.4",
+    "postcss": "^8.4.31",
+    "prettier": "^3.0.0",
+    "stylelint": "^16.0.0",
+    "typescript": "^5.3.3"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand",
+    "globals": {
+      "window": true,
+      "document": true
+    }
+  },
+  "stylelint": {
+    "extends": "@silverhand/eslint-config-react/.stylelintrc"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc"
+}

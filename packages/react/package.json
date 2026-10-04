@@ -1,0 +1,67 @@
+{
+  "name": "@logto/react",
+  "version": "4.1.0",
+  "type": "module",
+  "module": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    "types": "./lib/index.d.ts",
+    "import": "./lib/index.js",
+    "default": "./lib/index.js"
+  },
+  "files": [
+    "lib"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/logto-io/js.git",
+    "directory": "packages/react"
+  },
+  "scripts": {
+    "dev:tsc": "tsc -p tsconfig.build.json -w --preserveWatchOutput",
+    "precommit": "lint-staged",
+    "check": "tsc --noEmit",
+    "build": "rm -rf lib/ && tsc -p tsconfig.build.json --noEmit && rollup -c",
+    "lint": "eslint --ext .ts --ext .tsx src",
+    "test": "vitest",
+    "test:coverage": "vitest --silent --coverage",
+    "prepack": "pnpm build && pnpm test"
+  },
+  "dependencies": {
+    "@logto/browser": "workspace:^",
+    "@silverhand/essentials": "^2.9.3"
+  },
+  "devDependencies": {
+    "@silverhand/eslint-config": "^6.0.1",
+    "@silverhand/eslint-config-react": "^6.0.2",
+    "@silverhand/ts-config": "^6.0.0",
+    "@silverhand/ts-config-react": "^6.0.0",
+    "@testing-library/react": "^16.0.0",
+    "@types/react": "^19.2.3",
+    "@vitest/coverage-v8": "4.1.11",
+    "eslint": "^8.57.0",
+    "happy-dom": "^20.0.8",
+    "lint-staged": "^15.0.0",
+    "postcss": "^8.4.31",
+    "prettier": "^3.0.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "stylelint": "^16.0.0",
+    "typescript": "^5.3.3",
+    "vitest": "^4.1.11"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand/react",
+    "rules": {
+      "react/prefer-read-only-props": "off"
+    }
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc",
+  "publishConfig": {
+    "access": "public"
+  }
+}

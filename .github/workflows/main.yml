@@ -1,0 +1,53 @@
+name: Main
+
+on:
+  push:
+    branches:
+      - master
+      - "push-action/**"
+  pull_request:
+
+concurrency:
+  group: main-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node and pnpm
+        uses: silverhand-io/actions-node-pnpm-run-steps@v5
+        with:
+          node-version: 22
+          pnpm-version: 10
+
+      - name: Build
+        run: pnpm -r build
+
+      - name: Lint
+        run: pnpm -r lint
+
+      - name: Test
+        # The test script is moody
+        uses: nick-fields/retry@v3
+        with: 
+          timeout_minutes: 10
+          max_attempts: 5
+          command: pnpm -r --workspace-concurrency=0 test:coverage
+
+      - name: Codecov js
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: js
+          directory: ./packages/js
+
+      - name: Codecov browser
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: browser
+          directory: ./packages/browser

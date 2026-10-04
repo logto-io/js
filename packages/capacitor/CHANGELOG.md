@@ -1,0 +1,302 @@
+# @logto/capacitor
+
+## 4.1.0
+
+### Minor Changes
+
+- c8996b4: support object-form sign-in options
+  
+  Support the existing object-form sign-in options API. Post-sign-in navigation now reloads the
+  current WebView, and a browser that has already closed no longer causes a successful sign-in or
+  sign-out flow to reject.
+- a9dca71: export `decodeAccessToken`, `ReservedResource`, and `CacheKey` from applicable platform SDK package
+  roots
+- 1b9abbd: stabilize cache configuration across JavaScript SDKs
+  
+  Use the stable `cache` client adapter property. The deprecated `unstable_cache` alias remains
+  supported, with the stable property taking precedence. Node and edge clients continue to use an
+  endpoint-scoped process-local cache by default.
+  
+  Browser, React, Angular, Vue, Capacitor, and Chrome Extension clients can opt in through the stable
+  `enableCache` option. Browser caches are isolated by endpoint and application, and cache storage
+  failures no longer discard successful discovery responses.
+
+### Patch Changes
+
+- 9f877b2: clear local authentication state when remote sign-out cannot start
+- Updated dependencies [b694c0e]
+- Updated dependencies [a9dca71]
+- Updated dependencies [1b9abbd]
+- Updated dependencies [9f877b2]
+  - @logto/browser@3.1.0
+
+## 4.0.8
+
+### Patch Changes
+
+- @logto/browser@3.0.14
+
+## 4.0.7
+
+### Patch Changes
+
+- a478ed0: fix: `signIn()` and `signOut()` in `@logto/capacitor` no longer leave the returned promise unsettled when the underlying flow fails.
+
+  - `signIn()` now rejects when the authorization request or `handleSignInCallback()` throws, instead of hanging.
+  - `signOut()` now rejects when the underlying flow fails — OIDC discovery, token-storage operations, or the in-app browser navigation. Refresh-token revocation failures continue to be swallowed by the base client, as before.
+  - Listener handles are always removed on every exit path, including failure.
+
+  Resolves [#1103](https://github.com/logto-io/js/issues/1103).
+
+## 4.0.6
+
+### Patch Changes
+
+- @logto/browser@3.0.13
+
+## 4.0.5
+
+### Patch Changes
+
+- Updated dependencies [e8d8c44]
+  - @logto/browser@3.0.12
+
+## 4.0.4
+
+### Patch Changes
+
+- 7a3d0ab: fix Android sign-in flow where `browserFinished` fired before `appUrlOpen`, causing successful callbacks to be treated as user cancellations.
+
+  Listener handling now waits for the redirect and only cancels when no redirect occurs. Also widen Capacitor peer dependency support to both 7.x and 8.x.
+
+## 4.0.3
+
+### Patch Changes
+
+- @logto/browser@3.0.11
+
+## 4.0.2
+
+### Patch Changes
+
+- @logto/browser@3.0.10
+
+## 4.0.1
+
+### Patch Changes
+
+- @logto/browser@3.0.9
+
+## 4.0.0
+
+### Major Changes
+
+- c9453b8: bump @capacitor packages to v7
+
+### Patch Changes
+
+- @logto/browser@3.0.8
+
+## 3.0.7
+
+### Patch Changes
+
+- @logto/browser@3.0.7
+
+## 3.0.6
+
+### Patch Changes
+
+- @logto/browser@3.0.6
+
+## 3.0.5
+
+### Patch Changes
+
+- @logto/browser@3.0.5
+
+## 3.0.4
+
+### Patch Changes
+
+- d6a900c: bump dependencies for security update
+- Updated dependencies [733e978]
+- Updated dependencies [d6a900c]
+  - @logto/browser@3.0.4
+
+## 3.0.3
+
+### Patch Changes
+
+- 1fb33d0: force bump for republish
+- Updated dependencies [1fb33d0]
+  - @logto/browser@3.0.3
+
+## 3.0.2
+
+### Patch Changes
+
+- @logto/browser@3.0.2
+
+## 3.0.1
+
+### Patch Changes
+
+- 28bc32e: force bump for republish
+- Updated dependencies [28bc32e]
+  - @logto/browser@3.0.1
+
+## 3.0.0
+
+### Major Changes
+
+- 9fa75c6: drop CommonJS support and become pure ESM
+
+### Patch Changes
+
+- Updated dependencies [9fa75c6]
+  - @logto/browser@3.0.0
+
+## 2.0.5
+
+### Patch Changes
+
+- @logto/browser@2.2.19
+
+## 2.0.4
+
+### Patch Changes
+
+- @logto/browser@2.2.18
+
+## 2.0.3
+
+### Patch Changes
+
+- @logto/browser@2.2.17
+
+## 2.0.2
+
+### Patch Changes
+
+- 5f64e0e: export `UserInfoResponse` type
+  - @logto/browser@2.2.16
+
+## 2.0.1
+
+### Patch Changes
+
+- @logto/browser@2.2.15
+
+## 2.0.0
+
+### Major Changes
+
+- 3ce1565: bump @capacitor packages to v6
+
+## 1.1.13
+
+### Patch Changes
+
+- @logto/browser@2.2.14
+
+## 1.1.12
+
+### Patch Changes
+
+- @logto/browser@2.2.13
+
+## 1.1.11
+
+### Patch Changes
+
+- @logto/browser@2.2.12
+
+## 1.1.10
+
+### Patch Changes
+
+- @logto/browser@2.2.11
+
+## 1.1.9
+
+### Patch Changes
+
+- @logto/browser@2.2.10
+
+## 1.1.8
+
+### Patch Changes
+
+- @logto/browser@2.2.9
+
+## 1.1.7
+
+### Patch Changes
+
+- @logto/browser@2.2.8
+
+## 1.1.6
+
+### Patch Changes
+
+- 24d1680: fix: clear access token storage on sign-in
+- Updated dependencies [24d1680]
+  - @logto/browser@2.2.7
+
+## 1.1.5
+
+### Patch Changes
+
+- 76d113f: export more typescript types
+- Updated dependencies [e0d20a3]
+- Updated dependencies [76d113f]
+  - @logto/browser@2.2.6
+
+## 1.1.4
+
+### Patch Changes
+
+- @logto/browser@2.2.5
+
+## 1.1.3
+
+### Patch Changes
+
+- @logto/browser@2.2.4
+
+## 1.1.2
+
+### Patch Changes
+
+- 26619ed: use TypeScript 5.3.3
+- Updated dependencies [26619ed]
+  - @logto/browser@2.2.3
+
+## 1.1.1
+
+### Patch Changes
+
+- bump `@logto/browser` version
+
+## 1.1.0
+
+### Minor Changes
+
+- 9225576: export useful members from dependency sdk packages
+
+### Patch Changes
+
+- Updated dependencies [8d693a3]
+  - @logto/browser@2.2.0
+
+## 1.0.0
+
+### Major Changes
+
+- eb94b36: add Capacitor SDK
+
+### Patch Changes
+
+- Updated dependencies [eb94b36]
+  - @logto/browser@2.1.1

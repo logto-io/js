@@ -1,0 +1,347 @@
+import { type IncomingMessage, type ServerResponse } from 'node:http';
+
+import NodeClient, {
+  CookieStorage,
+  type AccessTokenClaims,
+  type SignInOptions,
+  type GetContextParameters,
+  type IdTokenClaims,
+  type InteractionMode,
+} from '@logto/node';
+import { serialize } from 'cookie';
+import {
+  type GetServerSidePropsResult,
+  type GetServerSidePropsContext,
+  type NextApiHandler,
+  type NextApiRequest,
+  type NextApiResponse,
+} from 'next';
+import { type NextApiRequestCookies } from 'next/dist/server/api-utils/index.js';
+
+import { createAuthRoutesHandler } from './auth-routes.js';
+import LogtoNextBaseClient from './client.js';
+import type { ErrorHandler, HandleAuthRoutesOptions, LogtoNextConfig } from './types.js';
+import { buildHandler, NavigationStore } from './utils.js';
+
+export type {
+  AuthRouteFlow,
+  AuthRouteSignInOptions,
+  HandleAuthRoutesOptions,
+  LogtoNextConfig,
+  GetSignInOptions,
+} from './types.js';
+
+export {
+  LogtoError,
+  LogtoRequestError,
+  LogtoClientError,
+  OidcError,
+  Prompt,
+  ReservedScope,
+  ReservedResource,
+  UserScope,
+  organizationUrnPrefix,
+  buildOrganizationUrn,
+  decodeAccessToken,
+  getOrganizationIdFromUrn,
+  CacheKey,
+  PersistKey,
+} from '@logto/node';
+
+export type {
+  AccessTokenClaims,
+  IdTokenClaims,
+  LogtoContext,
+  InteractionMode,
+  LogtoErrorCode,
+  UserInfoResponse,
+  SessionWrapper,
+  SessionData,
+} from '@logto/node';
+
+export default class LogtoClient extends LogtoNextBaseClient {
+  constructor(config: LogtoNextConfig) {
+    super(config, {
+      NodeClient,
+    });
+
+    if (!config.sessionWrapper && !config.cookieSecret) {
+      throw new Error('cookieSecret is required when using default session wrapper');
+    }
+  }
+
+  handleSignIn: (
+    options?:
+      | (SignInOptions & {
+          onError?: ErrorHandler;
+        })
+      | string,
+    interactionMode?: InteractionMode,
+    onError?: ErrorHandler
+  ) => NextApiHandler = (
+    options?:
+      | (SignInOptions & {
+          onError?: ErrorHandler;
+        })
+      | string,
+    interactionMode?: InteractionMode,
+    onError?: ErrorHandler
+  ) => {
+    // The array function can not have multiple signatures, have to warn the deprecated usage
+    if (typeof options === 'string') {
+      console.warn('Deprecated: Use the object parameter for handleSignIn instead.');
+      return this.handleSignInImplementation({ redirectUri: options, interactionMode, onError });
+    }
+
+    return this.handleSignInImplementation(
+      options ?? {
+        redirectUri: `${this.config.baseUrl}/api/logto/sign-in-callback`,
+        interactionMode,
+      }
+    );
+  };
+
+  handleSignInCallback = (
+    redirectTo = this.config.baseUrl,
+    onError?: ErrorHandler
+  ): NextApiHandler =>
+    buildHandler(async (request, response) => {
+      const { nodeClient, getNavigateUrl } = await this.createRequestScopedClient(
+        request,
+        response
+      );
+
+      if (request.url) {
+        await nodeClient.handleSignInCallback(`${this.config.baseUrl}${request.url}`);
+
+        // Check if there's a navigation URL (from postRedirectUri) first
+        const navigateUrl = getNavigateUrl();
+        if (navigateUrl) {
+          response.redirect(navigateUrl);
+        } else {
+          response.redirect(redirectTo);
+        }
+      }
+    }, onError);
+
+  handleSignOut = (redirectUri = this.config.baseUrl, onError?: ErrorHandler): NextApiHandler =>
+    buildHandler(async (request, response) => {
+      const { nodeClient, storage, getNavigateUrl } = await this.createRequestScopedClient(
+        request,
+        response
+      );
+      try {
+        await nodeClient.signOut(redirectUri);
+      } finally {
+        await storage.destroy();
+      }
+
+      const navigateUrl = getNavigateUrl();
+      if (navigateUrl) {
+        response.redirect(navigateUrl);
+      }
+    }, onError);
+
+  handleUser = (configs?: GetContextParameters, onError?: ErrorHandler) =>
+    this.withLogtoApiRoute(
+      (request, response) => {
+        response.json(request.user);
+      },
+      configs,
+      onError
+    );
+
+  handleAuthRoutes: {
+    (options?: HandleAuthRoutesOptions): NextApiHandler;
+    (configs?: GetContextParameters, onError?: ErrorHandler): NextApiHandler;
+  } = (
+    optionsOrConfigs: GetContextParameters | HandleAuthRoutesOptions = {},
+    legacyOnError?: ErrorHandler
+  ) =>
+    createAuthRoutesHandler(
+      this.config.baseUrl,
+      {
+        handleSignIn: this.handleSignIn,
+        handleSignInCallback: this.handleSignInCallback,
+        handleSignOut: this.handleSignOut,
+        handleUser: this.handleUser,
+      },
+      optionsOrConfigs,
+      legacyOnError
+    );
+
+  getAccessToken = async (
+    request: NextApiRequest,
+    response: NextApiResponse,
+    resource?: string,
+    organizationId?: string
+  ): Promise<string> => {
+    const nodeClient = await this.createNodeClientFromNextApi(request, response);
+    return nodeClient.getAccessToken(resource, organizationId);
+  };
+
+  getAccessTokenClaims = async (
+    request: NextApiRequest,
+    response: NextApiResponse,
+    resource?: string,
+    organizationId?: string
+  ): Promise<AccessTokenClaims> => {
+    const nodeClient = await this.createNodeClientFromNextApi(request, response);
+    return nodeClient.getAccessTokenClaims(resource, organizationId);
+  };
+
+  getIdTokenClaims = async (
+    request: NextApiRequest,
+    response: NextApiResponse
+  ): Promise<IdTokenClaims> => {
+    const nodeClient = await this.createNodeClientFromNextApi(request, response);
+    return nodeClient.getIdTokenClaims();
+  };
+
+  getOrganizationToken = async (
+    request: NextApiRequest,
+    response: NextApiResponse,
+    organizationId: string
+  ): Promise<string> => {
+    const nodeClient = await this.createNodeClientFromNextApi(request, response);
+    return nodeClient.getOrganizationToken(organizationId);
+  };
+
+  getOrganizationTokenClaims = async (
+    request: NextApiRequest,
+    response: NextApiResponse,
+    organizationId: string
+  ): Promise<AccessTokenClaims> => {
+    const nodeClient = await this.createNodeClientFromNextApi(request, response);
+    return nodeClient.getOrganizationTokenClaims(organizationId);
+  };
+
+  clearAccessToken = async (request: NextApiRequest, response: NextApiResponse): Promise<void> => {
+    const nodeClient = await this.createNodeClientFromNextApi(request, response);
+    await nodeClient.clearAccessToken();
+  };
+
+  clearAllTokens = async (request: NextApiRequest, response: NextApiResponse): Promise<void> => {
+    const nodeClient = await this.createNodeClientFromNextApi(request, response);
+    await nodeClient.clearAllTokens();
+  };
+
+  withLogtoApiRoute = (
+    handler: NextApiHandler,
+    config: GetContextParameters = {},
+    onError?: ErrorHandler
+  ): NextApiHandler =>
+    buildHandler(async (request, response) => {
+      const nodeClient = await this.createNodeClientFromNextApi(request, response);
+      const user = await nodeClient.getContext(config);
+
+      // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+      Object.defineProperty(request, 'user', { enumerable: true, get: () => user });
+
+      return handler(request, response);
+    }, onError);
+
+  withLogtoSsr =
+    <P extends Record<string, unknown> = Record<string, unknown>>(
+      handler: (
+        context: GetServerSidePropsContext
+      ) => GetServerSidePropsResult<P> | Promise<GetServerSidePropsResult<P>>,
+      configs: GetContextParameters = {},
+      onError?: (error: unknown) => unknown
+    ) =>
+    async (context: GetServerSidePropsContext) => {
+      try {
+        const nodeClient = await this.createNodeClientFromNextApi(context.req, context.res);
+        const user = await nodeClient.getContext(configs);
+
+        // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+        Object.defineProperty(context.req, 'user', { enumerable: true, get: () => user });
+
+        return await handler(context);
+      } catch (error: unknown) {
+        if (onError) {
+          return onError(error);
+        }
+
+        throw error;
+      }
+    };
+
+  /**
+   * Create a Node client for the current request.
+   *
+   * The public return type is intentionally kept as `NodeClient` (unchanged from previous
+   * versions) so existing callers — including the documented "fetch organization tokens"
+   * pattern — keep working. The per-request state (storage, navigation URL) needed internally
+   * is produced by {@link createRequestScopedClient}.
+   */
+  async createNodeClientFromNextApi(
+    request: IncomingMessage & {
+      cookies: NextApiRequestCookies;
+    },
+    response: ServerResponse
+  ): Promise<NodeClient> {
+    const { nodeClient } = await this.createRequestScopedClient(request, response);
+    return nodeClient;
+  }
+
+  /**
+   * Create a request-scoped Node client together with its per-request state.
+   *
+   * Every piece of mutable state here (storage, the navigation URL) is kept local to this
+   * call instead of being stored on the (typically singleton) client instance, so concurrent
+   * requests can never clobber each other's storage or redirect target.
+   */
+  private async createRequestScopedClient(
+    request: IncomingMessage & {
+      cookies: NextApiRequestCookies;
+    },
+    response: ServerResponse
+  ): Promise<{
+    nodeClient: NodeClient;
+    storage: CookieStorage;
+    getNavigateUrl: () => string | undefined;
+  }> {
+    const storage = new CookieStorage({
+      // The type checking is done in the constructor, encryptionKey is required when using default session wrapper
+      encryptionKey: this.config.cookieSecret ?? '',
+      sessionWrapper: this.config.sessionWrapper,
+      cookieKey: `logto_${this.config.appId}`,
+      isSecure: this.config.cookieSecure,
+      getCookie: (name) => {
+        return request.cookies[name] ?? '';
+      },
+      setCookie: (name, value, options) => {
+        response.setHeader('Set-Cookie', serialize(name, value, options));
+      },
+    });
+
+    await storage.init();
+
+    const navigation = new NavigationStore();
+    const nodeClient = new this.adapters.NodeClient(this.config, {
+      storage,
+      navigate: navigation.navigate,
+    });
+
+    return { nodeClient, storage, getNavigateUrl: () => navigation.url };
+  }
+
+  private readonly handleSignInImplementation = (
+    options: SignInOptions & {
+      onError?: ErrorHandler;
+    }
+  ): NextApiHandler =>
+    buildHandler(async (request, response) => {
+      const { nodeClient, getNavigateUrl } = await this.createRequestScopedClient(
+        request,
+        response
+      );
+      await nodeClient.signIn(options);
+
+      const navigateUrl = getNavigateUrl();
+      if (navigateUrl) {
+        response.redirect(navigateUrl);
+      }
+    }, options.onError);
+}

@@ -1,0 +1,66 @@
+{
+  "name": "@logto/nuxt",
+  "version": "2.0.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/module.d.mts",
+      "import": "./dist/module.mjs"
+    }
+  },
+  "types": "./dist/module.d.mts",
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/logto-io/js.git",
+    "directory": "packages/nuxt"
+  },
+  "scripts": {
+    "precommit": "lint-staged",
+    "dev": "nuxi dev playground",
+    "dev:prepare": "nuxt-module-build prepare && nuxi prepare playground",
+    "build": "nuxt-module-build prepare && nuxt-module-build build && tsc -p tsconfig.build.json",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "check": "tsc --noEmit",
+    "lint": "eslint --ext .ts src",
+    "prepack": "pnpm build"
+  },
+  "devDependencies": {
+    "@nuxt/module-builder": "^1.0.1",
+    "@nuxt/nitro-server": "^3.21.10",
+    "@nuxt/test-utils": "^4.0.0",
+    "@silverhand/eslint-config": "^6.0.1",
+    "@vitest/coverage-v8": "4.1.11",
+    "@vue/test-utils": "^2.4.4",
+    "eslint": "^8.57.0",
+    "h3": "^1.15.5",
+    "happy-dom": "^20.0.11",
+    "lint-staged": "^15.0.0",
+    "nitropack": "^2.13.4",
+    "nuxt": "^3.21.10",
+    "prettier": "^3.0.0",
+    "typescript": "^5.3.3",
+    "vitest": "^4.1.11",
+    "vue": "^3.5.13"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@logto/node": "workspace:^",
+    "@nuxt/kit": "^3.21.10",
+    "@silverhand/essentials": "^2.9.3",
+    "defu": "^6.1.4"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig",
+  "include": [
+    "src",
+    "edge"
+  ],
+  "exclude": ["src/**/*.test.ts", "edge/**/*.test.ts"]
+}

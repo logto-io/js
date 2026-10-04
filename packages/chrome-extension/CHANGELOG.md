@@ -1,0 +1,217 @@
+# @logto/chrome-extension
+
+## 0.2.0
+
+### Minor Changes
+
+- b694c0e: support configurable request timeouts through native fetch
+- 1b9abbd: stabilize cache configuration across JavaScript SDKs
+  
+  Use the stable `cache` client adapter property. The deprecated `unstable_cache` alias remains
+  supported, with the stable property taking precedence. Node and edge clients continue to use an
+  endpoint-scoped process-local cache by default.
+  
+  Browser, React, Angular, Vue, Capacitor, and Chrome Extension clients can opt in through the stable
+  `enableCache` option. Browser caches are isolated by endpoint and application, and cache storage
+  failures no longer discard successful discovery responses.
+
+### Patch Changes
+
+- 9f877b2: clear local authentication state when remote sign-out cannot start
+- Updated dependencies [b694c0e]
+- Updated dependencies [a9dca71]
+- Updated dependencies [1b9abbd]
+- Updated dependencies [9f877b2]
+  - @logto/browser@3.1.0
+
+## 0.1.28
+
+### Patch Changes
+
+- @logto/browser@3.0.14
+
+## 0.1.27
+
+### Patch Changes
+
+- @logto/browser@3.0.13
+
+## 0.1.26
+
+### Patch Changes
+
+- Updated dependencies [e8d8c44]
+  - @logto/browser@3.0.12
+
+## 0.1.25
+
+### Patch Changes
+
+- @logto/browser@3.0.11
+
+## 0.1.24
+
+### Patch Changes
+
+- @logto/browser@3.0.10
+
+## 0.1.23
+
+### Patch Changes
+
+- @logto/browser@3.0.9
+
+## 0.1.22
+
+### Patch Changes
+
+- @logto/browser@3.0.8
+
+## 0.1.21
+
+### Patch Changes
+
+- @logto/browser@3.0.7
+
+## 0.1.20
+
+### Patch Changes
+
+- @logto/browser@3.0.6
+
+## 0.1.19
+
+### Patch Changes
+
+- @logto/browser@3.0.5
+
+## 0.1.18
+
+### Patch Changes
+
+- d6a900c: bump dependencies for security update
+- Updated dependencies [733e978]
+- Updated dependencies [d6a900c]
+  - @logto/browser@3.0.4
+
+## 0.1.17
+
+### Patch Changes
+
+- 1fb33d0: force bump for republish
+- Updated dependencies [1fb33d0]
+  - @logto/browser@3.0.3
+
+## 0.1.16
+
+### Patch Changes
+
+- @logto/browser@3.0.2
+
+## 0.1.15
+
+### Patch Changes
+
+- 28bc32e: force bump for republish
+- Updated dependencies [28bc32e]
+  - @logto/browser@3.0.1
+
+## 0.1.14
+
+### Patch Changes
+
+- Updated dependencies [9fa75c6]
+  - @logto/browser@3.0.0
+
+## 0.1.13
+
+### Patch Changes
+
+- @logto/browser@2.2.19
+
+## 0.1.12
+
+### Patch Changes
+
+- @logto/browser@2.2.18
+
+## 0.1.11
+
+### Patch Changes
+
+- @logto/browser@2.2.17
+
+## 0.1.10
+
+### Patch Changes
+
+- @logto/browser@2.2.16
+
+## 0.1.9
+
+### Patch Changes
+
+- @logto/browser@2.2.15
+
+## 0.1.8
+
+### Patch Changes
+
+- @logto/browser@2.2.14
+
+## 0.1.7
+
+### Patch Changes
+
+- @logto/browser@2.2.13
+
+## 0.1.6
+
+### Patch Changes
+
+- @logto/browser@2.2.12
+
+## 0.1.5
+
+### Patch Changes
+
+- @logto/browser@2.2.11
+
+## 0.1.4
+
+### Patch Changes
+
+- @logto/browser@2.2.10
+
+## 0.1.3
+
+### Patch Changes
+
+- @logto/browser@2.2.9
+
+## 0.1.2
+
+### Patch Changes
+
+- @logto/browser@2.2.8
+
+## 0.1.1
+
+### Patch Changes
+
+- 24d1680: fix: clear access token storage on sign-in
+- faafc9d: fix publish config
+- Updated dependencies [24d1680]
+  - @logto/browser@2.2.7
+
+## 0.1.0
+
+### Minor Changes
+
+- e0d20a3: initial release
+
+### Patch Changes
+
+- Updated dependencies [e0d20a3]
+- Updated dependencies [76d113f]
+  - @logto/browser@2.2.6

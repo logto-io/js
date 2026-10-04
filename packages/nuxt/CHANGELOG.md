@@ -1,0 +1,352 @@
+# @logto/nuxt
+
+## 2.0.0
+
+### Major Changes
+
+- db78ef4: require Node.js 22 or later for server-side SDKs
+
+### Minor Changes
+
+- c8996b4: support request-specific sign-in options
+  
+  Add module-level `signInOptions` defaults and a `logto:sign-in-options` Nitro hook for per-request
+  overrides.
+- d6ca804: support client-side access token retrieval with on-demand refresh
+  
+  Add the `useLogtoAccessToken` composable backed by an SDK-managed endpoint, so browser code can
+  obtain a valid access token without a page reload or a hand-written token endpoint.
+  
+  A still-valid token is reused; an expired or missing one is exchanged through the server-side
+  session, and the renewed session is persisted to the response cookies before the request completes.
+  The refresh token and the application secret never reach the browser. Concurrent calls for the same
+  token share a single request, and a session that can no longer be refreshed answers `401` with the
+  `not_authenticated` error code so the application can start a sign-in instead of retrying.
+
+### Patch Changes
+
+- 9f877b2: clear local authentication state when remote sign-out cannot start
+- Updated dependencies [b694c0e]
+- Updated dependencies [a078735]
+- Updated dependencies [db78ef4]
+- Updated dependencies [3b32030]
+- Updated dependencies [a9dca71]
+- Updated dependencies [a9dca71]
+- Updated dependencies [1b9abbd]
+- Updated dependencies [9f877b2]
+  - @logto/node@4.0.0
+
+## 1.2.11
+
+### Patch Changes
+
+- Updated dependencies [f09212f]
+  - @logto/node@3.1.11
+
+## 1.2.10
+
+### Patch Changes
+
+- @logto/node@3.1.10
+
+## 1.2.9
+
+### Patch Changes
+
+- e8d8c44: bump @silverhand/essentials dependency to v2.9.3, which supports more Node.js versions (18, 20, 22, 24 and 25).
+- Updated dependencies [e8d8c44]
+  - @logto/node@3.1.9
+
+## 1.2.8
+
+### Patch Changes
+
+- @logto/node@3.1.8
+
+## 1.2.7
+
+### Patch Changes
+
+- 4f27436: fix an issue where can't import `logtoEventHandler` in server middleware, which is an type error
+  - @logto/node@3.1.7
+
+## 1.2.6
+
+### Patch Changes
+
+- @logto/node@3.1.6
+
+## 1.2.5
+
+### Patch Changes
+
+- @logto/node@3.1.5
+
+## 1.2.4
+
+### Patch Changes
+
+- @logto/node@3.1.4
+
+## 1.2.3
+
+### Patch Changes
+
+- @logto/node@3.1.3
+
+## 1.2.2
+
+### Patch Changes
+
+- @logto/node@3.1.2
+
+## 1.2.1
+
+### Patch Changes
+
+- d6a900c: bump dependencies for security update
+- Updated dependencies [d6a900c]
+  - @logto/node@3.1.1
+
+## 1.2.0
+
+### Minor Changes
+
+- f583d81: export logtoEventHandler
+
+## 1.1.5
+
+### Patch Changes
+
+- Updated dependencies [8c352b5]
+  - @logto/node@3.1.0
+
+## 1.1.4
+
+### Patch Changes
+
+- 1fb33d0: force bump for republish
+- Updated dependencies [1fb33d0]
+  - @logto/node@3.0.3
+
+## 1.1.3
+
+### Patch Changes
+
+- @logto/node@3.0.2
+
+## 1.1.2
+
+### Patch Changes
+
+- 28bc32e: force bump for republish
+- Updated dependencies [28bc32e]
+  - @logto/node@3.0.1
+
+## 1.1.1
+
+### Patch Changes
+
+- 8bc63e0: fix the default value of customRedirectBaseUrl
+
+  Previously, it was set to '<replace-with-custom-redirect-base-url>', which is not a valid value. Now the default value is removed because it's not a required value.
+
+- Updated dependencies [9fa75c6]
+  - @logto/node@3.0.0
+
+## 1.1.0
+
+### Minor Changes
+
+- 4c51e3b: support sign in options
+
+  Add new option `signInOptions`, see https://docs.logto.io/docs/references/openid-connect/authentication-parameters for more details.
+
+### Patch Changes
+
+- @logto/node@2.5.9
+
+## 1.0.1
+
+### Patch Changes
+
+- Updated dependencies [8d0b058]
+  - @logto/node@2.5.8
+
+## 1.0.0
+
+### Major Changes
+
+- 5f4de8c: add support for secure cookie storage in Nuxt SDK and improve security handling
+
+  This is a breaking change that enhances security but requires manual configuration:
+
+  - Introduce new `cookieSecure` configuration option to set whether Logto cookie should be secure
+  - Remove automatic HTTPS detection based on Request URL and headers
+  - No longer trust `x-forwarded-proto` or similar headers by default for security reasons
+
+  Previously, the SDK would automatically determine whether to use secure cookies based on the Request URL and headers. This automatic detection has been removed to prevent potential security vulnerabilities, especially in environments using reverse proxies or load balancers.
+
+  Now, users must explicitly configure the `cookieSecure` option based on their deployment environment. This change gives users more control and ensures that secure cookies are used only when explicitly configured.
+
+  It's strongly recommended to set `cookieSecure` to `true` when using HTTPS, especially in production environments.
+
+  Usage example:
+
+  ```ts
+  // nuxt.config.ts
+  export default defineNuxtConfig({
+    modules: ['@logto/nuxt'],
+    logto: {
+      cookieSecure: true, // Enable secure cookie in HTTPS environments
+    },
+  });
+  ```
+
+### Minor Changes
+
+- 71f3b53: support custom redirect base url settings for nuxt SDK
+
+### Patch Changes
+
+- @logto/node@2.5.7
+
+## 0.3.4
+
+### Patch Changes
+
+- @logto/node@2.5.6
+
+## 0.3.3
+
+### Patch Changes
+
+- ea4555f: use warning to replace the error of empty configuration
+
+## 0.3.2
+
+### Patch Changes
+
+- @logto/node@2.5.5
+
+## 0.3.1
+
+### Patch Changes
+
+- @logto/node@2.5.4
+
+## 0.3.0
+
+### Minor Changes
+
+- eaa7836: use `trySafe` for all `context.logtoUser` methods
+
+  All `context.logtoUser` methods now use the `trySafe` function to prevent errors from crashing the server.
+
+- 22f3555: remove commonjs export, fix non-default exports
+
+  - The CJS build generated by `@nuxt/module-builder` only exports the default export, causing issues for users who want to use named exports.
+  - Nuxt stills uses the CJS build if certain fields are found, regardless of the `"type": "module"` field in `package.json`. Since Nuxt 3 uses ESM by default, we just remove the CJS export to avoid confusion.
+
+### Patch Changes
+
+- @logto/node@2.5.3
+
+## 0.2.0
+
+### Minor Changes
+
+- 3ba2e81: return undefined when fetchUserInfo failed
+
+  When `fetchUserInfo` is set to `true`, `useLogto()` will call `fetchUserInfo` to get user info. If `fetchUserInfo` failed, it now returns `undefined` instead of throwing an error.
+
+  You can check the value of `userLogto()` to see if the user is authenticated.
+
+## 0.1.13
+
+### Patch Changes
+
+- @logto/node@2.5.2
+
+## 0.1.12
+
+### Patch Changes
+
+- @logto/node@2.5.1
+
+## 0.1.11
+
+### Patch Changes
+
+- Updated dependencies [957a1c9]
+  - @logto/node@2.5.0
+
+## 0.1.10
+
+### Patch Changes
+
+- @logto/node@2.4.7
+
+## 0.1.9
+
+### Patch Changes
+
+- @logto/node@2.4.6
+
+## 0.1.8
+
+### Patch Changes
+
+- @logto/node@2.4.5
+
+## 0.1.7
+
+### Patch Changes
+
+- 24d1680: fix: clear access token storage on sign-in
+- Updated dependencies [24d1680]
+  - @logto/node@2.4.4
+
+## 0.1.6
+
+### Patch Changes
+
+- Updated dependencies [76d113f]
+  - @logto/node@2.4.3
+
+## 0.1.5
+
+### Patch Changes
+
+- @logto/node@2.4.2
+
+## 0.1.4
+
+### Patch Changes
+
+- @logto/node@2.4.1
+
+## 0.1.3
+
+### Patch Changes
+
+- 0675d61: fix test cases
+
+## 0.1.2
+
+### Patch Changes
+
+- 329de84: fix import issues
+
+## 0.1.1
+
+### Patch Changes
+
+- 15062aa: fix `defineEventHandler is not defined` error`
+- 84621ba: fix typo in sample
+
+## 0.1.0
+
+### Minor Changes
+
+- e0c0247: add nuxt sdk and playground

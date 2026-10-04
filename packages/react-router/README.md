@@ -1,0 +1,306 @@
+# Logto React Router SDK
+
+[![Version](https://img.shields.io/npm/v/@logto/react-router)](https://www.npmjs.com/package/@logto/react-router)
+[![Build Status](https://github.com/logto-io/js/actions/workflows/main.yml/badge.svg)](https://github.com/logto-io/js/actions/workflows/main.yml)
+[![Codecov](https://img.shields.io/codecov/c/github/logto-io/js)](https://app.codecov.io/gh/logto-io/js?branch=master)
+
+The Logto SDK for server-rendered React Router applications.
+
+This package uses React Router Framework Mode middleware to keep Logto session state consistent
+across loaders, actions, authentication callbacks, and access-token refreshes. React Router 8
+enables middleware by default. When using React Router 7, enable it in your React Router config:
+
+```ts
+// react-router.config.ts
+import type { Config } from '@react-router/dev/config';
+
+export default {
+  ssr: true,
+  future: {
+    v8_middleware: true,
+  },
+} satisfies Config;
+```
+
+## Installation
+
+This package supports React Router 7.15 or later and React Router 8. When using React Router 7, it
+requires Node.js 20 or later. React Router 8 requires Node.js 22.22 or later, React 19.2.7 or later,
+and Vite 7 or later in Framework Mode.
+
+```bash
+pnpm add @logto/react-router
+```
+
+## Configure Logto
+
+Create a React Router `SessionStorage`, then initialize the SDK:
+
+```ts
+// app/services/auth.server.ts
+import { createLogtoReactRouter } from '@logto/react-router';
+import { createCookieSessionStorage } from 'react-router';
+
+const sessionStorage = createCookieSessionStorage({
+  cookie: {
+    name: 'logto-session',
+    httpOnly: true,
+    maxAge: 14 * 24 * 60 * 60,
+    sameSite: 'lax',
+    secrets: [process.env.SESSION_SECRET!],
+    secure: process.env.NODE_ENV === 'production',
+  },
+});
+
+export const logto = createLogtoReactRouter(
+  {
+    endpoint: process.env.LOGTO_ENDPOINT!,
+    appId: process.env.LOGTO_APP_ID!,
+    appSecret: process.env.LOGTO_APP_SECRET!,
+    baseUrl: process.env.LOGTO_BASE_URL!,
+    requestTimeoutMs: 10_000,
+  },
+  { sessionStorage }
+);
+```
+
+Add the middleware to the root route so every server request shares one request-scoped Logto
+context and session runtime:
+
+```tsx
+// app/root.tsx
+import type { MiddlewareFunction } from 'react-router';
+
+import { logto } from './services/auth.server';
+
+export const middleware = [logto.middleware] satisfies Array<MiddlewareFunction<Response>>;
+```
+
+## Authentication routes
+
+Mount the sign-in, sign-up, callback, and sign-out paths in one route module:
+
+```ts
+// app/routes/api.logto.$action.ts
+import { logto } from '../services/auth.server';
+
+const authRoutes = logto.authRoutes({
+  paths: {
+    signIn: '/api/logto/sign-in',
+    signUp: '/api/logto/sign-up',
+    callback: '/api/logto/callback',
+    signOut: '/api/logto/sign-out',
+  },
+  postCallbackRedirectUri: '/',
+  postSignOutRedirectUri: '/',
+});
+
+export const loader = authRoutes.loader;
+export const action = authRoutes.action;
+```
+
+Each `paths` entry is an absolute pathname matching the deployed application URL. Omit `signUp` if
+the application does not expose a sign-up route. The post-callback and post-sign-out URIs are
+resolved against `baseUrl`. The callback accepts `GET`; sign-in, sign-up, and sign-out accept only
+`POST`. Requests using the wrong method receive a `405 Method Not Allowed` response.
+
+Initiate sign-in and sign-out with a form:
+
+```tsx
+import { Form } from 'react-router';
+
+export const SignInButton = () => (
+  <Form action="/api/logto/sign-in" method="post">
+    <button type="submit">Sign In</button>
+  </Form>
+);
+```
+
+Use `signInOptions` for defaults shared by every sign-in. Add `getSignInOptions` when a request
+needs to override them, for example to request consent for a selected flow:
+
+```ts
+import { Prompt } from '@logto/react-router';
+
+const authRoutes = logto.authRoutes({
+  // ...paths and redirect options
+  signInOptions: { prompt: Prompt.Login },
+  getSignInOptions: (request, flow) => {
+    const prompt = new URL(request.url).searchParams.get('prompt');
+
+    return flow === 'signIn' && prompt === 'consent' ? { prompt: Prompt.Consent } : {};
+  },
+});
+```
+
+Resolver values override `signInOptions`. The SDK manages callback redirect fields and forces the
+registration screen for the sign-up route. Validate or allowlist request input before copying it
+into sign-in options.
+
+POST routes should also validate the request origin or a CSRF token when they use cookie sessions.
+Use `validateActionRequest` to apply the application's policy before Logto changes the session. For
+example, a same-origin validator can reject cross-origin form submissions:
+
+```ts
+const applicationOrigin = new URL(process.env.LOGTO_BASE_URL!).origin;
+
+const validateActionRequest = (request: Request) => {
+  if (request.headers.get('Origin') !== applicationOrigin) {
+    return new Response(null, { status: 403, statusText: 'Forbidden' });
+  }
+};
+```
+
+Pass this function as the `validateActionRequest` option of `logto.authRoutes()`.
+
+The callback exchanges the authorization code and commits the resulting Logto session before it
+redirects. If your app provisions application data after sign-in, set `postCallbackRedirectUri` to
+a dedicated provisioning route. That route can retry provisioning without repeating the code
+exchange.
+
+To return a user to a request-specific path, provide a resolver. It receives the POST action request
+that starts sign-in or sign-up, rather than the later callback request:
+
+```ts
+const resolveReturnTo = (signInRequest: Request) => {
+  const fallback = '/auth/provision';
+  const signInUrl = new URL(signInRequest.url);
+  const returnTo = signInUrl.searchParams.get('returnTo');
+
+  if (!returnTo?.startsWith('/') || returnTo.startsWith('//')) {
+    return fallback;
+  }
+
+  try {
+    return new URL(returnTo, signInUrl).origin === signInUrl.origin ? returnTo : fallback;
+  } catch {
+    return fallback;
+  }
+};
+
+const authRoutes = logto.authRoutes({
+  paths: {
+    signIn: '/api/logto/sign-in',
+    callback: '/api/logto/callback',
+    signOut: '/api/logto/sign-out',
+  },
+  postCallbackRedirectUri: resolveReturnTo,
+  postSignOutRedirectUri: '/',
+});
+
+export const loader = authRoutes.loader;
+export const action = authRoutes.action;
+```
+
+The resolved path is validated and stored in Logto's sign-in session. After code exchange, the
+callback retrieves it from that session and redirects there, so the callback request does not need
+its own `returnTo` parameter. Resolvers must return a same-origin path beginning with `/` and should
+replace missing or unsafe request input with an application fallback. When provisioning is
+required, return the provisioning path with the final destination encoded in its query. A callback
+from an older in-flight sign-in session without a stored destination falls back to the application
+root.
+
+## Read authentication state
+
+Access the request context from a loader or action:
+
+```ts
+// app/routes/dashboard.tsx
+import { redirect } from 'react-router';
+
+import type { Route } from './+types/dashboard';
+import { logto } from '../services/auth.server';
+
+export const loader = async ({ context }: Route.LoaderArgs) => {
+  const authentication = await context.get(logto.context).getContext();
+
+  if (!authentication.isAuthenticated) {
+    // Redirect to an application page containing the POST sign-in form.
+    return redirect('/sign-in');
+  }
+
+  return { authentication };
+};
+```
+
+Pass `{ fetchUserInfo: true }` to fetch the current user info. Token acquisition is explicit because
+it can refresh and rotate session credentials:
+
+```ts
+export const loader = async ({ context }: Route.LoaderArgs) => {
+  const logtoContext = context.get(logto.context);
+  const authentication = await logtoContext.getContext();
+
+  if (!authentication.isAuthenticated) {
+    return redirect('/sign-in');
+  }
+
+  const accessToken = await logtoContext.getAccessToken({
+    resource: 'https://api.example.com',
+  });
+
+  return { accessToken };
+};
+```
+
+The request context also provides:
+
+- `getOrganizationToken(organizationId)` for an organization token;
+- `getIdTokenClaims()` for ID token claims;
+- `getAccessTokenClaims(resource, organizationId)` for access token claims;
+- `getOrganizationTokenClaims(organizationId)` for organization token claims;
+- `clearAccessToken()` to remove cached access tokens; and
+- `clearAllTokens()` to remove every locally stored token.
+
+Pass both resource and organization arguments when the token is scoped to an API resource within
+an organization. Access-token and organization-token acquisition and claim lookups use coordinated
+session checkpoints because they may refresh and rotate session credentials. The clearing methods
+also persist their session changes before they return.
+
+## Session coordination
+
+The default `ProcessLocalSessionCoordinator` serializes writes for the same stable session ID in a
+single server process. This protects concurrent refresh-token rotation when `SessionStorage`
+returns reloadable server-side sessions.
+
+Every request uses an internal request-local coordinator to serialize its own session operations.
+When the latest session has a stable ID, each operation also uses the configured coordinator. A
+new server-side session starts with request-local coordination, then switches to the configured
+coordinator as soon as its first commit produces a reloadable persistent ID. Later checkpoints,
+finalization, and destruction in the same request use that persistent ID.
+
+Because cookie-only storage never returns a stable ID, it can serialize operations only within one
+request and cannot coordinate refreshes across concurrent requests. Passing a distributed
+coordinator does not change this. Applications that need cross-request coordination should use
+shared server-side session storage.
+
+For a multi-instance deployment, use both:
+
+- shared server-side `SessionStorage` that returns stable session IDs; and
+- a distributed implementation of `SessionCoordinator`, passed as `sessionCoordinator` when you
+  call `createLogtoReactRouter`.
+
+The storage keeps session state shared. The coordinator provides mutual exclusion for refresh and
+persistence operations that use the same session ID.
+
+Set `requestTimeoutMs` in the Logto configuration to bound each request to the Logto server. When a
+request times out during a session checkpoint, the coordinator keeps the session lock until the
+aborted request settles.
+
+## Migrating from 1.x
+
+This release removes the legacy request-handler API. The main changes are:
+
+- replace `makeLogtoReactRouter` with `createLogtoReactRouter`;
+- enable Framework Mode middleware and export `logto.middleware` from the root route;
+- replace `handleAuthRoutes` with `authRoutes` and export its `loader` and `action`;
+- submit sign-in, sign-up, and sign-out using `POST` forms;
+- replace `logto.getContext(options)(request)` with
+  `context.get(logto.context).getContext(options)`; and
+- call `getAccessToken` or `getOrganizationToken` explicitly instead of requesting tokens through
+  `getContext`.
+
+## Resources
+
+[![Website](https://img.shields.io/badge/website-logto.io-8262F8.svg)](https://logto.io/)
+[![Discord](https://img.shields.io/discord/965845662535147551?logo=discord&logoColor=ffffff&color=7389D8&cacheSeconds=600)](https://discord.gg/UEPaF3j5e6)

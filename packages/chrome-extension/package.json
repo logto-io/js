@@ -1,0 +1,55 @@
+{
+  "name": "@logto/chrome-extension",
+  "version": "0.2.0",
+  "description": "Logto Chrome extension SDK",
+  "type": "module",
+  "files": [
+    "lib"
+  ],
+  "module": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./lib/index.js",
+      "default": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    }
+  },
+  "scripts": {
+    "precommit": "lint-staged",
+    "check": "tsc --noEmit",
+    "build": "rm -rf lib && tsc -p tsconfig.build.json",
+    "lint": "eslint --ext .ts --ext .tsx src",
+    "test": "vitest",
+    "test:coverage": "vitest --silent --coverage",
+    "prepack": "pnpm build && pnpm test"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/logto-io/js.git",
+    "directory": "packages/chrome-extension-sample"
+  },
+  "dependencies": {
+    "@logto/browser": "workspace:^"
+  },
+  "devDependencies": {
+    "@silverhand/eslint-config": "^6.0.1",
+    "@silverhand/ts-config": "^6.0.0",
+    "@vitest/coverage-v8": "4.1.11",
+    "chrome-types": "^0.1.276",
+    "eslint": "^8.57.0",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.3.3",
+    "vitest": "^4.1.11"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand/react"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc",
+  "publishConfig": {
+    "access": "public"
+  }
+}

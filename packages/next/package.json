@@ -1,0 +1,87 @@
+{
+  "name": "@logto/next",
+  "version": "5.0.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "type": "module",
+  "module": "./lib/src/index.js",
+  "types": "./lib/src/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./lib/src/index.d.ts"
+      ],
+      "edge": [
+        "./lib/edge/index.d.ts"
+      ],
+      "server-actions": [
+        "./lib/server-actions/index.d.ts"
+      ]
+    }
+  },
+  "exports": {
+    ".": {
+      "import": "./lib/src/index.js",
+      "types": "./lib/src/index.d.ts"
+    },
+    "./edge": {
+      "import": "./lib/edge/index.js",
+      "types": "./lib/edge/index.d.ts"
+    },
+    "./server-actions": {
+      "import": "./lib/server-actions/index.js",
+      "types": "./lib/server-actions/index.d.ts"
+    }
+  },
+  "files": [
+    "lib"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/logto-io/js.git",
+    "directory": "packages/next"
+  },
+  "scripts": {
+    "dev:tsc": "tsc -p tsconfig.build.json -w --preserveWatchOutput",
+    "precommit": "lint-staged",
+    "check": "tsc --noEmit",
+    "build": "rm -rf lib/ && tsc -p tsconfig.build.json --noEmit && rollup -c",
+    "lint": "eslint --ext .ts src",
+    "test": "vitest",
+    "test:coverage": "vitest --silent --coverage",
+    "prepack": "pnpm build && pnpm test"
+  },
+  "dependencies": {
+    "@edge-runtime/cookies": "^5.0.0",
+    "@logto/node": "workspace:^",
+    "cookie": "^1.0.0"
+  },
+  "devDependencies": {
+    "@silverhand/eslint-config": "^6.0.1",
+    "@silverhand/ts-config": "^6.0.0",
+    "@silverhand/ts-config-react": "^6.0.0",
+    "@types/cookie": "^0.6.0",
+    "@vitest/coverage-v8": "4.1.11",
+    "eslint": "^8.57.0",
+    "lint-staged": "^15.0.0",
+    "next": "^15.5.24",
+    "next-test-api-route-handler": "^4.0.14",
+    "prettier": "^3.0.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "typescript": "^5.3.3",
+    "vitest": "^4.1.11"
+  },
+  "peerDependencies": {
+    "next": ">=12"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc",
+  "publishConfig": {
+    "access": "public"
+  }
+}

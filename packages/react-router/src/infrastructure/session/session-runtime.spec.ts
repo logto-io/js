@@ -1,0 +1,350 @@
+import type { Session, SessionStorage } from 'react-router';
+import { createSession } from 'react-router';
+
+import { createProcessLocalSessionCoordinator } from './session-coordinator.js';
+import { SessionRuntime } from './session-runtime.js';
+import type { TrackedSession } from './tracked-session.js';
+
+type TestSessionData = {
+  refreshToken?: string;
+  idToken?: string;
+  locale?: string;
+  theme?: string;
+  pending?: string;
+};
+
+const sessionCookie = 'logto-session=session-id';
+
+const delay = async (milliseconds: number) =>
+  new Promise<void>((resolve) => {
+    setTimeout(resolve, milliseconds);
+  });
+
+const getSessionId = (cookieHeader: string | undefined) =>
+  /logto-session=([^;]+)/.exec(cookieHeader ?? '')?.[1] ?? '';
+
+const createTestSessionStorage = (
+  initialData: TestSessionData,
+  beforeCommit?: () => Promise<void>
+) => {
+  const sessions = new Map<string, TestSessionData>([['session-id', structuredClone(initialData)]]);
+
+  const commitSession = vi.fn(async (session: Session<TestSessionData>) => {
+    await beforeCommit?.();
+    sessions.set(session.id, structuredClone(session.data));
+    const cookiePath = session.has('theme') ? 'final' : 'checkpoint';
+
+    return `logto-session=${session.id}; Path=/${cookiePath}; HttpOnly`;
+  });
+  const destroySession = vi.fn(async (session: Session<TestSessionData>) => {
+    sessions.delete(session.id);
+
+    return 'logto-session=; Max-Age=0';
+  });
+
+  const getSession = vi.fn(async (cookieHeader: string | undefined) => {
+    const sessionId = getSessionId(cookieHeader ?? undefined);
+    const data = sessions.get(sessionId) ?? {};
+
+    return createSession(structuredClone(data), sessionId);
+  });
+
+  const sessionStorage: SessionStorage<TestSessionData> = {
+    getSession: async (cookieHeader) => getSession(cookieHeader ?? undefined),
+    commitSession,
+    destroySession,
+  };
+
+  return {
+    sessionStorage,
+    getData: () => structuredClone(sessions.get('session-id') ?? {}),
+    getSession,
+    commitSession,
+    destroySession,
+  };
+};
+
+const createRuntime = async (
+  sessionStorage: SessionStorage<TestSessionData>,
+  sessionCoordinator = createProcessLocalSessionCoordinator()
+) =>
+  SessionRuntime.create({
+    cookieHeader: sessionCookie,
+    sessionStorage,
+    sessionCoordinator,
+  });
+
+describe('infrastructure:session:SessionRuntime', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('merges delayed mutations into the latest committed session', async () => {
+    const store = createTestSessionStorage({ refreshToken: 'old', locale: 'en' });
+    const coordinator = createProcessLocalSessionCoordinator();
+    const delayedRuntime = await createRuntime(store.sessionStorage, coordinator);
+    const refreshRuntime = await createRuntime(store.sessionStorage, coordinator);
+
+    delayedRuntime.session.set('theme', 'dark');
+
+    await refreshRuntime.checkpoint(async (session) => {
+      session.set('refreshToken', 'rotated');
+    });
+    await delayedRuntime.finalize();
+
+    expect(store.getData()).toEqual({
+      refreshToken: 'rotated',
+      locale: 'en',
+      theme: 'dark',
+    });
+    expect(store.commitSession).toHaveBeenCalledTimes(2);
+  });
+
+  it('reloads the session inside the coordinator before refreshing', async () => {
+    vi.useFakeTimers();
+
+    const store = createTestSessionStorage({ refreshToken: 'old' });
+    const coordinator = createProcessLocalSessionCoordinator();
+    const firstRuntime = await createRuntime(store.sessionStorage, coordinator);
+    const secondRuntime = await createRuntime(store.sessionStorage, coordinator);
+    const rotateRefreshToken = vi.fn(async (session: TrackedSession<TestSessionData>) => {
+      await delay(10);
+      session.set('refreshToken', 'rotated');
+    });
+    const refresh = async (runtime: SessionRuntime<TestSessionData>) =>
+      runtime.checkpoint(async (session) => {
+        if (session.get('refreshToken') === 'old') {
+          await rotateRefreshToken(session);
+        }
+      });
+
+    const first = refresh(firstRuntime);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(rotateRefreshToken).toHaveBeenCalledOnce();
+
+    const second = refresh(secondRuntime);
+    await vi.advanceTimersByTimeAsync(10);
+    await Promise.all([first, second]);
+
+    expect(rotateRefreshToken).toHaveBeenCalledOnce();
+    expect(store.getData()).toEqual({ refreshToken: 'rotated' });
+    expect(secondRuntime.session.get('refreshToken')).toBe('rotated');
+    expect(store.commitSession).toHaveBeenCalledOnce();
+  });
+
+  it('persists completed mutations before rethrowing a checkpoint error', async () => {
+    const store = createTestSessionStorage({ refreshToken: 'old' });
+    const runtime = await createRuntime(store.sessionStorage);
+    const refreshError = new Error('refresh failed');
+
+    runtime.session.set('theme', 'dark');
+
+    await expect(
+      runtime.checkpoint(async (session) => {
+        session.set('refreshToken', 'rotated');
+        throw refreshError;
+      })
+    ).rejects.toBe(refreshError);
+
+    expect(store.getData()).toEqual({ refreshToken: 'rotated', theme: 'dark' });
+    expect(runtime.session.get('theme')).toBe('dark');
+    expect(runtime.session.get('refreshToken')).toBe('rotated');
+    expect(runtime.session.hasPendingMutations).toBe(false);
+
+    await runtime.finalize();
+
+    expect(store.commitSession).toHaveBeenCalledOnce();
+  });
+
+  it('waits for an active checkpoint before finalizing', async () => {
+    vi.useFakeTimers();
+
+    const store = createTestSessionStorage({ refreshToken: 'old' });
+    const runtime = await createRuntime(store.sessionStorage);
+    const checkpoint = runtime.checkpoint(async (session) => {
+      await delay(25);
+      session.set('refreshToken', 'rotated');
+    });
+
+    const finalization = runtime.finalize();
+
+    await vi.advanceTimersByTimeAsync(0);
+    expect(store.commitSession).not.toHaveBeenCalled();
+
+    await vi.advanceTimersByTimeAsync(25);
+    await checkpoint;
+
+    await expect(finalization).resolves.toBe(
+      'logto-session=session-id; Path=/checkpoint; HttpOnly'
+    );
+    expect(store.getData()).toEqual({ refreshToken: 'rotated' });
+    expect(store.commitSession).toHaveBeenCalledOnce();
+  });
+
+  it('commits mutations made through the request session during a checkpoint', async () => {
+    const store = createTestSessionStorage({ refreshToken: 'old' });
+    const runtime = await createRuntime(store.sessionStorage);
+
+    await runtime.checkpoint(async () => {
+      runtime.session.set('theme', 'dark');
+    });
+
+    expect(store.getData()).toEqual({ refreshToken: 'old', theme: 'dark' });
+    expect(store.commitSession).toHaveBeenCalledOnce();
+    expect(runtime.session.hasPendingMutations).toBe(false);
+  });
+
+  it('retains request mutations made while a checkpoint commit is pending', async () => {
+    vi.useFakeTimers();
+
+    const commitStarted = vi.fn();
+    const store = createTestSessionStorage({ refreshToken: 'old' }, async () => {
+      commitStarted();
+      await delay(25);
+    });
+    const runtime = await createRuntime(store.sessionStorage);
+
+    const checkpoint = runtime.checkpoint(async (session) => {
+      session.set('refreshToken', 'rotated');
+    });
+
+    await vi.advanceTimersByTimeAsync(0);
+    expect(commitStarted).toHaveBeenCalledOnce();
+
+    runtime.session.set('theme', 'dark');
+    await vi.advanceTimersByTimeAsync(25);
+    await checkpoint;
+
+    expect(store.getData()).toEqual({ refreshToken: 'rotated' });
+    expect(runtime.session.hasPendingMutations).toBe(true);
+    expect(runtime.session.get('theme')).toBe('dark');
+
+    const finalize = runtime.finalize();
+
+    await vi.advanceTimersByTimeAsync(25);
+    await finalize;
+
+    expect(store.getData()).toEqual({ refreshToken: 'rotated', theme: 'dark' });
+  });
+
+  it('returns the newest cookie header produced by the request', async () => {
+    const store = createTestSessionStorage({ refreshToken: 'old' });
+    const runtime = await createRuntime(store.sessionStorage);
+
+    await runtime.checkpoint(async (session) => {
+      session.set('refreshToken', 'rotated');
+    });
+    expect(runtime.getResponseCookieHeader()).toBe(
+      'logto-session=session-id; Path=/checkpoint; HttpOnly'
+    );
+
+    runtime.session.set('theme', 'dark');
+
+    const cookieHeader = await runtime.finalize();
+
+    expect(cookieHeader).toBe('logto-session=session-id; Path=/final; HttpOnly');
+    expect(store.getSession).toHaveBeenLastCalledWith('logto-session=session-id');
+  });
+
+  it('destroys the latest session as a coordinated checkpoint', async () => {
+    const store = createTestSessionStorage({ idToken: 'id-token' });
+    const runtime = await createRuntime(store.sessionStorage);
+
+    runtime.session.set('pending', 'value');
+
+    const idToken = await runtime.destroy(async (session) => session.get('idToken'));
+
+    expect(idToken).toBe('id-token');
+    expect(store.getData()).toEqual({});
+    expect(store.destroySession).toHaveBeenCalledOnce();
+    expect(runtime.session.data).toEqual({});
+    await expect(runtime.finalize()).resolves.toBe('logto-session=; Max-Age=0');
+    await expect(runtime.checkpoint(async () => true)).rejects.toThrow(
+      'Cannot update a destroyed session.'
+    );
+  });
+
+  it('destroys the session before rethrowing an operation error', async () => {
+    const store = createTestSessionStorage({ idToken: 'id-token' });
+    const runtime = await createRuntime(store.sessionStorage);
+    const signOutError = new Error('OIDC discovery failed');
+
+    await expect(
+      runtime.destroy(async (session) => {
+        session.unset('idToken');
+        throw signOutError;
+      })
+    ).rejects.toBe(signOutError);
+
+    expect(store.getData()).toEqual({});
+    expect(store.destroySession).toHaveBeenCalledOnce();
+    expect(runtime.session.data).toEqual({});
+    await expect(runtime.finalize()).resolves.toBe('logto-session=; Max-Age=0');
+  });
+
+  it('rejects new operations and waits for destruction before finalizing', async () => {
+    vi.useFakeTimers();
+
+    const store = createTestSessionStorage({ idToken: 'id-token' });
+    const runtime = await createRuntime(store.sessionStorage);
+    const destructionStarted = vi.fn();
+    const queuedCheckpoint = vi.fn();
+    const secondDestruction = vi.fn();
+    const destruction = runtime.destroy(async () => {
+      destructionStarted();
+      await delay(25);
+    });
+
+    await vi.advanceTimersByTimeAsync(0);
+    expect(destructionStarted).toHaveBeenCalledOnce();
+
+    await expect(runtime.checkpoint(queuedCheckpoint)).rejects.toThrow(
+      'Cannot update a session while it is being destroyed.'
+    );
+    await expect(runtime.destroy(secondDestruction)).rejects.toThrow(
+      'Cannot update a session while it is being destroyed.'
+    );
+
+    const finalization = runtime.finalize();
+
+    await vi.advanceTimersByTimeAsync(0);
+    expect(store.destroySession).not.toHaveBeenCalled();
+
+    await vi.advanceTimersByTimeAsync(25);
+    await destruction;
+
+    await expect(finalization).resolves.toBe('logto-session=; Max-Age=0');
+    expect(queuedCheckpoint).not.toHaveBeenCalled();
+    expect(secondDestruction).not.toHaveBeenCalled();
+    expect(store.destroySession).toHaveBeenCalledOnce();
+  });
+
+  it('restores finalization after destruction fails', async () => {
+    vi.useFakeTimers();
+
+    const store = createTestSessionStorage({
+      idToken: 'id-token',
+      refreshToken: 'refresh-token',
+    });
+    const runtime = await createRuntime(store.sessionStorage);
+    const destructionError = new Error('database unavailable');
+
+    store.destroySession.mockRejectedValueOnce(destructionError);
+    runtime.session.set('theme', 'dark');
+
+    const destruction = runtime.destroy(async (session) => {
+      session.unset('idToken');
+      session.unset('refreshToken');
+      await delay(25);
+    });
+    const destructionExpectation = expect(destruction).rejects.toBe(destructionError);
+    const finalization = runtime.finalize();
+
+    await vi.advanceTimersByTimeAsync(25);
+    await destructionExpectation;
+
+    await expect(finalization).resolves.toBe('logto-session=session-id; Path=/final; HttpOnly');
+    expect(store.getData()).toEqual({ theme: 'dark' });
+    expect(store.commitSession).toHaveBeenCalledOnce();
+  });
+});

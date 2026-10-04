@@ -1,0 +1,81 @@
+# Logto Client SDK
+[![Version](https://img.shields.io/npm/v/@logto/client)](https://www.npmjs.com/package/@logto/client)
+[![Build Status](https://github.com/logto-io/js/actions/workflows/main.yml/badge.svg)](https://github.com/logto-io/js/actions/workflows/main.yml)
+[![Codecov](https://img.shields.io/codecov/c/github/logto-io/js)](https://app.codecov.io/gh/logto-io/js?branch=master)
+
+The Logto JavaScript Client SDK written in TypeScript.
+
+## Installation
+
+### Using npm
+
+```bash
+npm install @logto/client
+```
+
+### Using yarn
+
+```bash
+yarn add @logto/client
+```
+
+### Using pnpm
+
+```bash
+pnpm add @logto/client
+```
+
+## What is this and how does it work?
+
+Logto JavaScript Client SDK is platformless, and is the foundation of the other platform's SDKs (Browser, Next.js, React, Vue, etc.). Usually you are not expected to use it directly in your application, as we have released a set of official SDKs to help you integrate Logto with your favorite JavaScript frameworks. [Check this out](https://docs.logto.io/docs/recipes/integrate-logto/) and get started!
+
+If Logto does not support your framework and you want to contribute by building a new SDK, we recommend checking out our [Browser SDK](https://github.com/logto-io/js/tree/master/packages/browser) and [Node.js SDK](https://github.com/logto-io/js/tree/master/packages/node) and start from there.
+
+### Adapters
+
+To implement a platform-specific SDK, you should implement the following adapters:
+
+1. storage: save tokens and other info.
+2. navigate: handle redirect.
+3. generateState: generate state.
+4. generateCodeVerifier: generate code verifier.
+5. generateCodeChallenge: generate code challenge.
+6. cache: optionally cache well-known data.
+
+The client uses the runtime's native `fetch` by default. Set the optional `fetch` adapter only when
+the platform needs a custom transport.
+
+The optional `cache` adapter stores well-known data. Cache reads and writes are best-effort and do
+not make an otherwise successful request fail. The deprecated `unstable_cache` property remains
+supported; `cache` takes precedence when both are provided.
+
+See the [adapters](./src/adapter/index.ts) for more information.
+
+### Request timeouts
+
+Set `requestTimeoutMs` in `LogtoConfig` to apply a timeout to each request to the Logto server. The
+option covers discovery, authorization-code and refresh-token exchange, revocation, user info, and
+remote JSON Web Key Set requests. Framework SDKs built on `@logto/client` inherit the same option.
+
+```ts
+const config = {
+  endpoint: 'https://example.logto.app',
+  appId: 'your-app-id',
+  requestTimeoutMs: 10_000,
+};
+```
+
+The timeout is opt-in. The client builds its requester on top of native `fetch`, or the adapter's
+custom `fetch` transport when provided, so the same timeout policy applies in both cases. A custom
+transport must observe `RequestInit.signal` and settle after the signal is aborted. The client
+awaits that settlement before it rejects the operation.
+
+The deprecated `requester` adapter remains supported for compatibility. When both `fetch` and
+`requester` are provided, `fetch` takes precedence. Since a custom requester is already fully
+configured, the client does not apply `requestTimeoutMs` to it.
+
+## Resources
+
+[![Website](https://img.shields.io/badge/website-logto.io-8262F8.svg)](https://logto.io/)
+[![Docs](https://img.shields.io/badge/docs-logto.io-green.svg)](https://docs.logto.io/sdk/JavaScript/client/)
+[![Discord](https://img.shields.io/discord/965845662535147551?logo=discord&logoColor=ffffff&color=7389D8&cacheSeconds=600)](https://discord.gg/UEPaF3j5e6)

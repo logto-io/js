@@ -1,0 +1,26 @@
+.container {
+  padding: 20px;
+}
+
+.button:not(:last-child) {
+  margin-right: 4px;
+}
+
+.table {
+  margin: 50px auto;
+  table-layout: fixed;
+  width: 800px;
+  border: 1px solid #333;
+  border-spacing: 0;
+
+  th,
+  td {
+    padding: 10px;
+    word-wrap: break-word;
+    border: 1px solid #333;
+  }
+
+  th {
+    font-weight: bold;
+  }
+}
