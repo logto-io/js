@@ -135,6 +135,7 @@ export class StandardLogtoClient {
 
   protected jwtVerifierInstance: JwtVerifier;
   protected readonly accessTokenMap = new Map<string, AccessToken>();
+  private accessTokenMapLoading?: Promise<void>;
 
   get jwtVerifier() {
     return this.jwtVerifierInstance;
@@ -150,8 +151,6 @@ export class StandardLogtoClient {
       requestTimeoutMs: this.logtoConfig.requestTimeoutMs,
     });
     this.jwtVerifierInstance = buildJwtVerifier(this);
-
-    void this.loadAccessTokenMap();
   }
 
   /**
@@ -510,14 +509,23 @@ export class StandardLogtoClient {
     await this.adapter.storage.setItem('accessToken', JSON.stringify(data));
   }
 
+  /**
+   * Load the persisted access tokens once, on first use. Not done in the constructor because
+   * subclasses may replace `adapter.storage` in their own constructor.
+   */
+  private async ensureAccessTokenMapLoaded() {
+    this.accessTokenMapLoading ??= this.loadAccessTokenMap();
+    return this.accessTokenMapLoading;
+  }
+
   private async loadAccessTokenMap() {
-    const raw = await this.adapter.storage.getItem('accessToken');
-
-    if (!raw) {
-      return;
-    }
-
     try {
+      const raw = await this.adapter.storage.getItem('accessToken');
+
+      if (!raw) {
+        return;
+      }
+
       const json: unknown = JSON.parse(raw);
 
       if (!isLogtoAccessTokenMap(json)) {
@@ -546,6 +554,8 @@ export class StandardLogtoClient {
     if (!(await this.isAuthenticated())) {
       throw new LogtoClientError('not_authenticated');
     }
+
+    await this.ensureAccessTokenMapLoaded();
 
     const accessTokenKey = buildAccessTokenKey(resource, organizationId);
     const accessToken = this.accessTokenMap.get(accessTokenKey);
@@ -613,6 +623,8 @@ export class StandardLogtoClient {
     await this.setRefreshToken(refreshToken ?? null);
     await this.setIdToken(idToken);
 
+    // Saving writes the whole map, so load first to keep the other persisted tokens.
+    await this.ensureAccessTokenMapLoaded();
     this.accessTokenMap.set(accessTokenKey, {
       token: accessToken,
       scope,
