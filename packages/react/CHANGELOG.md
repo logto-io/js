@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.1.1
+
+### Patch Changes
+
+- @logto/browser@3.1.1
+
 ## 4.1.0
 
 ### Minor Changes
