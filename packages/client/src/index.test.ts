@@ -228,6 +228,26 @@ describe('LogtoClient', () => {
       await expect(logtoClient.getAccessToken()).resolves.toEqual(accessToken);
     });
 
+    it('should load access token from storage replaced after construction', async () => {
+      requester.mockClear();
+      const logtoClient = createClient(undefined, new MockedStorage({ idToken, refreshToken }));
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- replaces storage as a subclass constructor does
+      logtoClient.adapter.storage = new MockedStorage({
+        idToken,
+        refreshToken,
+        accessToken: JSON.stringify({
+          [buildAccessTokenKey()]: {
+            token: accessToken,
+            scope: '',
+            expiresAt: Date.now() / 1000 + 1000,
+          },
+        }),
+      });
+
+      await expect(logtoClient.getAccessToken()).resolves.toEqual(accessToken);
+      expect(requester).not.toHaveBeenCalled();
+    });
+
     it('should not load access token when storage value is invalid', async () => {
       const logtoClient = createClient(
         undefined,
