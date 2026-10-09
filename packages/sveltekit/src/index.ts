@@ -4,7 +4,7 @@ import LogtoClient, {
   type PersistKey,
   type Storage,
 } from '@logto/node';
-import { isRedirect, redirect, type Handle, type RequestEvent } from '@sveltejs/kit';
+import { isRedirect, redirect, type Handle, type RequestEvent, VERSION } from '@sveltejs/kit';
 
 export type {
   AccessTokenClaims,
@@ -153,7 +153,11 @@ export const handleLogto = (
       buildLogtoClient?.(event) ??
       new LogtoClient(config, {
         navigate: (url) => {
-          redirect(302, url);
+          if (parseInt(VERSION.split(".")[0]) >= 3) {
+            redirect(302, url, {external: true});  
+          } else {
+            redirect(302, url);  
+          }
         },
         storage,
       });
