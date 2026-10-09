@@ -1,5 +1,12 @@
 # Change Log
 
+## 3.1.1
+
+### Patch Changes
+
+- Updated dependencies [26ca693]
+  - @logto/client@3.2.1
+
 ## 3.1.0
 
 ### Minor Changes

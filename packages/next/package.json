@@ -1,6 +1,6 @@
 {
   "name": "@logto/next",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "engines": {
     "node": ">=22.0.0"
   },
