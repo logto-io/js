@@ -56,7 +56,7 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@sveltejs/kit": "^2.52.2"
+    "@sveltejs/kit": "^2.52.2 || ^3.0.0"
   },
   "dependencies": {
     "@logto/node": "workspace:^"

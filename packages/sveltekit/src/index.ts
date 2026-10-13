@@ -4,7 +4,10 @@ import LogtoClient, {
   type PersistKey,
   type Storage,
 } from '@logto/node';
-import { isRedirect, redirect, type Handle, type RequestEvent, VERSION } from '@sveltejs/kit';
+// eslint-disable-next-line import/no-duplicates -- Distinct SvelteKit entry points share one declaration file.
+import { isRedirect, redirect, type RequestEvent } from '@sveltejs/kit';
+// eslint-disable-next-line import/no-duplicates -- `sequence` is only exported from the hooks entry point.
+import { type sequence } from '@sveltejs/kit/hooks';
 
 export type {
   AccessTokenClaims,
@@ -43,6 +46,14 @@ export {
 
 export type HookConfig = {
   /**
+   * Whether to allow external `postRedirectUri` values after handling the sign-in callback.
+   * Only takes effect in SvelteKit 3 and later. SvelteKit 2 retains its existing redirect behavior.
+   * Redirects to Logto for sign-in and sign-out are always allowed.
+   * Applies to the default client; custom clients supplied by `buildLogtoClient` handle their own redirects.
+   * @default false
+   */
+  allowExternalPostRedirectUri?: boolean;
+  /**
    * The error response factory when an error occurs during the callback. If not provided, a 400
    * response will be returned.
    *
@@ -75,6 +86,16 @@ export type HookConfig = {
    */
   customStorage?: Storage<PersistKey>;
 };
+
+// `Handle` moved modules in SvelteKit 3; `sequence` accepts it in both supported versions.
+type Handle = Parameters<typeof sequence>[0];
+
+// SvelteKit 2 ignores the optional third argument; SvelteKit 3 uses it to allow external redirects.
+const redirectWithOptions: (
+  status: Parameters<typeof redirect>[0],
+  location: Parameters<typeof redirect>[1],
+  options?: { external?: boolean }
+) => never = redirect;
 
 /**
  * The factory to create a SvelteKit hook to handle Logto authentication. The hook will
@@ -152,12 +173,11 @@ export const handleLogto = (
     const logtoClient =
       buildLogtoClient?.(event) ??
       new LogtoClient(config, {
-        navigate: (url) => {
-          if (parseInt(VERSION.split(".")[0]) >= 3) {
-            redirect(302, url, {external: true});  
-          } else {
-            redirect(302, url);  
-          }
+        navigate: (url, { for: purpose }) => {
+          redirectWithOptions(302, url, {
+            external:
+              purpose !== 'post-sign-in' || (hookConfig?.allowExternalPostRedirectUri ?? false),
+          });
         },
         storage,
       });
