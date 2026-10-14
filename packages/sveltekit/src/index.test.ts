@@ -1,8 +1,15 @@
 import { CookieStorage } from '@logto/node';
-import { type RequestEvent } from '@sveltejs/kit';
-import { describe, expect, it, vi } from 'vitest';
+import { redirect, type RequestEvent } from '@sveltejs/kit';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { LogtoClient, handleLogto } from './index.js';
+
+vi.mock('@sveltejs/kit', { spy: true });
+
+afterEach(() => {
+  vi.clearAllMocks();
+  vi.restoreAllMocks();
+});
 
 const resolve = vi.fn();
 
@@ -53,6 +60,106 @@ const createCookieStorageFromEvent = (event: RequestEvent) => {
 };
 
 describe('handleLogto()', () => {
+  describe.each([undefined, false, true])(
+    'allowExternalPostRedirectUri: %s',
+    (allowExternalPostRedirectUri) => {
+      it.each(['sign-in', 'sign-out'] as const)(
+        'should always allow redirects to Logto for %s',
+        async (purpose) => {
+          const event = createMockEvent();
+          await handleLogto(config, cookieConfig, { allowExternalPostRedirectUri })({
+            resolve,
+            event,
+          });
+          const url = 'https://example.com/oidc';
+
+          await expect(async () =>
+            event.locals.logtoClient.adapter.navigate(url, { for: purpose })
+          ).rejects.toThrow(expect.objectContaining({ status: 302, location: url }));
+          expect(redirect).toHaveBeenCalledWith(302, url, { external: true });
+        }
+      );
+
+      it('should pass the configured permission for post-sign-in redirects', async () => {
+        const event = createMockEvent();
+        await handleLogto(config, cookieConfig, { allowExternalPostRedirectUri })({
+          resolve,
+          event,
+        });
+
+        await expect(async () =>
+          event.locals.logtoClient.adapter.navigate('/dashboard', { for: 'post-sign-in' })
+        ).rejects.toThrow(expect.objectContaining({ status: 302, location: '/dashboard' }));
+        expect(redirect).toHaveBeenCalledWith(302, '/dashboard', {
+          external: allowExternalPostRedirectUri ?? false,
+        });
+      });
+    }
+  );
+
+  it('should allow an external post-sign-in destination when opted in', async () => {
+    const event = createMockEvent();
+    await handleLogto(config, cookieConfig, { allowExternalPostRedirectUri: true })({
+      resolve,
+      event,
+    });
+    const url = 'https://another.example.com/dashboard';
+
+    await expect(async () =>
+      event.locals.logtoClient.adapter.navigate(url, { for: 'post-sign-in' })
+    ).rejects.toThrow(expect.objectContaining({ status: 302, location: url }));
+    expect(redirect).toHaveBeenCalledWith(302, url, { external: true });
+  });
+
+  it('should handle a redirect rejected by SvelteKit as a callback error', async () => {
+    const event = createMockEvent();
+    const handle = handleLogto(config, cookieConfig);
+    await handle({ resolve, event });
+    const client = event.locals.logtoClient;
+    const error = new Error('External redirect is not allowed');
+    vi.mocked(redirect).mockImplementationOnce(() => {
+      throw error;
+    });
+    vi.spyOn(client, 'handleSignInCallback').mockImplementationOnce(async () => {
+      await client.adapter.navigate('https://another.example.com/dashboard', {
+        for: 'post-sign-in',
+      });
+    });
+
+    const callbackEvent = createMockEvent({}, 'http://localhost/callback');
+    const callbackHandle = handleLogto(config, cookieConfig, { buildLogtoClient: () => client });
+    const response = await callbackHandle({ resolve, event: callbackEvent });
+
+    expect(response.status).toBe(400);
+    expect(await response.text()).toBe(`Error: ${error.message}`);
+    expect(redirect).toHaveBeenCalledWith(302, 'https://another.example.com/dashboard', {
+      external: false,
+    });
+  });
+
+  it('should rethrow an allowed post-sign-in redirect from the callback', async () => {
+    const event = createMockEvent();
+    await handleLogto(config, cookieConfig, { allowExternalPostRedirectUri: true })({
+      resolve,
+      event,
+    });
+    const client = event.locals.logtoClient;
+    const url = 'https://another.example.com/dashboard';
+    vi.spyOn(client, 'handleSignInCallback').mockImplementationOnce(async () => {
+      await client.adapter.navigate(url, { for: 'post-sign-in' });
+    });
+    const onCallbackError = vi.fn();
+    const callbackHandle = handleLogto(config, cookieConfig, {
+      buildLogtoClient: () => client,
+      onCallbackError,
+    });
+
+    await expect(
+      callbackHandle({ resolve, event: createMockEvent({}, 'http://localhost/callback') })
+    ).rejects.toThrow(expect.objectContaining({ status: 302, location: url }));
+    expect(onCallbackError).not.toHaveBeenCalled();
+  });
+
   it('should inject the Logto client into the request locals', async () => {
     const handle = handleLogto(config, cookieConfig);
     const event = createMockEvent();
