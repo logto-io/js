@@ -1,5 +1,11 @@
 # @logto/angular
 
+## 2.1.1
+
+### Patch Changes
+
+- @logto/browser@3.1.1
+
 ## 2.1.0
 
 ### Minor Changes
