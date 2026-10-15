@@ -388,3 +388,52 @@ describe('useLogto', () => {
     });
   });
 });
+
+describe('isInitialized', () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('stays false until the initial authentication read resolves, then becomes true', async () => {
+    const { result } = renderHook(() => useLogto(), { wrapper: createHookWrapper() });
+
+    expect(result.current.isInitialized).toBe(false);
+
+    await waitFor(() => {
+      expect(result.current.isInitialized).toBe(true);
+    });
+  });
+
+  it('does not go back to false when another client method bumps the loading counter', async () => {
+    // A slow call, like a token refresh: this is what puts `isLoading` back to `true` today.
+    getAccessToken.mockImplementationOnce(
+      async () =>
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve('token');
+          }, 50);
+        })
+    );
+
+    const { result } = renderHook(() => useLogto(), { wrapper: createHookWrapper() });
+
+    await waitFor(() => {
+      expect(result.current.isInitialized).toBe(true);
+    });
+
+    act(() => {
+      void result.current.getAccessToken();
+    });
+
+    // `isLoading` is the shared "something is in flight" counter (unchanged), while `isInitialized`
+    // —the "I already know whether there is a session" flag— does not move.
+    expect(result.current.isLoading).toBe(true);
+    expect(result.current.isInitialized).toBe(true);
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+
+    expect(result.current.isInitialized).toBe(true);
+  });
+});
