@@ -55,11 +55,32 @@ type LogtoEnv = { Variables: LogtoVariables };
 
 type SetCookieOptions = Parameters<CookieConfig['setCookie']>[2];
 
+type PendingCookie = {
+  name: string;
+  value: string;
+  options: CookieOptions;
+};
+
 class NavigationStore {
   url?: string;
 
   readonly navigate = (url: string): void => {
     this.url = url;
+  };
+}
+
+class CookieBuffer {
+  pending?: PendingCookie;
+
+  readonly buffer = (cookie: PendingCookie): void => {
+    this.pending = cookie;
+  };
+
+  readonly commit = (context: Context<LogtoEnv>): void => {
+    if (this.pending) {
+      setCookie(context, this.pending.name, this.pending.value, this.pending.options);
+      this.pending = undefined;
+    }
   };
 }
 
@@ -73,7 +94,8 @@ const toCookieOptions = (options: SetCookieOptions): CookieOptions => {
 };
 
 const createStorage = (context: Context<LogtoEnv>, config: LogtoHonoConfig) => {
-  return new CookieStorage({
+  const cookies = new CookieBuffer();
+  const storage = new CookieStorage({
     encryptionKey: config.encryptionKey,
     cookieKey: config.cookieKey,
     isSecure:
@@ -81,13 +103,20 @@ const createStorage = (context: Context<LogtoEnv>, config: LogtoHonoConfig) => {
       new URL(context.req.url).protocol === 'https:',
     getCookie: (name) => getCookie(context, name),
     setCookie: (name, value, options) => {
-      setCookie(context, name, value, toCookieOptions(options));
+      cookies.buffer({ name, value, options: toCookieOptions(options) });
     },
   });
+
+  return {
+    storage,
+    commitCookie: () => {
+      cookies.commit(context);
+    },
+  };
 };
 
 const createClient = async (context: Context<LogtoEnv>, config: LogtoHonoConfig) => {
-  const storage = createStorage(context, config);
+  const { storage, commitCookie } = createStorage(context, config);
   await storage.init();
   const navigation = new NavigationStore();
 
@@ -99,7 +128,23 @@ const createClient = async (context: Context<LogtoEnv>, config: LogtoHonoConfig)
   return {
     client,
     getNavigationUrl: () => navigation.url,
+    commitCookie,
   };
+};
+
+const withClient = async <Result>(
+  context: Context<LogtoEnv>,
+  config: LogtoHonoConfig,
+  handler: (client: NodeClient, getNavigationUrl: () => string | undefined) => Promise<Result>
+): Promise<Result> => {
+  const { client, getNavigationUrl, commitCookie } = await createClient(context, config);
+
+  try {
+    return await handler(client, getNavigationUrl);
+  } finally {
+    // `CookieStorage` writes on every storage change; only the final session state matters.
+    commitCookie();
+  }
 };
 
 const redirect = (context: Context<LogtoEnv>, url: string | undefined): Response => {
@@ -120,16 +165,19 @@ export const handleAuthRoutes = (
 
   const signIn = async (context: Context<LogtoEnv>, flow: AuthRouteFlow) => {
     const requestOptions = await getSignInOptions?.(context, flow);
-    const { client, getNavigationUrl } = await createClient(context, config);
 
-    await client.signIn({
-      ...config.signInOptions,
-      ...requestOptions,
-      redirectUri,
-      ...(flow === 'signUp' ? { firstScreen: 'register' as const } : {}),
+    const navigationUrl = await withClient(context, config, async (client, getNavigationUrl) => {
+      await client.signIn({
+        ...config.signInOptions,
+        ...requestOptions,
+        redirectUri,
+        ...(flow === 'signUp' ? { firstScreen: 'register' as const } : {}),
+      });
+
+      return getNavigationUrl();
     });
 
-    return redirect(context, getNavigationUrl());
+    return redirect(context, navigationUrl);
   };
 
   app.get(`/${prefix}/sign-in`, async (context) => signIn(context, 'signIn'));
@@ -137,20 +185,23 @@ export const handleAuthRoutes = (
   app.get(`/${prefix}/sign-up`, async (context) => signIn(context, 'signUp'));
 
   app.get(`/${prefix}/sign-in-callback`, async (context) => {
-    const { client } = await createClient(context, config);
     const { pathname, search } = new URL(context.req.url);
 
-    await client.handleSignInCallback(`${config.baseUrl}${pathname}${search}`);
+    await withClient(context, config, async (client) => {
+      await client.handleSignInCallback(`${config.baseUrl}${pathname}${search}`);
+    });
 
     return context.redirect(config.baseUrl);
   });
 
   app.get(`/${prefix}/sign-out`, async (context) => {
-    const { client, getNavigationUrl } = await createClient(context, config);
+    const navigationUrl = await withClient(context, config, async (client, getNavigationUrl) => {
+      await client.signOut(config.baseUrl);
 
-    await client.signOut(config.baseUrl);
+      return getNavigationUrl();
+    });
 
-    return redirect(context, getNavigationUrl());
+    return redirect(context, navigationUrl);
   });
 
   return app;
@@ -158,14 +209,15 @@ export const handleAuthRoutes = (
 
 export const withLogto = (config: LogtoHonoConfig): MiddlewareHandler<LogtoEnv> =>
   createMiddleware<LogtoEnv>(async (context, next) => {
-    const { client } = await createClient(context, config);
-    const logto: LogtoContext = await client.getContext({
-      getAccessToken: config.getAccessToken,
-      resource: config.resource,
-      fetchUserInfo: config.fetchUserInfo,
-      getOrganizationToken: config.getOrganizationToken,
-      organizationId: config.organizationId,
-    });
+    const logto: LogtoContext = await withClient(context, config, async (client) =>
+      client.getContext({
+        getAccessToken: config.getAccessToken,
+        resource: config.resource,
+        fetchUserInfo: config.fetchUserInfo,
+        getOrganizationToken: config.getOrganizationToken,
+        organizationId: config.organizationId,
+      })
+    );
 
     context.set('logto', logto);
 

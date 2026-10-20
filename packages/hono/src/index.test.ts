@@ -1,12 +1,14 @@
 import {
   PersistKey,
   Prompt,
+  unwrapSession,
   wrapSession,
   type CookieStorage,
   type GetContextParameters,
   type LogtoContext,
   type SignInOptions,
 } from '@logto/node';
+import NodeClient from '@logto/node/edge';
 import { Hono } from 'hono';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -40,16 +42,27 @@ vi.mock('@logto/node/edge', () => ({
     return {
       signIn: async (options: SignInOptions) => {
         await adapter.storage.setItem(PersistKey.SignInSession, 'session');
+        await adapter.storage.removeItem(PersistKey.AccessToken);
+        await adapter.storage.removeItem(PersistKey.IdToken);
+        await adapter.storage.removeItem(PersistKey.RefreshToken);
         await adapter.navigate(
           options.firstScreen === 'register' ? `${signInUrl}?firstScreen=register` : signInUrl
         );
         mocks.signIn(options);
       },
       signOut: async (redirectUri?: string) => {
+        await adapter.storage.removeItem(PersistKey.IdToken);
+        await adapter.storage.removeItem(PersistKey.RefreshToken);
+        await adapter.storage.removeItem(PersistKey.AccessToken);
+        await adapter.storage.removeItem(PersistKey.SignInSession);
         await adapter.navigate(signOutUrl);
         mocks.signOut(redirectUri);
       },
       handleSignInCallback: async (url: string) => {
+        await adapter.storage.setItem(PersistKey.RefreshToken, 'refresh_token');
+        await adapter.storage.setItem(PersistKey.IdToken, 'id_token');
+        await adapter.storage.setItem(PersistKey.AccessToken, '{}');
+        await adapter.storage.removeItem(PersistKey.SignInSession);
         mocks.handleSignInCallback(url);
       },
       getContext: async (parameters?: GetContextParameters) =>
@@ -71,6 +84,20 @@ const createApp = (appConfig: LogtoHonoConfig) => {
   return app;
 };
 
+const getCookieValue = (response: Response, name = 'logtoCookies') => {
+  const cookies = response.headers.getSetCookie();
+
+  expect(cookies).toHaveLength(1);
+
+  const pair = cookies[0]?.split(';')[0];
+
+  if (!pair?.startsWith(`${name}=`)) {
+    throw new Error(`Cookie "${name}" is missing`);
+  }
+
+  return decodeURIComponent(pair.slice(name.length + 1));
+};
+
 afterEach(() => {
   vi.clearAllMocks();
 });
@@ -85,7 +112,10 @@ describe('handleAuthRoutes', () => {
       expect(mocks.signIn).toHaveBeenCalledWith({
         redirectUri: `${config.baseUrl}/logto/sign-in-callback`,
       });
-      expect(response.headers.get('set-cookie')).toContain('logtoCookies=');
+      expect(NodeClient).toHaveBeenCalledWith(config, expect.any(Object));
+
+      const session = await unwrapSession(getCookieValue(response), config.encryptionKey);
+      expect(session).toEqual({ [PersistKey.SignInSession]: 'session' });
     });
 
     it('should support a custom auth routes prefix', async () => {
@@ -135,11 +165,23 @@ describe('handleAuthRoutes', () => {
         { headers: { 'x-forwarded-proto': 'https' } }
       );
 
-      const cookie = response.headers.get('set-cookie');
+      expect(response.headers.getSetCookie()).toHaveLength(1);
+
+      const cookie = response.headers.getSetCookie()[0] ?? '';
 
       expect(cookie).toMatch(/^custom=/);
       expect(cookie).toContain('Secure');
       expect(cookie).toContain('HttpOnly');
+    });
+
+    it('should mark the cookie Secure for a direct HTTPS request', async () => {
+      const response = await createApp(config).request('https://localhost:3000/logto/sign-in');
+
+      expect(response.headers.getSetCookie()).toHaveLength(1);
+
+      const cookie = response.headers.getSetCookie()[0] ?? '';
+
+      expect(cookie).toContain('Secure');
     });
   });
 
@@ -183,6 +225,13 @@ describe('handleAuthRoutes', () => {
       );
       expect(response.status).toBe(302);
       expect(response.headers.get('location')).toBe(config.baseUrl);
+
+      const session = await unwrapSession(getCookieValue(response), config.encryptionKey);
+      expect(session).toEqual({
+        [PersistKey.RefreshToken]: 'refresh_token',
+        [PersistKey.IdToken]: 'id_token',
+        [PersistKey.AccessToken]: '{}',
+      });
     });
   });
 
@@ -193,6 +242,9 @@ describe('handleAuthRoutes', () => {
       expect(mocks.signOut).toHaveBeenCalledWith(config.baseUrl);
       expect(response.status).toBe(302);
       expect(response.headers.get('location')).toBe(signOutUrl);
+
+      const session = await unwrapSession(getCookieValue(response), config.encryptionKey);
+      expect(session).toEqual({});
     });
   });
 
@@ -256,6 +308,26 @@ describe('withLogto', () => {
       },
       expect.anything()
     );
+  });
+
+  it('should persist refreshed tokens in a single cookie', async () => {
+    mocks.getContext.mockImplementationOnce(async (_parameters, storage) => {
+      await storage.setItem(PersistKey.AccessToken, '{}');
+      await storage.setItem(PersistKey.RefreshToken, 'refresh_token');
+
+      return { isAuthenticated: true };
+    });
+
+    const app = new Hono<{ Variables: LogtoVariables }>();
+    app.get('/context', withLogto(config), (request) => request.json(request.var.logto));
+
+    const response = await app.request('/context');
+    const session = await unwrapSession(getCookieValue(response), config.encryptionKey);
+
+    expect(session).toEqual({
+      [PersistKey.AccessToken]: '{}',
+      [PersistKey.RefreshToken]: 'refresh_token',
+    });
   });
 
   it('should read the session from the request cookie', async () => {

@@ -105,7 +105,8 @@ app.route(
 
 Resolver values override `signInOptions`. The SDK manages callback redirect fields and forces the
 registration screen for the sign-up route. Validate or allowlist request input before copying it
-into sign-in options.
+into sign-in options. `getSignInOptions` receives a regular Hono context; the `logto` variable is
+not set on the auth routes.
 
 ### Fetching user info and tokens
 

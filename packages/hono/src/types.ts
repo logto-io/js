@@ -19,8 +19,12 @@ export type AuthRouteSignInOptions = Omit<
 
 export type AuthRouteFlow = 'signIn' | 'signUp';
 
+/**
+ * Resolves request-specific sign-in options. The context is a regular Hono context and does not
+ * carry the `logto` variable, since the auth routes do not run `withLogto`.
+ */
 export type GetSignInOptions = (
-  context: Context<{ Variables: LogtoVariables }>,
+  context: Context,
   flow: AuthRouteFlow
 ) => AuthRouteSignInOptions | Promise<AuthRouteSignInOptions>;
 
