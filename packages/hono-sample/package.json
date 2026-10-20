@@ -1,0 +1,30 @@
+{
+  "name": "@logto/hono-sample",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "precommit": "lint-staged",
+    "start": "pnpm build && node lib/index.js",
+    "build": "rm -rf lib/ && tsc",
+    "lint": "eslint --ext .ts src"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.1.5",
+    "@logto/hono": "workspace:^",
+    "hono": "^4.13.13"
+  },
+  "devDependencies": {
+    "@silverhand/eslint-config": "^6.0.1",
+    "@silverhand/ts-config": "^6.0.0",
+    "@types/node": "^22.0.0",
+    "eslint": "^8.57.0",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.3.3"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc"
+}

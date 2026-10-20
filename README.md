@@ -21,6 +21,7 @@ The monorepo for SDKs and working samples written in JavaScript (Well, mostly in
 | [chrome-extension](./packages/chrome-extension/) | Logto Chrome extension SDK.                              |
 | [client](./packages/client/)                     | Logto JavaScript cross-platform foundation client.       |
 | [express](./packages/express/)                   | Logto Express SDK built on top of node foundations.      |
+| [hono](./packages/hono/)                         | Logto Hono SDK built on top of node foundations.         |
 | [js](./packages/js/)                             | Logto JavaScript core.                                   |
 | [next](./packages/next/)                         | Logto Next.js SDK built on top of node foundations.      |
 | [node](./packages/node/)                         | Logto node foundation SDK.                               |
@@ -38,6 +39,7 @@ The monorepo for SDKs and working samples written in JavaScript (Well, mostly in
 | [browser-sample](./packages/browser-sample/)                         | A sample of using Logto browser SDK.                                     |
 | [chrome-extension-sample](./packages/chrome-extension-sample/)       | A sample Chrome extension that demonstrates how to integrate Logto.      |
 | [express-sample](./packages/express-sample/)                         | A sample of using Logto Express SDK.                                     |
+| [hono-sample](./packages/hono-sample/)                               | A sample of using Logto Hono SDK.                                        |
 | [next-app-dir-sample](./packages/next-app-dir-sample/)               | A sample of using Logto Next.js SDK for Next.js app directory structure. |
 | [next-sample](./packages/next-sample/)                               | A sample of using Logto Next.js SDK.                                     |
 | [next-server-actions-sample](./packages/next-server-actions-sample/) | A sample of using Logto Next.js SDK for server actions.                  |
