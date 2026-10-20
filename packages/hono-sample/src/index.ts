@@ -1,7 +1,7 @@
 import { serve } from '@hono/node-server';
 import type { LogtoHonoConfig, LogtoVariables } from '@logto/hono';
 import { handleAuthRoutes, withLogto } from '@logto/hono';
-import { Hono } from 'hono';
+import { Hono, type MiddlewareHandler } from 'hono';
 
 const config: LogtoHonoConfig = {
   endpoint: process.env.LOGTO_ENDPOINT ?? 'http://localhost:3001',
@@ -14,14 +14,27 @@ const config: LogtoHonoConfig = {
 
 const app = new Hono<{ Variables: LogtoVariables }>();
 
+const requireAuth: MiddlewareHandler<{ Variables: LogtoVariables }> = async (context, next) => {
+  if (!context.var.logto.isAuthenticated) {
+    return context.redirect('/logto/sign-in');
+  }
+
+  await next();
+};
+
 app.route('/', handleAuthRoutes(config));
 
-app.get('/', (context) => {
+app.get('/', withLogto(config), (context) => {
+  const { isAuthenticated } = context.var.logto;
+  const authLinks = isAuthenticated
+    ? '<div><a href="/logto/sign-out">Sign Out</a></div>'
+    : `<div><a href="/logto/sign-in">Sign In</a></div>
+      <div><a href="/logto/sign-up">Sign Up</a></div>`;
+
   return context.html(
     `<h1>Hello Logto</h1>
-      <div><a href="/logto/sign-in">Sign In</a></div>
-      <div><a href="/logto/sign-up">Sign Up</a></div>
-      <div><a href="/logto/sign-out">Sign Out</a></div>
+      <p>Status: ${isAuthenticated ? 'Signed in' : 'Not signed in'}</p>
+      ${authLinks}
       <div><a href="/local-user-claims">Profile</a></div>
       <div><a href="/protected">Protected Resource</a></div>
       <div><a href="/remote-full-user">Fetch user info</a></div>
@@ -61,11 +74,7 @@ app.get(
   }
 );
 
-app.get('/protected', withLogto(config), (context) => {
-  if (!context.var.logto.isAuthenticated) {
-    return context.redirect('/logto/sign-in');
-  }
-
+app.get('/protected', withLogto(config), requireAuth, (context) => {
   return context.text('protected resource');
 });
 
