@@ -36,6 +36,7 @@ export const LogtoProvider = ({
     [LogtoClientClass, config, resolvedEnableCache]
   );
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
   const [error, setError] = useState<Error>();
 
   const isLoading = useMemo(() => loadingCount > 0, [loadingCount]);
@@ -52,9 +53,16 @@ export const LogtoProvider = ({
 
   useEffect(() => {
     (async () => {
-      const isAuthenticated = await memorizedLogtoClient.logtoClient.isAuthenticated();
+      try {
+        const isAuthenticated = await memorizedLogtoClient.logtoClient.isAuthenticated();
 
-      setIsAuthenticated(isAuthenticated);
+        setIsAuthenticated(isAuthenticated);
+      } finally {
+        // Released even if that read rejects, so nobody can end up waiting forever. The failure still
+        // surfaces through the `error` state, as any other client error does.
+        setIsInitialized(true);
+      }
+
       setLoadingCount((count) => Math.max(0, count - 1));
     })();
   }, [memorizedLogtoClient]);
@@ -63,13 +71,14 @@ export const LogtoProvider = ({
     () => ({
       ...memorizedLogtoClient,
       isAuthenticated,
+      isInitialized,
       setIsAuthenticated,
       isLoading,
       setIsLoading,
       error,
       setError,
     }),
-    [memorizedLogtoClient, isAuthenticated, isLoading, setIsLoading, error]
+    [memorizedLogtoClient, isAuthenticated, isInitialized, isLoading, setIsLoading, error]
   );
 
   return <LogtoContext.Provider value={memorizedContextValue}>{children}</LogtoContext.Provider>;
