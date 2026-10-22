@@ -2,40 +2,39 @@ import { IncomingMessage, ServerResponse } from 'node:http';
 import { Socket } from 'node:net';
 
 import type * as LogtoNode from '@logto/node';
-import { mockNuxtImport } from '@nuxt/test-utils/runtime';
 import { createEvent } from 'h3';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-
-import { type useRuntimeConfig } from '#imports';
 
 const accessTokenPath = '/api/logto/access-token';
 const cookieKey = 'logtoCookies';
 
-const runtimeConfig = vi.hoisted(() => ({
-  logto: {
-    endpoint: 'https://logto.example.com',
-    appId: 'app_id',
-    appSecret: 'app_secret',
-    cookieEncryptionKey: 'a-random-string',
-    pathnames: {
-      signIn: '/sign-in',
-      signOut: '/sign-out',
-      callback: '/callback',
-      accessToken: '/api/logto/access-token',
+const { runtimeConfig, useRuntimeConfig } = vi.hoisted(() => {
+  const runtimeConfig = {
+    logto: {
+      endpoint: 'https://logto.example.com',
+      appId: 'app_id',
+      appSecret: 'app_secret',
+      cookieEncryptionKey: 'a-random-string',
+      pathnames: {
+        signIn: '/sign-in',
+        signOut: '/sign-out',
+        callback: '/callback',
+        accessToken: '/api/logto/access-token',
+      },
     },
-  },
-  public: { logto: { accessTokenPath: '/api/logto/access-token' } },
-}));
+    public: { logto: { accessTokenPath: '/api/logto/access-token' } },
+  };
 
-// The spread of the original config keeps keys like `app` that the nuxt environment's own
-// bootstrap reads; the mock is visible there too.
-mockNuxtImport<typeof useRuntimeConfig>('useRuntimeConfig', (original) =>
-  vi.fn(() => ({
-    ...original(),
-    ...runtimeConfig,
-    public: { ...original().public, ...runtimeConfig.public },
-  }))
-);
+  return {
+    runtimeConfig,
+    useRuntimeConfig: vi.fn(() => runtimeConfig),
+  };
+});
+
+vi.mock('nitropack/runtime', () => ({
+  useNitroApp: vi.fn(() => ({ hooks: { callHook: vi.fn() } })),
+  useRuntimeConfig,
+}));
 
 /**
  * Observable state of the fake Logto client, used to assert on concurrency and on the session
