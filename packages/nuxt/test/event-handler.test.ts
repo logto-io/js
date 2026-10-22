@@ -2,17 +2,14 @@ import { ServerResponse, IncomingMessage } from 'node:http';
 import { Socket } from 'node:net';
 
 import * as logtoNode from '@logto/node';
-import { mockNuxtImport } from '@nuxt/test-utils/runtime';
 import { createEvent } from 'h3';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useRuntimeConfig } from '#imports';
 import type { LogtoSignInOptionsHookContext } from '@/src/runtime/utils/types';
 
-const { callHook } = vi.hoisted(() => ({ callHook: vi.fn() }));
-
-mockNuxtImport('useRuntimeConfig', () =>
-  vi.fn(() => ({
+const { callHook, useRuntimeConfig } = vi.hoisted(() => ({
+  callHook: vi.fn(),
+  useRuntimeConfig: vi.fn(() => ({
     app: {
       baseURL: '/',
       buildAssetsDir: '/_nuxt/',
@@ -20,6 +17,7 @@ mockNuxtImport('useRuntimeConfig', () =>
     },
     logto: {
       cookieEncryptionKey: 'foo',
+      postCallbackRedirectUri: '/',
       pathnames: {
         signIn: '/sign-in',
         signOut: '/sign-out',
@@ -27,10 +25,12 @@ mockNuxtImport('useRuntimeConfig', () =>
       },
     },
     public: { logto: { accessTokenPath: '/api/logto/access-token' } },
-  }))
-);
+  })),
+}));
+
 vi.mock('nitropack/runtime', () => ({
   useNitroApp: vi.fn(() => ({ hooks: { callHook } })),
+  useRuntimeConfig,
 }));
 const cookies = new Map();
 const getRequestURL = vi.fn(() => new URL('http://localhost:3000'));

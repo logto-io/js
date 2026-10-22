@@ -1,7 +1,5 @@
 import { defineEventHandler } from 'h3';
-import { useNitroApp } from 'nitropack/runtime';
-
-import { useRuntimeConfig } from '#imports';
+import { useNitroApp, useRuntimeConfig } from 'nitropack/runtime';
 
 import { logtoEventHandler } from '../utils/handler';
 import type { AuthRouteSignInOptions } from '../utils/types';
