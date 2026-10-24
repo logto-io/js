@@ -585,6 +585,9 @@ export class StandardLogtoClient {
 
   async #clearAccessToken(): Promise<void> {
     this.accessTokenMap.clear();
+    // Mark the map as loaded so a subsequent `ensureAccessTokenMapLoaded()` call does not reload
+    // the tokens that were just removed from storage.
+    this.accessTokenMapLoading = Promise.resolve();
     await this.adapter.storage.removeItem('accessToken');
   }
 
@@ -620,11 +623,12 @@ export class StandardLogtoClient {
       );
 
     await this.jwtVerifier.verifyIdToken(idToken);
+    // The sign-in replaces the previous session, so drop the access tokens cached for it, which
+    // `signIn({ clearTokens: false })` intentionally kept in storage.
+    await this.clearAccessToken();
     await this.setRefreshToken(refreshToken ?? null);
     await this.setIdToken(idToken);
 
-    // Saving writes the whole map, so load first to keep the other persisted tokens.
-    await this.ensureAccessTokenMapLoaded();
     this.accessTokenMap.set(accessTokenKey, {
       token: accessToken,
       scope,

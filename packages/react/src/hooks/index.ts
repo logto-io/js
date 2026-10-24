@@ -72,7 +72,7 @@ const useHandleSignInCallback = (callback?: () => void) => {
       const currentPageUrl = window.location.href;
       const isRedirected = await logtoClient.isSignInRedirected(currentPageUrl);
 
-      if (!isAuthenticated && isRedirected) {
+      if (isRedirected) {
         setIsLoading(true);
         await trySafe(
           async () => {
@@ -87,15 +87,7 @@ const useHandleSignInCallback = (callback?: () => void) => {
         setIsLoading(false);
       }
     })();
-  }, [
-    error,
-    handleError,
-    isAuthenticated,
-    isLoading,
-    logtoClient,
-    setIsAuthenticated,
-    setIsLoading,
-  ]);
+  }, [error, handleError, isLoading, logtoClient, setIsAuthenticated, setIsLoading]);
 
   return {
     isLoading,
@@ -144,6 +136,11 @@ const useLogto = (): Logto => {
       }
     };
 
+    const clearAllTokens = async () => {
+      await client.clearAllTokens();
+      setIsAuthenticated(false);
+    };
+
     return {
       getRefreshToken: proxy(client.getRefreshToken.bind(client)),
       getAccessToken: proxy(client.getAccessToken.bind(client)),
@@ -157,7 +154,7 @@ const useLogto = (): Logto => {
       signOut: proxy(signOut),
       fetchUserInfo: proxy(client.fetchUserInfo.bind(client)),
       clearAccessToken: proxy(client.clearAccessToken.bind(client)),
-      clearAllTokens: proxy(client.clearAllTokens.bind(client)),
+      clearAllTokens: proxy(clearAllTokens),
     };
   }, [client, proxy, setIsAuthenticated]);
 

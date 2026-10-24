@@ -27,6 +27,7 @@ import {
   mockedSignInUriWithLoginHint,
   mockedSignInUriWithoutReservedScopes,
 } from './mock.js';
+import { buildAccessTokenKey } from './utils/index.js';
 
 describe('LogtoClient', () => {
   describe('signInSession', () => {
@@ -229,6 +230,98 @@ describe('LogtoClient', () => {
       await expect(storage.getItem('idToken')).resolves.toEqual(idToken);
       expect(requester).toHaveBeenCalledWith(tokenEndpoint, expect.anything());
       await expect(storage.getItem('signInSession')).resolves.toBeNull();
+    });
+
+    it('should clear the previous access tokens after a successful callback when clearTokens is false', async () => {
+      requester.mockClear().mockImplementation(async () => ({
+        accessToken,
+        refreshToken,
+        idToken,
+        scope: 'read register manage',
+        expiresIn: 3600,
+      }));
+
+      const resource = 'https://api.example.com';
+      const organizationId = 'organization_id';
+      const previousAccessTokenMap = {
+        [buildAccessTokenKey(resource)]: {
+          token: 'previous_resource_access_token',
+          scope: 'read',
+          expiresAt: Date.now() / 1000 + 3600,
+        },
+        [buildAccessTokenKey(undefined, organizationId)]: {
+          token: 'previous_organization_access_token',
+          scope: 'read',
+          expiresAt: Date.now() / 1000 + 3600,
+        },
+      };
+      const storage = new MockedStorage({
+        idToken: 'previous_id_token',
+        refreshToken: 'previous_refresh_token',
+        accessToken: JSON.stringify(previousAccessTokenMap),
+      });
+      const logtoClient = createClient(undefined, storage);
+
+      // Load the map before signing in, as an app that already fetched tokens would.
+      await expect(logtoClient.getAccessToken(resource)).resolves.toBe(
+        'previous_resource_access_token'
+      );
+
+      await logtoClient.signIn({ redirectUri, clearTokens: false });
+      const callbackUri = `${redirectUri}?code=code_value&state=${mockedState}&codeVerifier=${mockedCodeVerifier}`;
+      await logtoClient.handleSignInCallback(callbackUri);
+
+      const accessTokenMap = logtoClient.getAccessTokenMap();
+      expect(accessTokenMap.has(buildAccessTokenKey(resource))).toBe(false);
+      expect(accessTokenMap.has(buildAccessTokenKey(undefined, organizationId))).toBe(false);
+      expect(accessTokenMap.get(buildAccessTokenKey())).toMatchObject({ token: accessToken });
+
+      const persistedAccessTokenMap = await storage.getItem('accessToken');
+      expect(persistedAccessTokenMap).not.toContain('previous_resource_access_token');
+      expect(persistedAccessTokenMap).not.toContain('previous_organization_access_token');
+      expect(persistedAccessTokenMap).toContain(accessToken);
+    });
+
+    it('should keep the previous access tokens when the ID token verification fails', async () => {
+      requester.mockClear().mockImplementation(async () => ({
+        accessToken,
+        refreshToken,
+        idToken,
+        scope: 'read register manage',
+        expiresIn: 3600,
+      }));
+
+      const resource = 'https://api.example.com';
+      const previousAccessTokenMap = {
+        [buildAccessTokenKey(resource)]: {
+          token: 'previous_resource_access_token',
+          scope: 'read',
+          expiresAt: Date.now() / 1000 + 3600,
+        },
+      };
+      const storage = new MockedStorage({
+        idToken: 'previous_id_token',
+        refreshToken: 'previous_refresh_token',
+        accessToken: JSON.stringify(previousAccessTokenMap),
+      });
+      const logtoClient = createClient(undefined, storage);
+      await expect(logtoClient.getAccessToken(resource)).resolves.toBe(
+        'previous_resource_access_token'
+      );
+
+      const verifyError = new Error('Invalid ID token');
+      logtoClient.setJwtVerifier({ verifyIdToken: vi.fn().mockRejectedValue(verifyError) });
+
+      await logtoClient.signIn({ redirectUri, clearTokens: false });
+      const callbackUri = `${redirectUri}?code=code_value&state=${mockedState}&codeVerifier=${mockedCodeVerifier}`;
+      await expect(logtoClient.handleSignInCallback(callbackUri)).rejects.toBe(verifyError);
+
+      expect(logtoClient.getAccessTokenMap().get(buildAccessTokenKey(resource))).toMatchObject({
+        token: 'previous_resource_access_token',
+      });
+      await expect(storage.getItem('accessToken')).resolves.toBe(
+        JSON.stringify(previousAccessTokenMap)
+      );
     });
   });
 
