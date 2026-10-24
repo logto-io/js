@@ -167,6 +167,21 @@ describe('useLogto', () => {
     expect(context.error.value).toBe(signOutError);
   });
 
+  it('should reset the authentication state after clearing all tokens', async () => {
+    isAuthenticated.mockResolvedValueOnce(true);
+    const client = new LogtoClient({ appId, endpoint });
+    const context = createContext(client);
+
+    await vi.waitFor(() => {
+      expect(context.isAuthenticated.value).toBe(true);
+    });
+
+    const { clearAllTokens } = createPluginMethods(context);
+    await clearAllTokens();
+
+    expect(context.isAuthenticated.value).toBe(false);
+  });
+
   it('uses the sign-out operation name in fallback errors', async () => {
     signOut.mockRejectedValueOnce('OIDC discovery failed');
     const client = new LogtoClient({ appId, endpoint });
@@ -228,6 +243,50 @@ describe('useHandleSignInCallback', () => {
         resolve();
       });
     });
+  });
+
+  it('should call `handleSignInCallback` when already authenticated but redirected', async () => {
+    // `signIn({ clearTokens: false })` keeps the previous ID token, so the client is still
+    // authenticated when the callback page loads.
+    handleSignInCallback.mockClear();
+    isAuthenticated.mockResolvedValue(true);
+    isSignInRedirected.mockResolvedValueOnce(true);
+
+    const client = new LogtoClient({ appId, endpoint });
+    const context = createContext(client);
+
+    await vi.waitFor(() => {
+      expect(context.isAuthenticated.value).toBe(true);
+    });
+
+    injectMock.mockImplementation((key: string) => {
+      if (key === contextInjectionKey) {
+        return context;
+      }
+
+      if (key === logtoInjectionKey) {
+        const { isAuthenticated, isLoading, error } = context;
+
+        return {
+          isAuthenticated: readonly(isAuthenticated),
+          isLoading: readonly(isLoading),
+          error: readonly(error),
+          ...createPluginMethods(context),
+        };
+      }
+    });
+
+    try {
+      useHandleSignInCallback();
+
+      await new Promise<void>((resolve) => {
+        setTimeout(resolve, 0);
+      });
+      expect(handleSignInCallback).toHaveBeenCalledTimes(1);
+    } finally {
+      isAuthenticated.mockResolvedValue(false);
+      handleSignInCallback.mockClear();
+    }
   });
 
   it('should call `handleSignInCallback` only once even if it fails internally', async () => {
