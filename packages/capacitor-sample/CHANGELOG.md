@@ -1,5 +1,11 @@
 # @logto/capacitor-sample
 
+## 0.1.8
+
+### Patch Changes
+
+- @logto/capacitor@4.1.2
+
 ## 0.1.7
 
 ### Patch Changes
