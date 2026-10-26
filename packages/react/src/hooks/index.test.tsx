@@ -188,6 +188,25 @@ describe('useLogto', () => {
     });
   });
 
+  it('should reset the authentication state after clearing all tokens', async () => {
+    isAuthenticated.mockResolvedValueOnce(true);
+    const { result } = renderHook(useLogto, {
+      wrapper: createHookWrapper(),
+    });
+
+    await waitFor(() => {
+      expect(result.current.isAuthenticated).toBe(true);
+    });
+
+    await act(async () => {
+      await result.current.clearAllTokens();
+    });
+
+    await waitFor(() => {
+      expect(result.current.isAuthenticated).toBe(false);
+    });
+  });
+
   it('uses the sign-out operation name in fallback errors', async () => {
     signOut.mockRejectedValueOnce('OIDC discovery failed');
     const { result } = renderHook(useLogto, {
@@ -238,17 +257,22 @@ describe('useLogto', () => {
     expect(handleSignInCallback).not.toHaveBeenCalled();
   });
 
-  it('should not call `handleSignInCallback` when it is authenticated', async () => {
+  it('should call `handleSignInCallback` when already authenticated but redirected', async () => {
+    // `signIn({ clearTokens: false })` keeps the previous ID token, so the client is still
+    // authenticated when the callback page loads.
     isSignInRedirected.mockResolvedValueOnce(true);
     isAuthenticated.mockResolvedValueOnce(true);
 
-    await act(async () => {
-      renderHook(useHandleSignInCallback, {
-        wrapper: createHookWrapper(),
-      });
+    const { result } = renderHook(useHandleSignInCallback, {
+      wrapper: createHookWrapper(),
     });
 
-    expect(handleSignInCallback).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(result.current.isAuthenticated).toBe(true);
+    });
+    await waitFor(() => {
+      expect(handleSignInCallback).toHaveBeenCalledTimes(1);
+    });
   });
 
   it('should call `handleSignInCallback` when navigated back to predefined callback url', async () => {

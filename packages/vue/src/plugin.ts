@@ -41,6 +41,11 @@ export const createPluginMethods = (context: Context) => {
     }
   };
 
+  const clearAllTokens = async () => {
+    await client.clearAllTokens();
+    setIsAuthenticated(false);
+  };
+
   const methods = {
     getRefreshToken: proxy(client.getRefreshToken.bind(client)),
     getAccessToken: proxy(client.getAccessToken.bind(client)),
@@ -54,7 +59,7 @@ export const createPluginMethods = (context: Context) => {
     signOut: proxy(signOut),
     fetchUserInfo: proxy(client.fetchUserInfo.bind(client)),
     clearAccessToken: proxy(client.clearAccessToken.bind(client)),
-    clearAllTokens: proxy(client.clearAllTokens.bind(client)),
+    clearAllTokens: proxy(clearAllTokens),
   };
 
   const handleSignInCallback = async (callbackUri: string, callbackFunction?: () => void) => {
