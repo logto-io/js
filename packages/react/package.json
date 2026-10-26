@@ -39,9 +39,9 @@
     "@silverhand/ts-config-react": "^6.0.0",
     "@testing-library/react": "^16.0.0",
     "@types/react": "^19.2.3",
-    "@vitest/coverage-v8": "4.1.11",
+    "@vitest/coverage-v8": "4.1.12",
     "eslint": "^8.57.0",
-    "happy-dom": "^20.0.8",
+    "happy-dom": "^21.0.4",
     "lint-staged": "^15.0.0",
     "postcss": "^8.4.31",
     "prettier": "^3.0.0",
@@ -49,7 +49,7 @@
     "react-dom": "^19.2.3",
     "stylelint": "^16.0.0",
     "typescript": "^5.3.3",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.12"
   },
   "peerDependencies": {
     "react": ">=16.8.0"
