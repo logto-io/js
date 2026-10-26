@@ -1,5 +1,11 @@
 # @logto/react-router-sample
 
+## 1.0.9
+
+### Patch Changes
+
+- @logto/react-router@2.0.2
+
 ## 1.0.8
 
 ### Patch Changes

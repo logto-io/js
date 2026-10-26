@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.1.37
+
+### Patch Changes
+
+- Updated dependencies [17e1aeb]
+  - @logto/react@4.1.2
+
 ## 2.1.36
 
 ### Patch Changes
