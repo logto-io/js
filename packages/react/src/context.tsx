@@ -6,7 +6,10 @@ export type LogtoContextProps = {
   logtoClient?: LogtoClient;
   /** Whether the user is authenticated or not. */
   isAuthenticated: boolean;
-  /** Whether the context has any pending requests. It will be `true` if there is at least one request pending. */
+  /**
+   * Whether the context is initializing or has pending requests. Local reads through
+   * `getIdToken`, `getIdTokenClaims`, and `getRefreshToken` do not affect this state.
+   */
   isLoading: boolean;
   /** The error that occurred during the last request. If there was no error, this will be `undefined`. */
   error?: Error;
