@@ -104,15 +104,20 @@ const useLogto = (): Logto => {
   const client = logtoClient ?? throwContextError();
 
   const proxy = useCallback(
-    <R, T extends unknown[]>(run: (...args: T) => Promise<R>, resetLoadingState = true) => {
+    <R, T extends unknown[]>(
+      run: (...args: T) => Promise<R>,
+      { trackLoading = true, resetLoadingState = true } = {}
+    ) => {
       return async (...args: T): Promise<Optional<R>> => {
         try {
-          setIsLoading(true);
+          if (trackLoading) {
+            setIsLoading(true);
+          }
           return await run(...args);
         } catch (error: unknown) {
           handleError(error, `Unexpected error occurred while calling ${run.name}.`);
         } finally {
-          if (resetLoadingState) {
+          if (trackLoading && resetLoadingState) {
             setIsLoading(false);
           }
         }
@@ -142,15 +147,17 @@ const useLogto = (): Logto => {
     };
 
     return {
-      getRefreshToken: proxy(client.getRefreshToken.bind(client)),
+      getRefreshToken: proxy(client.getRefreshToken.bind(client), { trackLoading: false }),
       getAccessToken: proxy(client.getAccessToken.bind(client)),
       getAccessTokenClaims: proxy(client.getAccessTokenClaims.bind(client)),
       getOrganizationToken: proxy(client.getOrganizationToken.bind(client)),
       getOrganizationTokenClaims: proxy(client.getOrganizationTokenClaims.bind(client)),
-      getIdToken: proxy(client.getIdToken.bind(client)),
-      getIdTokenClaims: proxy(client.getIdTokenClaims.bind(client)),
+      getIdToken: proxy(client.getIdToken.bind(client), { trackLoading: false }),
+      getIdTokenClaims: proxy(client.getIdTokenClaims.bind(client), { trackLoading: false }),
       // eslint-disable-next-line no-restricted-syntax -- TypeScript cannot infer the correct type.
-      signIn: proxy(client.signIn.bind(client), false) as LogtoClient['signIn'],
+      signIn: proxy(client.signIn.bind(client), {
+        resetLoadingState: false,
+      }) as LogtoClient['signIn'],
       signOut: proxy(signOut),
       fetchUserInfo: proxy(client.fetchUserInfo.bind(client)),
       clearAccessToken: proxy(client.clearAccessToken.bind(client)),

@@ -11,6 +11,11 @@ const isAuthenticated = vi.fn(async () => false);
 const isSignInRedirected = vi.fn(async () => false);
 const handleSignInCallback = vi.fn().mockResolvedValue(undefined);
 const getAccessToken = vi.fn();
+const localTokenReaders = {
+  getRefreshToken: vi.fn(),
+  getIdToken: vi.fn(),
+  getIdTokenClaims: vi.fn(),
+};
 const signIn = vi.fn();
 const signOut = vi.fn();
 
@@ -21,18 +26,16 @@ vi.mock('@logto/browser', () => {
         isAuthenticated,
         isSignInRedirected,
         handleSignInCallback,
-        getRefreshToken: vi.fn(),
         getAccessToken,
         getAccessTokenClaims: vi.fn(),
         getOrganizationToken: vi.fn(),
         getOrganizationTokenClaims: vi.fn(),
-        getIdToken: vi.fn(),
-        getIdTokenClaims: vi.fn(),
         signIn,
         signOut,
         fetchUserInfo: vi.fn(),
         clearAccessToken: vi.fn(),
         clearAllTokens: vi.fn(),
+        ...localTokenReaders,
       } satisfies Partial<LogtoClient>;
     }),
   };
@@ -121,6 +124,7 @@ const AlwaysLoading = ({ children }: { children?: ReactNode }) => {
 describe('useLogto', () => {
   afterEach(() => {
     vi.clearAllMocks();
+    vi.useRealTimers();
     handleSignInCallback.mockRestore();
   });
 
@@ -163,6 +167,71 @@ describe('useLogto', () => {
       expect(getIdTokenClaims).toBeDefined();
       expect(clearAccessToken).toBeDefined();
       expect(clearAllTokens).toBeDefined();
+    });
+  });
+
+  describe.each(['getRefreshToken', 'getIdToken', 'getIdTokenClaims'] as const)('%s', (method) => {
+    it.each([false, true])('does not enter loading when the read fails: %s', async (fails) => {
+      const value = method === 'getIdTokenClaims' ? { sub: 'user' } : 'token';
+      const error = new Error('Unable to read local token');
+      localTokenReaders[method].mockImplementationOnce(async () => {
+        await new Promise((resolve) => {
+          setTimeout(resolve, 1);
+        });
+        if (fails) {
+          throw error;
+        }
+        return value;
+      });
+      const onResolved = vi.fn();
+      const { result } = renderHook(useLogto, { wrapper: createHookWrapper() });
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false);
+      });
+      vi.useFakeTimers();
+
+      act(() => {
+        void (async () => {
+          onResolved(await result.current[method]());
+        })();
+      });
+      expect(result.current.isLoading).toBe(false);
+
+      await act(async () => {
+        await vi.runAllTimersAsync();
+      });
+      expect(onResolved).toHaveBeenCalledWith(fails ? undefined : value);
+      expect(result.current.error).toBe(fails ? error : undefined);
+    });
+
+    it('does not clear loading for a pending access token request', async () => {
+      getAccessToken.mockImplementationOnce(async () => {
+        await new Promise((resolve) => {
+          setTimeout(resolve, 1);
+        });
+        return 'access-token';
+      });
+      localTokenReaders[method].mockResolvedValueOnce(undefined);
+      const { result } = renderHook(useLogto, { wrapper: createHookWrapper() });
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false);
+      });
+      vi.useFakeTimers();
+
+      act(() => {
+        void result.current.getAccessToken();
+      });
+      expect(result.current.isLoading).toBe(true);
+
+      await act(async () => {
+        await result.current[method]();
+      });
+      expect(result.current.isLoading).toBe(true);
+
+      await act(async () => {
+        await vi.runAllTimersAsync();
+      });
+      expect(result.current.isLoading).toBe(false);
     });
   });
 
