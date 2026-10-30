@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.1.3
+
+### Patch Changes
+
+- 441afe2: prevent local token reads from changing the React loading state
+
 ## 4.1.2
 
 ### Patch Changes
