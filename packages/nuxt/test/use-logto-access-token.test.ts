@@ -24,8 +24,7 @@ mockNuxtImport<typeof useRuntimeConfig>('useRuntimeConfig', (original) =>
   }))
 );
 
-const fetchMock = vi.fn();
-vi.stubGlobal('$fetch', fetchMock);
+const fetchMock = mockNuxtImport('$fetch', () => vi.fn());
 
 const unauthorizedError = {
   statusCode: 401,
