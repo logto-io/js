@@ -1,14 +1,19 @@
 import { handleLogto } from '@logto/sveltekit';
 
-import { env } from '$env/dynamic/private';
+import {
+  LOGTO_APP_ID,
+  LOGTO_APP_SECRET,
+  LOGTO_COOKIE_ENCRYPTION_KEY,
+  LOGTO_ENDPOINT,
+} from '$app/env/private';
 
 export const handle = handleLogto(
   {
-    endpoint: env.LOGTO_ENDPOINT,
-    appId: env.LOGTO_APP_ID,
-    appSecret: env.LOGTO_APP_SECRET,
+    endpoint: LOGTO_ENDPOINT,
+    appId: LOGTO_APP_ID,
+    appSecret: LOGTO_APP_SECRET,
   },
   {
-    encryptionKey: env.LOGTO_COOKIE_ENCRYPTION_KEY,
+    encryptionKey: LOGTO_COOKIE_ENCRYPTION_KEY,
   }
 );
