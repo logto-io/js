@@ -1,10 +1,10 @@
 import { useHandleSignInCallback } from '@logto/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 const Callback = () => {
   const navigate = useNavigate();
   const { isLoading } = useHandleSignInCallback(() => {
-    navigate('/');
+    void navigate('/');
   });
 
   return isLoading ? <p>Redirecting...</p> : null;

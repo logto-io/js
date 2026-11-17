@@ -1265,7 +1265,7 @@ importers:
       react-dom:
         specifier: ^19.2.3
         version: 19.2.3(react@19.2.3)
-      react-router-dom:
+      react-router:
         specifier: ^7.18.5
         version: 7.18.5(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
     devDependencies:
@@ -9508,13 +9508,6 @@ packages:
   react-refresh@0.17.0:
     resolution: {integrity: sha512-z6F7K9bV85EfseRCp2bzrpyQ0Gkw1uLoCel9XBVWPg/TjRj94SkJzUTGfOa4bs7iJvBWtQG0Wq7wnI0syw3EBQ==}
     engines: {node: '>=0.10.0'}
-
-  react-router-dom@7.18.5:
-    resolution: {integrity: sha512-9HcfDMU6JJ/fp6gJZYGwNE6RknVGS4kBjH1HkNw959mCJi70TVwdipQWv2FEol9uGpi+SZTFtVpJPtEQfayeOw==}
-    engines: {node: '>=20.0.0'}
-    peerDependencies:
-      react: '>=18'
-      react-dom: '>=18'
 
   react-router@7.18.2:
     resolution: {integrity: sha512-aUVMjFm3GAPTTZL7oYr5E7ETiqfQCHRLH+B+5afnICvf0r7kkK4eR6SMuwbSTJw/7t+12khT/Kahij49fqOCIg==}
@@ -21103,12 +21096,6 @@ snapshots:
   react-refresh@0.16.0: {}
 
   react-refresh@0.17.0: {}
-
-  react-router-dom@7.18.5(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
-    dependencies:
-      react: 19.2.3
-      react-dom: 19.2.3(react@19.2.3)
-      react-router: 7.18.5(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
 
   react-router@7.18.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
     dependencies:
