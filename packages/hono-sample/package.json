@@ -10,9 +10,9 @@
     "lint": "eslint --ext .ts src"
   },
   "dependencies": {
-    "@hono/node-server": "^2.1.5",
+    "@hono/node-server": "^2.1.8",
     "@logto/hono": "workspace:^",
-    "hono": "^4.13.13"
+    "hono": "^4.13.19"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "^6.0.1",
