@@ -1,5 +1,5 @@
 import { LogtoProvider, type LogtoConfig, UserScope } from '@logto/react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router';
 
 import RequireAuth from './RequireAuth';
 import { appId, endpoint } from './consts';
