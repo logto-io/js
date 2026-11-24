@@ -16,7 +16,7 @@
     "@tanstack/react-query": "^5.0.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "react-router-dom": "^6.2.2"
+    "react-router": "^7.18.5"
   },
   "devDependencies": {
     "@parcel/core": "^2.16.4",
@@ -27,7 +27,6 @@
     "@silverhand/ts-config-react": "^6.0.0",
     "@types/react": "^19.2.3",
     "@types/react-dom": "^19.2.3",
-    "@types/react-router-dom": "^5.3.3",
     "buffer": "^6.0.3",
     "eslint": "^8.57.0",
     "lint-staged": "^15.0.0",

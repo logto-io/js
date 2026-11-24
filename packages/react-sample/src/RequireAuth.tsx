@@ -1,6 +1,6 @@
 import { useLogto } from '@logto/react';
 import { useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router';
 
 import { redirectUrl } from './consts';
 
